@@ -9,8 +9,18 @@ var await = require('asyncawait/await')
 var async = require('asyncawait/async')
 var logger = require('./logger')
 
-// make sure Sandboxes are run inside async environments
+/*
+* This is the base class for sandboxes
+* All sandboxes should be extended from this
+* Make sure it runs inside an async environment
+* @abstract
+ */
 class Sandbox{
+
+    /*
+    * @param {FileCacher} storage which will provide quick interaction (in-memory)
+    *           between host FS and sandbox FS
+     */
     constructor(cacher){
         this.cacher = cacher
     }
@@ -27,10 +37,21 @@ class Sandbox{
         throw "Concrete sandboxes must implement this function"
     }
 
+    /*
+    * @param {string} path in sandbox (relative to its bound directory)
+    * @returns {string} absolute path in host
+    **/
     resolvePath(p){
         return path.join(this.getRootPath(), p)
     }
 
+
+    /*
+    * Create a new file in sandbox
+    * @param {string} path in sandbox
+    * @param {boolean} [exec=false] is the new file executable
+    * @returns {number} file descriptor
+     */
     createFile(p, exec = false){
         let absPath = this.resolvePath(p)
         try {
@@ -42,6 +63,12 @@ class Sandbox{
         }
     }
 
+    /*
+    * Same as {Sandbox#createFile}, but writes file from {FileCacher}
+    * @param {string} path in sandbox
+    * @param {string} path/ID in {FileCacher}
+    * @param {boolean} [exec=false] is the new file executable
+     */
     createFileFromStorage(p, d, exec = False){
         let fd = this.createFile(p, exec)
         await(fs.writeAsync(fd, this.cacher.getFileBuffer(d)))
@@ -54,6 +81,11 @@ class Sandbox{
         await(fs.closeAsync(fd))
     }
 
+    /*
+    *   Get file from sandbox
+    *   @param {string} path in sandbox
+    *   @returns {number} file descriptor
+     */
     getFile(p){
         try {
             let absPath = this.resolvePath(p)
@@ -77,6 +109,11 @@ class Sandbox{
         }
     }
 
+    /*
+    *   Get file from sandbox and read it into {FileCacher} storage
+    *   @param {string} path in sandbox
+    *   @param {string} path/ID in {FileCacher} storage
+     */
     getFileToStorage(p, d){
         try{
             let absPath = this.resolvePath(p)
@@ -84,6 +121,33 @@ class Sandbox{
         }catch(e){
             logger.error("Sandbox %s could not retrieve file %s to storage",
                 this.constructor.name, p)
+        }
+    }
+    
+    pathExists(p){
+        try{
+            let res = await(fs.statAsync(this.resolvePath(p)))
+            return true
+        } catch(e){
+            return false
+        }
+    }
+
+    fileExists(p){
+        try{
+            let res = await(fs.statAsync(this.resolvePath(p)))
+            return res.isFile()
+        }catch(e){
+            return false
+        }
+    }
+
+    dirExists(p){
+        try{
+            let res = await(fs.statAsync(this.resolvePath(p)))
+            return res.isDirectory()
+        }catch(e){
+            return false
         }
     }
 }
