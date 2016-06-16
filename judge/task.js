@@ -6,6 +6,8 @@ class Task {
     constructor(attr){
         this.attr = attr
     }
+
+    // function to check if task is valid
 }
 
 module.exports = {

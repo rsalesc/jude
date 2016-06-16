@@ -5,6 +5,8 @@
 var fs = require('fs')
 var util = require('util')
 
+const EPS = 1e-7
+
 function exists(p){
     try{
         var res = fs.statSync(p)

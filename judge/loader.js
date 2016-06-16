@@ -12,7 +12,6 @@ var utils = require('./utils')
 var glob = require("glob")
 
 const JUDE_FN = "jude.yml"
-const EPS = 1e-7
 
 class Loader {
     constructor(packagePath){
@@ -87,17 +86,20 @@ class JudeLoader extends Loader {
         let percentageSum = 0
 
         for(let dataset of datasets){
+
             let cur = {
                 name: dataset["name"] || ("subtask"+(++cnt)),
                 percentage: dataset["percentage"] || 0,
                 testcases: this.getTestcases(dataset["path"])
             }
 
+            cur.checkerParams = dataset["checkerParams"] || cur.name
+
             percentageSum += cur.percentage
             res.push(cur)
         }
 
-        if(Math.abs(percentageSum-1) > EPS){ // check scoring
+        if(Math.abs(percentageSum-1) > utils.EPS){ // check scoring
             logger.error("[%s] datasets percentages should sum to 1", JudeLoader.name)
             throw "Datasets percentages do not sum to 1"
         }
@@ -185,5 +187,6 @@ utils.logInspect(loader.load())
 module.exports = {
     Loader,
     JudeLoader,
-    autoDetect
+    autoDetect,
+    LOADERS
 }
