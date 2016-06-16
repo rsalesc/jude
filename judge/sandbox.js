@@ -123,10 +123,15 @@ class Sandbox{
                 this.constructor.name, p)
         }
     }
+
+    getFileStats(p){
+        let res = await(fs.statAsync(this.resolvePath(p)))
+        return res
+    }
     
     pathExists(p){
         try{
-            let res = await(fs.statAsync(this.resolvePath(p)))
+            let res = this.getFileStats(p)
             return true
         } catch(e){
             return false
@@ -135,7 +140,7 @@ class Sandbox{
 
     fileExists(p){
         try{
-            let res = await(fs.statAsync(this.resolvePath(p)))
+            let res = this.getFileStats(p)
             return res.isFile()
         }catch(e){
             return false
@@ -144,11 +149,19 @@ class Sandbox{
 
     dirExists(p){
         try{
-            let res = await(fs.statAsync(this.resolvePath(p)))
+            let res = this.getFileStats(p)
             return res.isDirectory()
         }catch(e){
             return false
         }
+    }
+
+    removeDir(p){
+        await(fs.rmdirAsync(this.resolvePath(p)))
+    }
+
+    removeFile(p){
+        await(fs.unlinkAsync(this.resolvePath(p)))
     }
 }
 
