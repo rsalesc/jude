@@ -13,21 +13,29 @@ var glob = require("glob")
 
 const JUDE_FN = "jude.yml"
 
+/*
+*   Base class for all Loaders
+*   Make sure it runs inside an aysnc or blockable environment
+*   @abstract
+ */
 class Loader {
     constructor(packagePath){
         this.path = packagePath
     }
 
-    // Check if package <path> can be loaded by this loader
-    // <path> is the directory of the package
-    // Returns bool
+    /*
+    *   Check if a package can be loaded by this Loader
+    *   @param {string} package directory
+    *   @returns {boolean} if package can be loaded or not
+     */
     static isLoadable(packagePath){
         throw "Auto-detection not implemented in " + this.name
     }
 
-    // Effectively loads the package <path>
-    // <path> is the directory of the package
-    // Returns Task
+    /*
+    *   Load package and return a Task
+    *   @returns {Task} resulting task or null if some error occurs
+     */
     load() {
         throw "Load function not implemented in " + this.constructor.name
     }
@@ -39,7 +47,8 @@ class JudeLoader extends Loader {
     }
 
     /*
-    Returns paths for the tests of dataset in <datasetPath>
+    *   Returns paths for the tests of dataset
+    *   @param {string} dataset directory
      */
     getTestcases(datasetPath){
         let testsPath = path.join(this.path, "tests", datasetPath)
@@ -72,8 +81,9 @@ class JudeLoader extends Loader {
     }
 
     /*
-    Returns parsed datasets given their properties in <datasets>
-    It will raise an exception if data is inconsistent
+    * Returns parsed datasets given their properties in datasets
+    * @param {Object[]} datasets to be parsed in Jude format
+    * @throws if data is inconsistent
      */
     parseDatasets(datasets){
         if(!datasets || datasets.length == 0){
@@ -108,7 +118,9 @@ class JudeLoader extends Loader {
     }
 
     /*
-    Returns a Task correspondent to loaded Jude file <cfg>
+    *   Get a {Task} object correspondent to the loaded Jude file
+    *   @param {string} loaded Jude file
+    *   @returns {Task} task loaded or null if some error occurred
      */
     getTask(cfg){
         let lims = cfg["limits"] || {}
@@ -161,16 +173,18 @@ class JudeLoader extends Loader {
 }
 
 /*
-Contains the loaders available for use
-They can be accessed by their names
+* Contains the loaders available for use
+* They can be accessed by their names
  */
 const LOADERS = new Map([
     // add loaders here in the following format
     [JudeLoader.name, JudeLoader]
 ])
 
-// Returns a loader capable of loading package <path>
-// <path> is the directory of the package
+/*
+*   Returns a loader capable of loading package informed
+*   @param {string} package directory
+*/
 function autoDetect(packagePath){
     for(let [name, loader] of LOADERS){
         if(loader.isLoadable(packagePath))
