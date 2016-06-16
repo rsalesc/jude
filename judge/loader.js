@@ -47,8 +47,9 @@ class JudeLoader extends Loader {
     }
 
     /*
-    *   Returns paths for the tests of dataset
+    *   Get paths for the tests of dataset
     *   @param {string} dataset directory
+    *   @returns {Object[]} tests found
      */
     getTestcases(datasetPath){
         let testsPath = path.join(this.path, "tests", datasetPath)
