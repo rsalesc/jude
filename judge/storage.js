@@ -2,7 +2,7 @@
  * Created by rsalesc on 15/06/16.
  */
 
-class FileCacher{
+class Storage{
     createFileFromBuffer(){
 
     }
@@ -10,4 +10,6 @@ class FileCacher{
     getFileBuffer(){}
 }
 
-module.exports = FileCacher
+module.exports = {
+    Storage
+}
