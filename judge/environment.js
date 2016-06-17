@@ -2,7 +2,7 @@
  * Created by rsalesc on 15/06/16.
  */
 
-var FileCacher = require('./fcacher')
+var storage = require('./storage')
 var await = require('asyncawait/await')
 var async = require('asyncawait/async')
 var path = require('path')
@@ -20,7 +20,7 @@ class JudgeEnvironment{
     constructor(){
         this.sandboxes = []
         this.nextSandboxId = 0
-        this.cacher = new FileCacher()
+        //this.cacher = new Storage
     }
 
     getNextBoxId(){
