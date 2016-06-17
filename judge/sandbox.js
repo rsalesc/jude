@@ -27,6 +27,8 @@ class Sandbox{
     * @param {JudgeEnvironment} judge environment used by the sandbox
      */
     constructor(env, store){
+        if(new.target == Sandbox)
+            throw "Cannot instantiate abstract class " + this.constructor.name
         this.cacher = store
         this.env = env
     }

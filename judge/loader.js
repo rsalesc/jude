@@ -20,6 +20,8 @@ const JUDE_FN = "jude.yml"
  */
 class Loader {
     constructor(packagePath){
+        if(new.target == Loader)
+            throw "Cannot instantiate abstract class " + this.constructor.name
         this.path = packagePath
     }
 

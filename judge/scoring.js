@@ -7,6 +7,12 @@ var utils = require('./utils')
 var logger = require('./logger')
 
 class Scoring{
+    constructor(){
+        if(new.target == Scoring)
+            throw "Cannot instantiate abstract class " + this.constructor.name
+    }
+
+
     /*
     returns true if Task <tk> is a task with valid <this> properties
      */
