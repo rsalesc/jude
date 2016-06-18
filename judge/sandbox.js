@@ -4,6 +4,8 @@
 var Promise = require('bluebird')
 
 var fs = Promise.promisifyAll(require('fs'))
+var dlutil = Promise.promisifyAll({rmtree: require('dlutil').rmtreeAsync})
+
 var path = require('path')
 var await = require('asyncawait/await')
 var async = require('asyncawait/async')
@@ -42,6 +44,10 @@ class Sandbox{
     }
 
     getMemoryUsage(){
+        throw "Concrete sandboxes must implement this function"
+    }
+
+    getExitCode(){
         throw "Concrete sandboxes must implement this function"
     }
 
@@ -125,7 +131,7 @@ class Sandbox{
     getFileToStorage(p, d){
         try{
             let absPath = this.resolvePath(p)
-            this.cacher.createFileFromBuffer(d, await(fs.readFileAsync(p)))
+            this.cacher.createFileFromContent(d, await(fs.readFileAsync(p)))
         }catch(e){
             logger.error("Sandbox %s could not retrieve file %s to storage",
                 this.constructor.name, p)
@@ -173,8 +179,19 @@ class Sandbox{
     }
 }
 
-class Isolate extends Sandbox{
-    constructor(env, store){
+const IsolateConst = {
+    EXIT_SANDBOX_ERROR: "sandbox error",
+    EXIT_OK: "ok",
+    EXIT_SIGNAL: "signal",
+    EXIT_TIMEOUT: "timeout",
+    EXIT_TIMEOUT_WALL: "wall timeout",
+    EXIT_FILE_ACCESS: "file access",
+    EXIT_SYSCALL: "syscall",
+    EXIT_NONZERO_RETURN: "nonzero return"
+}
+
+class Isolate extends Sandbox {
+    constructor(env, store) {
         super(env, store)
         this.boxId = env.getNextBoxId()
         this.executable = JudgeConfig.ISOLATE_PATH
@@ -183,17 +200,23 @@ class Isolate extends Sandbox{
         this.outerDir = await(fs.mkdtempAsync(path.join(JudgeConfig.TEMP_DIR, "iso-")))
         this.innerDir = "/box"
         this.path = this.outerDir + this.innerDir // have to use sum
+        this.log = {}
 
-        await( fs.mkdirAsync(this.path) ) // defaults to 0o777
+        await(fs.mkdirAsync(this.path)) // defaults to 0o777
 
+        logger.debug("Creating isolate sandbox %s (%d)", this.path, this.boxId)
         this.setDefaultConfigs()
     }
 
-    getRootPath(){
+    getRootPath() {
         return this.path
     }
 
-    setDefaultConfigs(){
+    getChdirPath(p) {
+        return path.join(this.innerDir, p)
+    }
+
+    setDefaultConfigs() {
         this.cgroup = true
         this.chdir = this.innerDir
         this.dirs = [
@@ -219,80 +242,80 @@ class Isolate extends Sandbox{
         this.cgTiming = false
     }
 
-    init(){
+    init() {
         let params = []
-        if(this.cgroup) params.push("--cg")
+        if (this.cgroup) params.push("--cg")
         params.push("--box-id=" + this.boxId)
         params.push("--init")
 
-        try{
-            let res = await( spawn(this.executable, params) )
-        }catch(e){
+        try {
+            let res = await(spawn(this.executable, params))
+        } catch (e) {
             logger.error("[Isolate] Sandbox could not be initialized")
             throw e
         }
     }
 
-    getRunArgs(){
+    getRunArgs() {
         let res = []
         // remember to add meta parameter (for logging) before execing
 
-        if(this.chdir)
+        if (this.chdir)
             res.push(`--chdir=${this.chdir}`)
-        for(let dir of this.dirs) {
+        for (let dir of this.dirs) {
             let s = dir.in
-            if(dir.out) s += `=${dir.out}`
-            if(dir.ops) s += `:${dir.opts}`
+            if (dir.out) s += `=${dir.out}`
+            if (dir.ops) s += `:${dir.opts}`
             res.push(`--dir=${s}`)
         }
-        if(this.preserveEnv)
+        if (this.preserveEnv)
             res.push("--full-env")
 
-        for(let v of this.inheritEnv)
+        for (let v of this.inheritEnv)
             res.push(`--env=${v}`)
-        for(let key in this.setEnv)
-            if(this.setEnv.hasOwnProperty(key))
+        for (let key in this.setEnv)
+            if (this.setEnv.hasOwnProperty(key))
                 res.push(`--env=${key}=${this.setEnv[key]}`)
 
-        if(this.fsize)
+        if (this.fsize)
             res.push(`--fsize=${this.fsize}`)
-        if(this.stdin)
+        if (this.stdin)
             res.push(`--stdin=${this.stdin}`)
-        if(this.stdout)
+        if (this.stdout)
             res.push(`--stdout=${this.stdout}`)
-        if(this.stderr)
+        if (this.stderr)
             res.push(`--stderr=${this.stderr}`)
-        if(this.stackSize)
+        if (this.stackSize)
             res.push(`--stack=${this.stackSize}`)
-        if(this.memorySize)
+        if (this.memorySize)
             res.push(`--mem=${this.memorySize}`)
-        if(this.maxProcesses)
+        if (this.maxProcesses)
             res.push(`--processes=${this.maxProcesses}`)
         else
             res.push("--processes")
 
-        if(this.timelimit)
+        if (this.timelimit)
             res.push(`--time=${this.timelimit}`)
-        if(this.wallclockLimit)
+        if (this.wallclockLimit)
             res.push(`--wall-time=${this.wallclockLimit}`)
-        if(this.extraTimelimit)
+        if (this.extraTimelimit)
             res.push(`--extra-time=${this.extraTimelimit}`)
 
-        for(let i = 0; i < this.verbose; i++)
+        for (let i = 0; i < this.verbose; i++)
             res.push("--verbose")
 
-        if(this.cgMemorySize)
+        if (this.cgMemorySize)
             res.push(`--cg-mem=${this.cgMemorySize}`)
-        if(this.cgTiming)
+        if (this.cgTiming)
             res.push("--cg-timing")
 
         return res
     }
 
-    getLog(ex){
-        if(this.execs < 0) throw "No execution took place in this sandbox"
+    getLog(ex) {
+        if (this.execs < 0) throw "No execution took place in this sandbox"
         let exec = ex || this.execs
-        if(exec > this.execs) throw "This execution did not take place in this sandbox"
+        if (exec > this.execs) throw "This execution did not take place in this sandbox"
 
         let fn = `run.log.${exec}`
         let res = {}
@@ -306,8 +329,89 @@ class Isolate extends Sandbox{
                 else
                     log[key] = [value]
             }
-        }catch(e){
+
+            this.log = res
+        } catch (e) {
             logger.error("Error trying to read the log file %s", this.resolvePath(fn))
+            throw e
+        }
+    }
+
+    getRunningTime() { // seconds (float)
+        if (this.log.hasOwnProperty("time"))
+            return this.log["time"][0]
+        return null
+    }
+
+
+    getMemoryUsage() { // in bytes (int)
+        if (this.log.hasOwnProperty("cg-mem"))
+            return parseInt(this.log["cg-mem"][0]) * 1024
+        return null
+    }
+
+    getWallTime() {
+        if (this.log.hasOwnProperty("time-wall"))
+            return this.log["time-wall"][0]
+        return null
+    }
+
+    getExitCode() {
+        if (this.log.hasOwnProperty("exitcode"))
+            return parseInt(this.log["exitcode"][1])
+        return 0
+    }
+
+    getKillingSignal() {
+        if (this.log.hasOwnProperty("exitsig"))
+            return parseInt(this.log["exitsig"][0])
+        return 0
+    }
+
+    getStatusList() {
+        if (this.log.hasOwnProperty("status"))
+            return this.log["status"]
+        return []
+    }
+
+    translateBoxExitCode(code){
+        if(code == 2) return false
+        if(code == 1 || code == 0) return true
+        throw "Unknown sandbox exitcode (" + code + ")"
+    }
+
+    getExitStatus() {
+        list = this.getStatusList()
+        if (list.indexOf("XX") !== -1)
+            return IsolateConst.EXIT_SANDBOX_ERROR
+        if (list.indexOf("FO") !== -1)
+            return IsolateConst.EXIT_SYSCALL
+        if (list.indexOf("FA") !== -1)
+            return IsolateConst.EXIT_FILE_ACCESS
+        if (list.indexOf("TO") !== -1) {
+            if (this.log.hasOwnProperty("message") && this.log["message"].indexOf("wall") !== -1)
+                return IsolateConst.EXIT_TIMEOUT_WALL
+            else
+                return IsolateConst.EXIT_TIMEOUT
+        }
+        if (list.indexOf("SG") !== -1)
+            return IsolateConst.EXIT_SIGNAL
+        if (list.indexOf("RE") !== -1)
+            return IsolateConst.NONZERO_RETURN
+        return IsolateConst.EXIT_OK
+    }
+
+    cleanup(){
+        logger.debug("Deleting Isolate sandbox %s (%d)", this.path, this.boxId)
+        let args = [`--box-id=${this.boxId}`]
+        if(this.cgroup) args.push("--cg")
+        args.push("--cleanup")
+
+        try{
+            await(spawn(this.executable, args))
+            await(dlutil.rmtreeAsync(this.outerDir))
+        }catch(e){
+            logger.error("Isolate sandbox %s (%d) could not be deleted", this.path, this.boxId)
             throw e
         }
     }
@@ -317,13 +421,14 @@ async(function(){
     console.log("Testing with async...")
     let env = new jenv.JudgeEnvironment()
     let iso = new Isolate(env)
-    console.log(`Box directory: ${iso.path}`)
     console.log(iso.getRunArgs())
 
-    console.log(iso.getLog())
+    iso.init()
+    iso.cleanup()
 })()
 
 module.exports = {
     Sandbox,
-    Isolate
+    Isolate,
+    IsolateConst
 }
