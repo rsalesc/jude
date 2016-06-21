@@ -2,6 +2,14 @@
  * Created by rsalesc on 15/06/16.
  */
 
+var Promise = require('bluebird')
+
+var path = require('path')
+var logger = require('./logger')
+var fs = Promise.promisifyAll(require('fs'))
+var await = require('asyncawait/await')
+var async = require('asyncawait/async')
+
 /*
 *   This is the base class for Storage
 *   Make sure it runs inside an async environment
@@ -49,6 +57,62 @@ class Storage{
     }
 }
 
+class RealStorage extends Storage{
+    // WARNING: class created only for testing purposes.
+    // Non-persistent Storage should be used (in-memory, temporary dir, etc)
+    // TODO: every function should check if dir exist and create it if it doesnt
+    constructor(){
+        super()
+        this.path = "/"
+    }
+    load(p) {
+        this.path = path.resolve(p)
+    }
+    createFileFromContent(p, content){
+        let abs = path.resolve(this.path, p)
+        try {
+            await(fs.writeFileAsync(abs, content))
+        }
+        catch(e){
+            logger.error("[%s] File %s could not be created", this.constructor.name, p)
+            throw e
+        }
+    }
+
+    getFileBuffer(p){
+        let abs = path.resolve(this.path, p)
+        try{
+            let res = await(fs.readFileAsync(abs))
+            return res
+        }catch(e){
+            logger.error("[%s] File %s could not be retrieved", this.constructor.name, p)
+        }
+    }
+
+    getFileString(p){
+        let abs = path.resolve(this.path, p)
+        try{
+            let res = await(fs.readFileAsync(abs, "utf8"))
+            return res
+        }catch(e){
+            logger.error("[%s] File %s could not be retrieved", this.constructor.name, p)
+        }
+    }
+
+}
+
+if(!module.parent)
+    async(function(){
+        console.log("Testing with async...")
+        let store = new RealStorage()
+        store.load("test_contest")
+        console.log(store.getFileString("jude.yml"))
+        store.createFileFromContent("lol", "HAHAHA")
+        console.log(store.getFileBuffer("jude.yml"))
+    })()
+
+
 module.exports = {
-    Storage
+    Storage,
+    RealStorage
 }
