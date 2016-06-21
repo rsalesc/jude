@@ -8,7 +8,7 @@ var logger = new winston.Logger({
     transports: [
         new winston.transports.Console({
             level: (process.env.VERBOSE || true) ? 'debug' : 'warn',
-            // handleExceptions: true
+            //handleExceptions: true
         }),
         new winston.transports.File({name: 'info-file', level: 'info', filename: '../logs/info.log'}),
         new winston.transports.File({

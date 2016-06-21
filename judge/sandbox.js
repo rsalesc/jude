@@ -12,6 +12,7 @@ var async = require('asyncawait/async')
 var logger = require('./logger')
 var jenv = require('./environment')
 var spawn = require('child-process-promise').spawn
+var utils= require('./utils')
 
 var Storage = require('./storage').RealStorage
 var JudgeConfig = jenv.JudgeConfig
@@ -70,7 +71,8 @@ class Sandbox{
     createFile(p, exec = false){
         let absPath = this.resolvePath(p)
         try {
-            let fd = await(fs.openAsync(absPath, 'wx+', exec ? 0o777 : 0o664))
+            let fd = await(fs.openAsync(absPath, 'wx+'))
+            await(fs.chmodAsync(absPath, exec ? 0o777 :0o664))
             return fd
         }catch(e){
             logger.error("Sandbox %s could not create file %s", this.constructor.name, p)
@@ -85,15 +87,26 @@ class Sandbox{
     * @param {boolean} [exec=false] is the new file executable
      */
     createFileFromStorage(p, d, exec = False){
-        let fd = this.createFile(p, exec)
-        await(fs.writeAsync(fd, this.cacher.getFileBuffer(d)))
-        await(fs.closeAsync(fd))
+        let absPath = this.resolvePath(p)
+        try {
+            let buf = this.cacher.getFileBuffer(d)
+            await(fs.writeFileAsync(absPath, buf, {flag: "wx+"}))
+            await(fs.chmodAsync(absPath, exec ? 0o777 :0o664))
+        } catch(e){
+            logger.error("Sandbox %s could not create file from storage", this.constructor.name)
+            throw e
+        }
     }
 
     createFileFromString(p, content, exec = False){
-        let fd = this.createFile(p, exec)
-        await(fs.writeAsync(fd, content))
-        await(fs.closeAsync(fd))
+        let absPath = this.resolvePath(p)
+        try {
+            await(fs.writeFileAsync(absPath, content, {flag: "wx+"}))
+            await(fs.chmodAsync(absPath, exec ? 0o777 :0o664))
+        } catch(e){
+            logger.error("Sandbox %s could not create file from storage", this.constructor.name)
+            throw e
+        }
     }
 
     /*
@@ -116,7 +129,7 @@ class Sandbox{
     getFileToString(p){
         try{
             let absPath = this.resolvePath(p)
-            return await(fs.readFileAsync(p, "utf8"))
+            return await(fs.readFileAsync(absPath, "utf8"))
         }catch(e){
             logger.error("Sandbox %s could not retrieve file %s",
                 this.constructor.name, p)
@@ -132,7 +145,7 @@ class Sandbox{
     getFileToStorage(p, d){
         try{
             let absPath = this.resolvePath(p)
-            this.cacher.createFileFromContent(d, await(fs.readFileAsync(p)))
+            this.cacher.createFileFromContent(d, await(fs.readFileAsync(absPath)))
         }catch(e){
             logger.error("Sandbox %s could not retrieve file %s to storage",
                 this.constructor.name, p)
@@ -266,7 +279,7 @@ class Isolate extends Sandbox {
         for (let dir of this.dirs) {
             let s = dir.in
             if (dir.out) s += `=${dir.out}`
-            if (dir.ops) s += `:${dir.opts}`
+            if (dir.opts) s += `:${dir.opts}`
             res.push(`--dir=${s}`)
         }
         if (this.preserveEnv)
@@ -281,11 +294,11 @@ class Isolate extends Sandbox {
         if (this.fsize)
             res.push(`--fsize=${this.fsize}`)
         if (this.stdin)
-            res.push(`--stdin=${this.stdin}`)
+            res.push(`--stdin=${this.getChdirPath(this.stdin)}`)
         if (this.stdout)
-            res.push(`--stdout=${this.stdout}`)
+            res.push(`--stdout=${this.getChdirPath(this.stdout)}`)
         if (this.stderr)
-            res.push(`--stderr=${this.stderr}`)
+            res.push(`--stderr=${this.getChdirPath(this.stderr)}`)
         if (this.stackSize)
             res.push(`--stack=${this.stackSize}`)
         if (this.memorySize)
@@ -305,6 +318,8 @@ class Isolate extends Sandbox {
         for (let i = 0; i < this.verbose; i++)
             res.push("--verbose")
 
+        if(this.cgroup)
+            res.push("--cg")
         if (this.cgMemorySize)
             res.push(`--cg-mem=${this.cgMemorySize}`)
         if (this.cgTiming)
@@ -323,12 +338,12 @@ class Isolate extends Sandbox {
 
         try {
             let log = this.getFileToString(fn)
-            for (let line of log.split(/[\r\n]+/g)) {
-                let [key, value] = line.split(":", 1)
-                if (log.key)
-                    log[key].push(value)
+            for (let line of log.split(/[\r?\n]+/g)) {
+                let [key, value] = line.split(":", 2)
+                if (res.key)
+                    res[key].push(value)
                 else
-                    log[key] = [value]
+                    res[key] = [value]
             }
 
             this.log = res
@@ -345,9 +360,9 @@ class Isolate extends Sandbox {
     }
 
 
-    getMemoryUsage() { // in bytes (int)
+    getMemoryUsage() { // in kilobytes (int)
         if (this.log.hasOwnProperty("cg-mem"))
-            return parseInt(this.log["cg-mem"][0]) * 1024
+            return parseInt(this.log["cg-mem"][0])
         return null
     }
 
@@ -403,9 +418,10 @@ class Isolate extends Sandbox {
     }
 
     execute(command, capture=[], promise=false){
-        // increment exec num
+        this.execs++
         this.log = null
         let args = this.getRunArgs()
+        args.push("--meta=" + this.resolvePath(`run.log.${this.execs}`))
         args.push("--run")
         args.push("--")
         if(!Array.isArray(command)) command = [command]
@@ -451,14 +467,34 @@ class Isolate extends Sandbox {
 
 if(!module.parent)
     async(function(){
+        var sleep = require('sleep').sleep
+
         console.log("Testing with async...")
         let env = new jenv.JudgeEnvironment()
-        let iso = new Isolate(env)
-        console.log(iso.getRunArgs())
+        let store = new Storage()
+        store.load("test_contest/")
+
+        let iso = new Isolate(env, store)
 
         iso.init()
-        console.log(iso.execute("LALA"))
+
+        iso.stdout = "output"
+        iso.timelimit = 10
+        console.log(iso.getRunArgs())
+        iso.createFileFromStorage("a.out", "a.out", true)
+        iso.createFile("output", true)
+
+        try{
+            console.log(iso.execute("a.out"))
+            //sleep(15)
+            iso.getLog()
+            console.log(iso.log)
+        }catch(e){
+            logger.error("Could not execute a.out")
+            console.log(e)
+        }
         iso.cleanup()
+
     })()
 
 module.exports = {
