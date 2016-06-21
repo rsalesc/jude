@@ -11,8 +11,9 @@ var await = require('asyncawait/await')
 var async = require('asyncawait/async')
 var logger = require('./logger')
 var jenv = require('./environment')
-var spawn = require('spawn-rx').spawnPromise
+var spawn = require('child-process-promise').spawn
 
+var Storage = require('./storage').RealStorage
 var JudgeConfig = jenv.JudgeConfig
 
 /*
@@ -257,7 +258,7 @@ class Isolate extends Sandbox {
     }
 
     getRunArgs() {
-        let res = []
+        let res = [`--box-id=${this.boxId}`]
         // remember to add meta parameter (for logging) before execing
 
         if (this.chdir)
@@ -358,7 +359,7 @@ class Isolate extends Sandbox {
 
     getExitCode() {
         if (this.log.hasOwnProperty("exitcode"))
-            return parseInt(this.log["exitcode"][1])
+            return parseInt(this.log["exitcode"][0])
         return 0
     }
 
@@ -401,6 +402,37 @@ class Isolate extends Sandbox {
         return IsolateConst.EXIT_OK
     }
 
+    execute(command, capture=[], promise=false){
+        // increment exec num
+        this.log = null
+        let args = this.getRunArgs()
+        args.push("--run")
+        args.push("--")
+        if(!Array.isArray(command)) command = [command]
+        args = args.concat(command)
+
+        if(promise)
+            return spawn(this.executable, args, capture)
+        else {
+            let res = null
+            try {
+                res = await(spawn(this.executable, args, capture))
+            } catch (e) {
+                res = e
+            }
+
+            let ret = {
+                code: res.code,
+                message: res.message
+            }
+            for (let cap of capture) {
+                if (res.hasOwnProperty(cap))
+                    ret[cap] = res[cap].toString()
+            }
+            return ret
+        }
+    }
+
     cleanup(){
         logger.debug("Deleting Isolate sandbox %s (%d)", this.path, this.boxId)
         let args = [`--box-id=${this.boxId}`]
@@ -417,15 +449,17 @@ class Isolate extends Sandbox {
     }
 }
 
-async(function(){
-    console.log("Testing with async...")
-    let env = new jenv.JudgeEnvironment()
-    let iso = new Isolate(env)
-    console.log(iso.getRunArgs())
+if(!module.parent)
+    async(function(){
+        console.log("Testing with async...")
+        let env = new jenv.JudgeEnvironment()
+        let iso = new Isolate(env)
+        console.log(iso.getRunArgs())
 
-    iso.init()
-    iso.cleanup()
-})()
+        iso.init()
+        console.log(iso.execute("LALA"))
+        iso.cleanup()
+    })()
 
 module.exports = {
     Sandbox,
