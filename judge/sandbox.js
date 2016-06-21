@@ -61,19 +61,35 @@ class Sandbox{
         return path.join(this.getRootPath(), p)
     }
 
+    /*
+    *   Open a new file in sandbox
+    *   @param {string} path in sandbox
+    *   @param {string} flags to fs.open
+    *   @param {boolean} [exec=false] is the new file executable
+    *   @returns {number} file descriptor
+     */
+    openFile(p, flags = 'wx+', exec = false){
+        let absPath = this.resolvePath(p)
+        try{
+            let fd = await(fs.openAsync(absPath, flags, exec ? 0o777 : 0o664))
+            return fd
+        }catch(e){
+            logger.error("Sandbox %s could not open file %s", this.constructor.name, p)
+            throw e
+        }
+    }
 
     /*
-    * Create a new file in sandbox
+    * Create a new file in sandbox and close it
     * @param {string} path in sandbox
     * @param {boolean} [exec=false] is the new file executable
-    * @returns {number} file descriptor
      */
     createFile(p, exec = false){
         let absPath = this.resolvePath(p)
         try {
             let fd = await(fs.openAsync(absPath, 'wx+'))
             await(fs.chmodAsync(absPath, exec ? 0o777 :0o664))
-            return fd
+            await(fs.closeAsync(fd))
         }catch(e){
             logger.error("Sandbox %s could not create file %s", this.constructor.name, p)
             throw e
@@ -110,7 +126,7 @@ class Sandbox{
     }
 
     /*
-    *   Get file from sandbox
+    *   Get an opened file from sandbox
     *   @param {string} path in sandbox
     *   @returns {number} file descriptor
      */
@@ -155,6 +171,10 @@ class Sandbox{
     getFileStats(p){
         let res = await(fs.statAsync(this.resolvePath(p)))
         return res
+    }
+
+    chmod(p, mode=0o664){
+        await(fs.chmodAsync(this.resolvePath(p), mode))
     }
     
     pathExists(p){
@@ -428,11 +448,11 @@ class Isolate extends Sandbox {
         args = args.concat(command)
 
         if(promise)
-            return spawn(this.executable, args, capture)
+            return spawn(this.executable, args, {capture})
         else {
             let res = null
             try {
-                res = await(spawn(this.executable, args, capture))
+                res = await(spawn(this.executable, args, {capture}))
             } catch (e) {
                 res = e
             }
@@ -472,9 +492,9 @@ if(!module.parent)
         console.log("Testing with async...")
         let env = new jenv.JudgeEnvironment()
         let store = new Storage()
-        store.load("test_contest/")
 
         let iso = new Isolate(env, store)
+        store.load("test_contest/")
 
         iso.init()
 
