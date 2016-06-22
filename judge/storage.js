@@ -9,6 +9,7 @@ var logger = require('./logger')
 var fs = Promise.promisifyAll(require('fs'))
 var await = require('asyncawait/await')
 var async = require('asyncawait/async')
+var glob = Promise.promisifyAll({glob: require('glob').glob}).globAsync
 
 /*
 *   This is the base class for Storage
@@ -98,21 +99,68 @@ class RealStorage extends Storage{
             logger.error("[%s] File %s could not be retrieved", this.constructor.name, p)
         }
     }
+}
 
+class MemoryStorage extends Storage{
+    constructor(){
+        super()
+        this.data = {}
+    }
+
+    normalizePath(p){
+        return (p.length === 0 || p.charAt(0) != '/') ? "/" + p : p
+    }
+
+    load(p){
+        let absPath = path.resolve(p)
+        let res = await(glob("**/*", {cwd: absPath, nodir:true}))
+        for(let file of res){
+            try {
+                this.data[this.normalizePath(file)] = await(fs.readFileAsync(path.join(absPath, file)))
+            }catch(e){
+                throw e
+            }
+        }
+    }
+
+    createFileFromContent(p, content){
+        let norm = this.normalizePath(p)
+        this.data[norm] = new Buffer(content)
+    }
+
+    getFileBuffer(p, def=null){
+        p = this.normalizePath(p)
+        if(!this.data.hasOwnProperty(p)){
+            if(def === null) throw `File ${p} not found in MemoryStorage`
+            else return new Buffer(def)
+        }
+        return this.data[p]
+    }
+
+    getFileString(p, def=null){
+        p = this.normalizePath(p)
+        if(!this.data.hasOwnProperty(p)){
+            if(def === null) throw `File ${p} not found in MemoryStorage`
+            else return def.toString()
+        }
+        return this.data[p].toString()
+    }
 }
 
 if(!module.parent)
     async(function(){
         console.log("Testing with async...")
-        let store = new RealStorage()
+        let store = new MemoryStorage()
         store.load("test_contest")
         console.log(store.getFileString("jude.yml"))
-        store.createFileFromContent("lol", "HAHAHA")
+        store.createFileFromContent("lola", "HAHAHA")
         console.log(store.getFileBuffer("jude.yml"))
+        console.log(store.data)
     })()
 
 
 module.exports = {
     Storage,
-    RealStorage
+    RealStorage,
+    MemoryStorage
 }
