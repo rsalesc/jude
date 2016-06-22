@@ -12,9 +12,9 @@ var async = require('asyncawait/async')
 var logger = require('./logger')
 var jenv = require('./environment')
 var spawn = require('child-process-promise').spawn
-var utils= require('./utils')
+var utils = require('./utils')
 
-var Storage = require('./storage').RealStorage
+var Storage = require('./storage').MemoryStorage
 var JudgeConfig = jenv.JudgeConfig
 
 /*
@@ -61,17 +61,23 @@ class Sandbox{
         return path.join(this.getRootPath(), p)
     }
 
+    _getMode(exec){
+        if(exec === true) return 0o777
+        else if(exec === false) return 0o664
+        return exec
+    }
+
     /*
     *   Open a new file in sandbox
     *   @param {string} path in sandbox
     *   @param {string} flags to fs.open
-    *   @param {boolean} [exec=false] is the new file executable
+    *   @param {boolean|integer} [exec=false] is the new file executable, or octal mode
     *   @returns {number} file descriptor
      */
     openFile(p, flags = 'wx+', exec = false){
         let absPath = this.resolvePath(p)
         try{
-            let fd = await(fs.openAsync(absPath, flags, exec ? 0o777 : 0o664))
+            let fd = await(fs.openAsync(absPath, flags, this._getMode(exec)))
             return fd
         }catch(e){
             logger.error("Sandbox %s could not open file %s", this.constructor.name, p)
@@ -82,13 +88,13 @@ class Sandbox{
     /*
     * Create a new file in sandbox and close it
     * @param {string} path in sandbox
-    * @param {boolean} [exec=false] is the new file executable
+    * @param {boolean|integer} [exec=false] is the new file executable, or octal mode
      */
     createFile(p, exec = false){
         let absPath = this.resolvePath(p)
         try {
             let fd = await(fs.openAsync(absPath, 'wx+'))
-            await(fs.chmodAsync(absPath, exec ? 0o777 :0o664))
+            await(fs.chmodAsync(absPath, this._getMode(exec)))
             await(fs.closeAsync(fd))
         }catch(e){
             logger.error("Sandbox %s could not create file %s", this.constructor.name, p)
@@ -100,25 +106,25 @@ class Sandbox{
     * Same as {Sandbox#createFile}, but writes file from {FileCacher}
     * @param {string} path in sandbox
     * @param {string} path/ID in {FileCacher}
-    * @param {boolean} [exec=false] is the new file executable
+    * @param {boolean|integer} [exec=false] is the new file executable, or octal mode
      */
-    createFileFromStorage(p, d, exec = False){
+    createFileFromStorage(p, d, exec = false){
         let absPath = this.resolvePath(p)
         try {
             let buf = this.cacher.getFileBuffer(d)
             await(fs.writeFileAsync(absPath, buf, {flag: "wx+"}))
-            await(fs.chmodAsync(absPath, exec ? 0o777 :0o664))
+            await(fs.chmodAsync(absPath, this._getMode(exec)))
         } catch(e){
             logger.error("Sandbox %s could not create file from storage", this.constructor.name)
             throw e
         }
     }
 
-    createFileFromString(p, content, exec = False){
+    createFileFromString(p, content, exec = false){
         let absPath = this.resolvePath(p)
         try {
             await(fs.writeFileAsync(absPath, content, {flag: "wx+"}))
-            await(fs.chmodAsync(absPath, exec ? 0o777 :0o664))
+            await(fs.chmodAsync(absPath, this._getMode(exec)))
         } catch(e){
             logger.error("Sandbox %s could not create file from storage", this.constructor.name)
             throw e
@@ -232,11 +238,12 @@ class Isolate extends Sandbox {
         this.execs = -1
 
         this.outerDir = await(fs.mkdtempAsync(path.join(JudgeConfig.TEMP_DIR, "iso-")))
-        this.innerDir = "/box"
+        this.innerDir = "/tmp"
         this.path = this.outerDir + this.innerDir // have to use sum
         this.log = {}
 
         await(fs.mkdirAsync(this.path)) // defaults to 0o777
+        await(fs.chmod(this.path, 0o777))
 
         logger.debug("Creating isolate sandbox %s (%d)", this.path, this.boxId)
         this.setDefaultConfigs()
@@ -485,8 +492,8 @@ class Isolate extends Sandbox {
     }
 }
 
-if(!module.parent)
-    async(function(){
+if(!module.parent) {
+    async(function () {
         var sleep = require('sleep').sleep
 
         console.log("Testing with async...")
@@ -498,24 +505,31 @@ if(!module.parent)
 
         iso.init()
 
-        iso.stdout = "output"
-        iso.timelimit = 10
-        console.log(iso.getRunArgs())
-        iso.createFileFromStorage("a.out", "a.out", true)
-        iso.createFile("output", true)
+        iso.dirs.push({in: "/etc"})
 
-        try{
-            console.log(iso.execute("a.out"))
-            //sleep(15)
+        iso.preserveEnv = true
+        iso.maxProcesses = null
+        iso.timelimit = 20
+        iso.wallclockLimit = 30
+        console.log(iso.getRunArgs())
+
+        iso.createFileFromStorage("source.cpp", "checker.cpp")
+
+        try {
+            console.log(iso.execute(["/usr/bin/g++", "source.cpp", "-static",
+                "-std=c++11", "-O2", "-lm"], ['stdout', 'stderr']))
+
+            iso.getFileToStorage("a.out", "_/a.out")
             iso.getLog()
             console.log(iso.log)
-        }catch(e){
+        } catch (e) {
             logger.error("Could not execute a.out")
             console.log(e)
         }
         iso.cleanup()
 
     })()
+}
 
 module.exports = {
     Sandbox,
