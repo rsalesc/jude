@@ -360,6 +360,9 @@ class Isolate extends Sandbox {
         let exec = ex || this.execs
         if (exec > this.execs) throw "This execution did not take place in this sandbox"
 
+        if(this.log && this.log._exec === exec)
+            return this.log
+
         let fn = `run.log.${exec}`
         let res = {}
 
@@ -374,10 +377,13 @@ class Isolate extends Sandbox {
             }
 
             this.log = res
+            this.log._exec = exec
         } catch (e) {
             logger.error("Error trying to read the log file %s", this.resolvePath(fn))
             throw e
         }
+
+        return this.log
     }
 
     getRunningTime() { // seconds (float)
