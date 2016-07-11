@@ -67,7 +67,6 @@ let Compilation = {
 
         iso.removeFile(sourceFile)
 
-        if(!iso.translateBoxExitCode(res.code)) throw res.message
         if(res.code == 0 && execPath) {
             iso.getFileToStorage("a.out", execPath)
             iso.removeFile("a.out")
@@ -77,7 +76,7 @@ let Compilation = {
         iso.removeFile("output")
         return res
     },
-    "C" : function(iso, store, file, execPath){
+    "C" : function(iso, store, file, execPath) {
         let sourceFile = "source.c"
         iso.createFileFromStorage(sourceFile, file)
 
@@ -103,8 +102,7 @@ let Compilation = {
 
         iso.removeFile(sourceFile)
 
-        if(!iso.translateBoxExitCode(res.code)) throw res.message
-        if(res.code == 0 && execPath) {
+        if (res.code == 0 && execPath) {
             iso.getFileToStorage("a.out", execPath)
             iso.removeFile("a.out")
         }
@@ -114,6 +112,69 @@ let Compilation = {
         return res
     }
 }
+
+/*
+*   Compile the solution
+*   @param {JudgeEnvironment}
+*   @param {Storage}
+*   @param {string} solution language
+*   @param {string} path of the solution code in the storage
+*   @param {string} path of the resulting executable file in the storage
+*   @retuns {Object} compilation output/verdict (Isolate.execute() result)
+ */
+function compilationStep(env, store, lang, sol="_/sol", solExec="_/sol_exec"){
+    // init sandbox used during the compilation process
+    let iso = new Isolate(env, store)
+    iso.init()
+
+    // compiles
+    let result = Compilation[lang](iso, store, sol, solExec)
+
+    // cleanup
+    iso.cleanup()
+
+    return result
+}
+
+/*
+*   Test code against testcases of the given task, in the given language.
+*   Created files in storage are: _/checker_exec, _/sol_exec
+*
+*   @param {JudgeEnvironment}
+*   @param {Task}
+*   @param {string} the submitted code
+*   @param {string} language of the submitted code
+*   @returns {Object} evalution output/verdict
+ */
+function testTask(env, task, code, lang){
+    let store = new Storage()
+
+    // load task into the storage
+    store.load(task.getDirectory())
+
+    // create solution source in the storage
+    store.createFileFromContent("_/sol", code)
+
+    // compile solution
+    let compilationResult = compilationStep(env, store, lang)
+
+    // compilation failed, do something and return
+    if(!Isolate.translateBoxExitCode(compilationResult.code)){
+        return
+    }
+
+    // compile checker
+    let checkerCompilationResult =
+        compilationStep(env, store, task.getCheckerLanguage(), task.getChecker(), "_/checker_exec")
+
+    // checker compilation failed, do something and return
+    if(!Isolate.translateBoxExitCode(checkerCompilationResult.code)){
+        return
+    }
+
+    // now run solution against each of the datasets in ladder fashion
+}
+
 
 if(!module.parent){
     async(function(){

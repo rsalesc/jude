@@ -423,7 +423,7 @@ class Isolate extends Sandbox {
         return []
     }
 
-    translateBoxExitCode(code){
+    static translateBoxExitCode(code){
         if(code == 2) return false
         if(code == 1 || code == 0) return true
         throw "Unknown sandbox exitcode (" + code + ")"

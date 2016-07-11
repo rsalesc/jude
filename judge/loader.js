@@ -101,7 +101,7 @@ class JudeLoader extends Loader {
         for(let dataset of datasets){
 
             let cur = {
-                name: dataset["name"] || ("subtask"+(++cnt)),
+                name: dataset["name"] || dataset["path"],
                 percentage: dataset["percentage"] || 0,
                 testcases: this.getTestcases(dataset["path"])
             }

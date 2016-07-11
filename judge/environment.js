@@ -12,6 +12,7 @@ const MAX_SANDBOXES = 10
 var JudgeConfig = {
     EPS : 1e-7,
     MAX_SANDBOXES : 10,
+    MAX_SIMUL_TESTS: 3,
     TEMP_DIR : "/tmp",
     ISOLATE_PATH : path.resolve("isolate/isolate")
 }
