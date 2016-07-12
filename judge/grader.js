@@ -178,6 +178,19 @@ class Verdict{
             info = {text: info}
         this.info = info
     }
+
+    toJSON(){
+        return {
+            score: this.score,
+            verdict: this.verdict,
+            passed: this.passed,
+            info: this.info
+        }
+    }
+
+    static fromJSON(json){
+        return new Verdict(json.score || 0, json.verdict, json.passed || -1, json.info || {})
+    }
 }
 
 
@@ -441,8 +454,10 @@ if(!module.parent){
         let code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){int x, y; cin >> x >> y; cout << x+y << ' ' << x*y << endl;}"
         let slow_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){for(int i = 0; i < 1000000/2; i++) cerr << 129312 << '\\n'; int x, y; cin >> x >> y; cout << x+y << ' ' << x*y << endl;}"
         let tle_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){for(int i = 0; i < 1000000000000LL; i++);}"
+        let fake_mle_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){vector<int> v(1000000000);}"
+        let slow2_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){int acc = 0; for(int i = 0; i < 1000000000; i++) acc += i; cout << acc << endl;}"
         //console.log(code)
-        utils.logInspect(testTask(env, task, slow_code, "CPP"))
+        utils.logInspect(testTask(env, task, slow2_code, "CPP"))
 
         // var sleep = require('sleep').sleep
         //
