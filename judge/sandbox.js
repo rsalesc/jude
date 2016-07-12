@@ -11,11 +11,41 @@ var await = require('asyncawait/await')
 var async = require('asyncawait/async')
 var logger = require('./logger')
 var jenv = require('./environment')
-var spawn = require('child-process-promise').spawn
+var spawn = require('child_process').spawn
 var utils = require('./utils')
 
 var Storage = require('./storage').MemoryStorage
 var JudgeConfig = jenv.JudgeConfig
+
+/*
+*   spawnDetached async version (promisified)
+ */
+function spawnDetachedAsync(command, args=[], options={}){
+    return new Promise((resolve, reject) => {
+        options.stdio = ['ignore']
+        let successfulExitCodes = (options && options.successfulExitCodes) || [0];
+
+        let proc = spawn(command, args, options)
+        proc.on("close", (code) => {
+            if(successfulExitCodes.indexOf(code) === -1){
+                let commandStr = command + (args.length ? (' ' + args.join(' ')) : '');
+                let err = {
+                    code,
+                    message: '`' + commandStr + '` failed with code ' + code,
+                    toString(){
+                        return this.message
+                    }
+                }
+
+                reject(err)
+            }else{
+                resolve({code})
+            }
+        })
+
+        proc.on("error", reject)
+    })
+}
 
 /*
 * This is the base class for sandboxes
@@ -291,7 +321,7 @@ class Isolate extends Sandbox {
         params.push("--init")
 
         try {
-            let res = await(spawn(this.executable, params))
+            let res = await(spawnDetachedAsync(this.executable, params, {stdio: ['ignore']}))
         } catch (e) {
             logger.error("[Isolate] Sandbox could not be initialized")
             throw e
@@ -451,7 +481,7 @@ class Isolate extends Sandbox {
         return IsolateConst.EXIT_OK
     }
 
-    execute(command, capture=[], promise=false){
+    execute(command, capture=['ignore'], promise=false){
         this.execs++
         this.log = null
         let args = this.getRunArgs()
@@ -462,11 +492,11 @@ class Isolate extends Sandbox {
         args = args.concat(command)
 
         if(promise)
-            return spawn(this.executable, args, {capture, detached: true})
+            return spawnDetachedAsync(this.executable, args, {stdio: capture})
         else {
             let res = null
             try {
-                res = await(spawn(this.executable, args, {capture, detached: true}))
+                res = await(spawnDetachedAsync(this.executable, args, {stdio: capture}))
             } catch (e) {
                 res = e
             }
@@ -490,7 +520,7 @@ class Isolate extends Sandbox {
         args.push("--cleanup")
 
         try{
-            await(spawn(this.executable, args))
+            await(spawnDetachedAsync(this.executable, args, {stdio: ['ignore']}))
             await(dlutil.rmtreeAsync(this.outerDir))
         }catch(e){
             logger.error("Isolate sandbox %s (%d) could not be deleted", this.path, this.boxId)

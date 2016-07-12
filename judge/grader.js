@@ -439,7 +439,7 @@ if(!module.parent){
         let loader = new JudeLoader("test_contest/")
         let task = loader.load()
         let code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){int x, y; cin >> x >> y; cout << x+y << ' ' << x*y << endl;}"
-        let slow_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){for(int i = 0; i < 1000000/2; i++) cerr << 129312 << endl; int x, y; cin >> x >> y; cout << x+y << ' ' << x*y << endl;}"
+        let slow_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){for(int i = 0; i < 1000000/2; i++) cerr << 129312 << '\\n'; int x, y; cin >> x >> y; cout << x+y << ' ' << x*y << endl;}"
         let tle_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){for(int i = 0; i < 1000000000000LL; i++);}"
         //console.log(code)
         utils.logInspect(testTask(env, task, slow_code, "CPP"))
