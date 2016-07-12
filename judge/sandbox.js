@@ -462,11 +462,11 @@ class Isolate extends Sandbox {
         args = args.concat(command)
 
         if(promise)
-            return spawn(this.executable, args, {capture})
+            return spawn(this.executable, args, {capture, detached: true})
         else {
             let res = null
             try {
-                res = await(spawn(this.executable, args, {capture}))
+                res = await(spawn(this.executable, args, {capture, detached: true}))
             } catch (e) {
                 res = e
             }
