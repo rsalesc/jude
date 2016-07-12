@@ -2,14 +2,20 @@
  * Created by rsalesc on 14/06/16.
  */
 
-var fs = require('fs')
-var util = require('util')
+var async = require('asyncawait/async')
+var await = require('asyncawait/await')
 
-const EPS = 1e-7
+var Promise = require('bluebird')
+var commonfs = require('fs')
+var fs = Promise.promisifyAll({stat: commonfs.stat})
+var util = require('util')
+var JudgeConfig = require('./environment').JudgeConfig
+
+const EPS = JudgeConfig.EPS
 
 function exists(p){
     try{
-        var res = fs.statSync(p)
+        var res = await(fs.statAsync(p))
         return true
     }catch(e){
         return false
@@ -18,7 +24,7 @@ function exists(p){
 
 function fileExists(p){
     try{
-        var res = fs.statSync(p)
+        var res = await(fs.statAsync(p))
         return res.isFile()
     }catch(e){
         return false
@@ -27,7 +33,7 @@ function fileExists(p){
 
 function dirExists(p){
     try{
-        var res = fs.statSync(p)
+        var res = await(fs.statAsync(p))
         return res.isDirectory()
     }catch(e){
         return false
