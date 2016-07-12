@@ -65,6 +65,9 @@ let Checking = {
             checker_input, checker_output, checker_error)
         iso.removeFile("eval")
         iso.removeFile(input)
+
+        res.stdout = iso.getFileToString(checker_output)
+        res.stderr = iso.getFileToString(checker_error)
         return res
     }
 }
@@ -102,7 +105,9 @@ let Compilation = {
         }
 
         res.stdout = iso.getFileToString("output")
+        res.stderr = iso.getFileToString("error")
         iso.removeFile("output")
+        iso.removeFile("error")
         return res
     },
     "C" : function(iso, store, file, execPath) {
@@ -165,11 +170,13 @@ const VerdictConst = {
 }
 
 class Verdict{
-    constructor(score, verdict, passed = -1, error = ""){
+    constructor(score, verdict, passed = -1, info = {}){
         this.score = score || 0
         this.verdict = VerdictConst.hasOwnProperty(verdict) ? VerdictConst[verdict] : verdict
         this.passed = passed
-        this.error = error
+        if(typeof info === 'string' || info instanceof String)
+            info = {text: info}
+        this.info = info
     }
 }
 
@@ -227,6 +234,7 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
             let iso = new Isolate(env, store)
             let evaluationResult = {}
             let checkingResult = {}
+            let execTime = undefined
             let exitWith = function (verdict) {
                 try {
                     iso.cleanup()
@@ -249,9 +257,11 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
                 if (!Isolate.translateBoxExitCode(evaluationResult.code))
                     return exitWith(new Verdict(0, "VERDICT_JE"))
 
+                let dummy = new Isolate(env, store, evaluationResult.log)
+                execTime = dummy.getRunningTime()
+
                 // execution failed, do something and return
                 if (evaluationResult.code == 1) {
-                    let dummy = new Isolate(env, store, evaluationResult.log)
                     let exitStatus = dummy.getExitStatus()
                     let exitCode = dummy.getExitCode()
                     //let output = evaluationResult.output
@@ -262,7 +272,8 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
                         return exitWith(new Verdict(0, "VERDICT_WTE"))
 
                     // TODO: add sandbox information about RTE
-                    return exitWith(new Verdict(0, "VERDICT_RTE", -1, `exited with code ${exitCode}`))
+                    return exitWith(new Verdict(0, "VERDICT_RTE", -1, {text: `exited with code ${exitCode}`,
+                                                                        time: execTime}))
                 }
             } catch (e) {
                 logger.error("execution step failed - %s", e.toString())
@@ -281,7 +292,8 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
                 if (!Isolate.translateBoxExitCode(checkingResult.code))
                     return exitWith(new Verdict(0, "VERDICT_JE"))
 
-                let output = checkingResult.output
+                let output = checkingResult.stderr
+
                 if (checkingResult.code == 1) {
                     let dummy = new Isolate(env, store, checkingResult.log)
                     let exitStatus = dummy.getExitStatus()
@@ -291,12 +303,12 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
                         return exitWith(new Verdict(0, "VERDICT_CHTE"))
 
                     if (exitCode == 1 || exitCode == 2)
-                        return exitWith(new Verdict(0, "VERDICT_WA", 0, output))
+                        return exitWith(new Verdict(0, "VERDICT_WA", 0, {text: output, time: execTime}))
                     else
-                        return exitWith(new Verdict(0, "VERDICT_FAIL", 0, output))
+                        return exitWith(new Verdict(0, "VERDICT_FAIL", 0, {text: output, time: execTime}))
                 }
 
-                return exitWith(new Verdict(1, "VERDICT_AC", 0, output))
+                return exitWith(new Verdict(1, "VERDICT_AC", 0, {text: output, time: execTime}))
             } catch (e) {
                 logger.error("checker step failed - %s", e.toString())
                 console.log(e)
@@ -316,6 +328,7 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
 *   @param {Object} dataset
  */
 function testDataset(env, store, task, lang, dataset){
+    let execTime = 0
     try {
         let n = dataset.testcases.length
         for (let i = 0; i < n; i += JudgeConfig.MAX_SIMUL_TESTS) {
@@ -327,8 +340,12 @@ function testDataset(env, store, task, lang, dataset){
             let res = await(cases)
             for(let j = 0; j < JudgeConfig.MAX_SIMUL_TESTS && i+j < n; j++){
                 let caseResult = res[j]
+                if(caseResult.info.hasOwnProperty("time") && caseResult.info.time !== undefined)
+                    execTime = Math.max(execTime, caseResult.info.time)
+
                 if(caseResult.verdict != VerdictConst["VERDICT_AC"]){
                     caseResult.passed = i+j
+                    caseResult.info.time = execTime
                     return caseResult
                 }
             }
@@ -337,7 +354,8 @@ function testDataset(env, store, task, lang, dataset){
         logger.error("dataset test failed - %s", e.toString())
         return new Verdict(0, "VERDICT_JE")
     }
-    return new Verdict(1, "VERDICT_AC", dataset.testcases.length)
+
+    return new Verdict(1, "VERDICT_AC", dataset.testcases.length, {time: execTime})
 }
 
 /*
@@ -370,7 +388,7 @@ function testTask(env, task, code, lang){
     if(compilationResult.code == 1){
         let dummy = new Isolate(env, null, compilationResult.log)
         let exitStatus = dummy.getExitStatus()
-        let output = compilationResult.output
+        let output = compilationResult.stderr
 
         if(exitStatus == IsolateConst.EXIT_TIMEOUT || exitStatus == IsolateConst.EXIT_TIMEOUT_WALL)
             return utils.fillUpTo([new Verdict(0, "VERDICT_CTE")], task.getDatasetsCount())
@@ -391,7 +409,7 @@ function testTask(env, task, code, lang){
         let dummy = new Isolate(env, null, compilationResult.log)
         let exitStatus = dummy.getExitStatus()
         let exitCode = dummy.getExitCode()
-        let output = compilationResult.output
+        let output = compilationResult.stderr
 
         logger.error("checker compilation failed with error %s (%d):\n%s", exitStatus, exitCode, output)
 
@@ -421,9 +439,10 @@ if(!module.parent){
         let loader = new JudeLoader("test_contest/")
         let task = loader.load()
         let code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){int x, y; cin >> x >> y; cout << x+y << ' ' << x*y << endl;}"
+        let slow_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){for(int i = 0; i < 1000000/2; i++) cerr << 129312 << endl; int x, y; cin >> x >> y; cout << x+y << ' ' << x*y << endl;}"
         let tle_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){for(int i = 0; i < 1000000000000LL; i++);}"
-        console.log(code)
-        utils.logInspect(testTask(env, task, code, "CPP"))
+        //console.log(code)
+        utils.logInspect(testTask(env, task, slow_code, "CPP"))
 
         // var sleep = require('sleep').sleep
         //

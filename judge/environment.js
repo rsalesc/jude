@@ -12,7 +12,7 @@ const MAX_SANDBOXES = 10
 var JudgeConfig = {
     EPS : 1e-7,
     MAX_SANDBOXES : 10,
-    MAX_SIMUL_TESTS: 3,
+    MAX_SIMUL_TESTS: 1,
     COMPILATION_TL: 25,
     CHECKING_TL: 10,
     CHECKING_ML: 512,
