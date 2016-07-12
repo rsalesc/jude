@@ -138,13 +138,13 @@ class JudeLoader extends Loader {
             scoring: null,
             author: cfg["author"] || "",
             limits:{
-                time: lims["time"] ? Math.ceil(lims["time"]*multiplier/ratio)*ratio : 1000,
+                time: (lims["time"] ? Math.ceil(lims["time"]*multiplier/ratio)*ratio : 1000)/1000, // in seconds
                 memory: lims["memory"] || 256,
                 source: lims["source"] || 500
             },
             blockedLanguages: [],
             checker: {
-                language: checks["language"] || "cpp",
+                language: (checks["language"] || "cpp").toUpperCase(),
                 path: checks["path"] || "checker.cpp"
             }
         }
@@ -197,8 +197,10 @@ function autoDetect(packagePath){
 }
 
 // testing
-loader = new JudeLoader("test_contest/")
-utils.logInspect(loader.load())
+if(!module.parent) {
+    loader = new JudeLoader("test_contest/")
+    utils.logInspect(loader.load())
+}
 
 // exports names manually since it's still not supported
 module.exports = {

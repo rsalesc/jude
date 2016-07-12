@@ -32,7 +32,7 @@ class Task {
     *   @returns {string} checker path
      */
     getChecker(){
-        throw "not implemented"
+        return this.attr.checker.path
     }
 
     /*
@@ -40,7 +40,47 @@ class Task {
     *   @returns {string} checker language
      */
     getCheckerLanguage(){
-        throw "not implemented"
+        return this.attr.checker.language
+    }
+
+    /*
+    *   Get datasets
+     */
+    getDatasets(){
+        return this.attr.datasets
+    }
+
+    /*
+    *   Get count of datasets
+     */
+    getDatasetsCount(){
+        try{
+            return this.attr.datasets.length
+        }catch(e){
+            return 0
+        }
+    }
+
+    /*
+    *   Get timelimit (in ms)
+     */
+    getTimelimit(){
+        try{
+            return this.attr.limits.time
+        } catch(e){
+            return 1.0
+        }
+    }
+
+    /*
+    *   Get memory limit (in MB)
+     */
+    getMemorylimit(){
+        try{
+            return this.attr.limits.memory
+        }catch(e){
+            return 256
+        }
     }
 }
 

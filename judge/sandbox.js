@@ -231,22 +231,9 @@ const IsolateConst = {
 }
 
 class Isolate extends Sandbox {
-    constructor(env, store) {
+    constructor(env, store, log={}) {
         super(env, store)
-        this.boxId = env.getNextBoxId()
-        this.executable = JudgeConfig.ISOLATE_PATH
-        this.execs = -1
-
-        this.outerDir = await(fs.mkdtempAsync(path.join(JudgeConfig.TEMP_DIR, "iso-")))
-        this.innerDir = "/tmp"
-        this.path = this.outerDir + this.innerDir // have to use sum
-        this.log = {}
-
-        await(fs.mkdirAsync(this.path)) // defaults to 0o777
-        await(fs.chmod(this.path, 0o777))
-
-        logger.debug("Creating isolate sandbox %s (%d)", this.path, this.boxId)
-        this.setDefaultConfigs()
+        this.log = log
     }
 
     getRootPath() {
@@ -284,6 +271,20 @@ class Isolate extends Sandbox {
     }
 
     init() {
+        this.boxId = this.env.getNextBoxId()
+        this.executable = JudgeConfig.ISOLATE_PATH
+        this.execs = -1
+
+        this.outerDir = await(fs.mkdtempAsync(path.join(JudgeConfig.TEMP_DIR, "iso-")))
+        this.innerDir = "/tmp"
+        this.path = this.outerDir + this.innerDir // have to use sum
+
+        await(fs.mkdirAsync(this.path)) // defaults to 0o777
+        await(fs.chmod(this.path, 0o777))
+
+        logger.debug("Creating isolate sandbox %s (%d)", this.path, this.boxId)
+        this.setDefaultConfigs()
+
         let params = []
         if (this.cgroup) params.push("--cg")
         params.push("--box-id=" + this.boxId)
@@ -430,7 +431,7 @@ class Isolate extends Sandbox {
     }
 
     getExitStatus() {
-        list = this.getStatusList()
+        let list = this.getStatusList()
         if (list.indexOf("XX") !== -1)
             return IsolateConst.EXIT_SANDBOX_ERROR
         if (list.indexOf("FO") !== -1)

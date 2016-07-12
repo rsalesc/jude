@@ -42,10 +42,26 @@ function logInspect(p){
     return console.log(inspect(p))
 }
 
+function fillUpTo(arr, n=0){
+    if(n == 0) return []
+    if(!(arr instanceof Array) || arr.length == 0)
+        arr = [undefined]
+
+    while(arr.length > n) arr.pop()
+    while(arr.length < n){
+        let el = arr.pop()
+        arr.push(el)
+        arr.push(el)
+    }
+
+    return arr
+}
+
 module.exports = {
     exists,
     fileExists,
     dirExists,
     inspect,
-    logInspect
+    logInspect,
+    fillUpTo
 }

@@ -13,6 +13,10 @@ var JudgeConfig = {
     EPS : 1e-7,
     MAX_SANDBOXES : 10,
     MAX_SIMUL_TESTS: 3,
+    COMPILATION_TL: 25,
+    CHECKING_TL: 10,
+    CHECKING_ML: 512,
+    CHECKING_WTL: 20,
     TEMP_DIR : "/tmp",
     ISOLATE_PATH : path.resolve("isolate/isolate")
 }
