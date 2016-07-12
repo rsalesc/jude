@@ -228,7 +228,11 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
             let evaluationResult = {}
             let checkingResult = {}
             let exitWith = function (verdict) {
-                iso.cleanup()
+                try {
+                    iso.cleanup()
+                } catch(e){
+                    logger.warn("isolate box could not be cleared properly")
+                }
                 resolve(verdict)
                 return
             }
@@ -238,7 +242,7 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
                 iso.init()
 
                 evaluationResult = Evaluation[lang](iso, store, SOURCE_EXEC_PATH,
-                    testcase.in, timelimit, timelimit * 4, memorylimit)
+                    testcase.in, timelimit, timelimit * JudgeConfig.WT_MULTIPLIER, memorylimit)
                 evaluationResult.log = iso.getLog()
 
                 // sandbox crashed

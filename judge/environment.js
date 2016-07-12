@@ -17,6 +17,7 @@ var JudgeConfig = {
     CHECKING_TL: 10,
     CHECKING_ML: 512,
     CHECKING_WTL: 20,
+    WT_MULTIPLIER: 4,
     TEMP_DIR : "/tmp",
     ISOLATE_PATH : path.resolve("isolate/isolate")
 }
@@ -30,6 +31,7 @@ class JudgeEnvironment{
 
     getNextBoxId(){
         let res = this.nextSandboxId++
+        this.nextSandboxId %= JudgeConfig.MAX_SANDBOXES
         return res % JudgeConfig.MAX_SANDBOXES
     }
 }
