@@ -16,6 +16,7 @@ var utils = require('./utils')
 
 var Storage = require('./storage').MemoryStorage
 var JudgeConfig = jenv.JudgeConfig
+var spawnDetachedPromise = require('child-process-promise').spawn
 
 /*
 *   spawnDetached async version (promisified)
@@ -45,6 +46,15 @@ function spawnDetachedAsync(command, args=[], options={}){
 
         proc.on("error", reject)
     })
+}
+
+// debug
+spawnDetachedAsync = function(command, args=[], options={}){
+    if(options.hasOwnProperty("stdio")) {
+        options.capture = options.stdio
+        delete options.stdio
+    }
+    return spawnDetachedPromise(command, args, options)
 }
 
 /*
@@ -257,6 +267,7 @@ const IsolateConst = {
     EXIT_TIMEOUT_WALL: "wall timeout",
     EXIT_FILE_ACCESS: "file access",
     EXIT_SYSCALL: "syscall",
+    EXIT_OUTPUT_LIMIT: "output limit exceeded",
     EXIT_NONZERO_RETURN: "nonzero return"
 }
 
@@ -264,9 +275,12 @@ class Isolate extends Sandbox {
     constructor(env, store, log={}) {
         super(env, store)
         this.log = log
+        this.path = null
     }
 
     getRootPath() {
+        if(!this.path)
+            throw "sandbox was not init'd"
         return this.path
     }
 
@@ -295,6 +309,7 @@ class Isolate extends Sandbox {
         this.wallclockLimit = null
         this.extraTimelimit = null
         this.verbosity = 0
+        this.bufferize = null
 
         this.cgMemorySize = null
         this.cgTiming = false
@@ -307,7 +322,7 @@ class Isolate extends Sandbox {
 
         this.outerDir = await(fs.mkdtempAsync(path.join(JudgeConfig.TEMP_DIR, "iso-")))
         this.innerDir = "/tmp"
-        this.path = this.outerDir + this.innerDir // have to use sum
+        this.path = this.outerDir + this.innerDir // have to use sum, absoluteness of tmp will mess things up
 
         await(fs.mkdirAsync(this.path)) // defaults to 0o777
         await(fs.chmod(this.path, 0o777))
@@ -328,10 +343,19 @@ class Isolate extends Sandbox {
         }
     }
 
+    getBoxFilePath(p){
+        if(this.bufferize)
+            return this.resolvePath(p)
+        else
+            return this.getChdirPath(p)
+    }
+
     getRunArgs() {
         let res = [`--box-id=${this.boxId}`]
         // remember to add meta parameter (for logging) before execing
 
+        if(this.bufferize)
+            res.push(`--bufferize=${this.bufferize}`)
         if (this.chdir)
             res.push(`--chdir=${this.chdir}`)
         for (let dir of this.dirs) {
@@ -354,9 +378,9 @@ class Isolate extends Sandbox {
         if (this.stdin)
             res.push(`--stdin=${this.getChdirPath(this.stdin)}`)
         if (this.stdout)
-            res.push(`--stdout=${this.getChdirPath(this.stdout)}`)
+            res.push(`--stdout=${this.getBoxFilePath(this.stdout)}`)
         if (this.stderr)
-            res.push(`--stderr=${this.getChdirPath(this.stderr)}`)
+            res.push(`--stderr=${this.getBoxFilePath(this.stderr)}`)
         if (this.stackSize)
             res.push(`--stack=${this.stackSize}`)
         if (this.memorySize)
@@ -461,6 +485,13 @@ class Isolate extends Sandbox {
     }
 
     getExitStatus() {
+        let checkWall = function(message){
+            for(let msg of message)
+                if(msg.indexOf("wall") !== -1)
+                    return true
+            return false
+        }
+
         let list = this.getStatusList()
         if (list.indexOf("XX") !== -1)
             return IsolateConst.EXIT_SANDBOX_ERROR
@@ -469,19 +500,36 @@ class Isolate extends Sandbox {
         if (list.indexOf("FA") !== -1)
             return IsolateConst.EXIT_FILE_ACCESS
         if (list.indexOf("TO") !== -1) {
-            if (this.log.hasOwnProperty("message") && this.log["message"].indexOf("wall") !== -1)
+            if (this.log.hasOwnProperty("message") && checkWall(this.log.message))
                 return IsolateConst.EXIT_TIMEOUT_WALL
             else
                 return IsolateConst.EXIT_TIMEOUT
         }
         if (list.indexOf("SG") !== -1)
             return IsolateConst.EXIT_SIGNAL
+        if(list.indexOf("OL") !== -1)
+            return IsolateConst.EXIT_OUTPUT_LIMIT
+
         if (list.indexOf("RE") !== -1)
             return IsolateConst.NONZERO_RETURN
         return IsolateConst.EXIT_OK
     }
 
+    executeBufferized(...args){
+        let oldVal = this.bufferize
+        try {
+            this.bufferize = JudgeConfig.OUTPUT_LIMIT
+            let res = this.execute(...args)
+            this.bufferize = oldVal
+            return res
+        } catch(e){
+            this.bufferize = oldVal
+            throw e
+        }
+    }
+
     execute(command, capture=['ignore'], promise=false){
+
         this.execs++
         this.log = null
         let args = this.getRunArgs()

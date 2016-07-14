@@ -25,7 +25,7 @@ function evaluate(iso, store, command, input, output="output", error="error"){
     iso.stdout = output
     iso.stderr = error
 
-    let res = iso.execute(command)
+    let res = iso.executeBufferized(command, ['stdout', 'stderr']) // remove stdout and stderr, only for dbg
     //iso.removeFile(iso.stdout)
     //iso.removeFile(iso.stderr)
 
@@ -45,6 +45,7 @@ let Evaluation = {
         let res = evaluate(iso, store, ["./eval"], input, output, error)
         iso.removeFile("eval")
         iso.removeFile(input)
+
         return res
     }
 }
@@ -156,6 +157,7 @@ const VerdictConst = {
     VERDICT_MLE: "memory limit exceeded",
     VERDICT_TLE: "time limit exceeded",
     VERDICT_WTE: "walltime limit exceeded",
+    VERDICT_OLE: "output limit exceeded",
 
     VERDICT_CE: "compilation error",
     VERDICT_CTE: "compilation timed out",
@@ -282,7 +284,9 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
                     if (exitStatus == IsolateConst.EXIT_TIMEOUT)
                         return exitWith(new Verdict(0, "VERDICT_TLE"))
                     else if (exitStatus == IsolateConst.EXIT_TIMEOUT_WALL)
-                        return exitWith(new Verdict(0, "VERDICT_WTE"))
+                        return exitWith(new Verdict(0, "VERDICT_WTE", -1, {time: execTime}))
+                    else if (exitStatus == IsolateConst.EXIT_OUTPUT_LIMIT)
+                        return exitWith(new Verdict(0, "VERDICT_OLE", -1, {time: execTime}))
 
                     // TODO: add sandbox information about RTE
                     return exitWith(new Verdict(0, "VERDICT_RTE", -1, {text: `exited with code ${exitCode}`,
@@ -457,7 +461,7 @@ if(!module.parent){
         let fake_mle_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){vector<int> v(1000000000);}"
         let slow2_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){int acc = 0; for(int i = 0; i < 1000000000; i++) acc += i; cout << acc << endl;}"
         //console.log(code)
-        utils.logInspect(testTask(env, task, slow2_code, "CPP"))
+        utils.logInspect(testTask(env, task, slow_code, "CPP"))
 
         // var sleep = require('sleep').sleep
         //
