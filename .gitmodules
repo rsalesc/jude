@@ -1,3 +1,0 @@
-[submodule "judge/isolate"]
-	path = judge/isolate
-	url = https://github.com/ioi/isolate
