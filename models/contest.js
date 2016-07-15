@@ -1,0 +1,22 @@
+/**
+ * Created by rsalesc on 14/07/16.
+ */
+var mongoose = require('mongoose')
+var Schema = mongoose.Schema
+var TeamSchema = require('team')().schema
+
+module.exports = () => {
+    var ContestSchema = new Schema({
+        _creator: {type: Schema.Types.ObjectId, ref: 'User'},
+        name: {type: String, minlength: 4, maxlength: 64},
+        start_time: Date,
+        end_time: Date,
+        registration_end: Date,
+        problems: [{type: Schema.Types.ObjectId, ref: 'Problem'}],
+        submissions: [{type: Schema.Types.ObjectId, ref: 'Submission'}],
+        collabs: [{type: Schema.Types.ObjectId, ref: 'User'}],
+        registered: [TeamSchema]
+    })
+
+    return mongoose.model('Contest', ContestSchema)
+}
