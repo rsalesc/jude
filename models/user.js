@@ -2,7 +2,7 @@
  * Created by rsalesc on 14/07/16.
  */
 var mongoose = require('mongoose')
-var Schema = require('mongoose').Schema
+var Schema = mongoose.Schema
 
 module.exports = () => {
     var UserSchema = new Schema({
@@ -34,5 +34,5 @@ module.exports = () => {
         registeredAt: [{type: Schema.Types.ObjectId, ref: 'Contest'}],
     })
 
-    return mongoose.model('User', UserSchema)
+    return db.model('User', UserSchema)
 }

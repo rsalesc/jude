@@ -3,7 +3,9 @@
  */
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
-var TeamSchema = require('team')().schema
+var TeamSchema = require('./team')().schema
+var Submission = require('./submission')()
+var Problem = require('./problem')()
 
 module.exports = () => {
     var ContestSchema = new Schema({
@@ -18,5 +20,5 @@ module.exports = () => {
         registered: [TeamSchema]
     })
 
-    return mongoose.model('Contest', ContestSchema)
+    return db.model('Contest', ContestSchema)
 }

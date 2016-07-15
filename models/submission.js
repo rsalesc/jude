@@ -16,5 +16,5 @@ module.exports = () => {
         verdict: [Schema.Types.Mixed]
     })
 
-    return mongoose.model('Submission', SubmissionSchema)
+    return db.model('Submission', SubmissionSchema)
 }

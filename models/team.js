@@ -2,7 +2,7 @@
  * Created by rsalesc on 14/07/16.
  */
 var mongoose = require('mongoose')
-var Schema = require('mongoose').Schema
+var Schema = mongoose.Schema
 
 module.exports = () => {
     var TeamSchema = new Schema({
@@ -14,5 +14,5 @@ module.exports = () => {
         members: [{type: Schema.Types.ObjectId, ref: 'User'}]
     })
 
-    return mongoose.model('Team', TeamSchema)
+    return db.model('Team', TeamSchema)
 }

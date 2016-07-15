@@ -12,7 +12,7 @@ const MAX_SANDBOXES = 10
 var JudgeConfig = {
     EPS : 1e-7,
     MAX_SANDBOXES : 10,
-    MAX_SIMUL_TESTS: 4,
+    MAX_SIMUL_TESTS: 2,
     COMPILATION_TL: 25,
     CHECKING_TL: 10,
     CHECKING_ML: 512,
@@ -20,7 +20,7 @@ var JudgeConfig = {
     WT_MULTIPLIER: 4,
     OUTPUT_LIMIT: (1<<24),
     TEMP_DIR : "/tmp",
-    ISOLATE_PATH : path.resolve("isolate/isolate")
+    ISOLATE_PATH : path.resolve("/usr/local/bin/isolate")
 }
 
 class JudgeEnvironment{

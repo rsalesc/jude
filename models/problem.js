@@ -15,5 +15,5 @@ module.exports = () => {
         memorylimit: Number
     })
 
-    return mongoose.model('Problem', ProblemSchema)
+    return db.model('Problem', ProblemSchema)
 }
