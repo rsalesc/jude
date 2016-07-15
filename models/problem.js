@@ -12,7 +12,8 @@ module.exports = () => {
         hash: String,
         name: String,
         timelimit: Number,
-        memorylimit: Number
+        memorylimit: Number,
+        attrs: Schema.Types.Mixed
     })
 
     return db.model('Problem', ProblemSchema)

@@ -78,6 +78,7 @@ router.get('/:id/submissions', (req, res, next) => {
  *                  NULL if the contest does not exist
  */
 router.get('/:id/problems', (req, res, next) => {
+    // TODO: make problem object compact here
     Contest.findOne({_id: req.params.id}).populate('problems')
         .select('problems').lean().exec((err, contest) => {
 

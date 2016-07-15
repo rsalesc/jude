@@ -11,7 +11,9 @@ module.exports = () => {
             minlength: 4,
             maxlength: 16,
             match: /[a-zA-Z][a-zA-Z0-9_\.]*/,
-            required: true
+            required: true,
+            index: true,
+            unique: true
         },
         name: {
             type: String,
@@ -34,5 +36,7 @@ module.exports = () => {
         registeredAt: [{type: Schema.Types.ObjectId, ref: 'Contest'}],
     })
 
-    return db.model('User', UserSchema)
+    return db.models.User ?
+        db.model('User') :
+        db.model('User', UserSchema)
 }

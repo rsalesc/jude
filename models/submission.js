@@ -16,5 +16,7 @@ module.exports = () => {
         verdict: [Schema.Types.Mixed]
     })
 
-    return db.model('Submission', SubmissionSchema)
+    return db.models.Submission ?
+        db.model('Submission') :
+        db.model('Submission', SubmissionSchema)
 }

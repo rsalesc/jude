@@ -20,5 +20,7 @@ module.exports = () => {
         registered: [TeamSchema]
     })
 
-    return db.model('Contest', ContestSchema)
+    return db.models.Contest ?
+        db.model('Contest') :
+        db.model('Contest', ContestSchema)
 }
