@@ -14,5 +14,7 @@ module.exports = () => {
         members: [{type: Schema.Types.ObjectId, ref: 'User'}]
     })
 
-    return db.model('Team', TeamSchema)
+    return db.models.Team ?
+        db.model('Team') :
+        db.model('Team', TeamSchema)
 }

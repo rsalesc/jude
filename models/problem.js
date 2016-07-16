@@ -16,5 +16,7 @@ module.exports = () => {
         attrs: Schema.Types.Mixed
     })
 
-    return db.model('Problem', ProblemSchema)
+    return db.models.Problem ?
+        db.model('Problem') :
+        db.model('Problem', ProblemSchema)
 }

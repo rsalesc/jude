@@ -4,13 +4,14 @@
 var express = require('express');
 var router = express.Router();
 var Contest = require('../../models/contest')()
+var SubmissionNoCode = require('./submission').SubmissionNoCode
 
 function handleContestError(err, req, res, next){
     res.json({error: err})
 }
 
 const ContestSelection =
-    'name start_time end_time _id registration_end'
+    'name start_time end_time _id registration_end collabs _creator'
 
 /**
  * @api {get} /api/contest
@@ -58,7 +59,7 @@ router.get('/:id', (req, res, next) => {
  *                 NULL if the contest was not found
  */
 router.get('/:id/submissions', (req, res, next) => {
-    Contest.findOne({_id: req.params.id}).populate('submissions')
+    Contest.findOne({_id: req.params.id}).populate('submissions', SubmissionNoCode)
         .select('submissions').lean().exec((err, contest) => {
 
         if(err) return handleContestError(err, req, res)
