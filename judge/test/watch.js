@@ -3,7 +3,7 @@ const await = require('asyncawait/await');
 const logger = require('./../logger')
 const environment = require('./../environment');
 const db = require('../../db')
-const weed = require('node-seaweedfs')
+const weed = require('jude-seaweedfs')
 const grader = require('./../grader')
 
 const JudgeEnvironment = environment.JudgeEnvironment;
@@ -51,7 +51,7 @@ function watch(env){
 
         if(!env.cache.exists(req.id)){
             let writeStream = env.cache.addFromStream(req.id, processMessage)
-            env.seaweed.read(req.fid, writeStream)
+            env.seaweed.read(req.fid, writeStream);
         } else async(processMessage)()
     })
 }
