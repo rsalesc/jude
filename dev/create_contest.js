@@ -1,5 +1,5 @@
 require('../db')
-var Contest = require('../models/contest')()
+var Contest = require('../models/Contest')()
 
 new Contest({
     name: "Roberto test",

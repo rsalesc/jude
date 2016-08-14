@@ -2,7 +2,7 @@
  * Created by rsalesc on 15/07/16.
  */
 require('../db')
-var User = require('../models/user')()
+var User = require('../models/User')()
 
 new User({
     handle: "rsalesc",
