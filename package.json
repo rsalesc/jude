@@ -3,28 +3,38 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "sudo node index.js"
   },
   "dependencies": {
     "asyncawait": "^1.0.3",
     "body-parser": "~1.13.2",
     "child-process-promise": "^2.0.3",
+    "concat-stream": "^1.5.1",
     "cookie-parser": "~1.3.5",
     "debug": "~2.2.0",
     "dlutil": "0.0.2",
     "express": "~4.13.1",
+    "express-session": "^1.14.0",
     "file-exists": "^1.0.0",
+    "fs-extra": "^0.30.0",
     "glob": "^7.0.3",
     "jade": "~1.11.0",
+    "keystone": "^0.3.22",
+    "mongodb-queue": "^2.1.0",
     "mongoose": "^4.5.4",
     "morgan": "~1.6.1",
+    "multer": "0.1.8",
+    "node-seaweedfs": "^1.1.0",
+    "node-wildcard": "0.0.9",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^4.0.0",
     "serve-favicon": "~2.3.0",
     "sleep": "^3.0.1",
     "spawn-rx": "^0.2.0",
+    "tmp": "0.0.28",
     "winston": "^2.2.0",
-    "yamljs": "^0.2.7"
+    "yamljs": "^0.2.7",
+    "yauzl": "^2.6.0"
   }
 }
