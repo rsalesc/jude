@@ -3,6 +3,7 @@
  */
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
+var passportLocal = require('passport-local-mongoose')
 
 module.exports = () => {
     var UserSchema = new Schema({
@@ -20,13 +21,6 @@ module.exports = () => {
             maxlength: 64,
             required: true
         },
-        password: {
-            type: String,
-            minlength: 6,
-            maxlength: 32,
-            required: true,
-            // TODO: put password regex here
-        },
         email: {
             type: String,
             maxlength: 64,
@@ -35,6 +29,8 @@ module.exports = () => {
         },
         registeredAt: [{type: Schema.Types.ObjectId, ref: 'Contest'}],
     })
+
+    UserSchema.plugin(passportLocal, {usernameField: "handle"}) // populate fields?
 
     return db.models.User ?
         db.model('User') :
