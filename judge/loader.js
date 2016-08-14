@@ -8,33 +8,31 @@ var task = require('./task')
 var YAML = require('yamljs')
 var logger = require('./logger')
 var utils = require('./utils')
-// var glob = require('glob-fs')({gitignore:true})
-var glob = require("glob")
 
 const JUDE_FN = "jude.yml"
 
-/*
+/**
 *   Base class for all Loaders
 *   Make sure it runs inside an aysnc or blockable environment
 *   @abstract
  */
 class Loader {
-    constructor(packagePath){
+    constructor(store){
         if(new.target == Loader)
             throw "Cannot instantiate abstract class " + this.constructor.name
-        this.path = packagePath
+        this.store = store
     }
 
-    /*
+    /**
     *   Check if a package can be loaded by this Loader
-    *   @param {string} package directory
+    *   @param {Storage} Storage object
     *   @returns {boolean} if package can be loaded or not
      */
-    static isLoadable(packagePath){
+    static isLoadable(store){
         throw "Auto-detection not implemented in " + this.name
     }
 
-    /*
+    /**
     *   Load package and return a Task
     *   @returns {Task} resulting task or null if some error occurs
      */
@@ -44,35 +42,31 @@ class Loader {
 }
 
 class JudeLoader extends Loader {
-    static isLoadable(packagePath){
-        return utils.fileExists(path.join(packagePath, JUDE_FN))
+    static isLoadable(store){
+        return store.isReadable(JUDE_FN)
     }
 
-    /*
+    /**
     *   Get paths for the tests of dataset
     *   @param {string} dataset directory
     *   @returns {Object[]} tests found
      */
     getTestcases(datasetPath){
-        let testsPath = path.join(this.path, "tests", datasetPath)
-        if(!utils.dirExists(testsPath)){
-            logger.error("[%s] dataset path %s is invalid", JudeLoader.name, datasetPath)
-            throw "Package has missing datasets"
-        }
+        let testsPath = path.join("tests", datasetPath)
 
-        let inputs = glob.sync(path.join(testsPath, "/*.in"))
+        let inputs = this.store.glob(path.join(testsPath, "/*.in"))
         let res = []
 
         for(let input of inputs){
             let output = input.replace(/\.in$/, ".out")
-            if(!utils.fileExists(output)){
+            if(!this.store.isReadable(output)){
                 logger.error("[%s] test %s should exist", JudeLoader.name, output)
                 throw "Missing output file in dataset"
             }
 
             res.push( {
-                in: path.relative(this.path, path.resolve(input)),
-                out: path.relative(this.path, path.resolve(output))
+                in: input,
+                out: output
             })
         }
 
@@ -83,14 +77,14 @@ class JudeLoader extends Loader {
         return res
     }
 
-    /*
+    /**
     * Returns parsed datasets given their properties in datasets
     * @param {Object[]} datasets to be parsed in Jude format
     * @throws if data is inconsistent
      */
     parseDatasets(datasets){
         if(!datasets || datasets.length == 0){
-            logger.error("[%s] package %s has no dataset", JudeLoader.name, this.path)
+            logger.error("[%s] package has no dataset", JudeLoader.name)
             throw "Package has no dataset"
         }
 
@@ -120,7 +114,7 @@ class JudeLoader extends Loader {
         return res
     }
 
-    /*
+    /**
     *   Get a {Task} object correspondent to the loaded Jude file
     *   @param {string} loaded Jude file
     *   @returns {Task} task loaded or null if some error occurred
@@ -132,7 +126,6 @@ class JudeLoader extends Loader {
         let ratio = lims["timeApproximation"] || 500
 
         var attr = {
-            wd: path.resolve(this.path),
             weight: cfg["weight"] || 1,
             datasets: this.parseDatasets(cfg["datasets"]),
             scoring: null,
@@ -149,7 +142,7 @@ class JudeLoader extends Loader {
             }
         }
 
-        if(!utils.fileExists(path.join(this.path, attr.checker.path))){
+        if(!this.store.isReadable(attr.checker.path)){
             logger.error("[%s] checker could not be found in %s", JudeLoader.name, attr.checker.path)
             return null
         }
@@ -158,24 +151,23 @@ class JudeLoader extends Loader {
     }
 
     load(){
-        this.yaml = path.join(this.path, JUDE_FN)
-        if(!this.constructor.isLoadable(this.path)) {
-            logger.error('[%s] package is not loadable or does not exist: %s', JudeLoader.name, this.path)
+        if(!this.constructor.isLoadable(this.store)) {
+            logger.error('[%s] package is not loadable or does not exist', JudeLoader.name)
             return null
         }
 
         try {
-            var cfg = YAML.load(this.yaml)
+            var cfg = YAML.parse(this.store.getFileString(JUDE_FN))
             return this.getTask(cfg)
         }catch(e){
-            logger.error('[%s] package %s could not be read or parsed', JudeLoader.name, this.path)
+            logger.error('[%s] package could not be read or parsed', JudeLoader.name)
             logger.debug(e)
             return null
         }
     }
 }
 
-/*
+/**
 * Contains the loaders available for use
 * They can be accessed by their names
  */
@@ -184,13 +176,13 @@ const LOADERS = new Map([
     [JudeLoader.name, JudeLoader]
 ])
 
-/*
+/**
 *   Returns a loader capable of loading package informed
-*   @param {string} package directory
+*   @param {Storage} storage object
 */
-function autoDetect(packagePath){
+function autoDetect(store){
     for(let [name, loader] of LOADERS){
-        if(loader.isLoadable(packagePath))
+        if(loader.isLoadable(store))
             return loader
     }
     return null
@@ -198,8 +190,7 @@ function autoDetect(packagePath){
 
 // testing
 if(!module.parent) {
-    loader = new JudeLoader("test_contest/")
-    utils.logInspect(loader.load())
+
 }
 
 // exports names manually since it's still not supported

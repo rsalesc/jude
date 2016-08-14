@@ -5,13 +5,11 @@
 var async = require('asyncawait/async')
 var await = require('asyncawait/await')
 
+const path = require('path')
 var Promise = require('bluebird')
 var commonfs = require('fs')
 var fs = Promise.promisifyAll({stat: commonfs.stat})
 var util = require('util')
-var JudgeConfig = require('./environment').JudgeConfig
-
-const EPS = JudgeConfig.EPS
 
 function exists(p){
     try{
@@ -63,11 +61,30 @@ function fillUpTo(arr, n=0){
     return arr
 }
 
+function destroy(obj) {
+    for(var prop in obj){
+        var property = obj[prop];
+        if(property != null && typeof(property) == 'object') {
+            destroy(property);
+        }
+        else {
+            obj[prop] = null;
+        }
+    }
+}
+
+function normalizePath(p){
+    p = path.normalize(p)
+    if(p[-1] == "/") return p.slice(0, -1)
+    return p
+}
+
 module.exports = {
     exists,
     fileExists,
     dirExists,
     inspect,
     logInspect,
-    fillUpTo
+    fillUpTo,
+    destroy
 }

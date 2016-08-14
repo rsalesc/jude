@@ -12,12 +12,14 @@ var sandbox = require('./sandbox')
 var sleep = require('sleep').sleep
 var environment = require('./environment')
 
+const loader = require('./loader')
+
 var Isolate = sandbox.Isolate
 var IsolateConst = sandbox.IsolateConst
 var Storage = require('./storage').MemoryStorage
 var JudgeEnvironment = environment.JudgeEnvironment
 var JudgeConfig = environment.JudgeConfig
-var JudeLoader = require('./loader').JudeLoader
+var JudeLoader = loader.JudeLoader
 
 function evaluate(iso, store, command, input, output="output", error="error"){
     if(input)
@@ -202,7 +204,7 @@ const SOURCE_EXEC_PATH = "_/sol_exec"
 const CHECKER_PATH = "_/checker"
 const CHECKER_EXEC_PATH = "_/checker_exec"
 
-/*
+/**
 *   Compile the solution
 *   @param {JudgeEnvironment}
 *   @param {Storage}
@@ -211,29 +213,33 @@ const CHECKER_EXEC_PATH = "_/checker_exec"
 *   @param {string} path of the resulting executable file in the storage
 *   @retuns {Object} compilation output/verdict (Isolate.execute() result + Isolate.getLog() result)
  */
-function compilationStep(env, store, lang, sol=SOURCE_PATH, solExec=SOURCE_EXEC_PATH){
-    // init sandbox used during the compilation process
-    // compiles
-    let iso = new Isolate(env, store)
-    try {
-        iso.init()
-        let result = Compilation[lang](iso, store, sol, solExec)
+function compilationStepAsync(env, store, lang, sol=SOURCE_PATH, solExec=SOURCE_EXEC_PATH){
+    return new Promise((resolve, reject) => {
+        async(() => {
+            let iso = new Isolate(env, store)
+            try {
+                iso.init()
+                let result = Compilation[lang](iso, store, sol, solExec)
 
-        // get log
-        result.log = iso.getLog()
+                // get log
+                result.log = iso.getLog()
 
-        // cleanup
-        iso.cleanup()
+                // cleanup
+                try {
+                    iso.cleanup()
+                }catch(e){}
 
-        return result
-    }catch(e){
-        logger.error("compilation step failed - %s", e.toString())
-        try{
-            iso.cleanup()
-        }catch(e){}
+                resolve(result)
+            }catch(e){
+                logger.error("compilation step failed - %s", e.toString())
+                try{
+                    iso.cleanup()
+                }catch(e){}
 
-        return {code: 2}
-    }
+                resolve({code: 2})
+            }
+        })()
+    })
 }
 
 /*
@@ -335,7 +341,7 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
     })
 }
 
-/*
+/**
 *   Test to-be-executed solution against testcases of the given dataset
 *   Files expected to be created beforehand are: _/checker_exec, _/sol_exec
 *   @param {JudgeEnvironment}
@@ -375,27 +381,28 @@ function testDataset(env, store, task, lang, dataset){
     return new Verdict(1, "VERDICT_AC", dataset.testcases.length, {time: execTime})
 }
 
-/*
+/**
 *   Test code against testcases of the given task, in the given language.
 *   Created files in storage are: _/checker_exec, _/sol_exec
 *
 *   @param {JudgeEnvironment}
 *   @param {Task}
+*   @param {Storage}
 *   @param {string} the submitted code
 *   @param {string} language of the submitted code
 *   @returns {Verdict} evalution output/verdict
  */
-function testTask(env, task, code, lang){
-    let store = new Storage()
-
-    // load task into the storage
-    store.load(task.getDirectory())
+function testTask(env, task, store, code, lang){
 
     // create solution source in the storage
     store.createFileFromContent(SOURCE_PATH, code)
 
     // compile solution
-    let compilationResult = compilationStep(env, store, lang)
+    let [compilationResult, checkerCompilationResult]
+        =   await([compilationStepAsync(env, store, lang),
+            compilationStepAsync(env, store, task.getCheckerLanguage(),
+                task.getChecker(), CHECKER_EXEC_PATH)])
+
 
     // sandbox crashed
     if(!Isolate.translateBoxExitCode(compilationResult.code))
@@ -412,10 +419,6 @@ function testTask(env, task, code, lang){
 
         return utils.fillUpTo([new Verdict(0, "VERDICT_CE", -1, output)], task.getDatasetsCount())
     }
-
-    // compile checker
-    let checkerCompilationResult =
-        compilationStep(env, store, task.getCheckerLanguage(), task.getChecker(), CHECKER_EXEC_PATH)
 
     // sandbox crashed
     if(!Isolate.translateBoxExitCode(checkerCompilationResult.code))
@@ -449,19 +452,43 @@ function testTask(env, task, code, lang){
     return utils.fillUpTo(verdicts, task.getDatasetsCount())
 }
 
+/**
+ * Test solution against package test cases
+ * @param env
+ * @param pack
+ * @param code
+ * @param lang
+ */
+function testPackage(env, pack, code, lang){
+    let store = new Storage()
+    store.loadZip(pack)
+
+    let loade = loader.autoDetect(store)
+    if(loade === null)
+        throw "Package is not loadable"
+
+    let task = new loade(store).load()
+
+    return testTask(env, task, store, code, lang)
+}
+
 // testing
 if(!module.parent){
     async(function(){
         let env = new JudgeEnvironment()
-        let loader = new JudeLoader("test_contest/")
+        let store = new Storage()
+        store.loadZip("test/test_contest.zip")
+
+        let loader = new JudeLoader(store)
         let task = loader.load()
+
         let code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){int x, y; cin >> x >> y; cout << x+y << ' ' << x*y << endl;}"
         let slow_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){for(int i = 0; i < 1000000/2; i++) cerr << 129312 << '\\n'; int x, y; cin >> x >> y; cout << x+y << ' ' << x*y << endl;}"
         let tle_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){for(int i = 0; i < 1000000000000LL; i++);}"
         let fake_mle_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){vector<int> v(1000000000);}"
         let slow2_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){int acc = 0; for(int i = 0; i < 1000000000; i++) acc += i; cout << acc << endl;}"
         //console.log(code)
-        utils.logInspect(testTask(env, task, slow_code, "CPP"))
+        utils.logInspect(testTask(env, task, store, code, "CPP"))
 
         // var sleep = require('sleep').sleep
         //
@@ -500,3 +527,5 @@ if(!module.parent){
         // iso.cleanup()
     })()
 }
+
+module.exports = {testTask, testPackage}
