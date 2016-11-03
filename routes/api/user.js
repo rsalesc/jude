@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router()
-var User = require('../../models/user')()
-var Submission = require('../../models/submission')()
+var User = require('../../models/User')()
+var Submission = require('../../models/Submission')()
 var SubmissionNoCode = require('./submission').SubmissionNoCode
 
 var UserSelection = '_id handle name'
@@ -16,7 +16,7 @@ function handleUserError(err, req, res, next){
  * @apiGroup User
  */
 router.get('/', (req, res, next) => {
-    User.find().selection(UserSelection).lean().exec((err, users) => {
+    User.find().select(UserSelection).lean().exec((err, users) => {
         if(err) return handleUserError(err, req, res)
         res.json({result: users})
     })
@@ -32,13 +32,14 @@ router.get('/', (req, res, next) => {
  * @apiGroup User
  */
 router.get('/:type/:id', (req, res, next) => {
+
     let types = ["handle", "id"]
     if(types.indexOf(req.params.type) === -1) return next()
 
     let match = req.params.type == "id" ? {_id: req.params.id} :
                             {handle: req.params.id}
 
-    User.findOne(match).selection(UserSelection).lean().exec((err, user) => {
+    User.findOne(match).select(UserSelection).lean().exec((err, user) => {
         if(err) return handleUserError(err, req, res)
         res.json({result: user || null})
     })

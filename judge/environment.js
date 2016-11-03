@@ -7,10 +7,11 @@ const fse = require('fs-extra')
 const tmp = require('tmp')
 tmp.setGracefulCleanup();
 
-var storage = require('./storage')
+var path = require('path')
+var storage = require(path.join(__dirname, 'storage'));
 var await = require('asyncawait/await')
 var async = require('asyncawait/async')
-var path = require('path')
+
 var mongodbQueue = require('mongodb-queue')
 
 var JudgeConfig = {
@@ -30,7 +31,7 @@ var JudgeConfig = {
 
 class PackageCacher{
     constructor(){
-        this.path = tmp.dirSync({prefix: "judecache-", unsafeCleanup: true}).name
+        this.path = tmp.dirSync({prefix: "judecache-", unsafeCleanup: true}).name;
         this.has = new Set()
     }
 

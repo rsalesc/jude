@@ -3,11 +3,11 @@
  */
 var express = require('express');
 var router = express.Router();
-var Contest = require('../../models/contest')()
+var Contest = require('../../models/Contest')()
 var SubmissionNoCode = require('./submission').SubmissionNoCode
 
 function handleContestError(err, req, res, next){
-    res.json({error: err})
+    res.status(400).json({error: err})
 }
 
 const ContestSelection =

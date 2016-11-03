@@ -1,0 +1,17 @@
+@mixin change_input_field_color($color) {
+    label,
+    input:focus + label,
+    .prefix.active {
+        color: $color !important;
+    }
+    input:focus,
+    input.valid,
+    input.invalid {
+        border-bottom: 1px solid $color !important;
+        box-shadow: 0 1px 0 0 $color !important;
+    }
+}
+
+.default-form {
+    //@include change_input_field_color(#fff);
+}

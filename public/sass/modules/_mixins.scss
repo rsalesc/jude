@@ -1,0 +1,8 @@
+@mixin center($width, $height) {
+    width: $width * 1em;
+    height: $height * 1em;
+    left: 50%;
+    top: 50%;
+    margin-left: -$width/2 * 1em;
+    margin-top: -$height/2 * 1em;
+}

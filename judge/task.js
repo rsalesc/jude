@@ -2,14 +2,29 @@
  * Created by rsalesc on 14/06/16.
  */
 
-var path = require('path')
+const scoring = require(__dirname + '/scoring');
+const deepcopy = require('deepcopy');
 
 class Task {
     constructor(attr){
-        this.attr = attr
+        this.attr = attr;
     }
 
     // function to check if task is valid
+
+    /**
+     * Get scoring class
+     */
+    getScoringClass(){
+        return scoring[this.attr.scoring];
+    }
+
+    /**
+     * Get scoring
+     */
+    getScoring(){
+        return new (this.getScoringClass())(this);
+    }
 
     /*
     *   Get task directory
@@ -17,14 +32,6 @@ class Task {
      */
     getDirectory(){
         return this.attr.wd
-    }
-
-    /*
-     *   Resolve path according to getDirectory()
-     *   @param {string} path to be resolved
-     */
-    resolvePath(p){
-        return path.join(this.getDirectory(), p)
     }
 
     /*
@@ -62,14 +69,18 @@ class Task {
     }
 
     /*
-    *   Get timelimit (in ms)
+    *   Get timelimit (in secs)
      */
     getTimelimit(){
         try{
-            return this.attr.limits.time
+            return this.attr.limits.time/1000;
         } catch(e){
-            return 1.0
+            return 1.0;
         }
+    }
+
+    getTimelimitMs(){
+        return this.attr.limits.time;
     }
 
     /*
@@ -81,6 +92,29 @@ class Task {
         }catch(e){
             return 256
         }
+    }
+
+    getWeight(){
+        return this.weight || 1;
+    }
+
+    /**
+     * @return {Boolean} if task has a statement specified in package
+     */
+    hasStatement(){
+        return !!this.attr.statement;
+    }
+
+    getStatement(){
+        if(!this.attr.statement) return null;
+        return this.attr.statement;
+    }
+
+    toJSON(){
+        let res = deepcopy(this.attr);
+        for(let dataset of res.datasets)
+            delete dataset.testcases;
+        return res;
     }
 }
 

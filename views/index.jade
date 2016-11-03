@@ -1,5 +1,51 @@
-extends layout
+//
+   Created by rsalesc on 17/08/16.
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    title
+    link(rel='stylesheet', href='/stylesheets/main.css')
+    link(href='http://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
 
-block content
-  h1= title
-  p Welcome to #{title}
+    // Codemirror
+    script(src='/codemirror/lib/codemirror.js')
+    script(src='/codemirror/addon/display/autorefresh.js')
+    script(src='/codemirror/mode/javascript/javascript.js')
+
+    link(rel='stylesheet', href='/codemirror/theme/ambiance.css')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/theme/monokai.css')
+    link(rel='stylesheet', href='/codemirror/lib/codemirror.css')
+
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+
+  body
+    ju-main
+
+    script(src='https://code.jquery.com/jquery-3.1.0.min.js', integrity='sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=', crossorigin='anonymous')
+    script(src='/js/materialize.js')
+    // Components
+    script(src='/js/components.js')
+    script(type='text/javascript').
+      $(document).ready(function () {
+        $('select').material_select();
+        $(".button-collapse").sideNav();
+        $('.modal-trigger').leanModal();
+        $('.modal-trigger').click(function(){
+          $('#submit-problem').material_select();
+        });
+
+        window._cm = CodeMirror.fromTextArea(document.getElementById("submit-code"),{
+          lineNumbers: true,
+          theme: "ambiance",
+          autoRefresh: true,
+          fixedGutter: true
+        });
+
+            //        function refreshCodeMirror(){
+            //          window._cm.refresh();
+            //        }
+            //
+            //        setInterval(refreshCodeMirror, 2000);
+      });
+

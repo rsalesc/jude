@@ -1,0 +1,271 @@
+@import 'materialize/materialize';
+@import 'modules/mixins';
+@import 'components/forms';
+@import 'layouts/login';
+
+.main {
+    padding-left: 60px;
+}
+
+a{
+    i.material-icons{
+        @extend .teal-text, .text-lighten-1;
+
+        &:hover{
+            @extend .text-lighten-2;
+        }
+    }
+}
+
+@media only screen and (max-width : 992px) {
+    .main {
+        padding-left: 0;
+    }
+}
+@media only screen and (min-width: 993px) {
+    .container {
+        width: 75%;
+    }
+}
+
+
+nav{
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+#modal-standings{
+    max-width: 500px;
+    max-height: 300px;
+}
+
+.submission-list, .problems-list{
+    color: #666;
+
+    .problem-index{
+        font-style: normal;
+        font-size: 1.4em;
+    }
+
+    .problem-title{
+        font-size: 0.9em;
+        @media #{$medium-and-down} {
+            font-size: 0.8em;
+        }
+    }
+
+    .submission-time{
+        font-size: 0.85em;
+        color: #888;
+    }
+
+    .submission-line{
+        line-height: 2rem;
+        i{
+            display: block;
+            line-height: 2rem;
+            width: 2rem;
+            float: left;
+            margin-right: 1rem;
+            text-align: center;
+        }
+    }
+
+    .verdict-table td, .verdict-table th{
+        text-align: center;
+        font-size: 0.8em;
+    }
+
+    &.collapsible li.active .collapsible-header{
+        border-left: 3px solid color("teal", "lighten-1");
+    }
+    &.collapsible li.ac-color-head .collapsible-header{
+        @extend .ac-color;
+    }
+
+    &.collapsible li.wa-color-head .collapsible-header{
+        @extend .wa-color;
+    }
+
+    &.collapsible li.pending-color-head .collapsible-header{
+        @extend .pending-color;
+    }
+
+    .right{
+        @extend .hide-on-med-and-down;
+        .right-text {
+            font-size: .8em;
+        }
+    }
+}
+
+.jude-panel{
+    margin:20px;
+}
+
+.btn-small {
+    height: 24px;
+    line-height: 24px;
+    padding: 0 0.5rem;
+    font-size: 0.7em;
+}
+
+@keyframes blink {
+    40% {
+        background-color: rgba(255, 255, 0, 0.0);
+    }
+
+    60% {
+        background-color: rgba(255, 255, 0, 0.2);
+    }
+}
+@-webkit-keyframes blink {
+    40% {
+        background-color: rgba(255, 255, 0, 0.0);
+    }
+
+    60% {
+        background-color: rgba(255, 255, 0, 0.2);
+    }
+}
+
+.pending-color{
+    background-color: rgba(255, 255, 0, 0.2) !important;
+
+    animation: blink 3s linear 0s infinite;
+    -webkit-animation: blink 3s linear 0s infinite;
+}
+
+.ac-color {
+    border-left: 3px solid darkgreen;
+}
+
+.first-ac-color {
+    @extend .ac-color;
+}
+
+.wa-color {
+    border-left: 3px solid red;
+}
+
+#modal-submit{
+    height: 100%;
+    max-height: 75%;
+    form{
+        height: 85%;
+    }
+    .modal-content, .col, .row{
+        height: 100%;
+    }
+
+    .CodeMirror{
+        height: 100%;
+    }
+}
+
+.standings-table{
+    td:first-child, th:first-child{
+        width: 45px;
+        text-align: center;
+    }
+
+    td:first-child{
+        color: #888;
+    }
+
+    .score{
+        @extend .hide-on-med-and-down;
+    }
+
+    .problem-letter{
+        min-width: 40px;
+        max-width: 70px;
+        text-align: center;
+        vertical-align: middle;
+
+        @media #{$medium-and-down} {
+            min-width: 10px;
+            max-width: 50px;
+        }
+    }
+
+    td.problem-letter{
+        font-family: "Arial", sans-serif;
+        font-size: 0.8em;
+        border-left-width: 1px;
+        font-weight: bold;
+    }
+
+    td.team-name{
+        max-width: 46%;
+        min-width: 120px;
+    }
+
+    td.ac-color{
+        color: green;
+        background-color: rgba(139, 195, 74, 0.4) !important;
+    }
+
+    td.wa-color{
+        color: red;
+        background-color: rgba(255, 164, 156, 0.4) !important;
+    }
+
+    p{
+        line-height: 15px;
+        margin: 0;
+    }
+
+    .score-info{
+        color: #666;
+        font-size: 0.75em;
+        font-weight: normal;
+        @extend .hide-on-small-and-down;
+    }
+
+    td.problem-letter .score-info{
+        font-size: 0.85em;
+    }
+
+    .team-description{
+        color: #666;
+        font-size: 0.8em;
+    }
+
+    .first-ac-color{
+        .score-info{
+            color: white;
+        }
+        &.lighter {
+            background-color: darkgreen !important;
+            color: white;
+        }
+    }
+
+}
+
+.side-nav{
+    .side-nav-info{
+        padding-top: 12px;
+        padding-bottom: 12px;
+
+        a{
+            font-size: 0.75em;
+            line-height: 1em;
+            height: auto !important;
+            display: block;
+
+            padding-top: 5px;
+            padding-bottom: 5px;
+
+            span{
+                display: block;
+            }
+
+            .side-nav-info-title{
+                font-weight: bold;
+                font-size: 0.85em;
+            }
+        }
+    }
+}

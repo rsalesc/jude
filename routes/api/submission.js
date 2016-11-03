@@ -3,30 +3,31 @@
  */
 var express = require('express')
 var router = express.Router()
-var Submission = require('../../models/submission')()
+var Submission = require('../../models/Submission')()
 var SubmissionNoCode =
     '_id _creator contest problem language code verdict'
 
 function handleSubmissionError(err, req, res, next){
-    res.json({error: err})
+    res.status(400).json([err])
 }
 
 /**
- * @api {get} /api/submission/
+ * @api {get} /api/submissions/
  * @apiName GetSubmissions
- * @apiGroup Submission
+ * @apiGroup Submissions
  */
 router.get('/', (req, res, next) => {
     Submission.find().select(SubmissionNoCode).lean().exec((err, subs) => {
         if(err) return handleSubmissionError(err, req, res)
-        return res.json({result: subs})
+        return res.json(subs)
     })
 })
 
 /**
- * @api {get} /api/submission/:id
+ * @api {get} /api/submissions
+ * /:id
  * @apiName GetSubmission
- * @apiGroup Submission
+ * @apiGroup Submissions
  */
 router.get('/:id', (req, res, next) => {
     Submission.findOne({_id: req.params.id}).lean().exec((err, sub) => {

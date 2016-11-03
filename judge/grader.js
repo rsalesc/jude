@@ -6,14 +6,17 @@ var Promise =  require('bluebird')
 var async = require('asyncawait/async')
 var await = require('asyncawait/await')
 
-var utils = require('./utils')
-var logger = require('./logger')
-var sandbox = require('./sandbox')
-var sleep = require('sleep').sleep
-var environment = require('./environment')
+const path = require('path');
+var verdict = require(path.join(__dirname, 'verdict'));
+var utils = require(path.join(__dirname, 'utils'));
+var logger = require(path.join(__dirname, 'logger'));
+var sandbox = require(path.join(__dirname, 'sandbox'));
+var environment = require(path.join(__dirname, 'environment'));
 
-const loader = require('./loader')
+const loader = require(path.join(__dirname, 'loader'));
 
+var Verdict = verdict.Verdict;
+var VerdictConst = verdict.VerdictConst;
 var Isolate = sandbox.Isolate
 var IsolateConst = sandbox.IsolateConst
 var Storage = require('./storage').MemoryStorage
@@ -150,54 +153,6 @@ let Compilation = {
     }
 }
 
-const VerdictConst = {
-    VERDICT_INQ: "in queue",
-    VERDICT_SKIP: "skipped",
-
-    VERDICT_WA: "wrong answer",
-    VERDICT_RTE: "runtime error",
-    VERDICT_MLE: "memory limit exceeded",
-    VERDICT_TLE: "time limit exceeded",
-    VERDICT_WTE: "walltime limit exceeded",
-    VERDICT_OLE: "output limit exceeded",
-
-    VERDICT_CE: "compilation error",
-    VERDICT_CTE: "compilation timed out",
-
-    VERDICT_FAIL: "checker failed",
-    VERDICT_CHTE: "checker timed out",
-
-    VERDICT_JE: "judge crashed",
-    VERDICT_UE: "unknown error",
-
-    VERDICT_AC: "accepted"
-}
-
-class Verdict{
-    constructor(score, verdict, passed = -1, info = {}){
-        this.score = score || 0
-        this.verdict = VerdictConst.hasOwnProperty(verdict) ? VerdictConst[verdict] : verdict
-        this.passed = passed
-        if(typeof info === 'string' || info instanceof String)
-            info = {text: info}
-        this.info = info
-    }
-
-    toJSON(){
-        return {
-            score: this.score,
-            verdict: this.verdict,
-            passed: this.passed,
-            info: this.info
-        }
-    }
-
-    static fromJSON(json){
-        return new Verdict(json.score || 0, json.verdict, json.passed || -1, json.info || {})
-    }
-}
-
-
 /* Path constants to be used in the grading steps */
 const SOURCE_PATH = "_/sol"
 const SOURCE_EXEC_PATH = "_/sol_exec"
@@ -250,12 +205,12 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
         async(function() {
             logger.debug(`running on testcase ${testcase.in}`)
             let timelimit = task.getTimelimit()     // to seconds
-            let memorylimit = task.getMemorylimit() * 1024   // to mb
+            let memorylimit = task.getMemorylimit() * 1024   // to KB
 
             let iso = new Isolate(env, store)
             let evaluationResult = {}
             let checkingResult = {}
-            let execTime = undefined
+            let execTime = undefined;
             let exitWith = function (verdict) {
                 try {
                     iso.cleanup()
@@ -283,16 +238,16 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
 
                 // execution failed, do something and return
                 if (evaluationResult.code == 1) {
-                    let exitStatus = dummy.getExitStatus()
-                    let exitCode = dummy.getExitCode()
+                    let exitStatus = dummy.getExitStatus();
+                    let exitCode = dummy.getExitCode();
                     //let output = evaluationResult.output
 
                     if (exitStatus == IsolateConst.EXIT_TIMEOUT)
-                        return exitWith(new Verdict(0, "VERDICT_TLE"))
+                        return exitWith(new Verdict(0, "VERDICT_TLE", -1, {time: timelimit}));
                     else if (exitStatus == IsolateConst.EXIT_TIMEOUT_WALL)
-                        return exitWith(new Verdict(0, "VERDICT_WTE", -1, {time: execTime}))
+                        return exitWith(new Verdict(0, "VERDICT_WTE", -1, {time: execTime}));
                     else if (exitStatus == IsolateConst.EXIT_OUTPUT_LIMIT)
-                        return exitWith(new Verdict(0, "VERDICT_OLE", -1, {time: execTime}))
+                        return exitWith(new Verdict(0, "VERDICT_OLE", -1, {time: execTime}));
 
                     // TODO: add sandbox information about RTE
                     return exitWith(new Verdict(0, "VERDICT_RTE", -1, {text: `exited with code ${exitCode}`,
@@ -351,34 +306,34 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
 *   @param {Object} dataset
  */
 function testDataset(env, store, task, lang, dataset){
-    let execTime = 0
+    let execTime = -1;
     try {
-        let n = dataset.testcases.length
+        let n = dataset.testcases.length;
         for (let i = 0; i < n; i += JudgeConfig.MAX_SIMUL_TESTS) {
-            let cases = []
+            let cases = [];
             for(let j = 0; j < JudgeConfig.MAX_SIMUL_TESTS && i+j < n; j++)
                 cases.push(testCaseAsync(env, store, task, lang,
                     dataset, dataset.testcases[i+j]))
 
-            let res = await(cases)
+            let res = await(cases);
             for(let j = 0; j < JudgeConfig.MAX_SIMUL_TESTS && i+j < n; j++){
-                let caseResult = res[j]
-                if(caseResult.info.hasOwnProperty("time") && caseResult.info.time !== undefined)
-                    execTime = Math.max(execTime, caseResult.info.time)
+                let caseResult = res[j];
+                if(caseResult.info.hasOwnProperty("time"))
+                    execTime = Math.max(execTime, caseResult.info.time);
 
-                if(caseResult.verdict != VerdictConst["VERDICT_AC"]){
-                    caseResult.passed = i+j
-                    caseResult.info.time = execTime
+                if(caseResult.verdict != "VERDICT_AC"){
+                    caseResult.passed = i+j;
+                    if(execTime >= 0) caseResult.info.time = execTime;
                     return caseResult
                 }
             }
         }
     } catch (e){
-        logger.error("dataset test failed - %s", e.toString())
-        return new Verdict(0, "VERDICT_JE")
+        logger.error("dataset test failed - %s", e.toString());
+        return new Verdict(0, "VERDICT_JE");
     }
 
-    return new Verdict(1, "VERDICT_AC", dataset.testcases.length, {time: execTime})
+    return new Verdict(1, "VERDICT_AC", dataset.testcases.length, {time: execTime});
 }
 
 /**
@@ -443,7 +398,7 @@ function testTask(env, task, store, code, lang){
         verdicts.push(datasetVerdict)
 
         // if it was not accepted, break here (ladder effect)
-        if(datasetVerdict.verdict != VerdictConst["VERDICT_AC"])
+        if(datasetVerdict.verdict != "VERDICT_AC")
             break
     }
 
@@ -460,16 +415,24 @@ function testTask(env, task, store, code, lang){
  * @param lang
  */
 function testPackage(env, pack, code, lang){
-    let store = new Storage()
-    store.loadZip(pack)
+    let store = new Storage();
+    store.loadZip(pack);
 
-    let loade = loader.autoDetect(store)
+    let loade = loader.autoDetect(store);
     if(loade === null)
-        throw "Package is not loadable"
+        throw new Error("Package is not loadable");
 
-    let task = new loade(store).load()
+    let task = new loade(store).load();
 
-    return testTask(env, task, store, code, lang)
+    let datasets = task.getDatasets();
+    let verdicts = testTask(env, task, store, code, lang);
+    
+    let res = {};
+    for(let i = 0; i < datasets.length; i++){
+        res[datasets[i].name] = verdicts[i];
+    }
+
+    return res;
 }
 
 // testing
@@ -490,7 +453,6 @@ if(!module.parent){
         //console.log(code)
         utils.logInspect(testTask(env, task, store, code, "CPP"))
 
-        // var sleep = require('sleep').sleep
         //
         // let env = new JudgeEnvironment()
         // let store = new Storage()
@@ -528,4 +490,9 @@ if(!module.parent){
     })()
 }
 
-module.exports = {testTask, testPackage}
+let availableLanguages = {
+    CPP: "C++11",
+    C: "C"
+};
+
+module.exports = {testTask, testPackage, availableLanguages};

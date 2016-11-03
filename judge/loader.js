@@ -4,10 +4,11 @@
 
 var path = require('path')
 var fs = require('fs')
-var task = require('./task')
+var task = require(path.join(__dirname, 'task'));
 var YAML = require('yamljs')
-var logger = require('./logger')
-var utils = require('./utils')
+var logger = require(path.join(__dirname, 'logger'));
+var utils = require(path.join(__dirname, 'utils'));
+const scoring = require(path.join(__dirname, 'scoring'));
 
 const JUDE_FN = "jude.yml"
 
@@ -88,7 +89,7 @@ class JudeLoader extends Loader {
             throw "Package has no dataset"
         }
 
-        let res = []
+        let res = [];
         let cnt = 0
         let percentageSum = 0
 
@@ -128,10 +129,10 @@ class JudeLoader extends Loader {
         var attr = {
             weight: cfg["weight"] || 1,
             datasets: this.parseDatasets(cfg["datasets"]),
-            scoring: null,
+            scoring: cfg["scoring"] || "ProductScoring",
             author: cfg["author"] || "",
             limits:{
-                time: (lims["time"] ? Math.ceil(lims["time"]*multiplier/ratio)*ratio : 1000)/1000, // in seconds
+                time: (lims["time"] ? Math.ceil(lims["time"]*multiplier/ratio)*ratio : 1000), // in ms
                 memory: lims["memory"] || 256,
                 source: lims["source"] || 500
             },
@@ -139,12 +140,23 @@ class JudeLoader extends Loader {
             checker: {
                 language: (checks["language"] || "cpp").toUpperCase(),
                 path: checks["path"] || "checker.cpp"
-            }
+            },
+            statement: cfg["statement"] || null
+        };
+
+        if (!attr.scoring || !scoring.hasOwnProperty(attr.scoring)){
+            logger.error("[%s] scoring type %s does not exist", JudeLoader.name, attr.scoring);
+            return null;
+        }
+
+        if(attr.statement && !this.store.isReadable(attr.statement)){
+            logger.error("[%s] statement was specified but could not be find in %s", JudeLoader.name, attr.statement);
+            return null;
         }
 
         if(!this.store.isReadable(attr.checker.path)){
             logger.error("[%s] checker could not be found in %s", JudeLoader.name, attr.checker.path)
-            return null
+            return null;
         }
 
         return new task.Task(attr)

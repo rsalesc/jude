@@ -9,12 +9,12 @@ var dlutil = Promise.promisifyAll({rmtree: require('dlutil').rmtreeAsync})
 var path = require('path')
 var await = require('asyncawait/await')
 var async = require('asyncawait/async')
-var logger = require('./logger')
-var jenv = require('./environment')
+var logger = require(path.join(__dirname, 'logger'));
+var jenv = require(path.join(__dirname, 'environment'));
 var spawn = require('child_process').spawn
-var utils = require('./utils')
+var utils = require(path.join(__dirname, 'utils'));
 
-var Storage = require('./storage').MemoryStorage
+var Storage = require(path.join(__dirname, 'storage')).MemoryStorage
 var JudgeConfig = jenv.JudgeConfig
 var spawnDetachedPromise = require('child-process-promise').spawn
 
@@ -579,7 +579,6 @@ class Isolate extends Sandbox {
 
 if(!module.parent) {
     async(function () {
-        var sleep = require('sleep').sleep
 
         console.log("Testing with async...")
         let env = new jenv.JudgeEnvironment()

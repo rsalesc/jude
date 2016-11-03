@@ -3,7 +3,7 @@
  */
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
-var passportLocal = require('passport-local-mongoose')
+const sha256 = require('sha256');
 
 module.exports = () => {
     var UserSchema = new Schema({
@@ -12,25 +12,38 @@ module.exports = () => {
             minlength: 4,
             maxlength: 16,
             match: /[a-zA-Z][a-zA-Z0-9_\.]*/,
-            required: true,
-            index: true,
-            unique: true
+            required: true
         },
         name: {
             type: String,
-            maxlength: 64,
-            required: true
+            maxlength: 48,
+            default: "unnamed"
         },
+        description:String,
+        password: {type: String},
         email: {
             type: String,
-            maxlength: 64,
-            required: true,
+            maxlength: 64
             // TODO: put email regex here
         },
-        registeredAt: [{type: Schema.Types.ObjectId, ref: 'Contest'}],
+        contest: {type: Schema.Types.ObjectId, ref: 'Contest'},
+        unofficial: {type: Boolean, default: false},
+        role: {type: String, default: "contestant"}
     })
 
-    UserSchema.plugin(passportLocal, {usernameField: "handle"}) // populate fields?
+    UserSchema.index({handle: 1, contest: 1}, {unique: true});
+
+    UserSchema.pre('save', function(next){
+        if(this.isModified('password')){
+            this.password = sha256(this.password);
+        }
+
+        next();
+    });
+
+    UserSchema.methods.matchPasswords = function(candidate){
+        return this.password == sha256(candidate);
+    };
 
     return db.models.User ?
         db.model('User') :
