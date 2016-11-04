@@ -11,9 +11,9 @@ install_node(){
 	install_nvm
 	. ~/.nvm/nvm.sh || (. ~/.bashrc && . ~/.profile)
 
-	nvm install 6.2.2
-	nvm use 6.2.2
-	nvm alias default 6.2.2
+	nvm install 6
+	nvm use 6
+	nvm alias default 6
 
 }
 
