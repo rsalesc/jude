@@ -1,7 +1,7 @@
 /**
  * Created by rsalesc on 15/07/16.
  */
-require('../db')
+require('../db');
 var User = require('../models/User')();
 
 console.log("Creating root/root user.\n" +
@@ -13,7 +13,7 @@ new User({
     password: "root",
     email: "root@root.com"
 }).save((err) => {
-    if(err) return console.log(err)
+    if(err) return console.log(err);
     console.log("root/root user created. You can now login and change its password\n"
       + "Make sure you never delete it. Otherwise, you will have you run this script again");
 });
