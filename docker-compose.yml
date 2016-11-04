@@ -8,6 +8,8 @@ services:
     links:
       - db
       - fs
+    volumes:
+      - .:/app
 
   judge:
     build:
