@@ -15,8 +15,8 @@ function handleAdminPageError(err, req, res, next){
 router.use(function(req, res, next){
   if(!req.user)
     return handleAdminPageError("not authenticated", req, res);
-  if(req.user.contest !== null)
-    return handleAdminPageError("inconsistent session", req, res);
+  if(req.user.contest)
+    return handleAdminPageError("no privilege to access this page", req, res);
 
   next();
 });

@@ -14,7 +14,7 @@ const passport = require('passport');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    if(req.user && req.user.contest === null)
+    if(req.user && !req.user.contest)
       return res.redirect('/admin');
 
     res.redirect('/contest/dashboard')

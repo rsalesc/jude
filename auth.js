@@ -14,7 +14,8 @@ module.exports = function(app){
 
     // CHANGE: USE "createStrategy" INSTEAD OF "authenticate"
     passport.use('custom', new CustomStrategy((req, done) => {
-        if(!req.body.handle || !req.body.password || !mongoose.Types.ObjectId.isValid(req.body.contest))
+        if(!req.body.handle || !req.body.password ||
+          (req.body.contest && !mongoose.Types.ObjectId.isValid(req.body.contest)))
             return done(null, false, req.flash('error', 'Provided parameters are not valid'));
 
         User.findOne({

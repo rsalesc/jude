@@ -57,8 +57,8 @@ function handleApiError(err, req, res, next){
 router.use(function(req, res, next){
   if(!req.user)
     return handleApiError("not authenticated", req, res);
-  if(req.user.contest !== null)
-    return handleApiError("inconsistent session", req, res);
+  if(req.user.contest)
+    return handleApiError("no privilege", req, res);
 
   next();
 });
