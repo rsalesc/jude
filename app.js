@@ -8,7 +8,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var router = express.Router();
-var methodOverride = require('method-override');
+// var methodOverride = require('method-override');
 const restify = require('express-restify-mongoose');
 
 // expose db object globally
@@ -44,7 +44,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(multer());
-app.use(methodOverride('X-HTTP-Method-Override'));
+// app.use(methodOverride('X-HTTP-Method-Override'));
 
 // setup routes here
 app.use('/', routes);

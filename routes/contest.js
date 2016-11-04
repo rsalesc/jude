@@ -13,7 +13,7 @@ const {Contest, Submission, Problem, User} = models;
 
 function handleContestError(err, req, res, next){
     if(req.originalUrl == "/contest/dashboard")
-      return res.redirect1('/login');
+      return res.redirect('/login');
     res.status(400).json({error: err.toString()})
 }
 

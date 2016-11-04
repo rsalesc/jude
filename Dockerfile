@@ -1,24 +1,18 @@
-FROM ubuntu
+FROM debian:jessie
 
-# update and install deps
 RUN apt-get update
-RUN apt-get install -y wget \
-                       git
+RUN apt-get install -y gcc g++ git wget python
 
-# install node js
 ADD install_node.sh /tmp/install_node.sh
 RUN bash /tmp/install_node.sh
 
 # install pm2 globally
 RUN npm i -g pm2
 
-# install node deps
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /opt/jude && mv /tmp/node_modules /opt/jude/
-
 # copy code
 WORKDIR /opt/jude
+ADD package.json .
+RUN npm install --production
 COPY . .
 
 # start cluster

@@ -91,10 +91,7 @@ function startWatching(env){
 
 
 if(!module.parent) {
-    let seaweed = new weed({
-        server:		"localhost",
-        port:		9333
-    });
+    let seaweed = weedClient;
 
     // TODO: dispose after interruption
     async(startWatching)(new JudgeEnvironment(db, seaweed));

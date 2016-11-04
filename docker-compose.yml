@@ -1,0 +1,30 @@
+version: '2'
+services:
+  site:
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    links:
+      - db
+      - fs
+
+  judge:
+    build:
+      context: .
+      dockerfile: "Dockerfile.judge"
+    links:
+      - db
+      - fs
+    cap_add:
+      - ALL
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+
+  db:
+    image: mongo
+
+  fs:
+    image: carmark/seaweedfs
+    command: "server"

@@ -1,0 +1,26 @@
+FROM debian:jessie
+
+RUN apt-get update
+RUN apt-get install -y git wget make gcc g++
+
+WORKDIR "/var/lib"
+
+ADD https://api.github.com/repos/rsalesc/isolate/compare/master...HEAD /dev/null
+RUN git clone https://github.com/rsalesc/isolate
+
+WORKDIR "/var/lib/isolate"
+
+RUN make install
+
+RUN mkdir -p /var/lib/judge
+WORKDIR "/var/lib/judge"
+
+ADD install_node.sh /tmp/
+RUN bash /tmp/install_node.sh
+
+COPY package.json .
+RUN npm install --production
+
+COPY . .
+
+CMD node /var/lib/judge/judge/watch.js
