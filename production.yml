@@ -1,0 +1,17 @@
+version: '2'
+services:
+  site:
+    environment:
+      NODE_ENV: production
+    restart: always
+
+  judge:
+    environment:
+      NODE_ENV: production
+    restart: always
+
+  db:
+    restart: always
+
+  fs:
+    restart: always
