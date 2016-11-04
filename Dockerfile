@@ -25,8 +25,19 @@ ADD package.json .
 RUN npm install --production
 COPY . .
 
+# testlib.h
+WORKDIR /opt
+ADD https://api.github.com/repos/MikeMirzayanov/testlib/compare/master...HEAD /dev/null
+RUN git clone https://github.com/MikeMirzayanov/testlib
+
+WORKDIR /usr/include
+RUN mv /opt/testlib/testlib.h .
+
+WORKDIR /opt/jude
+
 # start cluster
 EXPOSE 3000
-CMD pm2 start index.js -i 4 --no-daemon
+#CMD pm2 start index.js -i 4 --no-daemon
+CMD node index.js
 
 
