@@ -14,7 +14,6 @@ services:
   judge:
     build:
       context: .
-      dockerfile: "Dockerfile.judge"
     links:
       - db
       - fs
@@ -23,6 +22,7 @@ services:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     privileged: true
+    entrypoint: "node /opt/jude/judge/watch.js"
 
   db:
     image: mongo
