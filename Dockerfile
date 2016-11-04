@@ -1,7 +1,7 @@
 FROM debian:jessie
 
 RUN apt-get update
-RUN apt-get install -y gcc g++ git wget python
+RUN apt-get install -y make gcc g++ git wget python
 
 ADD install_node.sh /tmp/install_node.sh
 RUN bash /tmp/install_node.sh
