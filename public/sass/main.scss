@@ -24,7 +24,7 @@ a{
 }
 @media only screen and (min-width: 993px) {
     .container {
-        width: 75%;
+        width: 72%;
     }
 }
 
@@ -94,7 +94,7 @@ nav{
     .right{
         @extend .hide-on-med-and-down;
         .right-text {
-            font-size: .8em;
+            font-size: .7em;
         }
     }
 }
