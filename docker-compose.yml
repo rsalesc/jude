@@ -10,6 +10,9 @@ services:
       - fs
     volumes:
       - .:/app
+    environment:
+      - MONGO_HOST: db
+      - WEED_HOST: fs
 
   judge:
     build:
@@ -23,6 +26,9 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     privileged: true
     entrypoint: "node /opt/jude/judge/watch.js"
+    environment:
+      - MONGO_HOST: db
+      - WEED_HOST: fs
 
   db:
     image: mongo
