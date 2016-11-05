@@ -193,6 +193,7 @@ class Sandbox{
             let absPath = this.resolvePath(p)
             return await(fs.readFileAsync(absPath, "utf8"))
         }catch(e){
+            if(e.code === "ENOENT") return "";
             logger.error("Sandbox %s could not retrieve file %s",
                 this.constructor.name, p)
             throw e
@@ -206,8 +207,7 @@ class Sandbox{
      */
     getFileToStorage(p, d){
         try{
-            let absPath = this.resolvePath(p)
-            this.cacher.createFileFromContent(d, await(fs.readFileAsync(absPath)))
+            this.cacher.createFileFromContent(d, this.getFileToString(p));
         }catch(e){
             logger.error("Sandbox %s could not retrieve file %s to storage",
                 this.constructor.name, p)
@@ -251,11 +251,21 @@ class Sandbox{
     }
 
     removeDir(p){
-        await(fs.rmdirAsync(this.resolvePath(p)))
+        try {
+            await(fs.rmdirAsync(this.resolvePath(p)))
+        } catch(e){
+            if(e.code != "ENOENT")
+              throw e;
+        }
     }
 
     removeFile(p){
-        await(fs.unlinkAsync(this.resolvePath(p)))
+        try {
+            await(fs.unlinkAsync(this.resolvePath(p)))
+        } catch(e){
+            if(e.code != "ENOENT")
+              throw e;
+        }
     }
 }
 
