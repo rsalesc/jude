@@ -19,7 +19,7 @@ var Verdict = verdict.Verdict;
 var VerdictConst = verdict.VerdictConst;
 var Isolate = sandbox.Isolate
 var IsolateConst = sandbox.IsolateConst
-var Storage = require('./storage').MemoryStorage
+var Storage = require(path.join(__dirname, "storage")).MemoryStorage
 var JudgeEnvironment = environment.JudgeEnvironment
 var JudgeConfig = environment.JudgeConfig
 var JudeLoader = loader.JudeLoader
@@ -230,8 +230,11 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
                 evaluationResult.log = iso.getLog()
 
                 // sandbox crashed
-                if (!Isolate.translateBoxExitCode(evaluationResult.code))
+                if (!Isolate.translateBoxExitCode(evaluationResult.code)) {
+                    console.log("sandbox crashed in evaluation step");
+                    console.log(evaluationResult);
                     return exitWith(new Verdict(0, "VERDICT_JE"))
+                }
 
                 let dummy = new Isolate(env, store, evaluationResult.log)
                 execTime = dummy.getRunningTime()
@@ -267,8 +270,11 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
                     CHECKER_EXEC_PATH)
                 checkingResult.log = iso.getLog()
 
-                if (!Isolate.translateBoxExitCode(checkingResult.code))
+                if (!Isolate.translateBoxExitCode(checkingResult.code)) {
+                    console.log("error in checking step right after grading");
+                    console.log(checkingResult);
                     return exitWith(new Verdict(0, "VERDICT_JE"))
+                }
 
                 let output = checkingResult.stderr
 
@@ -360,14 +366,17 @@ function testTask(env, task, store, code, lang){
 
 
     // sandbox crashed
-    if(!Isolate.translateBoxExitCode(compilationResult.code))
+    if(!Isolate.translateBoxExitCode(compilationResult.code)) {
+        console.log("sandbox crashed in compilation step");
+        console.log(compilationResult);
         return utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount())
+    }
 
     // compilation failed
     if(compilationResult.code == 1){
         let dummy = new Isolate(env, null, compilationResult.log)
-        let exitStatus = dummy.getExitStatus()
-        let output = compilationResult.stderr
+        let exitStatus = dummy.getExitStatus();
+        let output = compilationResult.stderr;
 
         if(exitStatus == IsolateConst.EXIT_TIMEOUT || exitStatus == IsolateConst.EXIT_TIMEOUT_WALL)
             return utils.fillUpTo([new Verdict(0, "VERDICT_CTE")], task.getDatasetsCount())
@@ -376,8 +385,11 @@ function testTask(env, task, store, code, lang){
     }
 
     // sandbox crashed
-    if(!Isolate.translateBoxExitCode(checkerCompilationResult.code))
+    if(!Isolate.translateBoxExitCode(checkerCompilationResult.code)) {
+        console.log("sandbox crashed in checker compilation step");
+        console.log(checkerCompilationResult);
         return utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount())
+    }
 
     // checker compilation failed, do something and return
     if(checkerCompilationResult.code == 1){
@@ -388,7 +400,7 @@ function testTask(env, task, store, code, lang){
 
         logger.error("checker compilation failed with error %s (%d):\n%s", exitStatus, exitCode, output)
 
-        return utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount())
+        return utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount());
     }
 
     // now run solution against each of the datasets in ladder fashion

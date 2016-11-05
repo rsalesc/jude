@@ -207,7 +207,8 @@ class Sandbox{
      */
     getFileToStorage(p, d){
         try{
-            this.cacher.createFileFromContent(d, this.getFileToString(p));
+          let absPath = this.resolvePath(p)
+          this.cacher.createFileFromContent(d, await(fs.readFileAsync(absPath)))
         }catch(e){
             logger.error("Sandbox %s could not retrieve file %s to storage",
                 this.constructor.name, p)
