@@ -30,7 +30,7 @@
                     </td>
                     <td class="problem-letter lighter" v-for="problem in problems"
                         :class="{'ac-color': isAc(team, problem), 'wa-color': isWa(team, problem)}"
-                        @dblclick.stop="showScore(team._id)">
+                        @dblclick.stop="showScore(team._id, problem.problem)">
                         <span v-if="problem.scoring.attempted(team.results[problem.problem._id])">
                             <p> {{ getProblemScore(team, problem) }}</p>
                             <p class="score-info" v-if="my.scoring.hasPenalty() && isAc(team, problem)">
@@ -114,9 +114,11 @@
             lighten(t){
                 return Helper.lighten(t);
             },
-            showScore(id){
+            showScore(id, problem){
                 let modal = $('#modal-standings');
-                this.renderedSubmissions = this.groupedSubs[id];
+                let group = this.groupedSubs[id];
+                if(!group) return;
+                this.renderedSubmissions = group.filter((x) => x.problem == problem._id);
                 modal.openModal();
             },
             showCode(sub){
