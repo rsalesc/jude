@@ -11,8 +11,8 @@ services:
     volumes:
       - .:/app
     environment:
-      - MONGO_HOST="db"
-      - WEED_HOST="fs"
+      - MONGO_HOST=db
+      - WEED_HOST=fs
 
   judge:
     build:
