@@ -47,10 +47,13 @@ module.exports = () => {
         this.problems.sort((a, b) => {
             try {
                 return ((x, y) => {
-                    x = parseInt(x.slice(1)) || 0;
-                    y = parseInt(y.slice(1)) || 0;
+                    let xd = parseInt(x.slice(1)) || 0;
+                    let yd = parseInt(y.slice(1)) || 0;
 
-                    return x < y ? -1 : (x > y ? 1 : 0);
+                    if(x[0] == y[0])
+                        return xd < yd ? -1 : (xd > yd ? 1 : 0);
+
+                    return x[0] < y[0] ? -1 : 1;
                 })(a.letter, b.letter)
             } catch(ex){
                 return false;
