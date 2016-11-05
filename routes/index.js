@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const path = require('path');
 const async = require('asyncawait/async');
-const models = require(path.join(__dirname, "../models"))
+const models = require(path.join(__dirname, "../models"));
 const {Problem, Contest} = models;
 
 const Storage = require(path.join(__dirname, "../judge/storage")).MemoryStorage;

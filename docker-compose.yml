@@ -35,4 +35,4 @@ services:
 
   fs:
     image: carmark/seaweedfs
-    command: "server"
+    command: "server -ip fs"
