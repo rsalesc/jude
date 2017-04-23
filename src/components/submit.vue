@@ -41,7 +41,7 @@
         ready(){},
         data() {
             return {
-                submitting: false
+                submitting: 0
             }
         },
         methods:{
@@ -54,13 +54,15 @@
                 return undefined;
             },
             submit(){
-                if(this.submitting) return;
+                if(this.submitting++ > 0){
+                    this.submitting--;
+                    return;
+                }
 
                 let el = $(this.$el);
                 let problem = el.find('#submit-problem').val();
                 let code = window._cm.getValue();
                 let language = el.find('#submit-language').val();
-                this.submitting = true;
 
                 Api.submit.save({
                     problem,
@@ -70,10 +72,10 @@
                     window._cm.setValue("");
                     Materialize.toast('Your submission was sent successfully!', 4000);
                     el.closeModal();
-                    this.submitting = false;
+                    this.submitting--;
                 }).catch((err) => {
                     Materialize.toast(`Submission error: ${err.data.error}`, 4000);
-                    this.submitting = false;
+                    this.submitting--;
                 });
             }
         },

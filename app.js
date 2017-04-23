@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // setup auth method
 // configure session
 app.use(session({
-  secret: 'kitkatz',
+  secret: 'truesecretmofos',
   resave: false,
   saveUninitialized: false,
   store: new MongoStore({mongooseConnection: db})
