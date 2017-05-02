@@ -42,7 +42,7 @@ router.post('/login', passport.authenticate('custom', { failureRedirect: '/login
         }
         res.redirect('/');
     });
-}
+});
 
 router.post('/upload/:id', function(req, res, next){
     if(!req.files || !req.files.file)
