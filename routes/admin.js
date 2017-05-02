@@ -1,5 +1,6 @@
 const path = require('path');
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 var express = require('express');
 var router = express.Router();
