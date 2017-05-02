@@ -23,7 +23,7 @@ router.get('/', function(req, res, next) {
 router.get('/login', function(req, res, next){
     Contest.find({hidden: false}).select('_id name').lean().exec((err, contests) => {
         if(err)
-            res.status(400).json({message: err.toString()});
+            res.status(401).json({message: err.toString()});
         let obj = {error: req.flash('error'), contests};
         
         res.render('login', obj);
@@ -42,7 +42,7 @@ router.post('/login', passport.authenticate('custom', { failureRedirect: '/login
         }
         res.redirect('/');
     });
-});
+}
 
 router.post('/upload/:id', function(req, res, next){
     if(!req.files || !req.files.file)

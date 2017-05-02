@@ -51,14 +51,14 @@ app.use('/', routes);
 
 // configure api
 function handleApiError(err, req, res, next){
-  res.status(400).json({error: err.toString()});
+  res.status(err.status).json({error: err.message});
 }
 
 router.use(function(req, res, next){
   if(!req.user)
-    return handleApiError("not authenticated", req, res);
+    return handleApiError({ status: 401, message: "not authenticated" }, req, res);
   if(req.user.contest)
-    return handleApiError("no privilege", req, res);
+    return handleApiError({ status: 403, message: "no privilege" }, req, res);
 
   next();
 });

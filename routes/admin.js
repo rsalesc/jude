@@ -25,4 +25,18 @@ router.get('/', function(req, res, next) {
   res.render('admin');
 });
 
+router.post('/login', passport.authenticate('custom'), (req, res, next) => {
+  req.session.save((err) => {
+    if(err) {
+      res.status(401).json({ error: "error during authentication" });
+    }
+    res.send();
+  });
+});
+
+router.post('/logout', (req, res, next) => {
+  req.logout();
+  res.send();
+});
+
 module.exports = router;
