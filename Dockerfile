@@ -12,6 +12,14 @@ WORKDIR /opt/isolate
 
 RUN make install
 
+# testlib.h
+WORKDIR /opt
+ADD https://api.github.com/repos/MikeMirzayanov/testlib/compare/master...HEAD /dev/null
+RUN git clone https://github.com/MikeMirzayanov/testlib
+
+WORKDIR /usr/include
+RUN mv /opt/testlib/testlib.h .
+
 # install node and jude
 WORKDIR /opt/jude
 ADD install_node.sh /tmp/install_node.sh
@@ -24,16 +32,6 @@ RUN npm i -g pm2
 ADD package.json .
 RUN npm install --production
 COPY . .
-
-# testlib.h
-WORKDIR /opt
-ADD https://api.github.com/repos/MikeMirzayanov/testlib/compare/master...HEAD /dev/null
-RUN git clone https://github.com/MikeMirzayanov/testlib
-
-WORKDIR /usr/include
-RUN mv /opt/testlib/testlib.h .
-
-WORKDIR /opt/jude
 
 # start cluster
 EXPOSE 3000
