@@ -1,12 +1,16 @@
 FROM debian:jessie
 
+RUN echo "deb http://ftp.de.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
 RUN apt-get update
-RUN apt-get install -y make gcc g++ git wget python
+RUN apt-get install -y make gcc g++ git wget python python3
+RUN apt-get install -t jessie-backports -y openjdk-8-jdk-headless ca-certificates-java
+RUN /usr/sbin/update-java-alternatives -s java-1.8.0-openjdk-amd64
 
 # install isolate
 WORKDIR /opt
-ADD https://api.github.com/repos/rsalesc/isolate/compare/master...HEAD /dev/null
-RUN git clone https://github.com/rsalesc/isolate
+# ADD https://api.github.com/repos/rsalesc/isolate/compare/master...HEAD /dev/null
+# RUN git clone https://github.com/rsalesc/isolate
+COPY isolate/ isolate/
 
 WORKDIR /opt/isolate
 
@@ -31,11 +35,13 @@ RUN npm i -g pm2
 # copy code
 ADD package.json .
 RUN npm install --production
+COPY judge/executor.jar /etc/java-sandbox
+COPY judge/security.policy /etc/java-sandbox
 COPY . .
 
 # start cluster
 EXPOSE 3000
 #CMD pm2 start index.js -i 4 --no-daemon
-CMD node index.js
+CMD node index.js --harmony
 
 

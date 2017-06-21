@@ -10,6 +10,7 @@ var Promise = require('bluebird')
 var commonfs = require('fs')
 var fs = Promise.promisifyAll({stat: commonfs.stat})
 var util = require('util')
+const glob = require("glob");
 
 function exists(p){
     try{
@@ -79,6 +80,15 @@ function normalizePath(p){
     return p
 }
 
+function globAsync(pattern, opts) {
+    return new Promise((resolve, reject) => {
+        glob(pattern, opts, (err, files) => {
+            if(err) return reject(err);
+            resolve(files);
+        });
+    });
+}
+
 module.exports = {
     exists,
     fileExists,
@@ -86,5 +96,6 @@ module.exports = {
     inspect,
     logInspect,
     fillUpTo,
-    destroy
+    destroy,
+    globAsync
 }

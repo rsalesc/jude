@@ -4,9 +4,13 @@
 var mongoose = require('mongoose')
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var Schema = mongoose.Schema
-var Problem = require('./Problem')()
 
 module.exports = () => {
+    if(db.models.Contest)
+        return db.model("Contest");
+
+    const Problem = require('./Problem')();
+
     var ContestProblem = new Schema({
         letter: {
             type: String,
@@ -40,10 +44,10 @@ module.exports = () => {
     });
 
     ContestSchema.index({name: 1});
+    ContestSchema.index({name: 'text'});
     ContestSchema.plugin(deepPopulate);
 
     ContestSchema.pre('save', function(next){
-
         this.problems.sort((a, b) => {
             try {
                 return ((x, y) => {
@@ -79,8 +83,16 @@ module.exports = () => {
         return parseInt((Date.now() - this.start_time.getTime()) / 60 / 1000);
     };
 
+    ContestSchema.pre("remove", function(next) {
+        db.model("Submission").remove({ contest: this._id }, err => {
+           if(err) console.error(err); 
+        });
+        db.model("User").remove({ contest: this._id }, err => {
+           if(err) console.error(err); 
+        });
+        next();
+    });
 
-    return db.models.Contest ?
-        db.model('Contest') :
-        db.model('Contest', ContestSchema)
+
+    return db.model('Contest', ContestSchema);
 }

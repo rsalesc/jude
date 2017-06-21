@@ -1,6 +1,10 @@
 const path = require('path');
 const mongoose = require('mongoose');
+const async = require("asyncawait/async");
+const await = require("asyncawait/await");
 const grader = require(path.join(__dirname, '../judge/grader'));
+const precheck = require(path.join(__dirname, "../judge/precheck"));
+const auth2 = require(path.join(__dirname, "../auth2"));
 
 var express = require('express');
 var router = express.Router();
@@ -12,8 +16,6 @@ const ContestProblemSelection =
 const {Contest, Submission, Problem, User} = models;
 
 function handleContestError(err, req, res, next){
-    if(req.originalUrl == "/contest/dashboard")
-      return res.redirect('/login');
     res.status(400).json({error: err.toString()})
 }
 
@@ -21,27 +23,18 @@ function getUserContest(user){
     try {
         return Contest.findById(user.contest)
     } catch(ex){
-        return null;
+        return {
+            exec: (cb) => cb(ex)
+        };
     }
 }
 
 // ensure user is auth'ed
-router.use(function(req, res, next){
-    if(!req.user)
-        return handleContestError("not authenticated", req, res);
-    if(!req.user.contest || !mongoose.Types.ObjectId.isValid(req.user.contest))
-        return handleContestError("inconsistent session", req, res);
-
-    next();
-});
-
-router.get('/dashboard', function(req, res, next) {
-    res.render('index');
-});
+router.use(auth2.isAuth("contestant"));
 
 router.get('/', function(req, res, next){
 
-    getUserContest(req.user).deepPopulate('problems.problem', {
+    getUserContest(req.auth2.user).deepPopulate('problems.problem', {
         populate: {
             'problems.problem':{
                 select: ContestProblemSelection
@@ -56,43 +49,45 @@ router.get('/', function(req, res, next){
         if(!contest.hasStarted())
           contest.problems = [];
 
+        contestObj = Object.assign({}, contest.toObject(), { languages: Object.entries(grader.availableLanguages) });
+
         User.find({contest: contest.id}).select('-password -email -handle').exec((err, teams) => {
             if(err)
                 return handleContestError(err, req, res);
             if(teams === null)
                 return handleContestError("couldnt retrieve teams", req, res);
             
-            res.json({_user: req.user._id, teams, contest});
+            res.json({ _user: req.auth2.user._id, teams, contest: contestObj });
         });
     });
 });
 
 // TODO: contest started check
 router.get('/my', function(req, res, next){
-    Submission.find({contest: req.user.contest, _creator: req.user._id})
+    Submission.find({contest: req.auth2.user.contest, _creator: req.auth2.user._id})
         .sort('-time')
         .exec((err, subs) => {
         if(err)
             return handleContestError(err, req, res);
 
-        res.json({_user: req.user._id, submissions: subs});
+        res.json({_user: req.auth2.user._id, submissions: subs});
     })
 });
 
 router.get('/submissions', function(req, res, next){
-    getUserContest(req.user).exec((err, contest) => {
+    getUserContest(req.auth2.user).exec((err, contest) => {
       if(err)
         return handleContestError(err, req, res);
       if(!contest)
         return handleContestError("non existent contest", req, res);
 
       if(!contest.hasStarted())
-        return res.json({_user: req.user._id, submissions: []});
+        return res.json({_user: req.auth2.user._id, submissions: []});
 
-      Submission.find({contest: req.user.contest}).sort('-time').select('-code').exec((err, subs) => {
+      Submission.find({contest: req.auth2.user.contest}).sort('-time').select('-code').exec((err, subs) => {
         if(err)
           return handleContestError(err, req, res);
-        res.json({_user: req.user._id, submissions: subs});
+        res.json({_user: req.auth2.user._id, submissions: subs});
       });
     });
 });
@@ -101,10 +96,16 @@ router.get('/submissions', function(req, res, next){
 router.post('/submit', function(req, res, next){
     if(!req.body.code || !req.body.language || !req.body.problem)
         return handleContestError("all fields must be filled", req, res);
-    let user = req.user;
+    let user = req.auth2.user;
 
     if(!grader.availableLanguages.hasOwnProperty(req.body.language))
         return handleContestError("language is invalid", req, res);
+
+    try {
+        req.body.code = precheck[req.body.language](req.body.code);
+    } catch(ex) {
+        return handleContestError(ex.message, req, res);
+    }
 
     getUserContest(user).exec((err, contest) => {
         if(err)
@@ -132,7 +133,7 @@ router.post('/submit', function(req, res, next){
             }
 
             let sub = new Submission({
-                _creator: req.user.id,
+                _creator: req.auth2.user.id,
                 contest: contest,
                 problem: req.body.problem,
                 timeInContest,
@@ -141,27 +142,30 @@ router.post('/submit', function(req, res, next){
                 verdict
             });
 
-            sub.save((err) => {
+            sub.save(async((err) => {
                 if(err)
                     return handleContestError(err, req, res);
 
-                judeQueue.add({
-                    id: req.body.problem,
-                    subid: sub._id,
-                    fid: problem.fid,
-                    code: req.body.code,
-                    lang: req.body.language
-                }, (err) => {
-                    if(err) return handleContestError(err, req, res);
-                    res.json({success: "submitted"});
-                });
-            });
+                try {
+                    await(judeQueue.add({
+                        id: req.body.problem,
+                        subid: sub._id,
+                        fid: problem.fid,
+                        code: req.body.code,
+                        lang: req.body.language
+                    }));
+                } catch(ex) {
+                    return handleContestError(ex, req, res);
+                }
+
+                res.json({success: "submitted"});
+            }));
         });
     });
 });
 
 router.get('/statement/:letter', function(req, res, next){
-    getUserContest(req.user).deepPopulate('problems.problem').exec((err, contest) => {
+    getUserContest(req.auth2.user).deepPopulate('problems.problem').exec((err, contest) => {
         if(err)
           return handleContestError(err, req, res, next);
         if(!contest)
@@ -179,7 +183,7 @@ router.get('/statement/:letter', function(req, res, next){
 });
 
 router.get('/submission/:id', function(req, res, next) {
-    getUserContest(req.user).exec((err, contest) => {
+    getUserContest(req.auth2.user).exec((err, contest) => {
         if(err)
             return handleContestError(err, req, res, next);
         if(!contest)
@@ -191,13 +195,17 @@ router.get('/submission/:id', function(req, res, next) {
             if (!sub)
                 return handleContestError("submission not found", req, res, next);
 
-            if (!sub._creator.equals(req.user._id) && !contest.hasEnded()) {
+            if (!sub._creator.equals(req.auth2.user._id) && !contest.hasEnded()) {
                 sub.code = undefined;
             }
 
             res.json(sub);
         });
     });
+});
+
+router.get('/languages', function(req, res, next) {
+    return res.json(Object.entries(grader.availableLanguages));
 });
 
 module.exports = router;

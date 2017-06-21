@@ -12,40 +12,18 @@ html
     script(src='/codemirror/lib/codemirror.js')
     script(src='/codemirror/addon/display/autorefresh.js')
     script(src='/codemirror/mode/javascript/javascript.js')
+    script(src='/codemirror/mode/clike/clike.js')
+    script(src='/codemirror/mode/python/python.js')
 
     link(rel='stylesheet', href='/codemirror/theme/ambiance.css')
-    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/theme/monokai.css')
     link(rel='stylesheet', href='/codemirror/lib/codemirror.css')
 
     meta(name='viewport', content='width=device-width, initial-scale=1')
 
   body
-    ju-main
+    div#app
 
     script(src='https://code.jquery.com/jquery-3.1.0.min.js', integrity='sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=', crossorigin='anonymous')
     script(src='/js/materialize.js')
     // Components
     script(src='/js/components.js')
-    script(type='text/javascript').
-      $(document).ready(function () {
-        $('select').material_select();
-        $(".button-collapse").sideNav();
-        $('.modal-trigger').leanModal();
-        $('.modal-trigger').click(function(){
-          $('#submit-problem').material_select();
-        });
-
-        window._cm = CodeMirror.fromTextArea(document.getElementById("submit-code"),{
-          lineNumbers: true,
-          theme: "ambiance",
-          autoRefresh: true,
-          fixedGutter: true
-        });
-
-            //        function refreshCodeMirror(){
-            //          window._cm.refresh();
-            //        }
-            //
-            //        setInterval(refreshCodeMirror, 2000);
-      });
-

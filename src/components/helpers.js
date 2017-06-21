@@ -6,6 +6,7 @@ import Vue from 'vue';
 import * as Api from './api.js';
 import hljs from 'highlight.js/lib/index.js';
 import moment from 'moment';
+import { mapState } from "vuex";
 
 export function getScoringString(prob, contest){
     if(contest)
@@ -27,6 +28,30 @@ export function getScoring(prob){
 
 export function getHumanVerdict(v){
     return VerdictConst[v];
+}
+
+export function getCodeMirrorMode(lang) {
+    const modes = {
+        "CPP": "clike",
+        "C": "clike",
+        "Java": "clike",
+        "Py2": "python",
+        "Py3": "python"
+    };
+
+    return modes[lang];
+}
+
+export function getHlsMode(lang) {
+    const modes = {
+        "CPP": "cpp",
+        "C": "cpp",
+        "Java": "java",
+        "Py2": "python",
+        "Py3": "python"
+    };
+
+    return modes[lang];
 }
 
 export function getMainVerdict(verdicts, task){
@@ -91,13 +116,41 @@ export function lighten(t){
 
 export function showCode(sub){
     Api.submission.get({id: sub._id}).then((res) => {
-        if(!res.json().hasOwnProperty("code")) return;
-        let code = res.json().code;
+        if(!res.body.hasOwnProperty("code")) return;
+        let code = res.body.code;
 
         let modal = $('#modal-code');
         let content = modal.find('#modal-code-content');
-        content.text(code).attr('class', 'cpp');
+        let compilation = modal.find("#modal-code-compilation");
+        compilation.text("");
+        if(res.body.verdict) {
+            for(let dataset in res.body.verdict) {
+                if(res.body.verdict.hasOwnProperty(dataset) && res.body.verdict[dataset].verdict == "VERDICT_CE") {
+                    compilation.text(res.body.verdict[dataset].info.text || "");
+                }
+            }
+        }
+
+        content.text(code).attr('class', getHlsMode(res.body.language));
         hljs.highlightBlock(content[0]);
         modal.openModal();
     });
+}
+
+export function mapModuleState(nesting, states = []) {
+    if(!Array.isArray(nesting))
+        nesting = [nesting];
+
+    let res = {};
+    for(let stateName of states) {
+        res[stateName] = (state) => {
+            let obj = state;
+            for(let key of nesting) {
+                obj = obj[key];
+            }
+            return obj[stateName];
+        };
+    }
+
+    return mapState(res);
 }

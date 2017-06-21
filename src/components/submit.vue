@@ -16,8 +16,8 @@
                         </div>
                         <div class="section"></div>
                         <div class="input-field">
-                            <select id="submit-language">
-                                <option value="CPP">C++</option>
+                            <select id="submit-language" @change="changeLanguage($event)">
+                                <option v-for="lang in languages" :value="lang[0]">{{lang[1]}}</option>
                             </select>
                             <label>Language</label>
                         </div>
@@ -26,8 +26,8 @@
             </form>
         </div>
         <div class="modal-footer">
-            <a class="modal-action btn-flat waves-effect" href="#" @click="submit">Submit</a>
-            <a class="modal-action modal-close btn-flat waves-effect" href="#">Close</a>
+            <a class="modal-action btn-flat waves-effect" href="#" @click.prevent="submit">Submit</a>
+            <a class="modal-action modal-close btn-flat waves-effect" @click.prevent="" href="#">Close</a>
         </div>
     </div>
 </template>
@@ -36,13 +36,29 @@
     import 'babel-polyfill';
     import * as Helper from './helpers.js';
     import * as Api from './api.js';
+    import { mapGetters } from "vuex";
+    import { types } from "./store/";
 
     export default {
-        ready(){},
+        mounted () {
+            this.cm = CodeMirror.fromTextArea(document.getElementById("submit-code"), {
+                lineNumbers: true,
+                theme: "ambiance",
+                autoRefresh: true,
+                fixedGutter: true
+            });
+        },
         data() {
             return {
-                submitting: 0
+                submitting: 0,
+                cm: {}
             }
+        },
+        computed: {
+            ...mapGetters([
+                "problems",
+                "languages"
+            ])
         },
         methods:{
             getProblem(id){
@@ -61,28 +77,26 @@
 
                 let el = $(this.$el);
                 let problem = el.find('#submit-problem').val();
-                let code = window._cm.getValue();
                 let language = el.find('#submit-language').val();
+                let code = this.cm.getValue();
 
                 Api.submit.save({
                     problem,
                     code,
                     language
                 }).then((result) => {
-                    window._cm.setValue("");
+                    this.cm.setValue("");
                     Materialize.toast('Your submission was sent successfully!', 4000);
                     el.closeModal();
+                    this.$store.dispatch(types.FETCH_CONTEST_DATA);
                     this.submitting--;
                 }).catch((err) => {
                     Materialize.toast(`Submission error: ${err.data.error}`, 4000);
                     this.submitting--;
                 });
-            }
-        },
-        props: {
-            "problems":{
-                type: Array,
-                default: () => []
+            },
+            changeLanguage(e) { 
+                this.cm.setOption("mode", Helper.getCodeMirrorMode(e.target.value));
             }
         }
     }

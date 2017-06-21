@@ -14,23 +14,26 @@ module.exports = {
         loaders: [
             {
                 test: /\.vue$/, // a regex for matching all files that end in `.vue`
-                loader: 'vue'   // loader to use for matched files
+                loader: 'vue-loader',   // loader to use for matched files,
+                options: {
+                    loaders: {
+                        'scss': 'vue-style-loader!css-loader!sass-loader',
+                        'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+                    }
+                }
             },
             {
                 test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
-                loader: 'babel',
-                query: {
-                    presets: ['es2015', 'stage-0'],
-                    plugins: ['transform-runtime']
-                }
+                loader: 'babel-loader'
             },
+            // maybe its load too much CSS?
             { test: /\.css$/, loader: "style-loader!css-loader" }
         ]
     },
     resolve: {
         alias: {
-            'Vue': path.join(__dirname, 'node_modules/vue')
+            'vue$': path.join(__dirname, 'node_modules/vue/dist/vue.js')
         }
     }
 }

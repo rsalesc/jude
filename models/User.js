@@ -6,6 +6,9 @@ var Schema = mongoose.Schema
 const sha256 = require('sha256');
 
 module.exports = () => {
+    if(db.models.User)
+        return db.model("User");
+
     var UserSchema = new Schema({
         handle: {
             type: String,
@@ -32,6 +35,12 @@ module.exports = () => {
     })
 
     UserSchema.index({handle: 1, contest: 1}, {unique: true});
+    UserSchema.index({handle: 'text', name: 'text'}, {
+        weights: {
+            handle: 2,
+            name: 1
+        }
+    });
 
     UserSchema.pre('save', function(next){
         if(this.isModified('password')){
@@ -45,7 +54,12 @@ module.exports = () => {
         return this.password == sha256(candidate);
     };
 
-    return db.models.User ?
-        db.model('User') :
-        db.model('User', UserSchema)
+    UserSchema.pre("remove", function(next) {
+        db.model("Submission").remove({ _creator: this._id }, err => {
+            if(err) console.error(err);
+        });
+        next();
+    });
+
+    return db.model('User', UserSchema)
 }

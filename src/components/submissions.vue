@@ -1,63 +1,68 @@
 <template>
-    <div id="problems-container" class="z-depth-1 col s5 card-panel jude-panel">
-        <h5 class="card-title">Submissions</h5>
-        <ul class="collapsible submission-list" v-paginate:5="mySubmissions">
-            <li v-for="sub in mySubmissions">
-                <div class="collapsible-header">
-                    <i class="problem-index" :style="{color: '#'+lighten(getProblem(sub.problem).color)}">
-                        {{ getProblem(sub.problem).letter }}
-                    </i>
-                    <span class="problem-title">
-                        {{ getProblem(sub.problem).problem.name }}
-                        <span class="submission-time">@ {{ getContestTime(sub.timeInContest) }}</span>
-                    </span>
-                    <span class="right" v-if="sub.score.affect">
-                        <a href="#" @click.stop="showCode(sub)">
-                            <i class="material-icons">remove_red_eye</i>
-                        </a>
-                        <span v-if="my.scoring.hasWeight()">
-                            {{ sub.score.score }} pts
+    <div class="col s6 padded-container">
+        <div class="z-depth-1 card-panel jude-panel">
+            <h5 class="card-title">Submissions</h5>
+            <paginate name="submissions" :list="my.submissions" :per="100"
+                class="collapsible submission-list">
+                <li v-for="sub in paginated('submissions')">
+                    <div class="collapsible-header">
+                        <i class="problem-index" :style="{color: '#'+lighten(getProblem(sub.problem).color)}">
+                            {{ getProblem(sub.problem).letter }}
+                        </i>
+                        <span class="problem-title">
+                            {{ getProblem(sub.problem).problem.name }}
+                            <span class="submission-time">@ {{ getContestTime(sub.timeInContest) }}</span>
                         </span>
-                        <span v-else>
-                            {{ getHumanVerdict(getMainVerdict(sub.verdict, getProblem(sub.problem).problem)) }}
+                        <span class="right" v-if="sub.score.affect">
+                            <a href="#" @click.stop.prevent="showCode(sub)">
+                                <i class="material-icons">remove_red_eye</i>
+                            </a>
+                            <span v-if="my.scoring.hasWeight()">
+                                {{ sub.score.score }} pts
+                            </span>
+                            <span v-else>
+                                {{ getHumanVerdict(getMainVerdict(sub.verdict, getProblem(sub.problem).problem)) }}
+                            </span>
                         </span>
-                    </span>
-                </div>
+                    </div>
 
-                <div class="collapsible-body">
-                    <table class="verdict-table">
-                        <thead>
-                            <tr>
-                                <th>Dataset</th>
-                                <th>Passed</th>
-                                <th>Verdict</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(name, verdict) in sub.verdict">
-                                <td>{{ name }}</td>
-                                <td>{{ getPassed(verdict.passed) }}</td>
-                                <td>
-                                    {{ getHumanVerdict(verdict.verdict) }}
-                                    <span v-if="getExecTime(verdict) !== null">
-                                        ({{ getExecTime(verdict) }})
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </li>
-        </ul>
+                    <div class="collapsible-body">
+                        <table class="verdict-table">
+                            <thead>
+                                <tr>
+                                    <th>Dataset</th>
+                                    <th>Passed</th>
+                                    <th>Verdict</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(verdict, name) in sub.verdict">
+                                    <td>{{ name }}</td>
+                                    <td>{{ getPassed(verdict.passed) }}</td>
+                                    <td>
+                                        {{ getHumanVerdict(verdict.verdict) }}
+                                        <span v-if="getExecTime(verdict) !== null">
+                                            ({{ getExecTime(verdict) }})
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </li>
+            </paginate>
 
-        <ul class="pagination" style="text-align: right">
-            <li class="waves-effect" v-for="link in mySubmissionsLinks"
-                :class="{active: currentMySubmissionsPage == link}">
-                <a @click.stop="changeMySubmissionsPage(link)" href="#">
-                    {{ link }}
-                </a>
-            </li>
-        </ul>
+            <paginate-links for="submissions" :async="true"></paginate-links>
+
+            <!--<ul class="pagination>
+                <li class="waves-effect" v-for="link in mySubmissionsLinks"
+                    :class="{active: currentMySubmissionsPage == link}">
+                    <a @click.stop="changeMySubmissionsPage(link)" href="#">
+                        {{ link }}
+                    </a>
+                </li>
+            </ul>-->
+        </div>
     </div>
 </template>
 
@@ -65,13 +70,22 @@
     import 'babel-polyfill';
     import * as Api from './api.js';
     import * as Helper from './helpers.js';
+    import { mapGetters } from "vuex";
 
     export default {
-        ready(){},
+        mounted () {
+            $('.collapsible').collapsible();
+        },
         data() {
             return {
-                mySubmissions: []
+                paginate: ['submissions']
             }
+        },
+        computed: {
+            ...mapGetters([
+                "problems",
+                "my"
+            ])
         },
         methods:{
             getProblem(id){
@@ -104,18 +118,9 @@
                 return Helper.showCode(sub);
             }
         },
-        watch:{
+        watch: {
             my: function(val){
                 this.fullMySubmissions = val.submissions || [];
-            }
-        },
-        props: {
-            "problems":{
-                type: Array,
-                default: () => []
-            },
-            "my":{
-                default: () => {}
             }
         }
     }

@@ -3,6 +3,8 @@ var path = require('path'),
     mongoose = require('mongoose'),
     files = fs.readdirSync(__dirname);
 
+require(path.join(__dirname, "../db"));
+
 files.forEach(function(file) {
     var name = path.basename(file, '.js');
     if (name === 'index')

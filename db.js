@@ -1,5 +1,5 @@
 var mongoose = require('mongoose')
-var mongodbQueue = require('mongodb-queue');
+const MongoQueue2 = require("mongo-queue2");
 const weed = require('jude-seaweedfs');
 
 // mongodb setup
@@ -11,7 +11,7 @@ var uri = 'mongodb://'+mongo_host+'/jude-dev';
 if(!global.db) {
     global.db = mongoose.createConnection(uri);
     global.db.mods = {};
-    global.judeQueue = mongodbQueue(db, "jude-queue");
+    global.judeQueue = new MongoQueue2(db, "jude-queue2");
     global.weedClient     = new weed({
         server:     weed_host,
         port:       9333

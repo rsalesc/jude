@@ -5,13 +5,17 @@
 const path = require('path');
 
 var mongoose = require('mongoose')
-const {Problem} = require(__dirname);
 var Schema = mongoose.Schema;
 
 const DEFAULT_VERDICT = {verdict: "", info:"", passed: -1, score: 0};
 
 // TODO: add creation time (with a plugin)
 module.exports = () => {
+    if(db.models.Submission)
+        return db.model('Submission');
+    
+    // const Problem = require(path.join(__dirname), "problem")();
+
     var SubmissionSchema = new Schema({
         _creator: {type: Schema.Types.ObjectId, ref: 'User', required: true},
         contest: {type: Schema.Types.ObjectId, ref: 'Contest'},
@@ -26,10 +30,13 @@ module.exports = () => {
     SubmissionSchema.index({contest: 1, _creator: 1});
     SubmissionSchema.index({contest: 1, problem: 1});
     SubmissionSchema.index({contest: 1, time: 1});
+    SubmissionSchema.index({contest: 1, timeInContest: 1});
+    SubmissionSchema.index({problem: 1});
+    SubmissionSchema.index({_creator: 1});
 
     SubmissionSchema.pre('save', function(next){
         if(this.problem){
-            Problem.findById(this.problem).exec((err, problem) => {
+            db.model("Problem").findById(this.problem).exec((err, problem) => {
                 if(err)
                     next(err);
                 this.verdict = (this.verdict || {});
@@ -45,7 +52,5 @@ module.exports = () => {
         }
     });
 
-    return db.models.Submission ?
-        db.model('Submission') :
-        db.model('Submission', SubmissionSchema)
+    return db.model('Submission', SubmissionSchema)
 }

@@ -8,43 +8,25 @@ const {Problem, Contest} = models;
 const Storage = require(path.join(__dirname, "../judge/storage")).MemoryStorage;
 const Loader = require(path.join(__dirname, "../judge/loader"));
 const utils = require(path.join(__dirname, "../judge/utils"));
+const api = require(path.join(__dirname, "api"));
 const contest = require(path.join(__dirname, "contest"));
 const admin = require(path.join(__dirname, "admin"));
+const auth2 = require(path.join(__dirname, "../auth2"));
 const passport = require('passport');
+
+function handleInternalError(err, req, res, next) {
+    res.status(500).json({ error: err.toString() });
+}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    if(req.user && !req.user.contest)
-      return res.redirect('/admin');
-
-    res.redirect('/contest/dashboard')
+    res.render('index');
 });
 
-router.get('/login', function(req, res, next){
-    Contest.find({hidden: false}).select('_id name').lean().exec((err, contests) => {
-        if(err)
-            res.status(401).json({message: err.toString()});
-        let obj = {error: req.flash('error'), contests};
-        
-        res.render('login', obj);
-    });
-});
+router.post('/api-logout', auth2.dispose());
+router.post('/api-login', auth2.authenticate(["contestant", "root"]));
 
-router.get('/logout', function(req, res, next){
-    req.logout();
-    res.redirect('/');
-});
-
-router.post('/login', passport.authenticate('custom', { failureRedirect: '/login', failureFlash: true }), function(req, res, next) {
-    req.session.save(function (err) {
-        if (err) {
-            return next(err);
-        }
-        res.redirect('/');
-    });
-});
-
-router.post('/upload/:id', function(req, res, next){
+router.post('/upload/:id', auth2.isAuth(["root"]), function(req, res, next){
     if(!req.files || !req.files.file)
         return res.status(404).json({message: "exactly one file should be uploaded"});
     Problem.findOne({_id: req.params.id}, (err, problem) => {
@@ -105,6 +87,15 @@ router.post('/upload/:id', function(req, res, next){
                 res.status(400).json({message: err.toString()});
             });
         })();
+    });
+});
+
+router.get("/contest-list", (req, res, next) => {
+    Contest.find({ hidden: false }, (err, contests) => {
+        if(err)
+            return handleInternalError(err, req, res);
+        
+        res.json({ contests });
     });
 });
 

@@ -1,63 +1,65 @@
 <template>
-    <div id="problems-container" class="z-depth-1 col s11 card-panel jude-panel">
-        <h5 class="card-title">Standings</h5>
-        <table class="standings-table bordered">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th></th>
-                    <th class="problem-letter">
-                        <p class="score">Score</p>
-                    </th>
-                    <th class="problem-letter" v-for="problem in problems">
-                        <p>{{ problem.letter }}</p>
-                        <p class="score-info"></p>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="team in teams">
-                    <td>{{ team.rank }}</td>
-                    <td class="team-name">
-                        <p>{{ team.name }}</p>
-                        <p class="team-description">{{ team.description }}</p>
-                    </td>
-                    <td class="problem-letter">
-                        <p>{{ team.merged.score }}</p>
-                        <p class="score-info" v-if="my.scoring.hasPenalty()">
-                            {{ getContestTime(team.merged.penalty) }}
-                        </p>
-                    </td>
-                    <td class="problem-letter lighter" v-for="problem in problems"
-                        :class="{'ac-color': isAc(team, problem), 'wa-color': isWa(team, problem)}"
-                        @dblclick.stop="showScore(team._id, problem.problem)">
-                        <span v-if="problem.scoring.attempted(team.results[problem.problem._id])">
-                            <p> {{ getProblemScore(team, problem) }}</p>
-                            <p class="score-info" v-if="my.scoring.hasPenalty() && isAc(team, problem)">
-                                {{ getContestTime(team.results[problem.problem._id].penalty) }}
+    <div class="col s12 padded-container">
+        <div class="z-depth-1 card-panel jude-panel">
+            <h5 class="card-title">Standings</h5>
+            <table class="standings-table bordered striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th></th>
+                        <th class="problem-letter">
+                            <p class="score">Score</p>
+                        </th>
+                        <th class="problem-letter" v-for="problem in problems">
+                            <p>{{ problem.letter }}</p>
+                            <p class="score-info"></p>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="team in teams">
+                        <td>{{ team.rank }}</td>
+                        <td class="team-name">
+                            <p>{{ team.name }}</p>
+                            <p class="team-description">{{ team.description }}</p>
+                        </td>
+                        <td class="problem-letter">
+                            <p>{{ team.merged.score }}</p>
+                            <p class="score-info" v-if="my.scoring.hasPenalty()">
+                                {{ getContestTime(team.merged.penalty) }}
                             </p>
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Standings Modal -->
-    <div id="modal-standings" class="modal modal-fixed-footer">
-        <div class="modal-content submission-list">
-            <div v-for="sub in renderedSubmissions" class="submission-line">
-                <a href="#" @click.stop="showCode(sub)">
-                    <i class="material-icons">remove_red_eye</i>
-                </a>
-                <span class="submission-time"> @ {{ getContestTime(sub.timeInContest) }} </span>
-                <span class="right">
-                    {{ getHumanVerdict(getMainVerdict(sub.verdict, getProblem(sub.problem).problem)) }}
-                </span>
-            </div>
+                        </td>
+                        <td class="problem-letter lighter" v-for="problem in problems"
+                            :class="{'ac-color': isAc(team, problem), 'wa-color': isWa(team, problem)}"
+                            @dblclick.stop="showScore(team._id, problem.problem)">
+                            <span v-if="problem.scoring.attempted(team.results[problem.problem._id])">
+                                <p> {{ getProblemScore(team, problem) }}</p>
+                                <p class="score-info" v-if="my.scoring.hasPenalty() && isAc(team, problem)">
+                                    {{ getContestTime(team.results[problem.problem._id].penalty) }}
+                                </p>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
+
+        <!-- Standings Modal -->
+        <div id="modal-standings" class="modal modal-fixed-footer">
+            <div class="modal-content submission-list">
+                <div v-for="sub in renderedSubmissions" class="submission-line">
+                    <a href="#" @click.stop.prevent="showCode(sub)">
+                        <i class="material-icons">remove_red_eye</i>
+                    </a>
+                    <span class="submission-time"> @ {{ getContestTime(sub.timeInContest) }} </span>
+                    <span class="right">
+                        {{ getHumanVerdict(getMainVerdict(sub.verdict, getProblem(sub.problem).problem)) }}
+                    </span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" @click.prevent="" class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
+            </div>
         </div>
     </div>
 </template>
@@ -65,13 +67,22 @@
 <script type="text/babel">
     import 'babel-polyfill';
     import * as Helper from './helpers.js';
+    import { mapGetters } from "vuex"
 
     export default {
-        ready(){},
+        mounted (){},
         data() {
             return {
                 renderedSubmissions: []
             }
+        },
+        computed: {
+            ...mapGetters([
+                "problems",
+                "my",
+                "groupedSubs",
+                "teams"
+            ])
         },
         methods:{
             isPending(prob){
@@ -123,21 +134,6 @@
             },
             showCode(sub){
                 Helper.showCode(sub);
-            }
-        },
-        props: {
-            "problems":{
-                type: Array,
-                default: () => []
-            },
-            "my":{
-                default: () => {}
-            },
-            "groupedSubs":{
-                default: () => {}
-            },
-            "teams":{
-                default: () => []
             }
         }
     }

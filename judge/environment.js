@@ -12,12 +12,12 @@ var storage = require(path.join(__dirname, 'storage'));
 var await = require('asyncawait/await')
 var async = require('asyncawait/async')
 
-var mongodbQueue = require('mongodb-queue')
+const MongoQueue2 = require("mongo-queue2");
 
 var JudgeConfig = {
     EPS : 1e-7,
     MAX_SANDBOXES : 10,
-    MAX_SIMUL_TESTS: 2,
+    MAX_SIMUL_TESTS: 3,
     COMPILATION_TL: 25,
     CHECKING_TL: 10,
     CHECKING_ML: 512,
@@ -26,40 +26,86 @@ var JudgeConfig = {
     OUTPUT_LIMIT: (1<<24),
     TEMP_DIR : "/tmp",
     ISOLATE_PATH : path.resolve("/usr/local/bin/isolate"),
-    VISIBILITY_WINDOW: 30
+    VISIBILITY_WINDOW: 30,
+    BOUND_ML: 2048
 }
 
 class PackageCacher{
-    constructor(){
+    constructor(size = 20){
         this.path = tmp.dirSync({prefix: "judecache-", unsafeCleanup: true}).name;
-        this.has = new Set()
+        this.has = new Map();
+        this.size = size;
+    }
+
+    popLessFrequent() {
+        let best = 1e9;
+        let res = [];
+        for(let [key, value] of this.has) {
+            if(value < best)
+                res = [];
+            if(value <= best) {
+                best = value;
+                res.push(key);
+            }
+        }
+
+        try {
+            if(res.length > 0) {
+                const idx = Math.random() * res.length | 0;
+                const path = this.getFilePath(res[idx]);
+                fse.removeSync(path);
+                this.has.delete(res[idx]);
+                return true;
+            } else {
+                return false;
+            }
+        } catch(ex) {
+            return false;
+        }
+    }
+
+    ensureSpace() {
+        while(this.has.size >= this.size) {
+            if(!this.popLessFrequent())
+                break;
+        }
+    }
+
+    ping(p) {
+        const nv = Math.max((this.has.get(p) || 0), 0) + 1;
+        for(let [key, value] of this.has) {
+            this.has.set(key, value - 1);
+        }
+        this.has.set(p, nv);
     }
 
     addFromStream(p, cb){
         let writeStream = fs.createWriteStream(path.join(this.path, p))
         writeStream.on("finish", () => {
-            this.has.add(p)
-            async(cb)(null)
-        })
+            this.ensureSpace();
+            this.ping(p);
+            (async(cb)(null));
+        });
 
         writeStream.on("error", (err) => {
-            async(cb)(err)
-        })
+            (async(cb)(err));
+        });
 
-        return writeStream
+        return writeStream;
     }
 
     addFromFile(p, d){
-        fse.copySync(d, this.getFilePath(p))
-        this.has.add(p)
+        fse.copySync(d, this.getFilePath(p));
+        this.ensureSpace();
+        this.ping(p);
     }
 
     exists(p){
-        return this.has.has(p)
+        return this.has.has(p);
     }
 
     getFilePath(p){
-        return path.resolve(this.path, p)
+        return path.resolve(this.path, p);
     }
 }
 
@@ -71,7 +117,7 @@ class JudgeEnvironment{
         this.cache = new PackageCacher()
 
         this.seaweed = seaweed
-        if(db) this.queue = mongodbQueue(db, "jude-queue")
+        if(db) this.queue = new MongoQueue2(db, "jude-queue2");
     }
 
     getNextBoxId(){

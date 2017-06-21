@@ -2,14 +2,14 @@ version: '2'
 services:
   site:
     image: rsalesc/jude
-    environment:
-      - NODE_ENV=production
+    #environment:
+      #- NODE_ENV=production
     restart: always
 
   judge:
     image: rsalesc/jude
-    environment:
-      - NODE_ENV=production
+    #environment:
+      #- NODE_ENV=production
     restart: always
 
   db:

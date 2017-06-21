@@ -4,6 +4,7 @@
 var Promise = require('bluebird')
 
 var fs = Promise.promisifyAll(require('fs'))
+var fse = require("fs-extra");
 var dlutil = Promise.promisifyAll({rmtree: require('dlutil').rmtreeAsync})
 
 var path = require('path')
@@ -13,6 +14,7 @@ var logger = require(path.join(__dirname, 'logger'));
 var jenv = require(path.join(__dirname, 'environment'));
 var spawn = require('child_process').spawn
 var utils = require(path.join(__dirname, 'utils'));
+const { globAsync } = utils;
 
 var Storage = require(path.join(__dirname, 'storage')).MemoryStorage
 var JudgeConfig = jenv.JudgeConfig
@@ -24,9 +26,12 @@ var spawnDetachedPromise = require('child-process-promise').spawn
 function spawnDetachedAsync(command, args=[], options={}){
     return new Promise((resolve, reject) => {
         options.stdio = ['ignore']
+        options.detached = true;
         let successfulExitCodes = (options && options.successfulExitCodes) || [0];
 
         let proc = spawn(command, args, options)
+        proc.unref();
+        
         proc.on("close", (code) => {
             if(successfulExitCodes.indexOf(code) === -1){
                 let commandStr = command + (args.length ? (' ' + args.join(' ')) : '');
@@ -63,7 +68,7 @@ spawnDetachedAsync = function(command, args=[], options={}){
 * Make sure it runs inside an async environment
 * @abstract
  */
-class Sandbox{
+class Sandbox {
 
     /*
     * @param {Storage} storage which will provide quick interaction (in-memory)
@@ -75,6 +80,14 @@ class Sandbox{
             throw "Cannot instantiate abstract class " + this.constructor.name
         this.cacher = store
         this.env = env
+    }
+
+    setStorage(store) {
+        this.cacher = store;
+    }
+
+    setEnvironment(env) {
+        this.env = env;
     }
 
     getRootPath(){
@@ -215,6 +228,25 @@ class Sandbox{
         }
     }
 
+    globToStorage(pattern, fun) {
+        try {
+            const files = await(globAsync(pattern, { cwd: this.getRootPath(), absolute: true }));
+            for(let file of files) {
+                this.cacher.createFileFromContent(fun(file), await(fs.readFileSync(file)));
+            }
+        } catch(ex) {
+            console.log(ex);
+            logger.error("Sandbox could not save class files");
+        }
+    }
+
+    globFromStorage(pattern, fun) {
+        let matches = this.cacher.glob(pattern);
+        matches.map((match) => {
+            this.createFileFromStorage(fun(match), match);
+        });
+    }
+
     getFileStats(p){
         let res = await(fs.statAsync(this.resolvePath(p)))
         return res
@@ -284,9 +316,10 @@ const IsolateConst = {
 
 class Isolate extends Sandbox {
     constructor(env, store, log={}) {
-        super(env, store)
-        this.log = log
-        this.path = null
+        super(env, store);
+        this.log = log;
+        this.path = null;
+        this.initialized = false;
     }
 
     getRootPath() {
@@ -327,30 +360,37 @@ class Isolate extends Sandbox {
     }
 
     init() {
-        this.boxId = this.env.getNextBoxId()
-        this.executable = JudgeConfig.ISOLATE_PATH
-        this.execs = -1
+        if(this.initialized) {
+            this.setDefaultConfigs();
+            await(fse.emptyDir(this.path));
+            return;
+        }
 
-        this.outerDir = await(fs.mkdtempAsync(path.join(JudgeConfig.TEMP_DIR, "iso-")))
-        this.innerDir = "/tmp"
+        this.boxId = this.env.getNextBoxId();
+        this.executable = JudgeConfig.ISOLATE_PATH;
+        this.execs = -1;
+
+        this.outerDir = await(fs.mkdtempAsync(path.join(JudgeConfig.TEMP_DIR, "iso-")));
+        this.innerDir = "/tmp";
         this.path = this.outerDir + this.innerDir // have to use sum, absoluteness of tmp will mess things up
 
         await(fs.mkdirAsync(this.path)) // defaults to 0o777
-        await(fs.chmod(this.path, 0o777))
+        await(fs.chmod(this.path, 0o777));
 
-        logger.debug("Creating isolate sandbox %s (%d)", this.path, this.boxId)
-        this.setDefaultConfigs()
+        logger.debug("Creating isolate sandbox %s (%d)", this.path, this.boxId);
+        this.setDefaultConfigs();
 
-        let params = []
-        if (this.cgroup) params.push("--cg")
-        params.push("--box-id=" + this.boxId)
-        params.push("--init")
+        let params = [];
+        if (this.cgroup) params.push("--cg");
+        params.push("--box-id=" + this.boxId);
+        params.push("--init");
 
         try {
-            let res = await(spawnDetachedAsync(this.executable, params, {stdio: ['ignore']}))
+            let res = await(spawnDetachedAsync(this.executable, params, {stdio: ['ignore']}));
+            this.initialized = true;
         } catch (e) {
-            logger.error("[Isolate] Sandbox could not be initialized")
-            throw e
+            logger.error("[Isolate] Sandbox could not be initialized");
+            throw e;
         }
     }
 
@@ -454,7 +494,7 @@ class Isolate extends Sandbox {
 
     getRunningTime() { // seconds (float)
         if (this.log.hasOwnProperty("time"))
-            return this.log["time"][0]
+            return parseFloat(this.log["time"][0]);
         return null
     }
 
@@ -467,7 +507,7 @@ class Isolate extends Sandbox {
 
     getWallTime() {
         if (this.log.hasOwnProperty("time-wall"))
-            return this.log["time-wall"][0]
+            return parseFloat(this.log["time-wall"][0]);
         return null
     }
 
@@ -579,11 +619,38 @@ class Isolate extends Sandbox {
         args.push("--cleanup")
 
         try{
-            await(spawnDetachedAsync(this.executable, args, {stdio: ['ignore']}))
+            if(this.initialized)
+                await(spawnDetachedAsync(this.executable, args, {stdio: ['ignore']}))
             await(dlutil.rmtreeAsync(this.outerDir))
         }catch(e){
-            logger.error("Isolate sandbox %s (%d) could not be deleted", this.path, this.boxId)
-            throw e
+            logger.error("Isolate sandbox %s (%d) could not be deleted", this.path, this.boxId);
+            throw e;
+        }
+    }
+}
+
+class IsolatePool {
+    constructor(size) {
+        this.size = size;
+        this.sandboxes = [];
+        this.ptr = 0;
+        for(let i = 0; i < size; i++) {
+            this.sandboxes.push(new Isolate());
+        }
+    }
+
+    getNext(env, store, log = []) {
+        let sandbox = this.sandboxes[this.ptr++];
+        this.ptr %= this.size;
+        sandbox.setEnvironment(env);
+        sandbox.setStorage(store);
+        sandbox.log = log;
+        return sandbox;
+    }
+    
+    cleanup() {
+        for(let sandbox of this.sandboxes){
+            sandbox.cleanup();
         }
     }
 }
@@ -629,5 +696,6 @@ if(!module.parent) {
 module.exports = {
     Sandbox,
     Isolate,
-    IsolateConst
-}
+    IsolateConst,
+    IsolatePool
+};

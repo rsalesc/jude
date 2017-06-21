@@ -1,0 +1,13 @@
+//
+   Created by rsalesc on 17/08/16.
+
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        title Redirecting...
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+    body
+        script(type='text/javascript').
+            localStorage.setItem("token", "#{token}");
+            window.location = "/";

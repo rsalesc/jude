@@ -6,6 +6,8 @@ var Promise =  require('bluebird')
 var async = require('asyncawait/async')
 var await = require('asyncawait/await')
 
+const fs = require("fs");
+
 const path = require('path');
 var verdict = require(path.join(__dirname, 'verdict'));
 var utils = require(path.join(__dirname, 'utils'));
@@ -14,15 +16,20 @@ var sandbox = require(path.join(__dirname, 'sandbox'));
 var environment = require(path.join(__dirname, 'environment'));
 
 const loader = require(path.join(__dirname, 'loader'));
+const Profiler = require(path.join(__dirname, 'profiler'));
 
 var Verdict = verdict.Verdict;
 var VerdictConst = verdict.VerdictConst;
 var Isolate = sandbox.Isolate
 var IsolateConst = sandbox.IsolateConst
+var IsolatePool = sandbox.IsolatePool;
 var Storage = require(path.join(__dirname, "storage")).MemoryStorage
 var JudgeEnvironment = environment.JudgeEnvironment
 var JudgeConfig = environment.JudgeConfig
 var JudeLoader = loader.JudeLoader
+
+const policyPath = "/etc/java-sandbox/security.policy";
+const javaExecutorPath = "/etc/java-sandbox/executor.jar";
 
 function evaluate(iso, store, command, input, output="output", error="error"){
     if(input)
@@ -30,7 +37,7 @@ function evaluate(iso, store, command, input, output="output", error="error"){
     iso.stdout = output
     iso.stderr = error
 
-    let res = iso.executeBufferized(command, ['stdout', 'stderr']) // remove stdout and stderr, only for dbg
+    let res = iso.executeBufferized(command); // remove stdout and stderr, only for dbg
     //iso.removeFile(iso.stdout)
     //iso.removeFile(iso.stderr)
 
@@ -50,6 +57,110 @@ let Evaluation = {
         let res = evaluate(iso, store, ["./eval"], input, output, error)
         iso.removeFile("eval")
         iso.removeFile(input)
+
+        return res
+    },
+    "Py2": function(iso, store, execPath, test, timelimit=null, wtlimit=null, memorylimit=null,
+                    input="input", output="output",
+                    error="error"){
+        iso.timelimit = timelimit
+        iso.wallclockLimit = wtlimit
+        iso.memorySize = memorylimit
+        iso.setEnv["HOME"] = "./";
+        iso.dirs.push({in: "/usr"});
+        iso.dirs.push({in: "/etc"});
+        iso.createFileFromStorage(input, test)
+        iso.createFileFromStorage("sol.pyc", "sol.pyc", true)
+
+        let res = evaluate(iso, store, ["/usr/bin/python2", "sol.pyc"], input, output, error)
+        iso.dirs.pop();
+        iso.dirs.pop();
+
+        iso.removeFile("sol.pyc");
+        iso.removeFile(input)
+
+        return res
+    },
+    "Py3": function(iso, store, execPath, test, timelimit=null, wtlimit=null, memorylimit=null,
+                    input="input", output="output",
+                    error="error"){
+        iso.timelimit = timelimit
+        iso.wallclockLimit = wtlimit
+        iso.memorySize = memorylimit
+        iso.setEnv["HOME"] = "./";
+        iso.dirs.push({in: "/usr"});
+        iso.dirs.push({in: "/etc"});
+        iso.createFileFromStorage(input, test)
+        iso.createFileFromStorage("sol.pyc", "sol.pyc", true)
+
+        let res = evaluate(iso, store, ["/usr/bin/python3", "sol.pyc"], input, output, error)
+        iso.dirs.pop();
+        iso.dirs.pop();
+
+        iso.removeFile("sol.pyc");
+        iso.removeFile(input)
+
+        return res
+    },
+    "Java": function(iso, store, execPath, test, timelimit=null, wtlimit=null, memorylimit=null,
+                    input="input", output="output",
+                    error="error"){
+        let oldProc = iso.maxProcesses;
+        let oldEnv = iso.setEnv;
+        let oldCgTiming = iso.cgTiming;
+        let oldCgMemory = iso.cgMemorySize;
+        let oldCg = iso.cgroup;
+
+        iso.setEnv["MALLOC_ARENA_MAX"] = "1";
+        iso.maxProcesses = null;
+        iso.timelimit = timelimit
+        iso.wallclockLimit = wtlimit
+        iso.dirs.push({in: "/etc"});
+        iso.dirs.push({in: "/usr/lib/jvm"});
+        iso.memorySize = iso.cgMemorySize = 1300*1024 + memorylimit;
+        iso.cgTiming = true;
+        iso.cgroup = true;
+
+        iso.createFileFromStorage(input, test)
+        iso.globFromStorage("*.class", path.basename);
+
+        const command = [
+            "/usr/bin/java",
+            "-client",
+           `-javaagent:${javaExecutorPath}=policy:${policyPath}`,
+            "-Xss128m",
+            `-Xmx${(memorylimit/1024)|0}m`,
+            "-XX:MaxMetaspaceSize=256m",
+            "-XX:CompressedClassSpaceSize=64m",
+            "-XX:ErrorFile=submission_jvm_crash.log",
+            "Main"
+        ];
+
+        //console.log(iso.getRunArgs());
+        let res = evaluate(iso, store, command, input, output, error)
+        //console.log(fs.readFileSync(iso.resolvePath("output"), "utf8"));
+        //console.log(fs.readFileSync(iso.resolvePath("error"), "utf8"));
+        //console.log(fs.readFileSync(iso.resolvePath("run.log.0"), "utf8"));
+
+        // console.log(fs.readFileSync(iso.resolvePath("submission_jvm_crash.log")));
+        //console.log(fs.readFileSync(iso.resolvePath("state"), "utf8"));
+
+        // require("sleep").sleep(20);
+
+        if(!iso.fileExists("state"))
+            throw new Error("State file not found");
+        
+        if(iso.fileExists("submission_jvm_crash.log"))
+            throw new Error("JVM somehow crashed");
+
+        iso.removeFile(input);
+        iso.dirs.pop();
+        iso.dirs.pop();
+        iso.setEnv = oldEnv;
+        iso.maxProcesses = oldProc;
+        iso.cgTiming = oldCgTiming;
+        iso.cgMemorySize = oldCgMemory;
+        iso.cgroup = oldCg;
 
         return res
     }
@@ -150,6 +261,117 @@ let Compilation = {
         res.stdout = iso.getFileToString("output")
         iso.removeFile("output")
         return res
+    },
+    "Java" : function(iso, store, file, execPath){
+        let sourceFile = "Main.java"
+        iso.createFileFromStorage(sourceFile, file)
+
+        let oldEnv = iso.preserveEnv
+        let oldProc = iso.maxProcesses
+        let oldTL = iso.timelimit
+        let oldWTL = iso.wallclockLimit
+        iso.preserveEnv = true
+        iso.maxProcesses = null
+        iso.dirs.push({in: "/etc"})
+        iso.dirs.push({in: "/usr/lib/jvm" });
+        iso.timelimit = JudgeConfig.COMPILATION_TL
+        iso.wallclockLimit = JudgeConfig.COMPILATION_TL
+
+        let res = evaluate(iso, store, 
+            ["/usr/bin/javac", "-Xlint", "-encoding", "UTF-8", sourceFile]);
+
+        iso.maxProcesses = oldProc
+        iso.preserveEnv = oldEnv
+        iso.timelimit = oldTL
+        iso.wallclockLimit = oldWTL
+        iso.dirs.pop();
+        iso.dirs.pop();
+
+        iso.removeFile(sourceFile)
+
+        if(res.code == 0) {
+            iso.globToStorage("*.class", path.basename);
+        }
+
+        res.stdout = iso.getFileToString("output")
+        res.stderr = iso.getFileToString("error")
+        iso.removeFile("output")
+        iso.removeFile("error")
+        return res
+    },
+    "Py2" : function(iso, store, file, execPath){
+        let sourceFile = "sol.py"
+        iso.createFileFromStorage(sourceFile, file)
+
+        let oldEnv = iso.preserveEnv
+        let oldProc = iso.maxProcesses
+        let oldTL = iso.timelimit
+        let oldWTL = iso.wallclockLimit
+        iso.preserveEnv = true
+        iso.maxProcesses = null
+        iso.dirs.push({in: "/etc"})
+        iso.dirs.push({in: "/usr"});
+        iso.timelimit = JudgeConfig.COMPILATION_TL
+        iso.wallclockLimit = JudgeConfig.COMPILATION_TL
+
+        let res = evaluate(iso, store, ["/usr/bin/python2", "-m", "py_compile",
+            sourceFile])
+
+        iso.maxProcesses = oldProc
+        iso.preserveEnv = oldEnv
+        iso.timelimit = oldTL
+        iso.wallclockLimit = oldWTL
+        iso.dirs.pop()
+        iso.dirs.pop();
+
+        iso.removeFile(sourceFile)
+
+        if(res.code == 0 && execPath) {
+            iso.globToStorage("**/*.pyc", (file) => "sol.pyc");
+        }
+
+        res.stdout = iso.getFileToString("output")
+        res.stderr = iso.getFileToString("error")
+        iso.removeFile("output")
+        iso.removeFile("error")
+        return res
+    },
+    "Py3" : function(iso, store, file, execPath){
+        let sourceFile = "sol.py"
+        iso.createFileFromStorage(sourceFile, file)
+
+        let oldEnv = iso.preserveEnv
+        let oldProc = iso.maxProcesses
+        let oldTL = iso.timelimit
+        let oldWTL = iso.wallclockLimit
+        iso.preserveEnv = true
+        iso.maxProcesses = null
+        iso.dirs.push({in: "/etc"})
+        iso.dirs.push({in: "/usr"});
+        iso.timelimit = JudgeConfig.COMPILATION_TL
+        iso.wallclockLimit = JudgeConfig.COMPILATION_TL
+
+        let res = evaluate(iso, store, ["/usr/bin/python3", "-m", "py_compile",
+            sourceFile])
+
+        iso.maxProcesses = oldProc
+        iso.preserveEnv = oldEnv
+        iso.timelimit = oldTL
+        iso.wallclockLimit = oldWTL
+        iso.dirs.pop()
+        iso.dirs.pop();
+
+        iso.removeFile(sourceFile)
+
+        if(res.code == 0 && execPath) {
+            iso.globToStorage("**/*.pyc", (file) => "sol.pyc");
+        }
+
+        res.stdout = iso.getFileToString("output")
+        res.stderr = iso.getFileToString("error")
+        iso.removeFile("output")
+        iso.removeFile("error")
+        return res
     }
 }
 
@@ -200,34 +422,31 @@ function compilationStepAsync(env, store, lang, sol=SOURCE_PATH, solExec=SOURCE_
 /*
 *   Promisified testCase
  */
-function testCaseAsync(env, store, task, lang, dataset, testcase){
+function testCaseAsync(env, store, iso, task, lang, dataset, testcase, prof){
     return new Promise(function(resolve, reject){
         async(function() {
             logger.debug(`running on testcase ${testcase.in}`)
             let timelimit = task.getTimelimit()     // to seconds
             let memorylimit = task.getMemorylimit() * 1024   // to KB
 
-            let iso = new Isolate(env, store)
-            let evaluationResult = {}
-            let checkingResult = {}
+            let evaluationResult = {};
+            let checkingResult = {};
             let execTime = undefined;
             let exitWith = function (verdict) {
-                try {
-                    iso.cleanup()
-                } catch(e){
-                    logger.warn("isolate box could not be cleared properly")
-                }
-                resolve(verdict)
-                return
-            }
+                return resolve(verdict);
+            };
 
+            let execLog = {};
+            prof.fire("eval_trycatch");
             // grading step
             try {
                 iso.init()
 
+                prof.fire("eval");
                 evaluationResult = Evaluation[lang](iso, store, SOURCE_EXEC_PATH,
                     testcase.in, timelimit, timelimit * JudgeConfig.WT_MULTIPLIER, memorylimit)
-                evaluationResult.log = iso.getLog()
+                prof.stop("eval");
+                evaluationResult.log = execLog = iso.getLog()
 
                 // sandbox crashed
                 if (!Isolate.translateBoxExitCode(evaluationResult.code)) {
@@ -260,14 +479,17 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
                 logger.error("execution step failed - %s", e.toString())
                 return exitWith(new Verdict(0, "VERDICT_JE"))
             }
-
+            prof.stop("eval_trycatch");
+            prof.fire("check_trycatch");
             try {
                 // recreate file to avoid input modification when checking
                 iso.createFileFromStorage("input", testcase.in)
                 iso.createFileFromStorage("answer", testcase.out)
 
+                prof.fire("check");
                 checkingResult = Checking[task.getCheckerLanguage()](iso, store,
                     CHECKER_EXEC_PATH)
+                prof.stop("check");
                 checkingResult.log = iso.getLog()
 
                 if (!Isolate.translateBoxExitCode(checkingResult.code)) {
@@ -275,6 +497,8 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
                     console.log(checkingResult);
                     return exitWith(new Verdict(0, "VERDICT_JE"))
                 }
+
+                iso.log = execLog;
 
                 let output = checkingResult.stderr
 
@@ -298,6 +522,8 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
                 console.log(e)
                 return exitWith(new Verdict(0, "VERDICT_JE"))
             }
+
+            prof.stop("check_trycatch");
         })()
     })
 }
@@ -314,16 +540,28 @@ function testCaseAsync(env, store, task, lang, dataset, testcase){
 function testDataset(env, store, task, lang, dataset){
     let execTime = -1;
     try {
+        let prof = new Profiler();
         let n = dataset.testcases.length;
+        let totalTime = 0;
+        let wallTime = 0;
+
+        prof.fire("general");
         for (let i = 0; i < n; i += JudgeConfig.MAX_SIMUL_TESTS) {
             let cases = [];
-            for(let j = 0; j < JudgeConfig.MAX_SIMUL_TESTS && i+j < n; j++)
-                cases.push(testCaseAsync(env, store, task, lang,
-                    dataset, dataset.testcases[i+j]))
+            let boxes = [];
+            for(let j = 0; j < JudgeConfig.MAX_SIMUL_TESTS && i+j < n; j++) {
+                let iso = new Isolate(env, store);
+                boxes.push(iso);
+                cases.push(testCaseAsync(env, store, iso, task, lang,
+                    dataset, dataset.testcases[i+j], prof))
+            }
 
             let res = await(cases);
             for(let j = 0; j < JudgeConfig.MAX_SIMUL_TESTS && i+j < n; j++){
                 let caseResult = res[j];
+                totalTime += boxes[j].getRunningTime();
+                wallTime += boxes[j].getWallTime();
+                boxes[j].cleanup();
                 if(caseResult.info.hasOwnProperty("time"))
                     execTime = Math.max(execTime, caseResult.info.time);
 
@@ -334,6 +572,12 @@ function testDataset(env, store, task, lang, dataset){
                 }
             }
         }
+
+        prof.stop("general");
+        prof.dump();
+        console.log("rt", totalTime);
+        console.log("wt", wallTime);
+        
     } catch (e){
         logger.error("dataset test failed - %s", e.toString());
         return new Verdict(0, "VERDICT_JE");
@@ -463,7 +707,65 @@ if(!module.parent){
         let fake_mle_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){vector<int> v(1000000000);}"
         let slow2_code = "\#include \<bits/stdc++.h>\nusing namespace std;\nint main(){int acc = 0; for(int i = 0; i < 1000000000; i++) acc += i; cout << acc << endl;}"
         //console.log(code)
-        utils.logInspect(testTask(env, task, store, code, "CPP"))
+        // utils.logInspect(testTask(env, task, store, slow_code, "CPP"))
+
+        let java_wacode = `
+        public class Main {
+            public static void main(String[] args) {
+                System.out.println("Hello!");
+            }
+        }`;
+
+        let java_mlecode = `
+        public class Main {
+            public static void main(String[] args) {
+                long a[] = new long[1024*1024*21];
+                for(int i = 0; i < 1024*1024*21; i++) a[i] = i;
+                System.out.println("Hello!");
+            }
+        }`;
+
+        let crazy_code = `import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) {
+        TaskG solver = new TaskG();
+        solver.solve();
+    }
+
+    static class TaskG {
+        static final long MODULO = (long) (1e9 + 7);
+
+        public void solve() {
+        	System.out.println(5);
+        }
+
+        private int gcd(int a, int b) {
+            while (b > 0) {
+                int t = a % b;
+                a = b;
+                b = t;
+            }
+            return a;
+        }
+    }
+}`;
+
+        let pycode = "print '5'";
+
+        utils.logInspect(testTask(env, task, store, pycode, "Py2"))
 
         //
         // let env = new JudgeEnvironment()
@@ -503,8 +805,11 @@ if(!module.parent){
 }
 
 let availableLanguages = {
-    CPP: "C++11",
-    C: "C"
+    CPP: "C++ 11",
+    C: "C 11",
+    Java: "Java 8",
+    Py2: "Python 2",
+    Py3: "Python 3"
 };
 
 module.exports = {testTask, testPackage, availableLanguages};

@@ -3,29 +3,23 @@
 @import 'components/forms';
 @import 'layouts/login';
 
-.main {
-    padding-left: 60px;
-}
-
-a{
-    i.material-icons{
-        @extend .teal-text, .text-lighten-1;
-
-        &:hover{
-            @extend .text-lighten-2;
-        }
-    }
+.wrapper {
+    padding-left: 240px;
 }
 
 @media only screen and (max-width : 992px) {
-    .main {
+    .wrapper {
         padding-left: 0;
     }
 }
 @media only screen and (min-width: 993px) {
     .container {
-        width: 72%;
+        width: 88%;
     }
+}
+
+.container.smaller {
+    max-width: 600px;
 }
 
 
@@ -99,8 +93,10 @@ nav{
     }
 }
 
-.jude-panel{
-    margin:20px;
+.padded-container {
+    .card-panel {
+        padding: .5em 1em;
+    }
 }
 
 .btn-small {
@@ -267,5 +263,14 @@ nav{
                 font-size: 0.85em;
             }
         }
+    }
+}
+
+.paginate-links {
+    @extend .pagination;
+    text-align: right;
+
+    .number {
+        @extend .waves-effect;
     }
 }

@@ -3,7 +3,14 @@
  */
 var express = require('express')
 var router = express.Router()
-var Submission = require('../../models/Submission')()
+const path = require("path");
+
+const async = require("asyncawait/async");
+const await = require("asyncawait/await");
+
+var models = require(path.join(__dirname, '../../models/'));
+const { Submission } = models;
+
 var SubmissionNoCode =
     '_id _creator contest problem language code verdict'
 
@@ -11,30 +18,35 @@ function handleSubmissionError(err, req, res, next){
     res.status(400).json([err])
 }
 
-/**
- * @api {get} /api/submissions/
- * @apiName GetSubmissions
- * @apiGroup Submissions
- */
-router.get('/', (req, res, next) => {
-    Submission.find().select(SubmissionNoCode).lean().exec((err, subs) => {
-        if(err) return handleSubmissionError(err, req, res)
-        return res.json(subs)
-    })
-})
+// TODO: set back to IN_QUEUE status
+router.post("/:id/rejudge", function(req, res, next) {
+    if(!req.params.id)
+        return handleSubmissionError("no rejudge id provided");
+    
+    Submission.findByIdAndUpdate(req.params.id, {}, { new: true }, async((err, sub) => {
+        if(err)
+            return handleSubmissionError(err);
 
-/**
- * @api {get} /api/submissions
- * /:id
- * @apiName GetSubmission
- * @apiGroup Submissions
- */
-router.get('/:id', (req, res, next) => {
-    Submission.findOne({_id: req.params.id}).lean().exec((err, sub) => {
-        if(err) return handleSubmissionError(err, req, res)
-        return res.json({result: sub || null})
-    })
-})
+        sub.populate("problem", async((err, sub) => {
+            if(err)
+                return handleSubmissionError(err);
+
+            try {
+                await(judeQueue.add({
+                    id: sub.problem._id,
+                    subid: sub._id,
+                    fid: sub.problem.fid,
+                    code: sub.code,
+                    lang: sub.language
+                }));
+            } catch(ex) {
+                return handleSubmissionError(ex, req, res);
+            }
+
+            res.json({success: "rejudged"});
+        }));
+    }));
+});
 
 module.exports = router
 module.exports.SubmissionNoCode = SubmissionNoCode

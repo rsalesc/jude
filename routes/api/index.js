@@ -9,8 +9,8 @@ var userRouter = require('./user')
 var submissionRouter = require('./submission')
 
 // middlewares
-router.use('/contest', contestRouter)
-router.use('/user', userRouter)
-router.use('/submission', submissionRouter)
+router.use('/contests', contestRouter)
+router.use('/users', userRouter)
+router.use('/submissions', submissionRouter)
 
 module.exports = router;
