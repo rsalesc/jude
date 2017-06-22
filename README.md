@@ -22,26 +22,27 @@ go get github.com/chrislusf/seaweedfs/weed
 
 About it: http://askubuntu.com/questions/757384/can-i-use-14-04-mongodb-packages-with-16-04
 
-### Docker Usage
+It seems that now there are better ways to install it on Ubuntu. Anyways it should be safer
+to stick to its Docker image.
 
-For development:
-
-```
-docker-compose up -d
-```
-
-For production:
+### Docker Usage in Development Mode
 
 ```
-docker-compose -f docker-compose.yml -f production.yml up -d
+./dcomp.sh build && ./dcomp.sh up
 ```
+
+Hit `CTRL+C` twice to stop the containers. The DB will persist across `dcomp` calls since
+as long as its container is stopped, not destroyed.
 
 To add a root/root user to your database:
 
 ```
 docker-compose run site bash
-node dev/make_db.js
+node dev/make_db.js # run this in the recently initiated sh session of the container
 ```
 
-The container port `3000` will be exposed and binded to the host `3000`. 
-You can use Nginx or similar to route some URL to it.
+If you do not destroy your DB container, you will probably do it only once.
+
+The container port `3000` will be exposed and binded to the host `3001`. 
+You can use Nginx or similar to route some URL to it, but in development mode
+it should be fine to access `http://localhost:3001`.
