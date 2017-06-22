@@ -114,7 +114,7 @@ export function lighten(t){
     return shadeColor2("#"+normalizeHexColor(t), 0.3).substr(1);
 }
 
-export function showCode(sub){
+export function showCode(component, sub){
     Api.submission.get({id: sub._id}).then((res) => {
         if(!res.body.hasOwnProperty("code")) return;
         let code = res.body.code;
@@ -134,6 +134,11 @@ export function showCode(sub){
         content.text(code).attr('class', getHlsMode(res.body.language));
         hljs.highlightBlock(content[0]);
         modal.openModal();
+    }, (res) => {
+        if(res.status == 401 || res.status == 403) {
+            Materialize.toast("Not logged in, cannot show code!");
+            component.$router.push("/");
+        }
     });
 }
 

@@ -166,12 +166,20 @@ export let getters = {
 
 export let actions = {
     async [types.FETCH_CONTEST_DATA] (context) {
-        let [contestResult, submissionsResult] = 
-            await Promise.all([Api.contest.get(), Api.submissions.get()]);
+        try {
+            let [contestResult, submissionsResult] = 
+                await Promise.all([Api.contest.get(), Api.submissions.get()]);
+            
+            context.commit(types.UPDATE_CONTEST_DATA, {
+            ...contestResult.body,
+            ...submissionsResult.body 
+            });
+        } catch(response) {
+            if(response.status == 401 || response.status == 403)
+                return false;
+            throw response;
+        }
 
-        context.commit(types.UPDATE_CONTEST_DATA, {
-           ...contestResult.body,
-           ...submissionsResult.body 
-        });
+        return true;
     }
 };

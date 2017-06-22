@@ -1,7 +1,10 @@
 <template>
     <div class="col s6 padded-container">
         <div class="z-depth-1 card-panel jude-panel">
-            <h5 class="card-title">Problemset</h5>
+            <h5 class="card-title">
+                <span>Problemset</span>
+                <span class="comment">Click in the page icon to download the statement for a problem.</span>
+            </h5>
             <ul class="collapsible problems-list" data-collapsible="accordion">
                 <li v-for="prob in problems">
                     <div class="collapsible-header" :class="{'ac-color': isAc(prob), 'wa-color': isWa(prob), 'pending-color': isPending(prob)}">

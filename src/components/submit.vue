@@ -84,15 +84,24 @@
                     problem,
                     code,
                     language
-                }).then((result) => {
+                }).then(async (result) => {
                     this.cm.setValue("");
                     Materialize.toast('Your submission was sent successfully!', 4000);
                     el.closeModal();
-                    this.$store.dispatch(types.FETCH_CONTEST_DATA);
                     this.submitting--;
+
+                    const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
+                    if(!loggedin) {
+                        this.$router.push("/");
+                    }
                 }).catch((err) => {
-                    Materialize.toast(`Submission error: ${err.data.error}`, 4000);
                     this.submitting--;
+                    if(err.status == 401 || err.status == 403) {
+                        Materialize.toast("Not logged in, failed to submit!", 4000);
+                        return this.$router.push("/");
+                    }
+
+                    Materialize.toast(`Submission error: ${err.body.error}`, 4000);
                 });
             },
             changeLanguage(e) { 

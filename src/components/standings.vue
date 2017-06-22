@@ -1,8 +1,11 @@
 <template>
     <div class="col s12 padded-container">
         <div class="z-depth-1 card-panel jude-panel">
-            <h5 class="card-title">Standings</h5>
-            <table class="standings-table bordered striped">
+            <h5 class="card-title">
+                <span>Standings</span>
+                <span class="comment">Double click a problem/team cell to show details about the tries of a team for that problem.</span>
+            </h5>
+            <table class="standings-table bordered">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -10,7 +13,7 @@
                         <th class="problem-letter">
                             <p class="score">Score</p>
                         </th>
-                        <th class="problem-letter" v-for="problem in problems">
+                        <th class="problem-letter" v-for="problem in problems" :style="{ borderTopColor: '#' + problem.color }">
                             <p>{{ problem.letter }}</p>
                             <p class="score-info"></p>
                         </th>
@@ -133,7 +136,7 @@
                 modal.openModal();
             },
             showCode(sub){
-                Helper.showCode(sub);
+                Helper.showCode(this, sub);
             }
         }
     }

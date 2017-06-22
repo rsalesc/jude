@@ -1,7 +1,10 @@
 <template>
     <div class="col s6 padded-container">
         <div class="z-depth-1 card-panel jude-panel">
-            <h5 class="card-title">Submissions</h5>
+            <h5 class="card-title">
+                <span>Submissions</span>
+                <span class="comment">Click in the eye to see more details about a submission.</span>
+            </h5>
             <paginate name="submissions" :list="my.submissions" :per="100"
                 class="collapsible submission-list">
                 <li v-for="sub in paginated('submissions')">
@@ -115,7 +118,7 @@
                 return Helper.lighten(t);
             },
             showCode(sub){
-                return Helper.showCode(sub);
+                return Helper.showCode(this, sub);
             }
         },
         watch: {

@@ -175,7 +175,10 @@
                 return moment(contest.end_time).format("LLL (Z)");
             },
             async fetch(){
-                await this.$store.dispatch(types.FETCH_CONTEST_DATA);
+                const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
+                if(!loggedin) {
+                    this.$router.push("/");
+                }
             },
             async doLogout() {
                 await this.$http.post(Api.paths.logout);

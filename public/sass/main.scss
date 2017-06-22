@@ -223,6 +223,12 @@ nav{
         font-size: 0.85em;
     }
 
+    th.problem-letter {
+        border-top-width: 3px;
+        border-top-color: white;
+        border-top-style: solid;
+    }
+
     .team-description{
         color: #666;
         font-size: 0.8em;
@@ -272,5 +278,16 @@ nav{
 
     .number {
         @extend .waves-effect;
+    }
+}
+
+.card-title {
+    .comment {
+        float: right;
+        width: 40%;
+        font-size: .8rem;
+        line-height: 1rem;
+        text-align: right;
+        color: gray;
     }
 }
