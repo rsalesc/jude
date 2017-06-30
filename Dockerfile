@@ -35,8 +35,8 @@ RUN npm i -g pm2
 # copy code
 ADD package.json .
 RUN npm install --production
-COPY judge/executor.jar /etc/java-sandbox
-COPY judge/security.policy /etc/java-sandbox
+COPY judge/executor.jar /etc/java-sandbox/
+COPY judge/security.policy /etc/java-sandbox/
 COPY . .
 
 # start cluster

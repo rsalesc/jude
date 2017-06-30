@@ -1,7 +1,5 @@
 const path = require('path');
 const mongoose = require('mongoose');
-const async = require("asyncawait/async");
-const await = require("asyncawait/await");
 const grader = require(path.join(__dirname, '../judge/grader'));
 const precheck = require(path.join(__dirname, "../judge/precheck"));
 const auth2 = require(path.join(__dirname, "../auth2"));
@@ -49,7 +47,7 @@ router.get('/', function(req, res, next){
         if(!contest.hasStarted())
           contest.problems = [];
 
-        contestObj = Object.assign({}, contest.toObject(), { languages: Object.entries(grader.availableLanguages) });
+        const contestObj = Object.assign({}, contest.toObject(), { languages: Object.entries(grader.availableLanguages)});
 
         User.find({contest: contest.id}).select('-password -email -handle').exec((err, teams) => {
             if(err)
@@ -142,18 +140,18 @@ router.post('/submit', function(req, res, next){
                 verdict
             });
 
-            sub.save(async((err) => {
+            sub.save((async (err) => {
                 if(err)
                     return handleContestError(err, req, res);
 
                 try {
-                    await(judeQueue.add({
+                    await judeQueue.add({
                         id: req.body.problem,
                         subid: sub._id,
                         fid: problem.fid,
                         code: req.body.code,
                         lang: req.body.language
-                    }));
+                    });
                 } catch(ex) {
                     return handleContestError(ex, req, res);
                 }

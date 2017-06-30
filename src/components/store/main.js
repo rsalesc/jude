@@ -137,9 +137,16 @@ export let computed = {
         });
 
         let pos = 0;
+        let last = -1;
+        let officials = 0;
+
         for(let i = 0; i < teams.length; i++){
-            if(!teams[i].unofficial)
-                teams[i].rank = ++pos;
+            if(!teams[i].unofficial) {
+                officials++;
+                if(last != -1) teams[i].rank = teams[last].rank;
+                if(last == -1 || teams[last].merged.score != teams[i].merged.score || teams[last].merged.penalty != teams[i].merged.penalty)
+                    teams[i].rank = officials;
+            }
         }
 
         return teams;

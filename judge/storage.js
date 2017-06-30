@@ -2,77 +2,72 @@
  * Created by rsalesc on 15/06/16.
  */
 
-var Promise = require('bluebird')
-
-const yauzl = require('yauzl')
-const concatStream = require('concat-stream')
-const utils = require('./utils')
-const wildcard = require('node-wildcard')
-var path = require('path')
-var logger = require('./logger')
-var fs = Promise.promisifyAll(require('fs'))
-var await = require('asyncawait/await')
-var async = require('asyncawait/async')
-var glob = Promise.promisifyAll({glob: require('glob').glob}).globAsync
+const yauzl = require("yauzl");
+const concatStream = require("concat-stream");
+const utils = require("./utils");
+const wildcard = require("node-wildcard");
+const path = require("path");
+const logger = require("./logger");
+const fs = require("fs-extra");
+const promisify = require("es6-promisify");
+const glob = promisify(require("glob").glob);
 
 /* Helper Functions for storage */
-function dealWithEntry(zipFile, entry){
-    return new Promise((resolve, reject) => {
-        async(() => {
-            zipFile.openReadStream(entry, (err, stream) => {
-                if(err) {
-                    zipFile.readEntry()
-                    return reject(err)
-                }
+function dealWithEntry(zipFile, entry) {
+  return new Promise((resolve, reject) => {
+    zipFile.openReadStream(entry, (err, stream) => {
+      if (err) {
+        zipFile.readEntry();
+        return reject(err);
+      }
 
-                let concat = concatStream((buffer) => {
-                    zipFile.readEntry()
-                    return resolve({path: entry.fileName, buffer})
-                })
+      const concat = concatStream((buffer) => {
+        zipFile.readEntry();
+        return resolve({ path: entry.fileName, buffer });
+      });
 
-                stream.on('error', (err) => {
-                    zipFile.readEntry()
-                    return reject(err)
-                })
+      stream.on("error", (err2) => {
+        zipFile.readEntry();
+        return reject(err2);
+      });
 
-                stream.pipe(concat)
-            })
-        })()
-    })
+      return stream.pipe(concat);
+    });
+  });
 }
 
-function loadZipAsync(p){
-    let absPath = path.resolve(p)
-    return new Promise((resolve, reject) => {
-        async(() => {
-            yauzl.open(absPath, {lazyEntries: true},
-                (err, zipFile) => {
+function loadZipAsync(p) {
+  const absPath = path.resolve(p);
+  return new Promise((resolve, reject) => {
+    yauzl.open(absPath, { lazyEntries: true },
+               (err, zipFile) => {
+                 if (err)
+                   return reject(err);
+                 const toWait = [];
+                 zipFile.readEntry();
 
-                    if(err) return reject(err)
-                    let toWait = []
-                    zipFile.readEntry()
+                 // process entries
+                 zipFile.on("entry", (entry) => {
+                   if (/\/$/.test(entry.fileName))
+                     return zipFile.readEntry();
 
-                    // process entries
-                    zipFile.on("entry", (entry) => {
-                        if(/\/$/.test(entry.fileName))
-                            return zipFile.readEntry()
+                   return toWait.push(dealWithEntry(zipFile, entry));
+                 });
 
-                        toWait.push(dealWithEntry(zipFile, entry))
-                    })
+                 zipFile.once("end", async () => {
+                   zipFile.close();
+                   // resolve or reject result
+                   try {
+                     const resWait = await Promise.all(toWait);
+                     resolve(resWait);
+                   } catch (ex) {
+                     reject(ex);
+                   }
+                 });
 
-                    zipFile.once("end", async(() => {
-                        zipFile.close()
-                        // resolve or reject result
-                        try{
-                            let resWait = await(toWait)
-                            resolve(resWait)
-                        } catch(ex){
-                            reject(ex)
-                        }
-                    }))
-                })
-        })()
-    })
+                 return null;
+               });
+  });
 }
 
 /**
@@ -80,216 +75,239 @@ function loadZipAsync(p){
 *   Make sure it runs inside an async environment
 *   @abstract
  */
-class Storage{
-    constructor(){
-        if(new.target == Storage)
-            throw "Cannot instantiate abstract class " + this.constructor.name
-    }
+class Storage {
+  constructor() {
+    if (new.target === Storage)
+      throw `Cannot instantiate abstract class ${this.constructor.name}`;
+  }
 
-    /**
-    *   Load a directory/file into the storage
-    *   @param {string} path to the directory/file
-     */
-    load(p){
-        throw "Function not implemented in " + this.constructor.name
-    }
+  /**
+  *   Load a directory/file into the storage
+  *   @param {string} path to the directory/file
+      */
+  // eslint-disable-next-line no-unused-vars
+  async load(p) {
+    throw `Function not implemented in ${this.constructor.name}`;
+  }
 
-    /**
-     * Relative path to be normalized
-     * @param p to be normalized
-     * @returns {string} normalized path
-     */
-    normalizePath(p){
-        return (p.length === 0 || p.charAt(0) != '/') ? "/" + p : p
-    }
+  /**
+   * Relative path to be normalized
+   * @param p to be normalized
+   * @returns {string} normalized path
+   */
+  // eslint-disable-next-line no-unused-vars
+  normalizePath(p) {
+    return p.length === 0 || p.charAt(0) !== "/"
+      ? `/${p}`
+      : p;
+  }
 
-    /**
-     *  Load a ZIP file into the storage
-     *  @param {string} path to the zip file
-     */
-    loadZip(p){
-        throw "Function not implemented in " + this.constructor.name
-    }
+  /**
+   *  Load a ZIP file into the storage
+   *  @param {string} path to the zip file
+   */
+  // eslint-disable-next-line no-unused-vars
+  async loadZip(p) {
+    throw `Function not implemented in ${this.constructor.name}`;
+  }
 
-    /**
-    *   Create a file in the storage from a provided buffer/string
-    *   @param {string} path/ID of the new file in the Storage
-    *   @param {buffer|string} content of the new file
-     */
-    createFileFromContent(p, content){
-        throw "Function not implemented in " + this.constructor.name
-    }
+  /**
+  *   Create a file in the storage from a provided buffer/string
+  *   @param {string} path/ID of the new file in the Storage
+  *   @param {buffer|string} content of the new file
+    */
+  // eslint-disable-next-line no-unused-vars
+  async createFileFromContent(p, content) {
+    throw `Function not implemented in ${this.constructor.name}`;
+  }
 
-    /**
-    *   Get buffer from a file in Storage
-    *   @param {string} path/ID to the file in storage
-    *   @returns {buffer} buffer from the file
-     */
-    getFileBuffer(p){
-        throw "Function not implemented in " + this.constructor.name
-    }
+  /**
+  *   Get buffer from a file in Storage
+  *   @param {string} path/ID to the file in storage
+  *   @returns {buffer} buffer from the file
+    */
+  // eslint-disable-next-line no-unused-vars
+  async getFileBuffer(p) {
+    throw `Function not implemented in ${this.constructor.name}`;
+  }
 
-    /**
-    *   Get string from a file in storage
-    *   @param {string} path/ID to the file in storage
-    *   @returns {string} string from the file
-     */
-    getFileString(p){
-        throw "Function not implemented in " + this.constructor.name
-    }
+  /**
+  *   Get string from a file in storage
+  *   @param {string} path/ID to the file in storage
+  *   @returns {string} string from the file
+    */
+  // eslint-disable-next-line no-unused-vars
+  async getFileString(p) {
+    throw `Function not implemented in ${this.constructor.name}`;
+  }
 
-    /**
-     *  Check if file is readable
-     */
-    isReadable(p){
-        try{
-            this.getFileBuffer(p)
-            return true
-        } catch (ex){
-            return false
-        }
+  /**
+   *  Check if file is readable
+   */
+  async isReadable(p) {
+    try {
+      await this.getFileBuffer(p);
+      return true;
+    } catch (ex) {
+      return false;
     }
+  }
 
-    /**
+  /**
      * Get file names that match the given glob pattern
      * @param {string} glob pattern
      * @return {string[]} file names that match the given glob pattern
      */
-    glob(p, sort=false){
-        throw "Function not implemented in " + this.constructor.name
-    }
+  // eslint-disable-next-line no-unused-vars
+  async glob(p, sort = false) {
+    throw `Function not implemented in ${this.constructor.name}`;
+  }
 
-    /**
+  /**
      *  Dispose any resource cached in-memory by the storage
      *  (the Storage object should be unusable after that)
      */
-    dispose(p){
-
-    }
+  // eslint-disable-next-line no-unused-vars
+  async dispose(p) {
+    throw `Function not implemented in ${this.constructor.name}`;
+  }
 }
 
-class RealStorage extends Storage{
-    // WARNING: class created only for testing purposes.
-    // Non-persistent Storage should be used (in-memory, temporary dir, etc)
-    // TODO: every function should check if dir exist and create it if it doesnt
-    constructor(){
-        super()
-        this.path = "/"
-    }
-    load(p) {
-        this.path = path.resolve(p)
-    }
-    createFileFromContent(p, content){
-        let abs = path.resolve(this.path, p)
-        try {
-            await(fs.writeFileAsync(abs, content))
-        }
-        catch(e){
-            logger.error("[%s] File %s could not be created", this.constructor.name, p)
-            throw e
-        }
-    }
+class RealStorage extends Storage {
+  // WARNING: class created only for testing purposes.
+  // Non-persistent Storage should be used (in-memory, temporary dir, etc)
+  // TODO: every function should check if dir exist and create it if it doesnt
+  constructor() {
+    super();
+    this.path = "/";
+  }
 
-    getFileBuffer(p){
-        let abs = path.resolve(this.path, p)
-        try{
-            let res = await(fs.readFileAsync(abs))
-            return res
-        }catch(e){
-            logger.error("[%s] File %s could not be retrieved", this.constructor.name, p)
-            throw e
-        }
-    }
+  // eslint-disable-next-line require-await
+  async load(p) {
+    this.path = path.resolve(p);
+  }
 
-    getFileString(p){
-        let abs = path.resolve(this.path, p)
-        try{
-            let res = await(fs.readFileAsync(abs, "utf8"))
-            return res
-        }catch(e){
-            logger.error("[%s] File %s could not be retrieved", this.constructor.name, p)
-            throw e
-        }
+  async createFileFromContent(p, content) {
+    const abs = path.resolve(this.path, p);
+    try {
+      await fs.writeFile(abs, content);
+    } catch (e) {
+      logger.error("[%s] File %s could not be created", this.constructor.name, p);
+      throw e;
     }
+  }
+
+  async getFileBuffer(p) {
+    const abs = path.resolve(this.path, p);
+    try {
+      const res = await fs.readFile(abs);
+      return res;
+    } catch (e) {
+      logger.error("[%s] File %s could not be retrieved", this.constructor.name, p);
+      throw e;
+    }
+  }
+
+  async getFileString(p) {
+    const abs = path.resolve(this.path, p);
+    try {
+      const res = await fs.readFile(abs, "utf8");
+      return res;
+    } catch (e) {
+      logger.error("[%s] File %s could not be retrieved", this.constructor.name, p);
+      throw e;
+    }
+  }
 }
 
-class MemoryStorage extends Storage{
-    constructor(){
-        super()
-        this.data = {}
-    }
+class MemoryStorage extends Storage {
+  constructor() {
+    super();
+    this.data = {};
+  }
 
-    load(p){
-        let absPath = path.resolve(p)
-        let res = await(glob("**/*", {cwd: absPath, nodir:true}))
-        for(let file of res){
-            this.data[this.normalizePath(file)]
-                = await(fs.readFileAsync(path.join(absPath, file)))
-        }
-    }
+  async load(p) {
+    const absPath = path.resolve(p);
+    const res = await glob("**/*", { cwd: absPath, nodir: true });
 
-    loadZip(p){
-        let res = await(loadZipAsync(p))
-        for(let {path, buffer} of res){
-           this.createFileFromContent(path, buffer)
-        }
-    }
+    await Promise.all(res.map(async (file) => {
+      this.data[this.normalizePath(file)] = await fs.readFile(path.join(absPath, file));
+    }));
+  }
 
-    createFileFromContent(p, content){
-        let norm = this.normalizePath(p)
-        this.data[norm] = new Buffer(content)
-    }
+  async loadZip(p) {
+    const res = await loadZipAsync(p);
+    const promises = res.map(({ path: resPath, buffer }) =>
+      this.createFileFromContent(resPath, buffer));
+    await Promise.all(promises);
+  }
 
-    getFileBuffer(p, def=null){
-        p = this.normalizePath(p)
-        if(!this.data.hasOwnProperty(p)){
-            if(def === null) throw `File ${p} not found in MemoryStorage`
-            else return new Buffer(def)
-        }
-        return this.data[p]
-    }
+  // eslint-disable-next-line require-await
+  async createFileFromContent(p, content) {
+    const norm = this.normalizePath(p);
+    this.data[norm] = new Buffer(content);
+  }
 
-    getFileString(p, def=null){
-        p = this.normalizePath(p)
-        if(!this.data.hasOwnProperty(p)){
-            if(def === null) throw `File ${p} not found in MemoryStorage`
-            else return def.toString()
-        }
-        return this.data[p].toString()
+  // eslint-disable-next-line require-await
+  async getFileBuffer(p, def = null) {
+    const normalizedPath = this.normalizePath(p);
+    if (!this.data.hasOwnProperty(normalizedPath)) {
+      if (def === null)
+        throw `File ${normalizedPath} not found in MemoryStorage`;
+      else
+        return new Buffer(def);
     }
+    return this.data[normalizedPath];
+  }
 
-    glob(p, sort=false){
-        p = this.normalizePath(p)
-        let res = []
-        for(let fn in this.data){
-            if(this.data.hasOwnProperty(fn) &&
-                    wildcard(fn, p))
-                res.push(fn)
-        }
-        if(sort) res.sort()
-        return res
+  // eslint-disable-next-line require-await
+  async getFileString(p, def = null) {
+    const normalizedPath = this.normalizePath(p);
+    if (!this.data.hasOwnProperty(normalizedPath)) {
+      if (def === null)
+        throw `File ${normalizedPath} not found in MemoryStorage`;
+      else
+        return def.toString();
     }
+    return this.data[normalizedPath].toString();
+  }
 
-    dispose(){
-        utils.destroy(this.data)
-        this.data = null
+  // eslint-disable-next-line require-await
+  async glob(p, sort = false) {
+    const normalizedPath = this.normalizePath(p);
+    const res = [];
+    for (const fn of Object.keys(this.data)) {
+      if (wildcard(fn, normalizedPath))
+        res.push(fn);
     }
+    if (sort)
+      res.sort();
+    return res;
+  }
+
+  // eslint-disable-next-line require-await
+  async dispose() {
+    utils.destroy(this.data);
+    this.data = null;
+  }
 }
 
-if(!module.parent)
-    async(function(){
-        console.log("Testing with async...")
-        let store = new MemoryStorage()
-        store.load("test_contest")
-        console.log(store.getFileString("jude.yml"))
-        store.createFileFromContent("lola", "HAHAHA")
-        console.log(store.getFileBuffer("jude.yml"))
-        console.log(store.data)
-    })()
+if (!module.parent) {
+  // eslint-disable-next-line require-await
+  (async () => {
+    console.log("Testing with async...");
+    const store = new MemoryStorage();
+    await store.load("test_contest");
+    console.log(store.getFileString("jude.yml"));
+    await store.createFileFromContent("lola", "HAHAHA");
+    console.log(store.getFileBuffer("jude.yml"));
+    console.log(store.data);
+  })();
+}
 
 
 module.exports = {
-    Storage,
-    RealStorage,
-    MemoryStorage
-}
+  Storage,
+  RealStorage,
+  MemoryStorage
+};

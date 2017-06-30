@@ -2,8 +2,6 @@
  * Created by rsalesc on 15/07/16.
  */
 
-const path = require('path');
-
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema;
 
@@ -37,13 +35,12 @@ module.exports = () => {
     SubmissionSchema.pre('save', function(next){
         if(this.problem){
             db.model("Problem").findById(this.problem).exec((err, problem) => {
-                if(err)
+                if (err)
                     next(err);
                 this.verdict = (this.verdict || {});
                 let res = {};
-                for(let data of problem.attr.datasets) {
+                for (let data of problem.attr.datasets)
                     res[data.name] = (this.verdict[data.name] || DEFAULT_VERDICT);
-                }
 
                 this.verdict = res;
                 next();
