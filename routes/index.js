@@ -1,105 +1,103 @@
-var express = require('express');
-var router = express.Router();
-const path = require('path');
-const async = require('asyncawait/async');
-const models = require(path.join(__dirname, "../models"));
-const {Problem, Contest} = models;
+const express = require("express");
+const router = express.Router();
+const path = require("path");
+const models = require("../models");
+const { Problem, Contest } = models;
 
-const Storage = require(path.join(__dirname, "../judge/storage")).MemoryStorage;
-const Loader = require(path.join(__dirname, "../judge/loader"));
-const utils = require(path.join(__dirname, "../judge/utils"));
-const api = require(path.join(__dirname, "api"));
-const contest = require(path.join(__dirname, "contest"));
-const admin = require(path.join(__dirname, "admin"));
-const auth2 = require(path.join(__dirname, "../auth2"));
-const passport = require('passport');
+const Storage = require("../judge/storage").MemoryStorage;
+const Loader = require("../judge/loader");
+const utils = require("../judge/utils");
+const api = require("./api");
+const contest = require("./contest");
+const admin = require("./admin");
+const auth2 = require("../auth2");
+const passport = require("passport");
 
 function handleInternalError(err, req, res, next) {
-    res.status(500).json({ error: err.toString() });
+  res.status(500).json({ error: err.toString() });
 }
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    res.render('index');
+router.get("/", (req, res, next) => {
+  res.render("index");
 });
 
-router.post('/api-logout', auth2.dispose());
-router.post('/api-login', auth2.authenticate(["contestant", "root"]));
+router.post("/api-logout", auth2.dispose());
+router.post("/api-login", auth2.authenticate(["contestant", "root"]));
 
-router.post('/upload/:id', auth2.isAuth(["root"]), function(req, res, next){
-    if(!req.files || !req.files.file)
-        return res.status(404).json({message: "exactly one file should be uploaded"});
-    Problem.findOne({_id: req.params.id}, (err, problem) => {
-        if (err)
-            return res.status(400).json({message: err.toString()});
-        if (!problem)
-            return res.status(400).json({message: "problem not found"});
+router.post("/upload/:id", auth2.isAuth(["root"]), (req, res, next) => {
+  if (!req.files || !req.files.file)
+    return res.status(404).json({ message: "exactly one file should be uploaded" });
+  Problem.findOne({ _id: req.params.id }, (err, problem) => {
+    if (err)
+      return res.status(400).json({ message: err.toString() });
+    if (!problem)
+      return res.status(400).json({ message: "problem not found" });
 
-        async(() => {
-            let file = req.files.file;
+    (async () => {
+      const file = req.files.file;
 
-            let task = null;
-            let store = new Storage();
-            try {
-                store.loadZip(file.path);
+      let task = null;
+      const store = new Storage();
+      try {
+        store.loadZip(file.path);
 
-                let loade = Loader.autoDetect(store);
-                if (loade === null)
-                    throw new Error("Package is not loadable");
+        const loade = Loader.autoDetect(store);
+        if (loade === null)
+          throw new Error("Package is not loadable");
 
-                task = new loade(store).load();
-            } catch (ex) {
-                return res.status(400).json({message: ex.toString()});
-            }
+        task = new loade(store).load();
+      } catch (ex) {
+        return res.status(400).json({ message: ex.toString() });
+      }
 
-            if (!task)
-                return res.status(400).json({message: "package could not be loaded"});
+      if (!task)
+        return res.status(400).json({ message: "package could not be loaded" });
 
 
-            console.log(`Uploading package ${file.path}`);
+      console.log(`Uploading package ${file.path}`);
 
-            weedClient.write(file.path).then((info) => {
-                problem.fid = info.fid;
-                problem.attr = task.toJSON();
+      weedClient.write(file.path).then((info) => {
+        problem.fid = info.fid;
+        problem.attr = task.toJSON();
 
-                if (task.hasStatement()) {
-                    weedClient.write(store.getFileBuffer(task.getStatement())).then((infoStatement) => {
-                        problem.statementFid = infoStatement.fid;
-                        info.statementFid = infoStatement.fid;
+        if (task.hasStatement()) {
+          weedClient.write(store.getFileBuffer(task.getStatement())).then((infoStatement) => {
+            problem.statementFid = infoStatement.fid;
+            info.statementFid = infoStatement.fid;
 
-                        problem.save((err) => {
-                            if (err)
-                                return res.status(400).json({message: err.toString()});
-                            res.send(info);
-                        });
-
-                    }).catch((err) => {
-                        res.status(400).json({message: err.toString()});
-                    });
-                } else {
-                    problem.save((err) => {
-                        if (err)
-                            return res.status(400).json({message: err.toString()});
-                        res.send(info);
-                    });
-                }
-            }).catch((err) => {
-                res.status(400).json({message: err.toString()});
+            problem.save((err) => {
+              if (err)
+                return res.status(400).json({ message: err.toString() });
+              res.send(info);
             });
-        })();
-    });
+          }).catch((err) => {
+            res.status(400).json({ message: err.toString() });
+          });
+        } else {
+          problem.save((err) => {
+            if (err)
+              return res.status(400).json({ message: err.toString() });
+            res.send(info);
+          });
+        }
+      }).catch((err) => {
+        res.status(400).json({ message: err.toString() });
+      });
+    })();
+  });
 });
 
 router.get("/contest-list", (req, res, next) => {
-    Contest.find({ hidden: false }, (err, contests) => {
-        if(err)
-            return handleInternalError(err, req, res);
-        
-        res.json({ contests });
-    });
+  Contest.find({ hidden: false }, (err, contests) => {
+    if (err)
+      return handleInternalError(err, req, res);
+
+    res.json({ contests });
+  });
 });
 
-router.use('/contest', contest);
-router.use('/admin', admin);
+router.use("/contest", contest);
+router.use("/admin", admin);
 
 module.exports = router;

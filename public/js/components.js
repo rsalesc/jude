@@ -93,7 +93,7 @@
 
 	var _contestList2 = _interopRequireDefault(_contestList);
 
-	var _store = __webpack_require__(547);
+	var _store = __webpack_require__(550);
 
 	__webpack_require__(785);
 
@@ -45561,15 +45561,15 @@
 
 	var Scoring = _interopRequireWildcard(_scoring);
 
-	var _task = __webpack_require__(534);
+	var _task = __webpack_require__(537);
 
-	var _verdict = __webpack_require__(543);
+	var _verdict = __webpack_require__(546);
 
 	var _vue = __webpack_require__(2);
 
 	var _vue2 = _interopRequireDefault(_vue);
 
-	var _api = __webpack_require__(544);
+	var _api = __webpack_require__(547);
 
 	var Api = _interopRequireWildcard(_api);
 
@@ -46236,10 +46236,6 @@
 
 	"use strict";
 
-	var _getIterator2 = __webpack_require__(475);
-
-	var _getIterator3 = _interopRequireDefault(_getIterator2);
-
 	var _getPrototypeOf = __webpack_require__(498);
 
 	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -46252,11 +46248,19 @@
 
 	var _inherits3 = _interopRequireDefault(_inherits2);
 
-	var _classCallCheck2 = __webpack_require__(529);
+	var _keys = __webpack_require__(529);
+
+	var _keys2 = _interopRequireDefault(_keys);
+
+	var _getIterator2 = __webpack_require__(475);
+
+	var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+	var _classCallCheck2 = __webpack_require__(532);
 
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var _createClass2 = __webpack_require__(530);
+	var _createClass2 = __webpack_require__(533);
 
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -46267,330 +46271,436 @@
 	 */
 
 	function submissionComparator(a, b) {
-	    if (a.timeInContest == b.timeInContest) return new Date(a.time).getTime() - new Date(b.time).getTime();
-	    return a.timeInContest - b.timeInContest;
+	  if (a.timeInContest === b.timeInContest) return new Date(a.time).getTime() - new Date(b.time).getTime();
+	  return a.timeInContest - b.timeInContest;
 	}
 
 	var Scoring = function () {
-	    function Scoring(task) {
-	        var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-	        (0, _classCallCheck3.default)(this, Scoring);
+	  function Scoring(task) {
+	    var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	    (0, _classCallCheck3.default)(this, Scoring);
 
-	        if (new.target == Scoring) throw "Cannot instantiate abstract class " + this.constructor.name;
-	        this._task = task;
-	        this._opts = opts;
+	    if (new.target === Scoring) throw "Cannot instantiate abstract class " + this.constructor.name;
+	    this._task = task;
+	    this._opts = opts;
+	  }
+
+	  (0, _createClass3.default)(Scoring, [{
+	    key: "solved",
+
+
+	    // eslint-disable-next-line no-unused-vars
+	    value: function solved(obj) {
+	      throw new Error("Function not implemented in this class");
 	    }
 
-	    (0, _createClass3.default)(Scoring, [{
-	        key: "solved",
-	        value: function solved(obj) {
-	            throw new Error("Function not implemented in this class");
-	        }
-	    }, {
-	        key: "attempted",
-	        value: function attempted(obj) {
-	            throw new Error("Function not implemented in this class");
-	        }
-	    }, {
-	        key: "eval",
-	        value: function _eval(verdicts) {
-	            throw new Error("Function not implemented in this class");
-	        }
-	    }, {
-	        key: "evalContest",
-	        value: function evalContest(submissions) {
-	            throw new Error("Function not implemented in this class");
-	        }
-	    }, {
-	        key: "skipped",
-	        value: function skipped() {
-	            return ["", "VERDICT_INQ", "VERDICT_JE", "VERDICT_CE", "VERDICT_FAIL", "VERDICT_CHTE", "VERDICT_UE", "VERDICT_CTE"];
-	        }
-	    }, {
-	        key: "hasSkipped",
-	        value: function hasSkipped(verdicts) {
-	            var toSkip = this.skipped();
-	            for (var key in verdicts) {
-	                if (!verdicts.hasOwnProperty(key)) continue;
-	                var verdict = verdicts[key];
-	                if (toSkip.indexOf(verdict.verdict) !== -1) return true;
-	            }
+	    // eslint-disable-next-line no-unused-vars
 
-	            return false;
-	        }
-	    }, {
-	        key: "evalContext",
-	        value: function evalContext(submissions) {
-	            var _this = this;
+	  }, {
+	    key: "attempted",
+	    value: function attempted(obj) {
+	      throw new Error("Function not implemented in this class");
+	    }
 
-	            return this.evalContest(submissions.filter(function (s) {
-	                return s.timeInContest >= 0;
-	            }).filter(function (s) {
-	                return !_this.hasSkipped(s.verdict);
-	            }).sort(submissionComparator));
+	    // eslint-disable-next-line no-unused-vars
+
+	  }, {
+	    key: "eval",
+	    value: function _eval(verdicts) {
+	      throw new Error("Function not implemented in this class");
+	    }
+
+	    // eslint-disable-next-line no-unused-vars
+
+	  }, {
+	    key: "evalContest",
+	    value: function evalContest(submissions) {
+	      throw new Error("Function not implemented in this class");
+	    }
+	  }, {
+	    key: "skipped",
+	    value: function skipped() {
+	      return ["", "VERDICT_INQ", "VERDICT_JE", "VERDICT_CE", "VERDICT_FAIL", "VERDICT_CHTE", "VERDICT_UE", "VERDICT_CTE"];
+	    }
+	  }, {
+	    key: "hasSkipped",
+	    value: function hasSkipped(verdicts) {
+	      var toSkip = this.skipped();
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+
+	      try {
+	        for (var _iterator = (0, _getIterator3.default)((0, _keys2.default)(verdicts)), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var key = _step.value;
+
+	          var verdict = verdicts[key];
+	          if (toSkip.indexOf(verdict.verdict) !== -1) return true;
 	        }
-	    }, {
-	        key: "task",
-	        get: function get() {
-	            return this._task;
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
 	        }
-	    }, {
-	        key: "opts",
-	        get: function get() {
-	            return this._opts;
-	        }
-	    }], [{
-	        key: "isTaskValid",
-	        value: function isTaskValid(tk) {
-	            throw new Error("Function not implemented in this class");
-	        }
-	    }, {
-	        key: "hasWeight",
-	        value: function hasWeight() {
-	            throw new Error("Function not implemented in this class");
-	        }
-	    }, {
-	        key: "hasPenalty",
-	        value: function hasPenalty() {
-	            throw new Error("Function not implemented in this class");
-	        }
-	    }, {
-	        key: "mergeEvaluations",
-	        value: function mergeEvaluations(evals) {
-	            throw new Error("Function not implemented in this class");
-	        }
-	    }]);
-	    return Scoring;
+	      }
+
+	      return false;
+	    }
+	  }, {
+	    key: "evalContext",
+	    value: function evalContext(submissions) {
+	      var _this = this;
+
+	      return this.evalContest(submissions.filter(function (s) {
+	        return s.timeInContest >= 0;
+	      }).filter(function (s) {
+	        return !_this.hasSkipped(s.verdict);
+	      }).sort(submissionComparator));
+	    }
+
+	    // eslint-disable-next-line no-unused-vars
+
+	  }, {
+	    key: "task",
+	    get: function get() {
+	      return this._task;
+	    }
+	  }, {
+	    key: "opts",
+	    get: function get() {
+	      return this._opts;
+	    }
+
+	    // eslint-disable-next-line no-unused-vars
+
+	  }], [{
+	    key: "isTaskValid",
+	    value: function isTaskValid(tk) {
+	      throw new Error("Function not implemented in this class");
+	    }
+	  }, {
+	    key: "hasWeight",
+	    value: function hasWeight() {
+	      throw new Error("Function not implemented in this class");
+	    }
+	  }, {
+	    key: "hasPenalty",
+	    value: function hasPenalty() {
+	      throw new Error("Function not implemented in this class");
+	    }
+	  }, {
+	    key: "mergeEvaluations",
+	    value: function mergeEvaluations(evals) {
+	      throw new Error("Function not implemented in this class");
+	    }
+	  }]);
+	  return Scoring;
 	}();
 
 	var ProductScoring = function (_Scoring) {
-	    (0, _inherits3.default)(ProductScoring, _Scoring);
+	  (0, _inherits3.default)(ProductScoring, _Scoring);
 
-	    function ProductScoring() {
-	        (0, _classCallCheck3.default)(this, ProductScoring);
-	        return (0, _possibleConstructorReturn3.default)(this, (ProductScoring.__proto__ || (0, _getPrototypeOf2.default)(ProductScoring)).apply(this, arguments));
+	  function ProductScoring() {
+	    (0, _classCallCheck3.default)(this, ProductScoring);
+	    return (0, _possibleConstructorReturn3.default)(this, (ProductScoring.__proto__ || (0, _getPrototypeOf2.default)(ProductScoring)).apply(this, arguments));
+	  }
+
+	  (0, _createClass3.default)(ProductScoring, [{
+	    key: "solved",
+	    value: function solved(obj) {
+	      return obj.score === this.task.getWeight();
 	    }
+	  }, {
+	    key: "attempted",
+	    value: function attempted(obj) {
+	      return obj.affect || obj.fails > 0;
+	    }
+	  }, {
+	    key: "fails",
+	    value: function fails(obj) {
+	      return obj.fails;
+	    }
+	  }, {
+	    key: "eval",
+	    value: function _eval(verdicts) {
+	      var res = 1;
+	      var _iteratorNormalCompletion2 = true;
+	      var _didIteratorError2 = false;
+	      var _iteratorError2 = undefined;
 
-	    (0, _createClass3.default)(ProductScoring, [{
-	        key: "solved",
-	        value: function solved(obj) {
-	            return obj.score == this.task.getWeight();
+	      try {
+	        for (var _iterator2 = (0, _getIterator3.default)((0, _keys2.default)(verdicts)), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	          var key = _step2.value;
+
+	          var verdict = verdicts[key];
+	          if (verdict.verdict === "VERDICT_INQ") {
+	            return {
+	              score: 0, affect: false, penalty: 0, fails: 0
+	            };
+	          }
+
+	          res *= verdict.verdict === "VERDICT_AC" ? 1 : 0;
 	        }
-	    }, {
-	        key: "attempted",
-	        value: function attempted(obj) {
-	            return obj.affect || obj.fails > 0;
+	      } catch (err) {
+	        _didIteratorError2 = true;
+	        _iteratorError2 = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	            _iterator2.return();
+	          }
+	        } finally {
+	          if (_didIteratorError2) {
+	            throw _iteratorError2;
+	          }
 	        }
-	    }, {
-	        key: "fails",
-	        value: function fails(obj) {
-	            return obj.fails;
-	        }
-	    }, {
-	        key: "eval",
-	        value: function _eval(verdicts) {
-	            var res = 1;
-	            for (var key in verdicts) {
-	                if (!verdicts.hasOwnProperty(key)) continue;
-	                var verdict = verdicts[key];
-	                if (verdict.verdict == "VERDICT_INQ") {
-	                    return { score: 0, affect: false, penalty: 0, fails: 0 };
-	                }
-	                res *= verdict.verdict == "VERDICT_AC" ? 1 : 0;
+	      }
+
+	      return {
+	        score: parseInt(res * this.task.getWeight(), 10), penalty: 0, affect: true, fails: 0
+	      };
+	    }
+	  }, {
+	    key: "evalContest",
+	    value: function evalContest(submissions) {
+	      submissions.sort(submissionComparator);
+
+	      var fails = 0;
+	      var penalty = 0;
+	      var opts = this.opts;
+	      var _iteratorNormalCompletion3 = true;
+	      var _didIteratorError3 = false;
+	      var _iteratorError3 = undefined;
+
+	      try {
+
+	        for (var _iterator3 = (0, _getIterator3.default)(submissions), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	          var submission = _step3.value;
+
+	          var evaluation = this.eval(submission.verdict);
+	          if (!evaluation.affect) {
+	            if (evaluation.score === 0) {
+	              penalty += opts.penalty || 20;
+	              fails++;
+	            } else {
+	              return {
+	                score: evaluation.score,
+	                penalty: penalty + submission.timeInContest,
+	                affect: true,
+	                fails: fails
+	              };
 	            }
-
-	            return { score: parseInt(res * this.task.getWeight()), penalty: 0, affect: true, fails: 0 };
+	          }
 	        }
-	    }, {
-	        key: "evalContest",
-	        value: function evalContest(submissions) {
-	            submissions.sort(submissionComparator);
-
-	            var fails = 0;
-	            var penalty = 0;
-	            var opts = this.opts;
-
-	            var _iteratorNormalCompletion = true;
-	            var _didIteratorError = false;
-	            var _iteratorError = undefined;
-
-	            try {
-	                for (var _iterator = (0, _getIterator3.default)(submissions), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                    var submission = _step.value;
-
-	                    var evaluation = this.eval(submission.verdict);
-	                    if (!evaluation.affect) continue;
-	                    if (evaluation.score == 0) {
-	                        penalty += opts.penalty || 20;
-	                        fails++;
-	                    } else {
-	                        return {
-	                            "score": evaluation.score,
-	                            "penalty": penalty + submission.timeInContest,
-	                            "affect": true,
-	                            "fails": fails
-	                        };
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError = true;
-	                _iteratorError = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion && _iterator.return) {
-	                        _iterator.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError) {
-	                        throw _iteratorError;
-	                    }
-	                }
-	            }
-
-	            return { score: 0, penalty: 0, affect: false, fails: fails };
+	      } catch (err) {
+	        _didIteratorError3 = true;
+	        _iteratorError3 = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	            _iterator3.return();
+	          }
+	        } finally {
+	          if (_didIteratorError3) {
+	            throw _iteratorError3;
+	          }
 	        }
-	    }], [{
-	        key: "isTaskValid",
-	        value: function isTaskValid(tk) {
-	            return true;
-	        }
-	    }, {
-	        key: "hasWeight",
-	        value: function hasWeight() {
-	            return true;
-	        }
-	    }, {
-	        key: "hasPenalty",
-	        value: function hasPenalty() {
-	            return true;
-	        }
-	    }, {
-	        key: "mergeEvaluations",
-	        value: function mergeEvaluations(evals) {
-	            return evals.reduce(function (old, cur) {
-	                return { score: old.score + cur.score, penalty: old.penalty + cur.penalty };
-	            }, { score: 0, penalty: 0 });
-	        }
-	    }]);
-	    return ProductScoring;
+	      }
+
+	      return {
+	        score: 0, penalty: 0, affect: false, fails: fails
+	      };
+	    }
+	  }], [{
+	    key: "isTaskValid",
+
+
+	    // eslint-disable-next-line no-unused-vars
+	    value: function isTaskValid(tk) {
+	      return true;
+	    }
+	  }, {
+	    key: "hasWeight",
+	    value: function hasWeight() {
+	      return true;
+	    }
+	  }, {
+	    key: "hasPenalty",
+	    value: function hasPenalty() {
+	      return true;
+	    }
+	  }, {
+	    key: "mergeEvaluations",
+	    value: function mergeEvaluations(evals) {
+	      return evals.reduce(function (old, cur) {
+	        return {
+	          score: old.score + cur.score,
+	          penalty: old.penalty + cur.penalty
+	        };
+	      }, { score: 0, penalty: 0 });
+	    }
+	  }]);
+	  return ProductScoring;
 	}(Scoring);
 
 	var IcpcScoring = function (_Scoring2) {
-	    (0, _inherits3.default)(IcpcScoring, _Scoring2);
+	  (0, _inherits3.default)(IcpcScoring, _Scoring2);
 
-	    function IcpcScoring() {
-	        (0, _classCallCheck3.default)(this, IcpcScoring);
-	        return (0, _possibleConstructorReturn3.default)(this, (IcpcScoring.__proto__ || (0, _getPrototypeOf2.default)(IcpcScoring)).apply(this, arguments));
+	  function IcpcScoring() {
+	    (0, _classCallCheck3.default)(this, IcpcScoring);
+	    return (0, _possibleConstructorReturn3.default)(this, (IcpcScoring.__proto__ || (0, _getPrototypeOf2.default)(IcpcScoring)).apply(this, arguments));
+	  }
+
+	  (0, _createClass3.default)(IcpcScoring, [{
+	    key: "solved",
+	    value: function solved(obj) {
+	      return obj.score > 0;
 	    }
+	  }, {
+	    key: "attempted",
+	    value: function attempted(obj) {
+	      return obj.affect || obj.fails > 0;
+	    }
+	  }, {
+	    key: "fails",
+	    value: function fails(obj) {
+	      return obj.fails;
+	    }
+	  }, {
+	    key: "eval",
+	    value: function _eval(verdicts) {
+	      var res = 1;
+	      var _iteratorNormalCompletion4 = true;
+	      var _didIteratorError4 = false;
+	      var _iteratorError4 = undefined;
 
-	    (0, _createClass3.default)(IcpcScoring, [{
-	        key: "solved",
-	        value: function solved(obj) {
-	            return obj.score > 0;
+	      try {
+	        for (var _iterator4 = (0, _getIterator3.default)((0, _keys2.default)(verdicts)), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	          var key = _step4.value;
+
+	          var verdict = verdicts[key];
+	          if (verdict.verdict === "VERDICT_INQ") {
+	            return {
+	              score: 0, affect: false, penalty: 0, fails: 0
+	            };
+	          }
+
+	          res *= verdict.verdict === "VERDICT_AC" ? 1 : 0;
 	        }
-	    }, {
-	        key: "attempted",
-	        value: function attempted(obj) {
-	            return obj.affect || obj.fails > 0;
+	      } catch (err) {
+	        _didIteratorError4 = true;
+	        _iteratorError4 = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	            _iterator4.return();
+	          }
+	        } finally {
+	          if (_didIteratorError4) {
+	            throw _iteratorError4;
+	          }
 	        }
-	    }, {
-	        key: "fails",
-	        value: function fails(obj) {
-	            return obj.fails;
-	        }
-	    }, {
-	        key: "eval",
-	        value: function _eval(verdicts) {
-	            var res = 1;
-	            for (var key in verdicts) {
-	                if (!verdicts.hasOwnProperty(key)) continue;
-	                var verdict = verdicts[key];
-	                if (verdict.verdict == "VERDICT_INQ") {
-	                    return { score: 0, affect: false, penalty: 0, fails: 0 };
-	                }
-	                res *= verdict.verdict == "VERDICT_AC" ? 1 : 0;
+	      }
+
+	      return {
+	        score: res, penalty: 0, affect: true, fails: 0
+	      };
+	    }
+	  }, {
+	    key: "evalContest",
+	    value: function evalContest(submissions) {
+	      submissions.sort(submissionComparator);
+
+	      var fails = 0;
+	      var penalty = 0;
+	      var opts = this.opts;
+	      var _iteratorNormalCompletion5 = true;
+	      var _didIteratorError5 = false;
+	      var _iteratorError5 = undefined;
+
+	      try {
+
+	        for (var _iterator5 = (0, _getIterator3.default)(submissions), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	          var submission = _step5.value;
+
+	          var evaluation = this.eval(submission.verdict);
+	          if (evaluation.affect) {
+	            if (evaluation.score === 0) {
+	              penalty += opts.penalty || 20;
+	              fails++;
+	            } else {
+	              return {
+	                score: 1,
+	                penalty: penalty + submission.timeInContest,
+	                affect: true,
+	                fails: fails
+	              };
 	            }
-
-	            return { score: res, penalty: 0, affect: true, fails: 0 };
+	          }
 	        }
-	    }, {
-	        key: "evalContest",
-	        value: function evalContest(submissions) {
-	            submissions.sort(submissionComparator);
-
-	            var fails = 0;
-	            var penalty = 0;
-	            var opts = this.opts;
-
-	            var _iteratorNormalCompletion2 = true;
-	            var _didIteratorError2 = false;
-	            var _iteratorError2 = undefined;
-
-	            try {
-	                for (var _iterator2 = (0, _getIterator3.default)(submissions), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                    var submission = _step2.value;
-
-	                    var evaluation = this.eval(submission.verdict);
-	                    if (!evaluation.affect) continue;
-	                    if (evaluation.score == 0) {
-	                        penalty += opts.penalty || 20;
-	                        fails++;
-	                    } else {
-	                        return {
-	                            "score": 1,
-	                            "penalty": penalty + submission.timeInContest,
-	                            "affect": true,
-	                            "fails": fails
-	                        };
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError2 = true;
-	                _iteratorError2 = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                        _iterator2.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError2) {
-	                        throw _iteratorError2;
-	                    }
-	                }
-	            }
-
-	            return { score: 0, penalty: 0, affect: false, fails: fails };
+	      } catch (err) {
+	        _didIteratorError5 = true;
+	        _iteratorError5 = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	            _iterator5.return();
+	          }
+	        } finally {
+	          if (_didIteratorError5) {
+	            throw _iteratorError5;
+	          }
 	        }
-	    }], [{
-	        key: "isTaskValid",
-	        value: function isTaskValid(tk) {
-	            return true;
-	        }
-	    }, {
-	        key: "hasWeight",
-	        value: function hasWeight() {
-	            return false;
-	        }
-	    }, {
-	        key: "hasPenalty",
-	        value: function hasPenalty() {
-	            return true;
-	        }
-	    }, {
-	        key: "mergeEvaluations",
-	        value: function mergeEvaluations(evals) {
-	            return evals.reduce(function (old, cur) {
-	                return { score: old.score + cur.score, penalty: old.penalty + cur.penalty };
-	            }, { score: 0, penalty: 0 });
-	        }
-	    }]);
-	    return IcpcScoring;
+	      }
+
+	      return {
+	        score: 0, penalty: 0, affect: false, fails: fails
+	      };
+	    }
+	  }], [{
+	    key: "isTaskValid",
+
+
+	    // eslint-disable-next-line no-unused-vars
+	    value: function isTaskValid(tk) {
+	      return true;
+	    }
+	  }, {
+	    key: "hasWeight",
+	    value: function hasWeight() {
+	      return false;
+	    }
+	  }, {
+	    key: "hasPenalty",
+	    value: function hasPenalty() {
+	      return true;
+	    }
+	  }, {
+	    key: "mergeEvaluations",
+	    value: function mergeEvaluations(evals) {
+	      return evals.reduce(function (old, cur) {
+	        return {
+	          score: old.score + cur.score,
+	          penalty: old.penalty + cur.penalty
+	        };
+	      }, { score: 0, penalty: 0 });
+	    }
+	  }]);
+	  return IcpcScoring;
 	}(Scoring);
 
 	module.exports = {
-	    _Scoring: Scoring,
-	    ProductScoring: ProductScoring,
-	    IcpcScoring: IcpcScoring
+	  _Scoring: Scoring,
+	  ProductScoring: ProductScoring,
+	  IcpcScoring: IcpcScoring
 	};
 
 /***/ }),
@@ -47267,6 +47377,33 @@
 
 /***/ }),
 /* 529 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(530), __esModule: true };
+
+/***/ }),
+/* 530 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	__webpack_require__(531);
+	module.exports = __webpack_require__(146).Object.keys;
+
+/***/ }),
+/* 531 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// 19.1.2.14 Object.keys(O)
+	var toObject = __webpack_require__(177)
+	  , $keys    = __webpack_require__(160);
+
+	__webpack_require__(501)('keys', function(){
+	  return function keys(it){
+	    return $keys(toObject(it));
+	  };
+	});
+
+/***/ }),
+/* 532 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -47280,14 +47417,14 @@
 	};
 
 /***/ }),
-/* 530 */
+/* 533 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	exports.__esModule = true;
 
-	var _defineProperty = __webpack_require__(531);
+	var _defineProperty = __webpack_require__(534);
 
 	var _defineProperty2 = _interopRequireDefault(_defineProperty);
 
@@ -47312,23 +47449,23 @@
 	}();
 
 /***/ }),
-/* 531 */
+/* 534 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(532), __esModule: true };
+	module.exports = { "default": __webpack_require__(535), __esModule: true };
 
 /***/ }),
-/* 532 */
+/* 535 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(533);
+	__webpack_require__(536);
 	var $Object = __webpack_require__(146).Object;
 	module.exports = function defineProperty(it, key, desc){
 	  return $Object.defineProperty(it, key, desc);
 	};
 
 /***/ }),
-/* 533 */
+/* 536 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var $export = __webpack_require__(144);
@@ -47336,20 +47473,20 @@
 	$export($export.S + $export.F * !__webpack_require__(154), 'Object', {defineProperty: __webpack_require__(150).f});
 
 /***/ }),
-/* 534 */
+/* 537 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	var _getIterator2 = __webpack_require__(475);
 
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-	var _classCallCheck2 = __webpack_require__(529);
+	var _classCallCheck2 = __webpack_require__(532);
 
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var _createClass2 = __webpack_require__(530);
+	var _createClass2 = __webpack_require__(533);
 
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -47360,205 +47497,203 @@
 	 */
 
 	var scoring = __webpack_require__(497);
-	var deepcopy = __webpack_require__(535);
+	var deepcopy = __webpack_require__(538);
 
 	var Task = function () {
-	    function Task(attr) {
-	        (0, _classCallCheck3.default)(this, Task);
+	  function Task(attr) {
+	    (0, _classCallCheck3.default)(this, Task);
 
-	        this.attr = attr;
-	    }
+	    this.attr = attr;
+	  }
 
-	    // function to check if task is valid
+	  // function to check if task is valid
 
-	    /**
+	  /**
 	     * Get scoring class
 	     */
 
 
-	    (0, _createClass3.default)(Task, [{
-	        key: 'getScoringClass',
-	        value: function getScoringClass() {
-	            return scoring[this.attr.scoring];
+	  (0, _createClass3.default)(Task, [{
+	    key: "getScoringClass",
+	    value: function getScoringClass() {
+	      return scoring[this.attr.scoring];
+	    }
+
+	    /**
+	       * Get scoring
+	       */
+
+	  }, {
+	    key: "getScoring",
+	    value: function getScoring() {
+	      return new (this.getScoringClass())(this);
+	    }
+
+	    /*
+	      *   Get task directory
+	      *   @returns {string} task directory
+	       */
+
+	  }, {
+	    key: "getDirectory",
+	    value: function getDirectory() {
+	      return this.attr.wd;
+	    }
+
+	    /*
+	      *   Get checker path
+	      *   @returns {string} checker path
+	       */
+
+	  }, {
+	    key: "getChecker",
+	    value: function getChecker() {
+	      return this.attr.checker.path;
+	    }
+
+	    /*
+	      *   Get checker language
+	      *   @returns {string} checker language
+	       */
+
+	  }, {
+	    key: "getCheckerLanguage",
+	    value: function getCheckerLanguage() {
+	      return this.attr.checker.language;
+	    }
+
+	    /*
+	      *   Get datasets
+	       */
+
+	  }, {
+	    key: "getDatasets",
+	    value: function getDatasets() {
+	      return this.attr.datasets;
+	    }
+
+	    /*
+	      *   Get count of datasets
+	       */
+
+	  }, {
+	    key: "getDatasetsCount",
+	    value: function getDatasetsCount() {
+	      try {
+	        return this.attr.datasets.length;
+	      } catch (e) {
+	        return 0;
+	      }
+	    }
+
+	    /*
+	      *   Get timelimit (in secs)
+	       */
+
+	  }, {
+	    key: "getTimelimit",
+	    value: function getTimelimit() {
+	      try {
+	        return this.attr.limits.time / 1000;
+	      } catch (e) {
+	        return 1.0;
+	      }
+	    }
+	  }, {
+	    key: "getTimelimitMs",
+	    value: function getTimelimitMs() {
+	      return this.attr.limits.time;
+	    }
+
+	    /*
+	      *   Get memory limit (in MB)
+	       */
+
+	  }, {
+	    key: "getMemorylimit",
+	    value: function getMemorylimit() {
+	      try {
+	        return this.attr.limits.memory;
+	      } catch (e) {
+	        return 256;
+	      }
+	    }
+	  }, {
+	    key: "getWeight",
+	    value: function getWeight() {
+	      return this.weight || 1;
+	    }
+
+	    /**
+	       * @return {Boolean} if task has a statement specified in package
+	       */
+
+	  }, {
+	    key: "hasStatement",
+	    value: function hasStatement() {
+	      return Boolean(this.attr.statement);
+	    }
+	  }, {
+	    key: "getStatement",
+	    value: function getStatement() {
+	      if (!this.attr.statement) return null;
+	      return this.attr.statement;
+	    }
+	  }, {
+	    key: "toJSON",
+	    value: function toJSON() {
+	      var res = deepcopy(this.attr);
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+
+	      try {
+	        for (var _iterator = (0, _getIterator3.default)(res.datasets), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var dataset = _step.value;
+
+	          delete dataset.testcases;
 	        }
-
-	        /**
-	         * Get scoring
-	         */
-
-	    }, {
-	        key: 'getScoring',
-	        value: function getScoring() {
-	            return new (this.getScoringClass())(this);
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
 	        }
+	      }
 
-	        /*
-	        *   Get task directory
-	        *   @returns {string} task directory
-	         */
-
-	    }, {
-	        key: 'getDirectory',
-	        value: function getDirectory() {
-	            return this.attr.wd;
-	        }
-
-	        /*
-	        *   Get checker path
-	        *   @returns {string} checker path
-	         */
-
-	    }, {
-	        key: 'getChecker',
-	        value: function getChecker() {
-	            return this.attr.checker.path;
-	        }
-
-	        /*
-	        *   Get checker language
-	        *   @returns {string} checker language
-	         */
-
-	    }, {
-	        key: 'getCheckerLanguage',
-	        value: function getCheckerLanguage() {
-	            return this.attr.checker.language;
-	        }
-
-	        /*
-	        *   Get datasets
-	         */
-
-	    }, {
-	        key: 'getDatasets',
-	        value: function getDatasets() {
-	            return this.attr.datasets;
-	        }
-
-	        /*
-	        *   Get count of datasets
-	         */
-
-	    }, {
-	        key: 'getDatasetsCount',
-	        value: function getDatasetsCount() {
-	            try {
-	                return this.attr.datasets.length;
-	            } catch (e) {
-	                return 0;
-	            }
-	        }
-
-	        /*
-	        *   Get timelimit (in secs)
-	         */
-
-	    }, {
-	        key: 'getTimelimit',
-	        value: function getTimelimit() {
-	            try {
-	                return this.attr.limits.time / 1000;
-	            } catch (e) {
-	                return 1.0;
-	            }
-	        }
-	    }, {
-	        key: 'getTimelimitMs',
-	        value: function getTimelimitMs() {
-	            return this.attr.limits.time;
-	        }
-
-	        /*
-	        *   Get memory limit (in MB)
-	         */
-
-	    }, {
-	        key: 'getMemorylimit',
-	        value: function getMemorylimit() {
-	            try {
-	                return this.attr.limits.memory;
-	            } catch (e) {
-	                return 256;
-	            }
-	        }
-	    }, {
-	        key: 'getWeight',
-	        value: function getWeight() {
-	            return this.weight || 1;
-	        }
-
-	        /**
-	         * @return {Boolean} if task has a statement specified in package
-	         */
-
-	    }, {
-	        key: 'hasStatement',
-	        value: function hasStatement() {
-	            return !!this.attr.statement;
-	        }
-	    }, {
-	        key: 'getStatement',
-	        value: function getStatement() {
-	            if (!this.attr.statement) return null;
-	            return this.attr.statement;
-	        }
-	    }, {
-	        key: 'toJSON',
-	        value: function toJSON() {
-	            var res = deepcopy(this.attr);
-	            var _iteratorNormalCompletion = true;
-	            var _didIteratorError = false;
-	            var _iteratorError = undefined;
-
-	            try {
-	                for (var _iterator = (0, _getIterator3.default)(res.datasets), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                    var dataset = _step.value;
-
-	                    delete dataset.testcases;
-	                }
-	            } catch (err) {
-	                _didIteratorError = true;
-	                _iteratorError = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion && _iterator.return) {
-	                        _iterator.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError) {
-	                        throw _iteratorError;
-	                    }
-	                }
-	            }
-
-	            return res;
-	        }
-	    }]);
-	    return Task;
+	      return res;
+	    }
+	  }]);
+	  return Task;
 	}();
 
-	module.exports = {
-	    Task: Task
-	};
+	module.exports = { Task: Task };
 
 /***/ }),
-/* 535 */
+/* 538 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(536);
+	module.exports = __webpack_require__(539);
 
 
 /***/ }),
-/* 536 */
+/* 539 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _copy = __webpack_require__(537);
+	var _copy = __webpack_require__(540);
 
-	var _polyfill = __webpack_require__(542);
+	var _polyfill = __webpack_require__(545);
 
 	function defaultCustomizer(target) {
 	  return void 0;
@@ -47646,7 +47781,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 537 */
+/* 540 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
@@ -47654,7 +47789,7 @@
 	exports.__esModule = true;
 	exports.copyValue = exports.copyCollection = exports.copy = void 0;
 
-	var _polyfill = __webpack_require__(542);
+	var _polyfill = __webpack_require__(545);
 
 	var toString = Object.prototype.toString;
 
@@ -47792,10 +47927,10 @@
 	exports.copy = copy;
 	exports.copyCollection = copyCollection;
 	exports.copyValue = copyValue;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(538).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(541).Buffer))
 
 /***/ }),
-/* 538 */
+/* 541 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -47808,9 +47943,9 @@
 
 	'use strict'
 
-	var base64 = __webpack_require__(539)
-	var ieee754 = __webpack_require__(540)
-	var isArray = __webpack_require__(541)
+	var base64 = __webpack_require__(542)
+	var ieee754 = __webpack_require__(543)
+	var isArray = __webpack_require__(544)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -49591,7 +49726,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 539 */
+/* 542 */
 /***/ (function(module, exports) {
 
 	'use strict'
@@ -49711,7 +49846,7 @@
 
 
 /***/ }),
-/* 540 */
+/* 543 */
 /***/ (function(module, exports) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -49801,7 +49936,7 @@
 
 
 /***/ }),
-/* 541 */
+/* 544 */
 /***/ (function(module, exports) {
 
 	var toString = {}.toString;
@@ -49812,7 +49947,7 @@
 
 
 /***/ }),
-/* 542 */
+/* 545 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
@@ -49889,117 +50024,121 @@
 	exports.getSymbols = getSymbols;
 	exports.indexOf = indexOf;
 	exports.isBuffer = isBuffer;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(538).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(541).Buffer))
 
 /***/ }),
-/* 543 */
+/* 546 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var _classCallCheck2 = __webpack_require__(529);
+	var _assign = __webpack_require__(141);
+
+	var _assign2 = _interopRequireDefault(_assign);
+
+	var _classCallCheck2 = __webpack_require__(532);
 
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var _createClass2 = __webpack_require__(530);
+	var _createClass2 = __webpack_require__(533);
 
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var VerdictConst = {
-	    "": "won't be judged",
-	    VERDICT_INQ: "in queue",
-	    VERDICT_SKIP: "skipped",
+	  "": "won't be judged",
+	  VERDICT_INQ: "in queue",
+	  VERDICT_SKIP: "skipped",
 
-	    VERDICT_WA: "wrong answer",
-	    VERDICT_RTE: "runtime error",
-	    VERDICT_MLE: "memory limit exceeded",
-	    VERDICT_TLE: "time limit exceeded",
-	    VERDICT_WTE: "walltime limit exceeded",
-	    VERDICT_OLE: "output limit exceeded",
+	  VERDICT_WA: "wrong answer",
+	  VERDICT_RTE: "runtime error",
+	  VERDICT_MLE: "memory limit exceeded",
+	  VERDICT_TLE: "time limit exceeded",
+	  VERDICT_WTE: "walltime limit exceeded",
+	  VERDICT_OLE: "output limit exceeded",
 
-	    VERDICT_CE: "compilation error",
-	    VERDICT_CTE: "compilation timed out",
+	  VERDICT_CE: "compilation error",
+	  VERDICT_CTE: "compilation timed out",
 
-	    VERDICT_FAIL: "checker failed",
-	    VERDICT_CHTE: "checker timed out",
+	  VERDICT_FAIL: "checker failed",
+	  VERDICT_CHTE: "checker timed out",
 
-	    VERDICT_JE: "judge crashed",
-	    VERDICT_UE: "unknown error",
+	  VERDICT_JE: "judge crashed",
+	  VERDICT_UE: "unknown error",
 
-	    VERDICT_AC: "accepted"
+	  VERDICT_AC: "accepted"
 	};
 
 	var Verdict = function () {
-	    function Verdict(score, verdict) {
-	        var passed = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -1;
-	        var info = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-	        (0, _classCallCheck3.default)(this, Verdict);
+	  function Verdict(score, verdict) {
+	    var passed = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -1;
+	    var info = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+	    (0, _classCallCheck3.default)(this, Verdict);
 
-	        this.score = score || 0;
-	        this.verdict = verdict;
-	        this.passed = passed;
-	        if (typeof info === 'string') info = { text: info };
-	        this.info = info;
+	    this.score = score || 0;
+	    this.verdict = verdict;
+	    this.passed = passed;
+	    this.info = {};
+	    if (typeof info === "string") (0, _assign2.default)(this.info, { text: info });else (0, _assign2.default)(this.info, info || {});
+	  }
+
+	  (0, _createClass3.default)(Verdict, [{
+	    key: "wasExecuted",
+	    value: function wasExecuted() {
+	      return this.passed >= 0;
 	    }
-
-	    (0, _createClass3.default)(Verdict, [{
-	        key: "wasExecuted",
-	        value: function wasExecuted() {
-	            return this.passed >= 0;
-	        }
-	    }, {
-	        key: "getTextInfo",
-	        value: function getTextInfo() {
-	            return this.info.text || "";
-	        }
-	    }, {
-	        key: "getVerdictCode",
-	        value: function getVerdictCode() {
-	            return this.verdict;
-	        }
-	    }, {
-	        key: "getVerdictText",
-	        value: function getVerdictText() {
-	            return VerdictConst.hasOwnProperty(this.verdict) ? VerdictConst[this.verdict] : this.verdict;
-	        }
-	    }, {
-	        key: "getScore",
-	        value: function getScore() {
-	            return this.score;
-	        }
-	    }, {
-	        key: "getPassed",
-	        value: function getPassed() {
-	            return Math.max(0, this.passed);
-	        }
-	    }, {
-	        key: "toJSON",
-	        value: function toJSON() {
-	            return {
-	                score: this.score,
-	                verdict: this.verdict,
-	                passed: this.passed,
-	                info: this.info
-	            };
-	        }
-	    }], [{
-	        key: "fromJSON",
-	        value: function fromJSON(json) {
-	            return new Verdict(json.score || 0, json.verdict, json.passed || -1, json.info || {});
-	        }
-	    }]);
-	    return Verdict;
+	  }, {
+	    key: "getTextInfo",
+	    value: function getTextInfo() {
+	      return this.info.text || "";
+	    }
+	  }, {
+	    key: "getVerdictCode",
+	    value: function getVerdictCode() {
+	      return this.verdict;
+	    }
+	  }, {
+	    key: "getVerdictText",
+	    value: function getVerdictText() {
+	      return VerdictConst.hasOwnProperty(this.verdict) ? VerdictConst[this.verdict] : this.verdict;
+	    }
+	  }, {
+	    key: "getScore",
+	    value: function getScore() {
+	      return this.score;
+	    }
+	  }, {
+	    key: "getPassed",
+	    value: function getPassed() {
+	      return Math.max(0, this.passed);
+	    }
+	  }, {
+	    key: "toJSON",
+	    value: function toJSON() {
+	      return {
+	        score: this.score,
+	        verdict: this.verdict,
+	        passed: this.passed,
+	        info: this.info
+	      };
+	    }
+	  }], [{
+	    key: "fromJSON",
+	    value: function fromJSON(json) {
+	      return new Verdict(json.score || 0, json.verdict, json.passed || -1, json.info || {});
+	    }
+	  }]);
+	  return Verdict;
 	}();
 
 	module.exports = {
-	    Verdict: Verdict,
-	    VerdictConst: VerdictConst
+	  Verdict: Verdict,
+	  VerdictConst: VerdictConst
 	};
 
 /***/ }),
-/* 544 */
+/* 547 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50013,11 +50152,11 @@
 
 	var _vue2 = _interopRequireDefault(_vue);
 
-	var _vueResource = __webpack_require__(545);
+	var _vueResource = __webpack_require__(548);
 
 	var _vueResource2 = _interopRequireDefault(_vueResource);
 
-	var _store = __webpack_require__(547);
+	var _store = __webpack_require__(550);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -50047,7 +50186,7 @@
 	};
 
 /***/ }),
-/* 545 */
+/* 548 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*!
@@ -51146,7 +51285,7 @@
 
 	var nodeClient = function (request) {
 
-	    var client = __webpack_require__(546);
+	    var client = __webpack_require__(549);
 
 	    return new PromiseObj(function (resolve) {
 
@@ -51621,13 +51760,13 @@
 
 
 /***/ }),
-/* 546 */
+/* 549 */
 /***/ (function(module, exports) {
 
 	/* (ignored) */
 
 /***/ }),
-/* 547 */
+/* 550 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -51637,7 +51776,7 @@
 	});
 	exports.store = exports.types = undefined;
 
-	var _defineProperty2 = __webpack_require__(548);
+	var _defineProperty2 = __webpack_require__(551);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -51645,7 +51784,7 @@
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
-	var _objectWithoutProperties2 = __webpack_require__(549);
+	var _objectWithoutProperties2 = __webpack_require__(552);
 
 	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
@@ -51659,7 +51798,7 @@
 
 	var _vuex2 = _interopRequireDefault(_vuex);
 
-	var _main = __webpack_require__(550);
+	var _main = __webpack_require__(553);
 
 	var main = _interopRequireWildcard(_main);
 
@@ -51719,14 +51858,14 @@
 	});
 
 /***/ }),
-/* 548 */
+/* 551 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	exports.__esModule = true;
 
-	var _defineProperty = __webpack_require__(531);
+	var _defineProperty = __webpack_require__(534);
 
 	var _defineProperty2 = _interopRequireDefault(_defineProperty);
 
@@ -51748,7 +51887,7 @@
 	};
 
 /***/ }),
-/* 549 */
+/* 552 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -51768,7 +51907,7 @@
 	};
 
 /***/ }),
-/* 550 */
+/* 553 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -51778,19 +51917,19 @@
 	});
 	exports.actions = exports.getters = exports.computed = exports.mutations = exports.state = exports.types = undefined;
 
-	var _regenerator = __webpack_require__(551);
+	var _regenerator = __webpack_require__(554);
 
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 
-	var _promise = __webpack_require__(553);
+	var _promise = __webpack_require__(556);
 
 	var _promise2 = _interopRequireDefault(_promise);
 
-	var _slicedToArray2 = __webpack_require__(567);
+	var _slicedToArray2 = __webpack_require__(570);
 
 	var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-	var _asyncToGenerator2 = __webpack_require__(571);
+	var _asyncToGenerator2 = __webpack_require__(574);
 
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -51802,11 +51941,11 @@
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
-	var _keys = __webpack_require__(572);
+	var _keys = __webpack_require__(529);
 
 	var _keys2 = _interopRequireDefault(_keys);
 
-	var _defineProperty2 = __webpack_require__(548);
+	var _defineProperty2 = __webpack_require__(551);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -51814,7 +51953,7 @@
 
 	var _vue2 = _interopRequireDefault(_vue);
 
-	var _api = __webpack_require__(544);
+	var _api = __webpack_require__(547);
 
 	var Api = _interopRequireWildcard(_api);
 
@@ -52006,8 +52145,15 @@
 	        });
 
 	        var pos = 0;
+	        var last = -1;
+	        var officials = 0;
+
 	        for (var _i = 0; _i < teams.length; _i++) {
-	            if (!teams[_i].unofficial) teams[_i].rank = ++pos;
+	            if (!teams[_i].unofficial) {
+	                officials++;
+	                if (last != -1) teams[_i].rank = teams[last].rank;
+	                if (last == -1 || teams[last].merged.score != teams[_i].merged.score || teams[last].merged.penalty != teams[_i].merged.penalty) teams[_i].rank = officials;
+	            }
 	        }
 
 	        return teams;
@@ -52105,14 +52251,14 @@
 	});
 
 /***/ }),
-/* 551 */
+/* 554 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(552);
+	module.exports = __webpack_require__(555);
 
 
 /***/ }),
-/* 552 */
+/* 555 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {// This method of obtaining a reference to the global object needs to be
@@ -52150,23 +52296,23 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 553 */
+/* 556 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(554), __esModule: true };
+	module.exports = { "default": __webpack_require__(557), __esModule: true };
 
 /***/ }),
-/* 554 */
+/* 557 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(518);
 	__webpack_require__(492);
 	__webpack_require__(477);
-	__webpack_require__(555);
+	__webpack_require__(558);
 	module.exports = __webpack_require__(146).Promise;
 
 /***/ }),
-/* 555 */
+/* 558 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52177,11 +52323,11 @@
 	  , $export            = __webpack_require__(144)
 	  , isObject           = __webpack_require__(152)
 	  , aFunction          = __webpack_require__(148)
-	  , anInstance         = __webpack_require__(556)
-	  , forOf              = __webpack_require__(557)
-	  , speciesConstructor = __webpack_require__(560)
-	  , task               = __webpack_require__(561).set
-	  , microtask          = __webpack_require__(563)()
+	  , anInstance         = __webpack_require__(559)
+	  , forOf              = __webpack_require__(560)
+	  , speciesConstructor = __webpack_require__(563)
+	  , task               = __webpack_require__(564).set
+	  , microtask          = __webpack_require__(566)()
 	  , PROMISE            = 'Promise'
 	  , TypeError          = global.TypeError
 	  , process            = global.process
@@ -52373,7 +52519,7 @@
 	    this._h = 0;              // <- rejection state, 0 - default, 1 - handled, 2 - unhandled
 	    this._n = false;          // <- notify
 	  };
-	  Internal.prototype = __webpack_require__(564)($Promise.prototype, {
+	  Internal.prototype = __webpack_require__(567)($Promise.prototype, {
 	    // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
 	    then: function then(onFulfilled, onRejected){
 	      var reaction    = newPromiseCapability(speciesConstructor(this, $Promise));
@@ -52400,7 +52546,7 @@
 
 	$export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: $Promise});
 	__webpack_require__(489)($Promise, PROMISE);
-	__webpack_require__(565)(PROMISE);
+	__webpack_require__(568)(PROMISE);
 	Wrapper = __webpack_require__(146)[PROMISE];
 
 	// statics
@@ -52424,7 +52570,7 @@
 	    return capability.promise;
 	  }
 	});
-	$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(566)(function(iter){
+	$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(569)(function(iter){
 	  $Promise.all(iter)['catch'](empty);
 	})), PROMISE, {
 	  // 25.4.4.1 Promise.all(iterable)
@@ -52470,7 +52616,7 @@
 	});
 
 /***/ }),
-/* 556 */
+/* 559 */
 /***/ (function(module, exports) {
 
 	module.exports = function(it, Constructor, name, forbiddenField){
@@ -52480,12 +52626,12 @@
 	};
 
 /***/ }),
-/* 557 */
+/* 560 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var ctx         = __webpack_require__(147)
-	  , call        = __webpack_require__(558)
-	  , isArrayIter = __webpack_require__(559)
+	  , call        = __webpack_require__(561)
+	  , isArrayIter = __webpack_require__(562)
 	  , anObject    = __webpack_require__(151)
 	  , toLength    = __webpack_require__(168)
 	  , getIterFn   = __webpack_require__(495)
@@ -52510,7 +52656,7 @@
 	exports.RETURN = RETURN;
 
 /***/ }),
-/* 558 */
+/* 561 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// call something on iterator step with safe closing on error
@@ -52527,7 +52673,7 @@
 	};
 
 /***/ }),
-/* 559 */
+/* 562 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// check on default Array iterator
@@ -52540,7 +52686,7 @@
 	};
 
 /***/ }),
-/* 560 */
+/* 563 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// 7.3.20 SpeciesConstructor(O, defaultConstructor)
@@ -52553,11 +52699,11 @@
 	};
 
 /***/ }),
-/* 561 */
+/* 564 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var ctx                = __webpack_require__(147)
-	  , invoke             = __webpack_require__(562)
+	  , invoke             = __webpack_require__(565)
 	  , html               = __webpack_require__(488)
 	  , cel                = __webpack_require__(156)
 	  , global             = __webpack_require__(145)
@@ -52633,7 +52779,7 @@
 	};
 
 /***/ }),
-/* 562 */
+/* 565 */
 /***/ (function(module, exports) {
 
 	// fast apply, http://jsperf.lnkit.com/fast-apply/5
@@ -52654,11 +52800,11 @@
 	};
 
 /***/ }),
-/* 563 */
+/* 566 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var global    = __webpack_require__(145)
-	  , macrotask = __webpack_require__(561).set
+	  , macrotask = __webpack_require__(564).set
 	  , Observer  = global.MutationObserver || global.WebKitMutationObserver
 	  , process   = global.process
 	  , Promise   = global.Promise
@@ -52727,7 +52873,7 @@
 	};
 
 /***/ }),
-/* 564 */
+/* 567 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var hide = __webpack_require__(149);
@@ -52739,7 +52885,7 @@
 	};
 
 /***/ }),
-/* 565 */
+/* 568 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52758,7 +52904,7 @@
 	};
 
 /***/ }),
-/* 566 */
+/* 569 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var ITERATOR     = __webpack_require__(490)('iterator')
@@ -52784,14 +52930,14 @@
 	};
 
 /***/ }),
-/* 567 */
+/* 570 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	exports.__esModule = true;
 
-	var _isIterable2 = __webpack_require__(568);
+	var _isIterable2 = __webpack_require__(571);
 
 	var _isIterable3 = _interopRequireDefault(_isIterable2);
 
@@ -52840,21 +52986,21 @@
 	}();
 
 /***/ }),
-/* 568 */
+/* 571 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(569), __esModule: true };
+	module.exports = { "default": __webpack_require__(572), __esModule: true };
 
 /***/ }),
-/* 569 */
+/* 572 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(477);
 	__webpack_require__(492);
-	module.exports = __webpack_require__(570);
+	module.exports = __webpack_require__(573);
 
 /***/ }),
-/* 570 */
+/* 573 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var classof   = __webpack_require__(496)
@@ -52868,14 +53014,14 @@
 	};
 
 /***/ }),
-/* 571 */
+/* 574 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	exports.__esModule = true;
 
-	var _promise = __webpack_require__(553);
+	var _promise = __webpack_require__(556);
 
 	var _promise2 = _interopRequireDefault(_promise);
 
@@ -52911,33 +53057,6 @@
 	};
 
 /***/ }),
-/* 572 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(573), __esModule: true };
-
-/***/ }),
-/* 573 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	__webpack_require__(574);
-	module.exports = __webpack_require__(146).Object.keys;
-
-/***/ }),
-/* 574 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	// 19.1.2.14 Object.keys(O)
-	var toObject = __webpack_require__(177)
-	  , $keys    = __webpack_require__(160);
-
-	__webpack_require__(501)('keys', function(){
-	  return function keys(it){
-	    return $keys(toObject(it));
-	  };
-	});
-
-/***/ }),
 /* 575 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -52948,21 +53067,21 @@
 	});
 	exports.actions = exports.computed = exports.getters = exports.mutations = exports.state = exports.types = undefined;
 
-	var _regenerator = __webpack_require__(551);
+	var _regenerator = __webpack_require__(554);
 
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 
-	var _asyncToGenerator2 = __webpack_require__(571);
+	var _asyncToGenerator2 = __webpack_require__(574);
 
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-	var _defineProperty2 = __webpack_require__(548);
+	var _defineProperty2 = __webpack_require__(551);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
 	var _mutations;
 
-	var _api = __webpack_require__(544);
+	var _api = __webpack_require__(547);
 
 	var Api = _interopRequireWildcard(_api);
 
@@ -52995,7 +53114,7 @@
 	        return state.rawContestList;
 	    },
 	    selectedContest: function selectedContest(state, getters) {
-	        if (!state.rawSelectedContest) return {};
+	        if (!state.rawSelectedContest) return { name: "admin" };
 	        return state.rawSelectedContest;
 	    }
 	};
@@ -70733,7 +70852,7 @@
 
 	__webpack_require__(178);
 
-	var _api = __webpack_require__(544);
+	var _api = __webpack_require__(547);
 
 	var Api = _interopRequireWildcard(_api);
 
@@ -71554,11 +71673,11 @@
 	    value: true
 	});
 
-	var _regenerator = __webpack_require__(551);
+	var _regenerator = __webpack_require__(554);
 
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 
-	var _asyncToGenerator2 = __webpack_require__(571);
+	var _asyncToGenerator2 = __webpack_require__(574);
 
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -71566,7 +71685,7 @@
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
-	var _api = __webpack_require__(544);
+	var _api = __webpack_require__(547);
 
 	var Api = _interopRequireWildcard(_api);
 
@@ -71590,7 +71709,7 @@
 
 	var _vuex = __webpack_require__(4);
 
-	var _store = __webpack_require__(547);
+	var _store = __webpack_require__(550);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -71897,11 +72016,11 @@
 	    value: true
 	});
 
-	var _regenerator = __webpack_require__(551);
+	var _regenerator = __webpack_require__(554);
 
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 
-	var _asyncToGenerator2 = __webpack_require__(571);
+	var _asyncToGenerator2 = __webpack_require__(574);
 
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -71919,13 +72038,13 @@
 
 	var Helper = _interopRequireWildcard(_helpers);
 
-	var _api = __webpack_require__(544);
+	var _api = __webpack_require__(547);
 
 	var Api = _interopRequireWildcard(_api);
 
 	var _vuex = __webpack_require__(4);
 
-	var _store = __webpack_require__(547);
+	var _store = __webpack_require__(550);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -72384,7 +72503,7 @@
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
-	var _api = __webpack_require__(544);
+	var _api = __webpack_require__(547);
 
 	var Api = _interopRequireWildcard(_api);
 
@@ -72443,9 +72562,9 @@
 	            this.$http.post(Api.paths.login, {
 	                handle: this.handle,
 	                password: this.password,
-	                contest: this.$route.query.id
+	                contest: this.$route.query.id === "null" ? null : this.$route.query.id
 	            }).then(function (res) {
-	                _this.$router.push("/contest");
+	                if (_this.selectedContest.name === "admin") window.location = "/admin";else _this.$router.push("/contest");
 	            }, function (err) {
 	                Materialize.toast("Login Error: " + err.body.error, 4000);
 	            });
@@ -72606,11 +72725,11 @@
 	    value: true
 	});
 
-	var _regenerator = __webpack_require__(551);
+	var _regenerator = __webpack_require__(554);
 
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 
-	var _asyncToGenerator2 = __webpack_require__(571);
+	var _asyncToGenerator2 = __webpack_require__(574);
 
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -72624,7 +72743,7 @@
 
 	var _vuex = __webpack_require__(4);
 
-	var _store = __webpack_require__(547);
+	var _store = __webpack_require__(550);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -72693,6 +72812,14 @@
 	//
 	//
 	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
 
 /***/ }),
 /* 784 */
@@ -72722,7 +72849,25 @@
 	    attrs: {
 	      "src": "/images/jude.jpg"
 	    }
-	  })])], 1), _vm._v(" "), _vm._l((_vm.contestList), function(contest) {
+	  })])], 1), _vm._v(" "), _c('li', {
+	    staticClass: "collection-item"
+	  }, [_c('div', [_vm._v("\n                        Admin Panel\n                        "), _c('a', {
+	    staticClass: "secondary-content",
+	    attrs: {
+	      "href": "#"
+	    },
+	    on: {
+	      "click": function($event) {
+	        $event.preventDefault();
+	        _vm.selectContest({
+	          _id: null,
+	          name: 'admin'
+	        })
+	      }
+	    }
+	  }, [_c('i', {
+	    staticClass: "material-icons"
+	  }, [_vm._v("send")])])])]), _vm._v(" "), _vm._l((_vm.contestList), function(contest) {
 	    return _c('li', {
 	      staticClass: "collection-item"
 	    }, [_c('div', [_vm._v("\n                            " + _vm._s(contest.name) + "\n                            "), _c('a', {

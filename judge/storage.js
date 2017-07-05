@@ -292,7 +292,7 @@ class MemoryStorage extends Storage {
   }
 }
 
-if (!module.parent) {
+if (!module.parent && false) {
   // eslint-disable-next-line require-await
   (async () => {
     console.log("Testing with async...");

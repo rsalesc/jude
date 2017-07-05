@@ -14,8 +14,8 @@ function rejudgeAction(Restangular, $state, notification) {
                     .one('submissions', scope.submission.values.id)
                     .customPOST({}, "rejudge")
                     .then(() => $state.reload())
-                    .then(() => notification.log(`Submission ${scope.submission.values.id} was put back on queue`, { addnCls: 'humane-flatty-success' }) )
-                    .catch(e => notification.log('A problem occurred, please try again', { addnCls: 'humane-flatty-error' }) && console.error(e) )
+                    .then(() => notification.log(`Submission ${scope.submission.values.id} was put back on queue.`, { addnCls: 'humane-flatty-success' }) )
+                    .catch(e => notification.log('A problem occurred, please try again.', { addnCls: 'humane-flatty-error' }) && console.error(e) )
             }
         },
         template:

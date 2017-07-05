@@ -1,14 +1,17 @@
-var express = require('express')
+const express = require("express");
 const path = require("path");
-var router = express.Router()
-var models = require(path.join(__dirname, '../../models/'));
+const mongoose = require("mongoose");
+// eslint-disable-next-line new-cap
+const router = express.Router();
+const models = require("../../models/");
 const { User, Submission } = models;
-var SubmissionNoCode = require('./submission').SubmissionNoCode
+const { SubmissionNoCode } = require("./submission");
+const { ObjectId } = mongoose.Types;
 
-var UserSelection = '_id handle name'
+const UserSelection = "_id handle name";
 
-function handleUserError(err, req, res, next){
-    res.json({error: err})
+function handleUserError(err, req, res) {
+  res.json({ error: err });
 }
 
-module.exports = router
+module.exports = router;

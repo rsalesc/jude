@@ -1,10 +1,10 @@
 const path = require("path");
 const mongodb = require("mongodb");
-const logger = require(path.join(__dirname, "logger"));
-const environment = require(path.join(__dirname, "environment"));
-const db = require(path.join(__dirname, "../db"));
-const grader = require(path.join(__dirname, "grader"));
-const { Submission } = require(path.join(__dirname, "../models/"));
+const logger = require("./logger");
+const environment = require("./environment");
+const db = require("../db");
+const grader = require("./grader");
+const { Submission } = require("../models");
 
 const { JudgeEnvironment, JudgeConfig } = environment;
 const POLLING_RATE = 1000;
@@ -17,8 +17,8 @@ function sleepAsync(ms) {
 
 function watch(env) {
   return new Promise(async (resolve) => {
-        // dbg
-        // console.log(await(env.queue.size()));
+    // dbg
+    // console.log(await(env.queue.size()));
 
     let msg = null;
     try {
@@ -110,10 +110,7 @@ async function startWatching(env) {
   /* eslint-enable */
 }
 
+const seaweed = weedClient;
 
-if (!module.parent) {
-  const seaweed = weedClient;
-
-    // TODO: dispose after interruption
-  startWatching(new JudgeEnvironment(db, seaweed));
-}
+// TODO: dispose after interruption
+startWatching(new JudgeEnvironment(db, seaweed));

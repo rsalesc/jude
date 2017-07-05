@@ -19,9 +19,13 @@
         "prefer-object-spread",
         "class-property",
         "dependencies",
-        "eslint-plugin-local-rules"
+        "eslint-plugin-local-rules",
+        "import"
     ],
     "rules": {
+        "import/no-unresolved": 2,
+        "import/no-dynamic-require": 2,
+        "import/no-absolute-path": 2,
         "prefer-object-spread/prefer-object-spread": 2,
         "class-property/class-property-semicolon": 2,
         "dependencies/case-sensitive": 2,
@@ -72,7 +76,7 @@
         "handle-callback-err": 0,
         "no-mixed-requires": 2,
         "no-new-require": 2,
-        "no-path-concat": 0,
+        "no-path-concat": 2,
         "no-sync": 1,
         "array-bracket-spacing": [2, "never"],
         "block-spacing": [2, "always"],

@@ -32,7 +32,7 @@ export let computed = {
     },
     selectedContest: (state, getters) => {
         if(!state.rawSelectedContest)
-            return {};
+            return { name: "admin" };
         return state.rawSelectedContest;
     }
 };

@@ -6,12 +6,12 @@ const Promise = require("bluebird");
 const fs = require("fs-extra");
 
 const path = require("path");
-const logger = require(path.join(__dirname, "logger"));
-const jenv = require(path.join(__dirname, "environment"));
-const utils = require(path.join(__dirname, "utils"));
+const logger = require("./logger");
+const jenv = require("./environment");
+const utils = require("./utils");
 const { globAsync } = utils;
 
-const Storage = require(path.join(__dirname, "storage")).MemoryStorage;
+const Storage = require("./storage").MemoryStorage;
 const { JudgeConfig } = jenv;
 const spawnDetachedPromise = require("child-process-promise").spawn;
 
@@ -664,7 +664,7 @@ class IsolatePool {
   }
 }
 
-if (!module.parent) {
+if (!module.parent && false) {
   // eslint-disable-next-line require-await
   (async () => {
     console.log("Testing with async...");

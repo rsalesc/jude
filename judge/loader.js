@@ -3,11 +3,11 @@
  */
 
 const path = require("path");
-const task = require(path.join(__dirname, "task"));
+const task = require("./task");
 const YAML = require("yamljs");
-const logger = require(path.join(__dirname, "logger"));
-const utils = require(path.join(__dirname, "utils"));
-const scoring = require(path.join(__dirname, "scoring"));
+const logger = require("./logger");
+const utils = require("./utils");
+const scoring = require("./scoring");
 
 const JUDE_FN = "jude.yml";
 

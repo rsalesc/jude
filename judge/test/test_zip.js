@@ -4,7 +4,7 @@ const await = require('asyncawait/await')
 const wildcard = require('node-wildcard')
 const loader = require('../loader')
 
-if(!module.parent)
+if(!module.parent && false)
     async(() => {
         var store = new storage.MemoryStorage()
         store.loadZip("test_contest.zip")

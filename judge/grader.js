@@ -7,16 +7,16 @@ const fs = require("fs");
 const path = require("path");
 const promiseReflect = require("promise-reflect");
 
-const verdict = require(path.join(__dirname, "verdict"));
-const utils = require(path.join(__dirname, "utils"));
-const logger = require(path.join(__dirname, "logger"));
-const sandbox = require(path.join(__dirname, "sandbox"));
-const environment = require(path.join(__dirname, "environment"));
+const verdict = require("./verdict");
+const utils = require("./utils");
+const logger = require("./logger");
+const sandbox = require("./sandbox");
+const environment = require("./environment");
 
-const loader = require(path.join(__dirname, "loader"));
-const Profiler = require(path.join(__dirname, "profiler"));
+const loader = require("./loader");
+const Profiler = require("./profiler");
 
-const Storage = require(path.join(__dirname, "storage")).MemoryStorage;
+const Storage = require("./storage").MemoryStorage;
 
 const { Verdict } = verdict;
 const { Isolate, IsolateConst } = sandbox;
@@ -692,7 +692,7 @@ async function testPackage(env, pack, code, lang) {
 }
 
 // testing
-if (!module.parent) {
+if (!module.parent && false) {
   (async () => {
     const env = new JudgeEnvironment();
     const store = new Storage();

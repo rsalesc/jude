@@ -39,9 +39,13 @@ COPY judge/executor.jar /etc/java-sandbox/
 COPY judge/security.policy /etc/java-sandbox/
 COPY . .
 
+# build code
+# RUN npm run build-judge
+# RUN npm run build-index
+
 # start cluster
 EXPOSE 3000
 #CMD pm2 start index.js -i 4 --no-daemon
-CMD node index.js --harmony
+CMD npm run start-index
 
 

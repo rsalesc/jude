@@ -26,20 +26,39 @@ it should be fine to access `http://localhost:3001`.
 
 #### Webpack and Gulp
 
-If you edit the `views` folder (or anything that is imported in those files), you will
-likely need to rebuild the `Vue` components. This can be acomplished by running
-`webpack` in the project's root directory.
-
-If you edit the `public/js/admin` folder or anything that is imported by those files,
-you will need to run `webpack` inside this folder. This will rebuild the `ng-admin`
-scripts.
+This whole project uses ES6 features (some of them already supported by Node 7+). Though,
+transpiled code is proved to work better than native implementations of those features, so
+Babel is used here with Webpack. Webpack is both used by the back-end applications to
+generate transpiled bundles and by the front-end apps (admin and Vue app) to generate
+uglified, compressed bundles. If you change any Javascript code in this project, you will
+likely need to run one of the commands below. If you want to rebundle everything, don't
+hesitate to run `npm run build`, it will take 10s average. The `gulp` tasks still need
+to be run separately, though. It's highly recommended to run the `gulp` task BEFORE
+the `webpack` tasks.
 
 If you edit the css files (probably those on `public` folder) you will likely
 need to run the `gulp` command in the project's root directory to rebuild the
 css bundle.
 
+If you edit the `views` folder (or anything that is imported by those files), you will
+likely need to rebuild the `Vue` components to see the changes in local testing. 
+This can be acomplished by running `npm run build-front` in the project's root directory.
+
+If you edit the `public/js/admin` folder or anything that is imported by those files,
+you will need to run `npm run build-admin` to see the changes in local testing.
+This will rebuild the `ng-admin` scripts.
+
+If you edit the `judge` folder or anything that is imported by those, you will likely
+need to rebuild the judge bundle running `npm run build-judge` to see the changes
+locally.
+
+If you edit anything used in the express app (almost everything is :)), you will
+likely need to run `npm run build-index` to see the changes locally. This will
+rebundle the express app.
+
 You can install these tools and make them globally available (as shown above)
-by running `npm install -g gulp webpack`.
+by running `npm install -g gulp webpack`, or you can install them locally
+as well.
 
 ## Host Installation [DEPRECATED FOR NOW]
 
