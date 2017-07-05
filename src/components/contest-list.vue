@@ -13,6 +13,14 @@
                                 <img class="responsive-img" src="/images/jude.jpg">
                             </center>
                         </li>
+                        <li class="collection-item">
+                          <div>
+                            Admin Panel
+                            <a href="#" @click.prevent="selectContest({ _id: null, name: 'admin' })" class="secondary-content">
+                              <i class="material-icons">send</i>
+                            </a>
+                          </div>
+                        </li>
                         <li class="collection-item" v-for="contest in contestList">
                             <div>
                                 {{ contest.name }}

@@ -51,9 +51,12 @@
                 this.$http.post(Api.paths.login, {
                     handle: this.handle,
                     password: this.password,
-                    contest: this.$route.query.id
+                    contest: this.$route.query.id === "null" ? null : this.$route.query.id
                 }).then((res) => {
-                    this.$router.push("/contest");
+                    if(this.selectedContest.name === "admin")
+                      window.location = "/admin";
+                    else
+                      this.$router.push("/contest");
                 }, (err) => {
                     Materialize.toast(`Login Error: ${err.body.error}`, 4000);
                 });
