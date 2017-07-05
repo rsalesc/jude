@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 const path = require("path");
 
 module.exports = {
@@ -17,11 +18,15 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
         query: {
-          presets: ["es2015", "es2016", "es2017", "stage-3"],
+          presets: ["es2015", "stage-3"],
           plugins: ["transform-runtime"]
         }
       },
       { test: /\.css$/, loader: "style-loader!css-loader" }
     ]
-  }
+  },
+  plugins: [
+    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
+    new webpack.optimize.UglifyJsPlugin()
+  ]
 };

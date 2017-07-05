@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
   // entry point of our application
@@ -25,11 +26,19 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
-        loader: "babel-loader"
+        loader: "babel-loader",
+        options: {
+          presets: ["es2015", "stage-3"],
+          plugins: ["transform-runtime"]
+        }
       },
       // maybe its load too much CSS?
       { test: /\.css$/, loader: "style-loader!css-loader" }
     ]
   },
-  resolve: { alias: { vue$: path.join(__dirname, "node_modules/vue/dist/vue.js") }}
+  resolve: { alias: { vue$: path.join(__dirname, "node_modules/vue/dist/vue.js") }},
+  plugins: [
+    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
+    new webpack.optimize.UglifyJsPlugin()
+  ]
 };

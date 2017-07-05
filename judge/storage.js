@@ -77,7 +77,7 @@ function loadZipAsync(p) {
  */
 class Storage {
   constructor() {
-    if (new.target === Storage)
+    if (this.constructor.name === Storage.name)
       throw `Cannot instantiate abstract class ${this.constructor.name}`;
   }
 

@@ -18,7 +18,7 @@ const JUDE_FN = "jude.yml";
  */
 class Loader {
   constructor(store) {
-    if (new.target === Loader)
+    if (this.constructor.name === Loader.name)
       throw `Cannot instantiate abstract class ${this.constructor.name}`;
     this.store = store;
   }
