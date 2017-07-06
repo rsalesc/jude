@@ -141,20 +141,7 @@
       },
       methods: {
         getRemainingTime() {
-          const contest = this.rawContest;
-          if (!contest)
-            return "";
-          const startTs = new Date(contest.start_time).getTime();
-          const endTs = new Date(contest.end_time).getTime();
-
-          if (Date.now() >= endTs)
-            return "contest has ended";
-          else if (Date.now() < startTs) {
-            const res = Helper.getCountdown(moment(contest.start_time));
-            return `contest will start in ${res}`;
-          }
-          const res = Helper.getCountdown(moment(contest.end_time));
-          return `contest will end in ${res}`;
+          return Helper.getRemainingTime(this.rawContest);
         },
         getContestName() {
           const contest = this.rawContest;

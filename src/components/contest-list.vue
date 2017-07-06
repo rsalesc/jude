@@ -17,13 +17,14 @@
                           <div>
                             Admin Panel
                             <a href="#" @click.prevent="selectContest({ _id: null, name: 'admin' })" class="secondary-content">
-                              <i class="material-icons">send</i>
+                              <i class="material-icons">lock</i>
                             </a>
                           </div>
                         </li>
-                        <li class="collection-item" v-for="contest in contestList" :key="contest._id">
+                        <li class="collection-item multiline" v-for="contest in contestList" :key="contest._id">
                             <div>
-                                {{ contest.name }}
+                                <span class="title">{{ contest.name }}</span>
+                                <p class="tertiary-content">{{ getRemainingTime(contest) }}</p>
                                 <a href="#" @click.prevent="selectContest(contest)" class="secondary-content">
                                     <i class="material-icons">send</i>
                                 </a>
@@ -37,30 +38,34 @@
 </template>
 
 <script type="text/babel">
-    import Helper from "./helpers";
-    import { mapGetters } from "vuex";
-    import { types } from "./store/";
+  import * as Helper from "./helpers";
+  import { mapGetters } from "vuex";
+  import { types } from "./store/";
 
-    export default {
-        data () {
-            return {};
-        },
-        computed: {
-            ...mapGetters([
-                "contestList"
-            ])
-        },
-        mounted () {
-            this.fetch();
-        },
-        methods: {
-            async fetch() {
-                await this.$store.dispatch(types.FETCH_CONTEST_LIST);
-            },
-            selectContest(contest) {
-                this.$store.commit(types.SELECT_CONTEST_FROM_LIST, contest);
-                this.$router.push({ path: '/login', query: { id: contest._id }});
-            }
-        }
+  export default {
+    data() {
+      return {};
+    },
+    computed: {
+      ...mapGetters([
+        "contestList"
+      ])
+    },
+    mounted() {
+      this.fetch();
+    },
+    methods: {
+      async fetch() {
+        await this.$store.dispatch(types.FETCH_CONTEST_LIST);
+      },
+      selectContest(contest) {
+        this.$store.commit(types.SELECT_CONTEST_FROM_LIST, contest);
+        this.$router.push({ path: "/login", query: { id: contest._id }});
+      },
+      getRemainingTime(contest) {
+        console.log(contest);
+        return Helper.getRemainingTime(contest);
+      }
     }
+  };
 </script>

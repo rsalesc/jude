@@ -291,3 +291,20 @@ nav{
         color: gray;
     }
 }
+
+.collection .collection-item.multiline {
+  position: relative;
+  
+  .secondary-content {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+
+  p.tertiary-content {
+    font-size: .8rem;
+    line-height: 1rem;
+    color: gray;
+    margin: 0;
+  }
+}

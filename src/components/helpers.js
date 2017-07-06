@@ -76,19 +76,35 @@ export function getPassed(n) {
 export function getExecTime(verdict) {
   if (!verdict.info || !verdict.info.hasOwnProperty("time"))
     return null;
-  return `${parseInt(verdict.info.time * 1000)} ms`;
+  return `${parseInt(verdict.info.time * 1000, 10)} ms`;
+}
+
+export function pad(x, size, ch = "0") {
+  const s = ch.repeat(size + 1) + x.toString();
+  return s.substr(s.length - size);
 }
 
 export function getCountdown(m) {
   const dur = moment.duration(m.diff(moment()));
   if (dur.asHours() >= 24)
     return m.fromNow();
-  return `${parseInt(dur.asHours())}:${pad(dur.minutes(), 2)}:${pad(dur.seconds(), 2)}`;
+  return `${parseInt(dur.asHours(), 10)}:${pad(dur.minutes(), 2)}:${pad(dur.seconds(), 2)}`;
 }
 
-export function pad(x, size, ch = "0") {
-  const s = ch.repeat(size + 1) + x.toString();
-  return s.substr(s.length - size);
+export function getRemainingTime(contest) {
+  if (!contest)
+    return "";
+  const startTs = new Date(contest.start_time).getTime();
+  const endTs = new Date(contest.end_time).getTime();
+
+  if (Date.now() >= endTs)
+    return "contest has ended";
+  else if (Date.now() < startTs) {
+    const res = getCountdown(moment(contest.start_time));
+    return `contest will start in ${res}`;
+  }
+  const res = getCountdown(moment(contest.end_time));
+  return `contest will end in ${res}`;
 }
 
 export function getFormattedContestTime(t) {
