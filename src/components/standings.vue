@@ -13,7 +13,7 @@
                         <th class="problem-letter">
                             <p class="score">Score</p>
                         </th>
-                        <th class="problem-letter" v-for="problem in problems" :style="{ borderTopColor: '#' + problem.color }">
+                        <th class="problem-letter" v-for="problem in problems">
                             <p>{{ problem.letter }}</p>
                             <p class="score-info"></p>
                         </th>
