@@ -93,102 +93,100 @@
     </div>
 </template>
 
-<script type="text/babel">
-    import * as Api from './api.js';
-    import * as Helper from './helpers.js';
+<script type="text/babel">import * as Api from "./api.js";
+    import * as Helper from "./helpers.js";
     import SubmitComponent from "./submit.vue";
-    import Vue from 'vue';
-    import moment from 'moment';
-    import 'moment/locale/en-gb';
+    import Vue from "vue";
+    import moment from "moment";
+    import "moment/locale/en-gb";
     import { mapGetters, mapState } from "vuex";
     import { types } from "./store/";
 
-    moment.locale('en-gb');
+    moment.locale("en-gb");
 
     export default {
-        mounted () {
-            this.fetch();
-            window.setInterval(() => {
-                this.countdownString = this.getRemainingTime();
-            }, 1000);
-            
-            $(".button-collapse").sideNav();
-            $('.modal-trigger').leanModal();
-            $('.modal-trigger').click(function() {
-                $('#submit-problem').material_select();
-                $('#submit-language').material_select();
-            });
-        },
-        data() {
-            return {
-                countdownString: "-"
-            }
-        },
-        computed: {
-            ...Helper.mapModuleState("main", [
-                "user",
-                "rawContest",
-                "rawSubmissions",
-                "rawTeams"
-            ]),
-            ...mapGetters([
-                "problems",
-                "my",
-                "groupedSubs",
-                "teams",
-                "languages",
-                "submissions",
-                "getRawProblem",
-                "isFetching"
-            ])
-        },
-        methods:{
-            getRemainingTime() {
-                let contest = this.rawContest;
-                if(!contest) return "";
-                let start_ts = new Date(contest.start_time).getTime();
-                let end_ts = new Date(contest.end_time).getTime();
+      mounted() {
+        this.fetch();
+        window.setInterval(() => {
+          this.countdownString = this.getRemainingTime();
+        }, 1000);
+    
+        $(".button-collapse").sideNav();
+        $(".modal-trigger").leanModal();
+        $(".modal-trigger").click(() => {
+          $("#submit-problem").material_select();
+          $("#submit-language").material_select();
+        });
+      },
+      data() {
+        return { countdownString: "-" };
+      },
+      computed: {
+        ...Helper.mapModuleState("main", [
+          "user",
+          "rawContest",
+          "rawSubmissions",
+          "rawTeams"
+        ]),
+        ...mapGetters([
+          "problems",
+          "my",
+          "groupedSubs",
+          "teams",
+          "languages",
+          "submissions",
+          "getRawProblem",
+          "isFetching"
+        ])
+      },
+      methods: {
+        getRemainingTime() {
+          const contest = this.rawContest;
+          if (!contest)
+            return "";
+          const startTs = new Date(contest.start_time).getTime();
+          const endTs = new Date(contest.end_time).getTime();
 
-                if(Date.now() >= end_ts) return "contest has ended";
-                else if(Date.now() < start_ts) {
-                    let res = Helper.getCountdown(moment(contest.start_time));
-                    return `contest will start in ${res}`
-                } else {
-                    let res = Helper.getCountdown(moment(contest.end_time));
-                    return `contest will end in ${res}`
-                }
-            },
-            getContestName(){
-                let contest = this.rawContest;
-                if(!contest) return "-";
-                return contest.name;
-            },
-            getStartTime(){
-                let contest = this.rawContest;
-                if(!contest) return "-";
-
-                return moment(contest.start_time).format("LLL (Z)");
-            },
-            getEndTime(){
-                let contest = this.rawContest;
-                if(!contest) return "-";
-                return moment(contest.end_time).format("LLL (Z)");
-            },
-            async fetch(){
-                const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
-                if(!loggedin) {
-                    this.$router.push("/");
-                }
-            },
-            async doLogout() {
-                await this.$http.post(Api.paths.logout);
-                this.$router.push("/");
-            }
+          if (Date.now() >= endTs)
+            return "contest has ended";
+          else if (Date.now() < startTs) {
+            const res = Helper.getCountdown(moment(contest.start_time));
+            return `contest will start in ${res}`;
+          }
+          const res = Helper.getCountdown(moment(contest.end_time));
+          return `contest will end in ${res}`;
         },
-        components: {
-            JuSubmit: SubmitComponent
+        getContestName() {
+          const contest = this.rawContest;
+          if (!contest)
+            return "-";
+          return contest.name;
+        },
+        getStartTime() {
+          const contest = this.rawContest;
+          if (!contest)
+            return "-";
+
+          return moment(contest.start_time).format("LLL (Z)");
+        },
+        getEndTime() {
+          const contest = this.rawContest;
+          if (!contest)
+            return "-";
+          return moment(contest.end_time).format("LLL (Z)");
+        },
+        async fetch() {
+          const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
+          if (!loggedin)
+            this.$router.push("/");
+        },
+        async doLogout() {
+          await this.$http.post(Api.paths.logout);
+          this.$router.push("/");
         }
-    }
+      },
+      components: { JuSubmit: SubmitComponent }
+    };
 </script>
 
 <style lang="sass">

@@ -21,7 +21,7 @@
                             </a>
                           </div>
                         </li>
-                        <li class="collection-item" v-for="contest in contestList">
+                        <li class="collection-item" v-for="contest in contestList" :key="contest._id">
                             <div>
                                 {{ contest.name }}
                                 <a href="#" @click.prevent="selectContest(contest)" class="secondary-content">

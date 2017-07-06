@@ -20,7 +20,8 @@
         "class-property",
         "dependencies",
         "eslint-plugin-local-rules",
-        "import"
+        "import",
+        "html"
     ],
     "rules": {
         "import/no-unresolved": 2,

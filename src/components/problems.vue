@@ -6,7 +6,7 @@
                 <span class="comment">Click in the page icon to download the statement for a problem.</span>
             </h5>
             <ul class="collapsible problems-list" data-collapsible="accordion">
-                <li v-for="prob in problems">
+                <li v-for="prob in problems" :key="prob._id">
                     <div class="collapsible-header" :class="{'ac-color': isAc(prob), 'wa-color': isWa(prob), 'pending-color': isPending(prob)}">
                         <i class="problem-index" :style="{color: '#'+lighten(prob.color)}">
                             {{ prob.letter }}

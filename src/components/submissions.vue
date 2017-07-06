@@ -7,7 +7,7 @@
             </h5>
             <paginate name="submissions" :list="my.submissions" :per="100"
                 class="collapsible submission-list">
-                <li v-for="sub in paginated('submissions')">
+                <li v-for="sub in paginated('submissions')" :key="sub._id">
                     <div class="collapsible-header">
                         <i class="problem-index" :style="{color: '#'+lighten(getProblem(sub.problem).color)}">
                             {{ getProblem(sub.problem).letter }}
@@ -39,7 +39,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(verdict, name) in sub.verdict">
+                                <tr v-for="(verdict, name) in sub.verdict" :key="name">
                                     <td>{{ name }}</td>
                                     <td>{{ getPassed(verdict.passed) }}</td>
                                     <td>
@@ -69,64 +69,61 @@
     </div>
 </template>
 
-<script type="text/babel">
-    // import 'babel-polyfill';
-    import * as Api from './api.js';
-    import * as Helper from './helpers.js';
+<script type="text/babel">// import 'babel-polyfill';
+    import * as Api from "./api.js";
+    import * as Helper from "./helpers.js";
     import { mapGetters } from "vuex";
 
     export default {
-        mounted () {
-            $('.collapsible').collapsible();
-        },
-        data() {
-            return {
-                paginate: ['submissions']
-            }
-        },
-        computed: {
-            ...mapGetters([
-                "problems",
-                "my"
-            ])
-        },
-        methods:{
-            getProblem(id){
-                for(let prob of this.problems){
-                    if(prob.problem._id == id)
-                        return prob;
-                }
+      mounted() {
+        $(".collapsible").collapsible();
+      },
+      data() {
+        return { paginate: ["submissions"]};
+      },
+      computed: {
+        ...mapGetters([
+          "problems",
+          "my"
+        ])
+      },
+      methods: {
+        getProblem(id) {
+          for (const prob of this.problems) {
+            if (prob.problem._id === id)
+              return prob;
+          }
 
-                return undefined;
-            },
-            getPassed(n){
-                return Helper.getPassed(n);
-            },
-            getMainVerdict(a, b){
-                return Helper.getMainVerdict(a, b);
-            },
-            getHumanVerdict(x){
-              return Helper.getHumanVerdict(x);
-            },
-            getContestTime(t){
-                return Helper.getFormattedContestTime(t);
-            },
-            getExecTime(t){
-                return Helper.getExecTime(t);
-            },
-            lighten(t){
-                return Helper.lighten(t);
-            },
-            showCode(sub){
-                return Helper.showCode(this, sub);
-            }
+          return undefined;
         },
-        watch: {
-            my: function(val){
-                this.fullMySubmissions = val.submissions || [];
-            }
+        getPassed(n) {
+          return Helper.getPassed(n);
+        },
+        getMainVerdict(a, b) {
+          return Helper.getMainVerdict(a, b);
+        },
+        getHumanVerdict(x) {
+          return Helper.getHumanVerdict(x);
+        },
+        getContestTime(t) {
+          return Helper.getFormattedContestTime(t);
+        },
+        getExecTime(t) {
+          return Helper.getExecTime(t);
+        },
+        lighten(t) {
+          return Helper.lighten(t);
+        },
+        showCode(sub) {
+          return Helper.showCode(this, sub);
         }
-    }
+      },
+      watch: {
+        my(val) {
+          this.fullMySubmissions = val.submissions || [];
+        }
+      }
+    };
 </script>
 
 <style lang="sass"></style>

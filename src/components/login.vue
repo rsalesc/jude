@@ -30,37 +30,37 @@
     </div>
 </template>
 
-<script type="text/babel">
-    import * as Api from "./api";
+<script type="text/babel">import * as Api from "./api";
     import { mapGetters } from "vuex";
 
     export default {
-        data () {
-            return {
-                handle: "",
-                password: ""
-            };
-        },
-        computed: {
-            ...mapGetters([
-                "selectedContest"
-            ])
-        },
-        methods: {
-            formLogin() {
-                this.$http.post(Api.paths.login, {
-                    handle: this.handle,
-                    password: this.password,
-                    contest: this.$route.query.id === "null" ? null : this.$route.query.id
-                }).then((res) => {
-                    if(this.selectedContest.name === "admin")
-                      window.location = "/admin";
-                    else
-                      this.$router.push("/contest");
-                }, (err) => {
-                    Materialize.toast(`Login Error: ${err.body.error}`, 4000);
-                });
-            }
+      data() {
+        return {
+          handle: "",
+          password: ""
+        };
+      },
+      computed: {
+        ...mapGetters([
+          "selectedContest"
+        ])
+      },
+      methods: {
+        formLogin() {
+          this.$http.post(Api.paths.login, {
+            handle: this.handle,
+            password: this.password,
+            contest: this.$route.query.id === "null"
+              ? null
+              : this.$route.query.id
+          }).then(() => {
+            if (this.selectedContest.name === "admin")
+              window.location = "/admin";
+            else
+              this.$router.push("/contest");
+            return null;
+          }).catch(err => Materialize.toast(`Login Error: ${err.body.error}`, 4000));
         }
-    }
+      }
+    };
 </script>

@@ -13,7 +13,7 @@
                         <th class="problem-letter">
                             <p class="score">Score</p>
                         </th>
-                        <th class="problem-letter" v-for="problem in problems">
+                        <th class="problem-letter" v-for="problem in problems" :key="problem.problem._id">
                             <p>{{ problem.letter }}</p>
                             <p class="score-info"></p>
                         </th>
@@ -34,7 +34,7 @@
                         </td>
                         <td class="problem-letter lighter" v-for="problem in problems"
                             :class="{'ac-color': isAc(team, problem), 'wa-color': isWa(team, problem)}"
-                            @dblclick.stop="showScore(team._id, problem.problem)">
+                            @dblclick.stop="showScore(team._id, problem.problem)" :key="problem.problem._id">
                             <span v-if="problem.scoring.attempted(team.results[problem.problem._id])">
                                 <p> {{ getProblemScore(team, problem) }}</p>
                                 <p class="score-info" v-if="my.scoring.hasPenalty() && isAc(team, problem)">
@@ -50,7 +50,7 @@
         <!-- Standings Modal -->
         <div id="modal-standings" class="modal modal-fixed-footer">
             <div class="modal-content submission-list">
-                <div v-for="sub in renderedSubmissions" class="submission-line">
+                <div v-for="sub in renderedSubmissions" class="submission-line" :key="sub._id">
                     <a href="#" @click.stop.prevent="showCode(sub)">
                         <i class="material-icons">remove_red_eye</i>
                     </a>
@@ -67,79 +67,78 @@
     </div>
 </template>
 
-<script type="text/babel">
-    // import 'babel-polyfill';
-    import * as Helper from './helpers.js';
-    import { mapGetters } from "vuex"
+<script type="text/babel">// import 'babel-polyfill';
+    import * as Helper from "./helpers.js";
+    import { mapGetters } from "vuex";
 
     export default {
-        mounted (){},
-        data() {
-            return {
-                renderedSubmissions: []
-            }
+      mounted() {},
+      data() {
+        return { renderedSubmissions: []};
+      },
+      computed: {
+        ...mapGetters([
+          "problems",
+          "my",
+          "groupedSubs",
+          "teams"
+        ])
+      },
+      methods: {
+        isPending(prob) {
+          return prob.pending && !prob.solved;
         },
-        computed: {
-            ...mapGetters([
-                "problems",
-                "my",
-                "groupedSubs",
-                "teams"
-            ])
+        isWa(team, prob) {
+          const result = team.results[prob.problem._id];
+          return prob.scoring.attempted(result) && !prob.scoring.solved(result);
         },
-        methods:{
-            isPending(prob){
-                return prob.pending && !prob.solved;
-            },
-            isWa(team, prob){
-                let result = team.results[prob.problem._id];
-                return prob.scoring.attempted(result) && !prob.scoring.solved(result);
-            },
-            isAc(team, prob){
-                return prob.scoring.solved(team.results[prob.problem._id]);
-            },
-            getProblem(id){
-                for(let prob of this.problems){
-                    if(prob.problem._id == id)
-                        return prob;
-                }
+        isAc(team, prob) {
+          return prob.scoring.solved(team.results[prob.problem._id]);
+        },
+        getProblem(id) {
+          for (const prob of this.problems) {
+            if (prob.problem._id === id)
+              return prob;
+          }
 
-                return undefined;
-            },
-            getMainVerdict(a, b){
-                return Helper.getMainVerdict(a, b);
-            },
-            getHumanVerdict(x){
-                return Helper.getHumanVerdict(x);
-            },
-            getContestTime(t){
-                return Helper.getFormattedContestTime(t);
-            },
-            getProblemScore(team, prob){
-                let result = team.results[prob.problem._id];
-                if(this.isAc(team, prob)) {
-                    if(result.fails === 0) return "+";
-                    return `+${result.fails}`;
-                } else if(this.isWa(team, prob)){
-                    return `-${result.fails}`;
-                }
-                return "";
-            },
-            lighten(t){
-                return Helper.lighten(t);
-            },
-            showScore(id, problem){
-                let modal = $('#modal-standings');
-                let group = this.groupedSubs[id];
-                if(!group) return;
-                this.renderedSubmissions = group.filter((x) => x.problem == problem._id);
-                modal.openModal();
-            },
-            showCode(sub){
-                Helper.showCode(this, sub);
-            }
+          return undefined;
+        },
+        getMainVerdict(a, b) {
+          return Helper.getMainVerdict(a, b);
+        },
+        getHumanVerdict(x) {
+          return Helper.getHumanVerdict(x);
+        },
+        getContestTime(t) {
+          return Helper.getFormattedContestTime(t);
+        },
+        getProblemScore(team, prob) {
+          const result = team.results[prob.problem._id];
+          if (this.isAc(team, prob)) {
+            if (result.fails === 0)
+              return "+";
+            return `+${result.fails}`;
+          } else if (this.isWa(team, prob))
+            return `-${result.fails}`;
+    
+          return "";
+        },
+        lighten(t) {
+          return Helper.lighten(t);
+        },
+        showScore(id, problem) {
+          const modal = $("#modal-standings");
+          const group = this.groupedSubs[id];
+          if (!group)
+            return;
+          this.renderedSubmissions = group.filter(x => x.problem === problem._id);
+          modal.openModal();
+        },
+        showCode(sub) {
+          Helper.showCode(this, sub);
         }
-    }
+      }
+    };
 </script>
 
 <style lang="sass"></style>

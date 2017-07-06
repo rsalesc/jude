@@ -10,14 +10,14 @@
                     <div class="col s4">
                         <div class="input-field">
                             <select id="submit-problem">
-                                <option v-for="prob in problems" :value="prob.problem._id">{{prob.letter}}. {{ prob.problem.name }}</option>
+                                <option v-for="prob in problems" :value="prob.problem._id" :key="prob.problem._id">{{prob.letter}}. {{ prob.problem.name }}</option>
                             </select>
                             <label>Problem</label>
                         </div>
                         <div class="section"></div>
                         <div class="input-field">
                             <select id="submit-language" @change="changeLanguage($event)">
-                                <option v-for="lang in languages" :value="lang[0]">{{lang[1]}}</option>
+                                <option v-for="lang in languages" :value="lang[0]" :key="lang[1]">{{lang[1]}}</option>
                             </select>
                             <label>Language</label>
                         </div>
