@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 module.exports = {
   // entry point of our application
@@ -26,9 +27,10 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
+        // include: /node_modules[/\\]vue-paginate/,
         loader: "babel-loader",
         options: {
-          presets: ["es2015", "stage-3"],
+          presets: [["env", { modules: false, loose: true }]],
           plugins: ["transform-runtime"]
         }
       },

@@ -70,7 +70,7 @@
 </template>
 
 <script type="text/babel">
-    import 'babel-polyfill';
+    // import 'babel-polyfill';
     import * as Api from './api.js';
     import * as Helper from './helpers.js';
     import { mapGetters } from "vuex";

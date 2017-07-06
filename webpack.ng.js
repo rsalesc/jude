@@ -19,10 +19,11 @@ module.exports = {
         loader: "babel-loader",
         query: {
           presets: ["es2015", "stage-3"],
-          plugins: ["transform-runtime"]
+          plugins: ["angularjs-annotate", "transform-runtime"]
         }
       },
-      { test: /\.css$/, loader: "style-loader!css-loader" }
+      { test: /\.css$/, loader: "style-loader!css-loader" },
+      { test: /\.html$/, loader: "html-loader", options: { minimize: true }}
     ]
   },
   plugins: [

@@ -3,7 +3,7 @@ const myApp = angular.module("myApp", ["ng-admin"]);
 
 myApp.config((RestangularProvider) => {
   RestangularProvider.setErrorInterceptor((response) => {
-    if (response.status == 401 || response.status == 403) {
+    if (response.status === 401 || response.status === 403) {
       window.location = "/";
       return false;
     }
@@ -18,8 +18,8 @@ myApp.config((RestangularProvider) => {
         params.sort = `${dir}${params._sortField}`;
 
         delete params._sortField;
-        if (params._sortDir) 
-delete params._sortDir;
+        if (params._sortDir)
+          delete params._sortDir;
       }
 
       if (params._filters) {
@@ -46,6 +46,7 @@ import PackageField from "./directives/package";
 import qField from "./helpers/q";
 import filteredList from "./helpers/filtered";
 import AddUsersAction from "./directives/addusers";
+import LogoutHeaderButton from "./directives/logoutHeaderButton";
 import { RejudgeListAction, RejudgeBatchAction } from "./directives/rejudge";
 import { addUsersController, addUsersTemplate } from "./pages/addusers";
 
@@ -53,6 +54,7 @@ myApp.directive("maPackageField", PackageField);
 myApp.directive("maRejudgeAction", RejudgeListAction);
 myApp.directive("maRejudgeBatch", RejudgeBatchAction);
 myApp.directive("maAddUsers", AddUsersAction);
+myApp.directive("maLogoutHeaderButton", LogoutHeaderButton);
 
 myApp.config(["$stateProvider", function ($stateProvider) {
   $stateProvider.state("add-users", {
@@ -282,6 +284,9 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
 
   submission.editionView().fields(submission.showView().fields());
   // submission.creationView().fields(submission.showView().fields());
+
+  // add layout
+  admin.header(require("./header.html"));
 
   // add entities
   admin.addEntity(user);

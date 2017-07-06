@@ -1,4 +1,4 @@
-import "babel-polyfill";
+// import "babel-polyfill";
 import * as Scoring from "../../judge/scoring.js";
 import { Task } from "../../judge/task.js";
 import { VerdictConst } from "../../judge/verdict.js";
@@ -8,9 +8,9 @@ import moment from "moment";
 import { mapState } from "vuex";
 
 const hljs = require("highlight.js/lib/highlight");
-hljs.registerLanguage("cpp", "highlight.js/lib/languages/cpp");
-hljs.registerLanguage("python", "highlight.js/lib/languages/python");
-hljs.registerLanguage("java", "highlight.js/lib/languages/java");
+hljs.registerLanguage("cpp", require("highlight.js/lib/languages/cpp"));
+hljs.registerLanguage("python", require("highlight.js/lib/languages/python"));
+hljs.registerLanguage("java", require("highlight.js/lib/languages/java"));
 
 export function getScoringString(prob, contest) {
   if (contest)
