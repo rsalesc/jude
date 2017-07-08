@@ -8,7 +8,7 @@
 This will initiate `judge`, `site`, `mongo` and `seaweedfs` containers. That's all needed
 to run a minimal version of `Jude`.
 
-Hit `CTRL+C` twice to stop the containers. The DB will persist across `dcomp` calls since
+Hit `CTRL+C` twice to stop the containers. The DB will persist across `dcomp` calls
 as long as its container is stopped, not destroyed.
 
 To add a root/root user to your database:
