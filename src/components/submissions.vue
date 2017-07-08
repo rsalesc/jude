@@ -73,6 +73,7 @@
     import * as Api from "./api.js";
     import * as Helper from "./helpers.js";
     import { mapGetters } from "vuex";
+    import { types } from "./store/";
 
     export default {
       mounted() {
@@ -115,7 +116,7 @@
           return Helper.lighten(t);
         },
         showCode(sub) {
-          return Helper.showCode(this, sub);
+          return this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
         }
       },
       watch: {

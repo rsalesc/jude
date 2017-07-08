@@ -77,25 +77,14 @@
         <router-view></router-view>
 
         <ju-submit></ju-submit>
-        <div id="modal-code" class="modal modal-fixed-footer">
-            <div class="modal-content">
-                <pre><code id="modal-code-compilation"></code></pre>
-                <pre>
-                    <code id="modal-code-content">
-
-                    </code>
-                </pre>
-            </div>
-            <div class="modal-footer">
-                <a @click.prevent="" href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
-            </div>
-        </div>
+        <ju-code-modal></ju-code-modal>
     </div>
 </template>
 
 <script type="text/babel">import * as Api from "./api.js";
     import * as Helper from "./helpers.js";
     import SubmitComponent from "./submit.vue";
+    import CodeModalComponent from "./codeModal.vue";
     import Vue from "vue";
     import moment from "moment";
     import "moment/locale/en-gb";
@@ -172,7 +161,10 @@
           this.$router.push("/");
         }
       },
-      components: { JuSubmit: SubmitComponent }
+      components: { 
+        JuSubmit: SubmitComponent,
+        JuCodeModal: CodeModalComponent
+      }
     };
 </script>
 

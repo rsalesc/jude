@@ -69,6 +69,7 @@
 
 <script type="text/babel">// import 'babel-polyfill';
     import * as Helper from "./helpers.js";
+    import { types } from "./store/";
     import { mapGetters } from "vuex";
 
     export default {
@@ -135,7 +136,7 @@
           modal.openModal();
         },
         showCode(sub) {
-          Helper.showCode(this, sub);
+          this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
         }
       }
     };

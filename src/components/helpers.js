@@ -7,10 +7,7 @@ import * as Api from "./api.js";
 import moment from "moment";
 import { mapState } from "vuex";
 
-const hljs = require("highlight.js/lib/highlight");
-hljs.registerLanguage("cpp", require("highlight.js/lib/languages/cpp"));
-hljs.registerLanguage("python", require("highlight.js/lib/languages/python"));
-hljs.registerLanguage("java", require("highlight.js/lib/languages/java"));
+import hljs from "./hljs";
 
 export function getScoringString(prob, contest) {
   if (contest)
@@ -22,12 +19,12 @@ export function getScoringClassFromString(sc) {
   return Scoring[sc];
 }
 
-export function getScoringClass(prob) {
-  return Scoring[getScoringString(prob)];
+export function getScoringClass(prob, contest) {
+  return Scoring[getScoringString(prob, contest)];
 }
 
-export function getScoring(prob) {
-  return new (getScoringClass(prob))(new Task(prob.problem.attr));
+export function getScoring(prob, contest) {
+  return new (getScoringClass(prob, contest))(new Task(prob.problem.attr));
 }
 
 export function getHumanVerdict(v) {
@@ -154,7 +151,7 @@ export function showCode(component, sub) {
   Api.submission.get({ id: sub._id }).then((res) => {
     if (!res.body.hasOwnProperty("code"))
       return;
-    const code = res.body.code;
+    const { code } = res.body;
 
     const modal = $("#modal-code");
     const content = modal.find("#modal-code-content");
@@ -162,7 +159,7 @@ export function showCode(component, sub) {
     compilation.text("");
     if (res.body.verdict) {
       for (const dataset in res.body.verdict) {
-        if (res.body.verdict.hasOwnProperty(dataset) && res.body.verdict[dataset].verdict == "VERDICT_CE")
+        if (res.body.verdict.hasOwnProperty(dataset) && res.body.verdict[dataset].verdict === "VERDICT_CE")
           compilation.text(res.body.verdict[dataset].info.text || "");
       }
     }
@@ -170,10 +167,12 @@ export function showCode(component, sub) {
     content.text(code).attr("class", getHlsMode(res.body.language));
     hljs.highlightBlock(content[0]);
     modal.openModal();
-  }, (res) => {
-    if (res.status == 401 || res.status == 403) {
-      Materialize.toast("Not logged in, cannot show code!");
+  }).catch((res) => {
+    if (res.status === 401 || res.status === 403) {
+      Materialize.toast("Not logged in, cannot show submission info!");
       component.$router.push("/");
+    } else {
+      Materialize.toast("Cannot retrieve submission info for an unknown reason. Try again!");
     }
   });
 }

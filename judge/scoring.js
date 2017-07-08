@@ -75,11 +75,11 @@ class Scoring {
 
   evalContext(submissions) {
     return this.evalContest(
-          submissions
-            .filter(s => s.timeInContest >= 0)
-            .filter(s => !this.hasSkipped(s.verdict))
-            .sort(submissionComparator)
-        );
+      submissions
+        .filter(s => s.timeInContest >= 0)
+        .filter(s => !this.hasSkipped(s.verdict))
+        .sort(submissionComparator)
+    );
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -89,8 +89,7 @@ class Scoring {
 }
 
 class ProductScoring extends Scoring {
-
-    // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars
   static isTaskValid(tk) {
     return true;
   }
@@ -121,7 +120,7 @@ class ProductScoring extends Scoring {
       const verdict = verdicts[key];
       if (verdict.verdict === "VERDICT_INQ") {
         return {
- score: 0, affect: false, penalty: 0, fails: 0
+          score: 0, affect: false, penalty: 0, fails: 0
         };
       }
 
@@ -131,7 +130,7 @@ class ProductScoring extends Scoring {
     }
 
     return {
- score: parseInt(res * this.task.getWeight(), 10), penalty: 0, affect: true, fails: 0
+      score: parseInt(res * this.task.getWeight(), 10), penalty: 0, affect: true, fails: 0
     };
   }
 
@@ -144,7 +143,7 @@ class ProductScoring extends Scoring {
 
     for (const submission of submissions) {
       const evaluation = this.eval(submission.verdict);
-      if (!evaluation.affect) {
+      if (evaluation.affect) {
         if (evaluation.score === 0) {
           penalty += opts.penalty || 20;
           fails++;
@@ -160,7 +159,7 @@ class ProductScoring extends Scoring {
     }
 
     return {
-score: 0, penalty: 0, affect: false, fails
+      score: 0, penalty: 0, affect: false, fails
     };
   }
 
@@ -173,7 +172,6 @@ score: 0, penalty: 0, affect: false, fails
 }
 
 class IcpcScoring extends Scoring {
-
   // eslint-disable-next-line no-unused-vars
   static isTaskValid(tk) {
     return true;
@@ -205,7 +203,7 @@ class IcpcScoring extends Scoring {
       const verdict = verdicts[key];
       if (verdict.verdict === "VERDICT_INQ") {
         return {
- score: 0, affect: false, penalty: 0, fails: 0
+          score: 0, affect: false, penalty: 0, fails: 0
         };
       }
 
@@ -215,7 +213,7 @@ class IcpcScoring extends Scoring {
     }
 
     return {
-score: res, penalty: 0, affect: true, fails: 0
+      score: res, penalty: 0, affect: true, fails: 0
     };
   }
 
@@ -244,7 +242,7 @@ score: res, penalty: 0, affect: true, fails: 0
     }
 
     return {
-score: 0, penalty: 0, affect: false, fails
+      score: 0, penalty: 0, affect: false, fails
     };
   }
 
@@ -257,7 +255,7 @@ score: 0, penalty: 0, affect: false, fails
 }
 
 module.exports = {
-    _Scoring: Scoring,
-    ProductScoring,
-    IcpcScoring
+  _Scoring: Scoring,
+  ProductScoring,
+  IcpcScoring
 };
