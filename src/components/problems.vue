@@ -3,7 +3,8 @@
         <div class="z-depth-1 card-panel jude-panel">
             <h5 class="card-title">
                 <span>Problemset</span>
-                <span class="comment">Click in the page icon to download the statement for a problem.</span>
+                <span class="comment-smaller tooltipped" :data-tooltip="getTooltipText()"><i class="material-icons">info</i></span>
+                <span class="comment">{{ getTooltipText() }}</span>
             </h5>
             <ul class="collapsible problems-list" data-collapsible="accordion">
                 <li v-for="prob in problems" :key="prob._id">
@@ -38,7 +39,9 @@
     import { mapGetters } from "vuex";
 
     export default {
-        mounted (){},
+        mounted (){
+          this.$nextTick(() => $('.tooltipped').tooltip({ delay: 50, html: true }));
+        },
         data() {
             return {}
         },
@@ -60,6 +63,9 @@
             },
             lighten(t){
                 return Helper.lighten(t);
+            },
+            getTooltipText() {
+              return Helper.getTooltipText(`Click in the page icon to download the statement for a problem.`);
             }
         }
     }

@@ -3,7 +3,8 @@
         <div class="z-depth-1 card-panel jude-panel">
             <h5 class="card-title">
                 <span>Standings</span>
-                <span class="comment">Double click a problem/team cell to show details about the tries of a team for that problem.</span>
+                <span class="comment-smaller tooltipped" :data-tooltip="getTooltipText()"><i class="material-icons">info</i></span>
+                <span class="comment">{{ getTooltipText() }}</span>
             </h5>
             <table class="standings-table bordered">
                 <thead>
@@ -73,7 +74,11 @@
     import { mapGetters } from "vuex";
 
     export default {
-      mounted() {},
+      mounted() {
+        this.$nextTick(() => {
+          $('.tooltipped').tooltip({ delay: 50, html: true });
+        });
+      },
       data() {
         return { renderedSubmissions: []};
       },
@@ -135,8 +140,13 @@
           this.renderedSubmissions = group.filter(x => x.problem === problem._id);
           modal.openModal();
         },
-        showCode(sub) {
-          this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
+        async showCode(sub) {
+          const loggedin = await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
+          if (!loggedin)
+            this.$router.push("/");
+        },
+        getTooltipText() {
+          return Helper.getTooltipText(`Double click a problem/team cell to show details about the tries of a team for that problem.`);
         }
       }
     };

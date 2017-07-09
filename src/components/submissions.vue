@@ -3,7 +3,8 @@
         <div class="z-depth-1 card-panel jude-panel">
             <h5 class="card-title">
                 <span>Submissions</span>
-                <span class="comment">Click in the eye to see more details about a submission.</span>
+                <span class="comment-smaller tooltipped" :data-tooltip="getTooltipText()"><i class="material-icons">info</i></span>
+                <span class="comment">{{ getTooltipText() }}</span>
             </h5>
             <paginate name="submissions" :list="my.submissions" :per="100"
                 class="collapsible submission-list">
@@ -20,10 +21,10 @@
                             <a href="#" @click.stop.prevent="showCode(sub)">
                                 <i class="material-icons">remove_red_eye</i>
                             </a>
-                            <span v-if="my.scoring.hasWeight()">
+                            <span v-if="my.scoring.hasWeight()" class="right-text">
                                 {{ sub.score.score }} pts
                             </span>
-                            <span v-else>
+                            <span v-else class="right-text">
                                 {{ getHumanVerdict(getMainVerdict(sub.verdict, getProblem(sub.problem).problem)) }}
                             </span>
                         </span>
@@ -77,7 +78,10 @@
 
     export default {
       mounted() {
-        $(".collapsible").collapsible();
+        this.$nextTick(() => {
+          $('.tooltipped').tooltip({ delay: 50, html: true });
+          $('.collapsible').collapsible();
+        });
       },
       data() {
         return { paginate: ["submissions"]};
@@ -115,8 +119,13 @@
         lighten(t) {
           return Helper.lighten(t);
         },
-        showCode(sub) {
-          return this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
+        async showCode(sub) {
+          const loggedin = await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
+          if (!loggedin)
+            this.$router.push("/");
+        },
+        getTooltipText() {
+          return Helper.getTooltipText(`Click in the eye to see more details about a submission.`);
         }
       },
       watch: {

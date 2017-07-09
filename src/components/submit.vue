@@ -17,7 +17,7 @@
                         <div class="section"></div>
                         <div class="input-field">
                             <select id="submit-language" @change="changeLanguage($event)">
-                                <option v-for="lang in languages" :value="lang[0]" :key="lang[1]">{{lang[1]}}</option>
+                                <option v-for="lang in languages" :value="lang[0]" :key="lang[0]">{{lang[1]}}</option>
                             </select>
                             <label>Language</label>
                         </div>

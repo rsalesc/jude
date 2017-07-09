@@ -3,8 +3,38 @@
 @import 'components/forms';
 @import 'layouts/login';
 
+body {
+  font-size: 95%;
+}
+
 .wrapper {
     padding-left: 240px;
+}
+
+i.material-icons {
+  transform: scale(0.85);
+}
+
+@media only screen and (max-width: 1240px) {
+  .card-title {
+    .comment {
+      display: none;
+    }
+    .comment-smaller {
+      display: inline-block;
+    }
+  }
+}
+
+@media only screen and (min-width: 1241px) {
+  .card-title {
+    .comment {
+      display: inline-block;
+    }
+    .comment-smaller {
+      display: none;
+    }
+  }
 }
 
 @media only screen and (max-width : 992px) {
@@ -86,9 +116,9 @@ nav{
     }
 
     .right{
-        @extend .hide-on-med-and-down;
         .right-text {
-            font-size: .7em;
+            @extend .hide-on-med-and-down;
+            font-size: .8em;
         }
     }
 }
@@ -247,11 +277,14 @@ nav{
 }
 
 .side-nav{
-    .side-nav-info{
+    a {
+      font-size: 0.95em;
+    }
+    .side-nav-info {
         padding-top: 12px;
         padding-bottom: 12px;
 
-        a{
+        a {
             font-size: 0.75em;
             line-height: 1em;
             height: auto !important;
@@ -285,10 +318,16 @@ nav{
     .comment {
         float: right;
         width: 40%;
-        font-size: .8rem;
+        font-size: .4em;
         line-height: 1rem;
         text-align: right;
         color: gray;
+    }
+
+    .comment-smaller {
+      float: right;
+      text-align: right;
+      color: darkslategray;
     }
 }
 
@@ -302,9 +341,21 @@ nav{
   }
 
   p.tertiary-content {
-    font-size: .8rem;
+    font-size: .4em;
     line-height: 1rem;
     color: gray;
     margin: 0;
   }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  .secondary-content {
+    float: right;
+    font-size: .45em;
+    color: gray;
+  }
+}
+
+.tooltip-text-small {
+  font-size: 0.7em;
 }

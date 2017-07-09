@@ -194,3 +194,7 @@ export function mapModuleState(nesting, states = []) {
 
   return mapState(res);
 }
+
+export function getTooltipText(s) {
+  return `${s}`;
+}
