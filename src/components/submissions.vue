@@ -6,7 +6,7 @@
                 <span class="comment-smaller tooltipped" :data-tooltip="getTooltipText()"><i class="material-icons">info</i></span>
                 <span class="comment">{{ getTooltipText() }}</span>
             </h5>
-            <paginate name="submissions" :list="my.submissions" :per="100"
+            <paginate name="submissions" :list="my.submissions" :per="5"
                 class="collapsible submission-list">
                 <li v-for="sub in paginated('submissions')" :key="sub._id">
                     <div class="collapsible-header">
