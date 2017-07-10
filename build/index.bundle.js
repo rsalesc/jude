@@ -160,7 +160,7 @@ var _promise = __webpack_require__(11);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _typeof2 = __webpack_require__(60);
+var _typeof2 = __webpack_require__(61);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -342,7 +342,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = __webpack_require__(0);
 var fs = __webpack_require__(15);
-var util = __webpack_require__(61);
+var util = __webpack_require__(62);
 var glob = __webpack_require__(29);
 
 function inspect(p) {
@@ -456,7 +456,7 @@ module.exports = require("fs-extra");
 /**
  * Created by rsalesc on 14/06/16.
  */
-var winston = __webpack_require__(63);
+var winston = __webpack_require__(64);
 var process = __webpack_require__(30);
 
 var logger = new winston.Logger({
@@ -501,7 +501,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mongoose = __webpack_require__(1);
 var models = __webpack_require__(6);
-var crypto = __webpack_require__(79);
+var crypto = __webpack_require__(80);
 
 var Schema = mongoose.Schema;
 
@@ -912,14 +912,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/06/16.
  */
 
-var yauzl = __webpack_require__(58);
-var concatStream = __webpack_require__(59);
+var yauzl = __webpack_require__(59);
+var concatStream = __webpack_require__(60);
 var utils = __webpack_require__(10);
-var wildcard = __webpack_require__(62);
+var wildcard = __webpack_require__(63);
 var path = __webpack_require__(0);
 var logger = __webpack_require__(16);
 var fs = __webpack_require__(15);
-var promisify = __webpack_require__(64);
+var promisify = __webpack_require__(65);
 var glob = promisify(__webpack_require__(29).glob);
 
 /* Helper Functions for storage */
@@ -1011,7 +1011,7 @@ var Storage = function () {
   function Storage() {
     (0, _classCallCheck3.default)(this, Storage);
 
-    if (new.target === Storage) throw "Cannot instantiate abstract class " + this.constructor.name;
+    if (this.constructor.name === Storage.name) throw "Cannot instantiate abstract class " + this.constructor.name;
   }
 
   /**
@@ -2188,8 +2188,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var path = __webpack_require__(0);
-var task = __webpack_require__(65);
-var YAML = __webpack_require__(67);
+var task = __webpack_require__(66);
+var YAML = __webpack_require__(68);
 var logger = __webpack_require__(16);
 var utils = __webpack_require__(10);
 var scoring = __webpack_require__(33);
@@ -2206,7 +2206,7 @@ var Loader = function () {
   function Loader(store) {
     (0, _classCallCheck3.default)(this, Loader);
 
-    if (new.target === Loader) throw "Cannot instantiate abstract class " + this.constructor.name;
+    if (this.constructor.name === Loader.name) throw "Cannot instantiate abstract class " + this.constructor.name;
     this.store = store;
   }
 
@@ -2781,7 +2781,7 @@ var Scoring = function () {
     var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     (0, _classCallCheck3.default)(this, Scoring);
 
-    if (new.target === Scoring) throw "Cannot instantiate abstract class " + this.constructor.name;
+    if (this.constructor.name === Scoring.name) throw "Cannot instantiate abstract class " + this.constructor.name;
     this._task = task;
     this._opts = opts;
   }
@@ -2987,7 +2987,7 @@ var ProductScoring = function (_Scoring) {
           var submission = _step3.value;
 
           var evaluation = this.eval(submission.verdict);
-          if (!evaluation.affect) {
+          if (evaluation.affect) {
             if (evaluation.score === 0) {
               penalty += opts.penalty || 20;
               fails++;
@@ -3022,7 +3022,6 @@ var ProductScoring = function (_Scoring) {
     }
   }], [{
     key: "isTaskValid",
-
 
     // eslint-disable-next-line no-unused-vars
     value: function isTaskValid(tk) {
@@ -3169,7 +3168,6 @@ var IcpcScoring = function (_Scoring2) {
   }], [{
     key: "isTaskValid",
 
-
     // eslint-disable-next-line no-unused-vars
     value: function isTaskValid(tk) {
       return true;
@@ -3239,7 +3237,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var fs = __webpack_require__(20);
 var fse = __webpack_require__(15);
-var tmp = __webpack_require__(75);
+var tmp = __webpack_require__(76);
 tmp.setGracefulCleanup();
 
 var path = __webpack_require__(0);
@@ -3484,16 +3482,18 @@ var router = express.Router();
 // var methodOverride = require('method-override');
 var restify = __webpack_require__(47);
 var apiRoutes = __webpack_require__(25);
+var staticCompressed = __webpack_require__(57);
 
 // expose db object globally
 __webpack_require__(26);
 
 var app = express();
-var routes = __webpack_require__(57);
+var routes = __webpack_require__(58);
 var auth2 = __webpack_require__(18);
 var models = __webpack_require__(6);
 
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
+app.use("/static-jude", staticCompressed(path.join(__dirname, "public"), { enableBrotli: true }));
 
 // setup auth method
 // configure session
@@ -4144,6 +4144,12 @@ module.exports = router;
 
 /***/ }),
 /* 57 */
+/***/ (function(module, exports) {
+
+module.exports = require("express-static-gzip");
+
+/***/ }),
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4171,8 +4177,8 @@ var Storage = __webpack_require__(22).MemoryStorage;
 var Loader = __webpack_require__(31);
 var utils = __webpack_require__(10);
 var api = __webpack_require__(25);
-var contest = __webpack_require__(68);
-var admin = __webpack_require__(80);
+var contest = __webpack_require__(69);
+var admin = __webpack_require__(81);
 var auth2 = __webpack_require__(18);
 var passport = __webpack_require__(35);
 
@@ -4289,49 +4295,49 @@ router.use("/admin", admin);
 module.exports = router;
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports) {
 
 module.exports = require("yauzl");
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports) {
 
 module.exports = require("concat-stream");
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports) {
 
 module.exports = require("util");
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports) {
 
 module.exports = require("node-wildcard");
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports) {
 
 module.exports = require("winston");
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports) {
 
 module.exports = require("es6-promisify");
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4356,7 +4362,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var scoring = __webpack_require__(33);
-var deepcopy = __webpack_require__(66);
+var deepcopy = __webpack_require__(67);
 
 var Task = function () {
   function Task(attr) {
@@ -4536,19 +4542,19 @@ var Task = function () {
 module.exports = { Task: Task };
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports) {
 
 module.exports = require("deepcopy");
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports) {
 
 module.exports = require("yamljs");
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4566,7 +4572,7 @@ var _asyncToGenerator2 = __webpack_require__(4);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _entries = __webpack_require__(69);
+var _entries = __webpack_require__(70);
 
 var _entries2 = _interopRequireDefault(_entries);
 
@@ -4578,8 +4584,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = __webpack_require__(0);
 var mongoose = __webpack_require__(1);
-var grader = __webpack_require__(70);
-var precheck = __webpack_require__(78);
+var grader = __webpack_require__(71);
+var precheck = __webpack_require__(79);
 var auth2 = __webpack_require__(18);
 
 var express = __webpack_require__(5);
@@ -4834,13 +4840,13 @@ router.get("/languages", function (req, res, next) {
 module.exports = router;
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/object/entries");
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5615,16 +5621,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // eslint-disable-next-line no-unused-vars
 var fs = __webpack_require__(20);
 var path = __webpack_require__(0);
-var promiseReflect = __webpack_require__(71);
+var promiseReflect = __webpack_require__(72);
 
-var verdict = __webpack_require__(72);
+var verdict = __webpack_require__(73);
 var utils = __webpack_require__(10);
 var logger = __webpack_require__(16);
-var sandbox = __webpack_require__(73);
+var sandbox = __webpack_require__(74);
 var environment = __webpack_require__(34);
 
 var loader = __webpack_require__(31);
-var Profiler = __webpack_require__(77);
+var Profiler = __webpack_require__(78);
 
 var Storage = __webpack_require__(22).MemoryStorage;
 
@@ -6442,13 +6448,13 @@ module.exports = { testTask: testTask, testPackage: testPackage, availableLangua
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports) {
 
 module.exports = require("promise-reflect");
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6560,7 +6566,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6611,7 +6617,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 15/06/16.
  */
-var Promise = __webpack_require__(74);
+var Promise = __webpack_require__(75);
 
 var fs = __webpack_require__(15);
 
@@ -6625,7 +6631,7 @@ var globAsync = utils.globAsync;
 var Storage = __webpack_require__(22).MemoryStorage;
 var JudgeConfig = jenv.JudgeConfig;
 
-var spawnDetachedPromise = __webpack_require__(76).spawn;
+var spawnDetachedPromise = __webpack_require__(77).spawn;
 
 /*
 *   spawnDetached async version (promisified)
@@ -6688,7 +6694,7 @@ var Sandbox = function () {
   function Sandbox(env, store) {
     (0, _classCallCheck3.default)(this, Sandbox);
 
-    if (new.target === Sandbox) throw "Cannot instantiate abstract class " + this.constructor.name;
+    if (this.constuctor.name === Sandbox.name) throw "Cannot instantiate abstract class " + this.constructor.name;
     this.cacher = store;
     this.env = env;
   }
@@ -8303,25 +8309,25 @@ module.exports = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports) {
 
 module.exports = require("tmp");
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports) {
 
 module.exports = require("child-process-promise");
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8427,7 +8433,7 @@ var Profiler = function () {
 module.exports = Profiler;
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8466,13 +8472,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports) {
 
 module.exports = require("crypto");
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

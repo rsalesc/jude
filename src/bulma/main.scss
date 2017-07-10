@@ -1,0 +1,34 @@
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+/* helpers */
+.ju-centered {
+  margin: 0 auto;
+}
+
+/* component related CSS */
+.ju-main-card {
+  max-width: 500px;
+}
+
+.ju-b-table-compact {
+  font-size: 0.8em;
+  .pagination {
+    font-size: 0.75em;
+  }
+}
+
+.navbar-item > .icon {
+  padding-right: 1em;
+}
+
+/* text related CSS */
+.ju-secondary-text {
+  font-size: .75em;
+}
+
+.ju-tertiary-text {
+  font-size: .675em;
+}
