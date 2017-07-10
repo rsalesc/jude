@@ -5,10 +5,11 @@ import App from "./app.vue";
 import ContestList from "./contest-list.vue";
 import Login from "./login.vue";
 import MainPage from "./main.vue";
+import Dashboard from "./dashboard.vue";
+import Rankings from "./rankings.vue";
 import { store } from "./store/";
 import Buefy from "buefy";
 import "buefy/lib/buefy.css";
-import "bulma/css/bulma.css";
 import "./main.scss";
 require("font-awesome-webpack");
 
@@ -19,7 +20,15 @@ Vue.use(Buefy, { defaultIconPack: "fa" });
 const routes = [
   { path: "/", component: ContestList },
   { path: "/login", component: Login },
-  { path: "/contest", component: MainPage }
+  {
+    path: "/contest",
+    component: MainPage,
+    children: [
+      { path: "dashboard", component: Dashboard },
+      { path: "standings", component: Rankings },
+      { path: "", redirect: "dashboard" }
+    ]
+  }
 ];
 
 const router = new VueRouter({ routes });

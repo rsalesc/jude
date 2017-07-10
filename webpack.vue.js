@@ -39,7 +39,7 @@ module.exports = {
       // maybe its load too much CSS?
       { test: /\.css$/, loader: "style-loader!css-loader" },
       {
-        test: /\.scss$/,
+        test: /\.s(c|a)ss$/,
         use: [{ loader: "style-loader" }, { loader: "css-loader" }, { loader: "sass-loader" }]
       },
       {
@@ -55,6 +55,8 @@ module.exports = {
   resolve: { alias: { vue$: path.join(__dirname, "node_modules/vue/dist/vue.js") }},
   plugins: [
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
+    new webpack.ContextReplacementPlugin(/brace[/\\]theme$/, /github/),
+    new webpack.ContextReplacementPlugin(/brace[/\\]mode$/, /(c_cpp|java|python)/),
     new webpack.optimize.UglifyJsPlugin(),
     new CompressionPlugin({
       asset: "[path].gz[query]",

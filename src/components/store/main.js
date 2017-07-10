@@ -7,7 +7,8 @@ export const types = {
   FETCH_CONTEST_DATA: "main/FETCH_CONTEST_DATA",
   FETCH_AND_SHOW_SUBMISSION: "main/FETCH_AND_SHOW_SUBMISSION",
   UPDATE_SHOWN_SUBMISSION: "main/UPDATE_SHOWN_SUBMISSION",
-  CLEAR_MODAL_TRIGGER: "main/CLEAR_MODAL_TRIGGER"
+  CLEAR_MODAL_TRIGGER: "main/CLEAR_MODAL_TRIGGER",
+  SET_AUTO_FETCH_STANDINGS: "main/SET_AUT_FETCH_STANDINGS"
 };
 
 export const state = {
@@ -16,7 +17,8 @@ export const state = {
   rawSubmissions: [],
   rawTeams: [],
   shownSubmission: {},
-  codeModalTrigger: false
+  codeModalTrigger: false,
+  autoFetchStandings: false
 };
 
 export const mutations = {
@@ -32,6 +34,9 @@ export const mutations = {
   },
   [types.CLEAR_MODAL_TRIGGER](state) {
     state.codeModalTrigger = false;
+  },
+  [types.SET_AUTO_FETCH_STANDINGS](state, value) {
+    state.autoFetchStandings = value;
   }
 };
 

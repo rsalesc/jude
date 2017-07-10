@@ -1,3 +1,6 @@
+@import "~bulma/css/bulma.css";
+@import "~bulma/sass/utilities/variables.sass";
+
 body, html {
   height: 100%;
   margin: 0;
@@ -9,8 +12,39 @@ body, html {
 }
 
 /* component related CSS */
+
+@media only screen and (max-width: 999px) {
+  .table .ju-problem-cell {
+    width: 80px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .table .ju-problem-cell {
+    display: none;
+  }
+
+  .table .ju-problem-cell.ju-score-cell {
+    display: table-cell;
+  }
+}
+
+.rule {
+  width: 100%;
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 20px;
+}
+
 .ju-main-card {
   max-width: 500px;
+}
+
+.ju-b-table-less-compact {
+  font-size: 0.875em;
+  .pagination {
+    font-size: 0.8em;
+  }
 }
 
 .ju-b-table-compact {
@@ -20,11 +54,55 @@ body, html {
   }
 }
 
+.b-table-content tr {
+  color: $text !important;
+}
+
 .navbar-item > .icon {
   padding-right: 1em;
 }
 
+.ju-circle {
+  border-radius: 50%;
+  width: 1.5em;
+  font-size: 1.5em;
+  color: #666;
+  border: 1px solid #666;
+
+  span {
+    text-align: center;
+    line-height: 1.5em;
+    display: block;
+  }
+}
+
+.table.ju-standings {
+  td, th {
+    vertical-align: middle;
+  }
+}
+
+.table .ju-problem-cell {
+  text-align: center;
+  vertical-align: middle;
+  width: 128px;
+
+  &.ac-color {
+    color: green;
+    background-color: rgba(139, 195, 74, 0.4) !important;
+  }
+
+  &.wa-color{
+    color: red;
+    background-color: rgba(255, 164, 156, 0.4) !important;
+  }
+}
+
 /* text related CSS */
+.ju-comment {
+  color: #777;
+}
+
 .ju-secondary-text {
   font-size: .75em;
 }
@@ -32,3 +110,64 @@ body, html {
 .ju-tertiary-text {
   font-size: .675em;
 }
+
+.ju-score-info {
+  @extend .ju-comment;
+  @extend .ju-tertiary-text;
+}
+
+/* INDETERMINATE */
+
+@-webkit-keyframes greenglow {
+    from {
+        left:-40%;
+    }
+    to {
+        left:100%;
+    }
+}
+@-moz-keyframes greenglow {
+    from {
+        left:-40%;
+    }
+    to {
+        left:100%;
+    }
+}
+@-o-keyframes greenglow {
+    from {
+        left:-40%;
+    }
+    to {
+        left:100%;
+    }
+}
+@keyframes greenglow {
+    from {
+        left:-40%;
+    }
+    to {
+        left:100%;
+    }
+}
+.indeterminate {
+    width:100%;
+    height:3px;
+    position:relative;
+    overflow:hidden;
+    background: #E6E6E6;
+}
+
+.indeterminate.active:after {
+    content: " ";
+    display:block;
+    width:40%;
+    top:-50%;
+    height:250%;
+    position:absolute;
+    animation: greenglow 1s linear infinite;
+    -webkit-animation: greenglow 1s linear infinite;
+    z-index:2;
+    background: $primary;
+}
+  

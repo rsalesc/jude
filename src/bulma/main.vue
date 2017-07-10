@@ -13,46 +13,60 @@
       </div>
       <div class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item">
+          <router-link class="navbar-item" to="dashboard">
             <b-icon icon="dashboard" size="is-small"></b-icon>
             <span>Dashboard</span>
-          </a>
-          <a class="navbar-item">
+          </router-link>
+          <router-link class="navbar-item" to="standings">
             <b-icon icon="users" size="is-small"></b-icon>
             <span>Standings</span>
-          </a>
+          </router-link>
         </div>
 
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="field">
               <p class="control">
-                <a class="button is-primary">
+                <a class="button is-primary" @click="submitModal.active = true">
                   <span class="icon"><b-icon icon="send" size="is-small"></b-icon></span>
                   <span>Submit</span>
                 </a>
               </p>
             </div>
           </div>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <span class="icon"><b-icon icon="user" size="is-small"></b-icon></span>
+              <span>Panel</span>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" @click="doLogout()">Logout</a>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
-
+    <div class="indeterminate" :class="{ active: isFetching }"></div>
     <section class="section">
       <router-view></router-view>
     </section>
+
+    <b-modal
+      :component="SubmitComponent"
+      :active.sync="submitModal.active">
+    </b-modal>
   </div>
 </template>
 
 <script type="text/babel">import * as Api from "./api.js";
     import * as Helper from "./helpers.js";
-    //import SubmitComponent from "./submit.vue";
-    //import CodeModalComponent from "./codeModal.vue";
+    import SubmitComponent from "./submit.vue";
     import Vue from "vue";
     import moment from "moment";
     import "moment/locale/en-gb";
     import { mapGetters, mapState } from "vuex";
     import { types } from "./store/";
+    import BulmaUtils from "./bulmutils";
 
     moment.locale("en-gb");
 
@@ -64,7 +78,13 @@
         }, 1000);
       },
       data() {
-        return { countdownString: "-" };
+        return { 
+          countdownString: "-",
+          SubmitComponent,
+          submitModal: {
+            active: false
+          }
+        };
       },
       computed: {
         ...Helper.mapModuleState("main", [
@@ -108,9 +128,14 @@
           return moment(contest.end_time).format("LLL (Z)");
         },
         async fetch() {
-          const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
-          if (!loggedin)
-            this.$router.push("/");
+          try {
+            const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
+            if (!loggedin)
+              this.$router.push("/");
+          } catch (err) {
+            new BulmaUtils(this).toast("Error contacting the server", 4000, "is-danger");
+            console.error(err);
+          }
         },
         async doLogout() {
           await this.$http.post(Api.paths.logout);

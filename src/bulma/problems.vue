@@ -1,35 +1,44 @@
 <template>
-    <div class="col s6 padded-container">
-        <div class="z-depth-1 card-panel jude-panel">
-            <h5 class="card-title">
-                <span>Problemset</span>
-                <span class="comment-smaller tooltipped" :data-tooltip="getTooltipText()"><i class="material-icons">info</i></span>
-                <span class="comment">{{ getTooltipText() }}</span>
-            </h5>
-            <ul class="collapsible problems-list" data-collapsible="accordion">
-                <li v-for="prob in problems" :key="prob._id">
-                    <div class="collapsible-header" :class="{'ac-color': isAc(prob), 'wa-color': isWa(prob), 'pending-color': isPending(prob)}">
-                        <i class="problem-index" :style="{color: '#'+lighten(prob.color)}">
-                            {{ prob.letter }}
-                        </i>
-                        <span class="problem-title">
-                            {{prob.problem.name}}
-                        </span>
+    <div class="box">
+      <div class="box-title">
+        <p class="title is-4">Problems</p>
+      </div>
+      <hr class="rule"></hr>
+      <div class="box-content">
+        <div class="media" v-for="prob in problems" :key="prob.problem._id">
+          <div class="media-left ju-circle"
+            :style="{ color: `#${lighten(prob.color)}`, borderColor: `#${lighten(prob.color)}` }">
+            <span>{{ prob.letter }}</span>
+          </div>
 
-                        <span class="right">
-                            <span class="right-text">
-                                {{ prob.problem.attr.limits.time }} ms / {{ prob.problem.attr.limits.memory }} MB
-                            </span>
-                            <a v-bind:href="'/contest/statement/' + prob.letter" target='_blank'>
-                                <i class="material-icons">description</i>
-                            </a>
-                        </span>
-                    </div>
-                    <div class="collapsible-content">
-                    </div>
-                </li>
-            </ul>
+          <div class="media-content">
+            <p class="ju-problem-title"> {{ prob.problem.name }}</p>
+            <p class="ju-tertiary-text">
+              {{ prob.problem.attr.limits.time }} ms / {{ prob.problem.attr.limits.memory }} MB
+            </p>
+          </div>
+
+          <div class="media-right">
+            <b-tooltip label="Download statement">
+              <a class="button is-primary is-small"
+                :href="`/contest/statement/${prob.letter}`" target="_blank">
+                <b-icon size="is-small" icon="file-text"></b-icon>
+              </a>
+            </b-tooltip>
+            <b-tooltip label="Quick submit">
+              <a class="button is-primary is-small" @click="quickSubmit(prob)">
+                <b-icon size="is-small" icon="send"></b-icon>
+              </a>
+            </b-tooltip>
+          </div>
         </div>
+      </div>
+
+      <b-modal
+        :component="SubmitComponent"
+        :active.sync="submitModal.active"
+        :props="submitModal.props">
+      </b-modal>
     </div>
 </template>
 
@@ -37,13 +46,20 @@
     // import 'babel-polyfill';
     import * as Helper from "./helpers";
     import { mapGetters } from "vuex";
+    import SubmitComponent from "./submit.vue";
 
     export default {
-        mounted (){
-          this.$nextTick(() => $('.tooltipped').tooltip({ delay: 50, html: true }));
-        },
+        mounted () {},
         data() {
-            return {}
+            return {
+              SubmitComponent,
+              submitModal: {
+                active: false,
+                props: {
+                  problem: null
+                }
+              }
+            };
         },
         computed: {
             ...mapGetters([
@@ -66,6 +82,10 @@
             },
             getTooltipText() {
               return Helper.getTooltipText(`Click in the page icon to download the statement for a problem.`);
+            },
+            quickSubmit(prob) {
+              this.submitModal.props.problem = prob.problem._id;
+              this.submitModal.active = true;
             }
         }
     }

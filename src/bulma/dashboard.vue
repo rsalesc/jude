@@ -1,10 +1,10 @@
 <template>
     <div class="columns">
       <div class="column">
-        <ju-problem></ju-problem>
+        <ju-problems></ju-problems>
       </div>
       <div class="column">
-        <ju-submission></ju-submission>
+        <ju-submissions></ju-submissions>
       </div>
     </div>
 </template>
@@ -14,11 +14,11 @@
     import SubmissionsComponent from './submissions.vue';
     export default {
         data()  {
-            return {}
+            return {};
         },
         components: {
-            JuProblem: ProblemsComponent,
-            JuSubmission: SubmissionsComponent
+            JuProblems: ProblemsComponent,
+            JuSubmissions: SubmissionsComponent
         }
     }
 </script>
