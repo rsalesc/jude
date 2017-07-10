@@ -1,14 +1,16 @@
 const path = require("path");
 const webpack = require("webpack");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const CompressionPlugin = require("compression-webpack-plugin");
+const BrotliPlugin = require("brotli-webpack-plugin");
 
 module.exports = {
   // entry point of our application
-  entry: ["./src/components/index.js"],
+  entry: ["./src/bulma/index.js"],
   // where to place the compiled bundle
   output: {
-    path: path.join(__dirname, "/public/js"),
-    filename: "components.js"
+    path: path.join(__dirname, "/public/js/bulma"),
+    filename: "bulma-site.js"
   },
   module: {
     // `loaders` is an array of loaders to use.
@@ -35,12 +37,37 @@ module.exports = {
         }
       },
       // maybe its load too much CSS?
-      { test: /\.css$/, loader: "style-loader!css-loader" }
+      { test: /\.css$/, loader: "style-loader!css-loader" },
+      {
+        test: /\.s(c|a)ss$/,
+        use: [{ loader: "style-loader" }, { loader: "css-loader" }, { loader: "sass-loader" }]
+      },
+      {
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: "file-loader",
+        query: {
+          name: "assets/[name].[ext]",
+          publicPath: "/static-jude/js/bulma/"
+        }
+      }
     ]
   },
   resolve: { alias: { vue$: path.join(__dirname, "node_modules/vue/dist/vue.js") }},
   plugins: [
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.ContextReplacementPlugin(/brace[/\\]theme$/, /github/),
+    new webpack.ContextReplacementPlugin(/brace[/\\]mode$/, /(c_cpp|java|python)/),
+    new webpack.optimize.UglifyJsPlugin(),
+    new CompressionPlugin({
+      asset: "[path].gz[query]",
+      algorithm: "gzip",
+      test: /\.(js|html|css|svg|woff(2)?|ttf|eot)$/,
+      threshold: 10 * 1024
+    }),
+    new BrotliPlugin({
+      asset: "[path].br[query]",
+      test: /\.(js|html|css|svg|woff(2)?|ttf|eot)$/,
+      threshold: 10 * 1024
+    })
   ]
 };

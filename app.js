@@ -13,6 +13,7 @@ const router = express.Router();
 // var methodOverride = require('method-override');
 const restify = require("express-restify-mongoose");
 const apiRoutes = require("./routes/api");
+const staticCompressed = require("express-static-gzip");
 
 // expose db object globally
 require("./db");
@@ -22,7 +23,8 @@ const routes = require("./routes/index");
 const auth2 = require("./auth2");
 const models = require("./models");
 
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
+app.use("/static-jude", staticCompressed(path.join(__dirname, "public"), { enableBrotli: true }));
 
 // setup auth method
 // configure session

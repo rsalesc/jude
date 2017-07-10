@@ -8,7 +8,9 @@ export const types = {
   FETCH_AND_SHOW_SUBMISSION: "main/FETCH_AND_SHOW_SUBMISSION",
   UPDATE_SHOWN_SUBMISSION: "main/UPDATE_SHOWN_SUBMISSION",
   CLEAR_MODAL_TRIGGER: "main/CLEAR_MODAL_TRIGGER",
-  SET_AUTO_FETCH_STANDINGS: "main/SET_AUT_FETCH_STANDINGS"
+  SET_AUTO_FETCH_STANDINGS: "main/SET_AUTO_FETCH_STANDINGS",
+  SET_COMPACT_TABLE: "main/SET_COMPACT_TABLE",
+  SET_FORMATTED_PENALTY: "main/SET_FORMATTED_PENALTY"
 };
 
 export const state = {
@@ -18,7 +20,11 @@ export const state = {
   rawTeams: [],
   shownSubmission: {},
   codeModalTrigger: false,
-  autoFetchStandings: false
+  config: {
+    autoFetchStandings: false,
+    compactTable: false,
+    formattedPenalty: true
+  }
 };
 
 export const mutations = {
@@ -36,7 +42,13 @@ export const mutations = {
     state.codeModalTrigger = false;
   },
   [types.SET_AUTO_FETCH_STANDINGS](state, value) {
-    state.autoFetchStandings = value;
+    state.config.autoFetchStandings = value;
+  },
+  [types.SET_COMPACT_TABLE](state, value) {
+    state.config.compactTable = value;
+  },
+  [types.SET_FORMATTED_PENALTY](state, value) {
+    state.config.formattedPenalty = value;
   }
 };
 

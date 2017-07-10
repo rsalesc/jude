@@ -913,7 +913,7 @@ var Storage = function () {
   function Storage() {
     (0, _classCallCheck3.default)(this, Storage);
 
-    if (new.target === Storage) throw "Cannot instantiate abstract class " + this.constructor.name;
+    if (this.constructor.name === Storage.name) throw "Cannot instantiate abstract class " + this.constructor.name;
   }
 
   /**
@@ -1787,7 +1787,7 @@ var Scoring = function () {
     var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     (0, _classCallCheck3.default)(this, Scoring);
 
-    if (new.target === Scoring) throw "Cannot instantiate abstract class " + this.constructor.name;
+    if (this.constructor.name === Scoring.name) throw "Cannot instantiate abstract class " + this.constructor.name;
     this._task = task;
     this._opts = opts;
   }
@@ -1993,7 +1993,7 @@ var ProductScoring = function (_Scoring) {
           var submission = _step3.value;
 
           var evaluation = this.eval(submission.verdict);
-          if (!evaluation.affect) {
+          if (evaluation.affect) {
             if (evaluation.score === 0) {
               penalty += opts.penalty || 20;
               fails++;
@@ -2028,7 +2028,6 @@ var ProductScoring = function (_Scoring) {
     }
   }], [{
     key: "isTaskValid",
-
 
     // eslint-disable-next-line no-unused-vars
     value: function isTaskValid(tk) {
@@ -2174,7 +2173,6 @@ var IcpcScoring = function (_Scoring2) {
     }
   }], [{
     key: "isTaskValid",
-
 
     // eslint-disable-next-line no-unused-vars
     value: function isTaskValid(tk) {
@@ -4274,6 +4272,30 @@ var VerdictConst = {
   VERDICT_AC: "accepted"
 };
 
+var VerdictTag = {
+  "": "white",
+  VERDICT_INQ: "light",
+  VERDICT_SKIP: "dark",
+
+  VERDICT_WA: "danger",
+  VERDICT_RTE: "danger",
+  VERDICT_MLE: "danger",
+  VERDICT_TLE: "danger",
+  VERDICT_WTE: "danger",
+  VERDICT_OLE: "danger",
+
+  VERDICT_CE: "warning",
+  VERDICT_CTE: "warning",
+
+  VERDICT_FAIL: "info",
+  VERDICT_CHTE: "info",
+
+  VERDICT_JE: "black",
+  VERDICT_UE: "black",
+
+  VERDICT_AC: "success"
+};
+
 var Verdict = function () {
   function Verdict(score, verdict) {
     var passed = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -1;
@@ -4338,7 +4360,8 @@ var Verdict = function () {
 
 module.exports = {
   Verdict: Verdict,
-  VerdictConst: VerdictConst
+  VerdictConst: VerdictConst,
+  VerdictTag: VerdictTag
 };
 
 /***/ }),
@@ -4488,7 +4511,7 @@ var Sandbox = function () {
   function Sandbox(env, store) {
     (0, _classCallCheck3.default)(this, Sandbox);
 
-    if (new.target === Sandbox) throw "Cannot instantiate abstract class " + this.constructor.name;
+    if (this.constuctor.name === Sandbox.name) throw "Cannot instantiate abstract class " + this.constructor.name;
     this.cacher = store;
     this.env = env;
   }
@@ -6304,7 +6327,7 @@ var Loader = function () {
   function Loader(store) {
     (0, _classCallCheck3.default)(this, Loader);
 
-    if (new.target === Loader) throw "Cannot instantiate abstract class " + this.constructor.name;
+    if (this.constructor.name === Loader.name) throw "Cannot instantiate abstract class " + this.constructor.name;
     this.store = store;
   }
 

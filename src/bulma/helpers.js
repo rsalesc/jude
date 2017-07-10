@@ -1,7 +1,7 @@
 // import "babel-polyfill";
 import * as Scoring from "../../judge/scoring.js";
 import { Task } from "../../judge/task.js";
-import { VerdictConst } from "../../judge/verdict.js";
+import { VerdictConst, VerdictTag } from "../../judge/verdict.js";
 import Vue from "vue";
 import * as Api from "./api.js";
 import moment from "moment";
@@ -29,6 +29,10 @@ export function getHumanVerdict(v) {
   return VerdictConst[v];
 }
 
+export function getVerdictTag(s) {
+  return `is-${VerdictTag[s] || "white"}`;
+}
+
 export function getCodeMirrorMode(lang) {
   const modes = {
     CPP: "clike",
@@ -39,6 +43,21 @@ export function getCodeMirrorMode(lang) {
   };
 
   return modes[lang];
+}
+
+export function getBraceMode(lang) {
+  if (!lang)
+    return "c_cpp";
+    
+  const modes = {
+    CPP: "c_cpp",
+    C: "c_cpp",
+    Java: "java",
+    Py2: "python",
+    Py3: "python"
+  };
+
+  return modes[lang] || "c_cpp";
 }
 
 export function getHlsMode(lang) {
