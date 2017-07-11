@@ -2,8 +2,8 @@
   <div>
     <nav class="navbar">
       <div class="navbar-brand">
-        <a class="navbar-item has-text-centered">
-          Jude
+        <a class="navbar-item">
+          <img src="/static-jude/images/crown-48.png" width="48" height="38">
         </a>
         <div class="navbar-burger burger">
           <span></span>
