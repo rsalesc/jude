@@ -33,7 +33,7 @@ async function evaluate(iso, store, command, input, output = "output", error = "
   iso.stderr = error;
 
   // remove stdout and stderr, only for dbg
-  const res = await iso.executeBufferized(command);
+  const res = await iso.execute(command);
   // iso.removeFile(iso.stdout)
   // iso.removeFile(iso.stderr)
 

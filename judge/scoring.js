@@ -10,8 +10,8 @@ function submissionComparator(a, b) {
 
 class Scoring {
   constructor(task, opts = {}) {
-    if (this.constructor.name === Scoring.name)
-      throw `Cannot instantiate abstract class ${this.constructor.name}`;
+    //if (new.target == Scoring)
+    //  throw `Cannot instantiate abstract class Scoring`;
     this._task = task;
     this._opts = opts;
   }

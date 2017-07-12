@@ -2206,7 +2206,8 @@ var Loader = function () {
   function Loader(store) {
     (0, _classCallCheck3.default)(this, Loader);
 
-    if (this.constructor.name === Loader.name) throw "Cannot instantiate abstract class " + this.constructor.name;
+    //if (new.target == Loader)
+    //  throw `Cannot instantiate abstract class Loader`;
     this.store = store;
   }
 
@@ -2781,7 +2782,8 @@ var Scoring = function () {
     var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     (0, _classCallCheck3.default)(this, Scoring);
 
-    if (this.constructor.name === Scoring.name) throw "Cannot instantiate abstract class " + this.constructor.name;
+    //if (new.target == Scoring)
+    //  throw `Cannot instantiate abstract class Scoring`;
     this._task = task;
     this._opts = opts;
   }
@@ -4560,10 +4562,6 @@ module.exports = require("yamljs");
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(2);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
 var _regenerator = __webpack_require__(3);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -4579,6 +4577,14 @@ var _entries2 = _interopRequireDefault(_entries);
 var _extends2 = __webpack_require__(24);
 
 var _extends3 = _interopRequireDefault(_extends2);
+
+var _keys = __webpack_require__(9);
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _getIterator2 = __webpack_require__(2);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4614,13 +4620,72 @@ function getUserContest(user) {
   }
 }
 
+function filterOutSub(sub) {
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = (0, _getIterator3.default)((0, _keys2.default)(sub.verdict)), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var dataset = _step.value;
+
+      sub.verdict[dataset].info = {};
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  sub.code = undefined;
+  return sub;
+}
+
+function filterOutPrivateSub(sub) {
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    for (var _iterator2 = (0, _getIterator3.default)((0, _keys2.default)(sub.verdict)), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var dataset = _step2.value;
+
+      if (sub.verdict[dataset].verdict !== "VERDICT_CE") {
+        if (sub.verdict[dataset].info) sub.verdict[dataset].info.text = undefined;else sub.verdict[dataset].info = {};
+      }
+    }
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+        _iterator2.return();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+
+  return sub;
+}
+
 // ensure user is auth'ed
 router.use(auth2.isAuth("contestant"));
 
 router.get("/", function (req, res, next) {
-  getUserContest(req.auth2.user).deepPopulate("problems.problem", {
-    populate: { "problems.problem": { select: ContestProblemSelection } }
-  }).exec(function (err, contest) {
+  getUserContest(req.auth2.user).deepPopulate("problems.problem", { populate: { "problems.problem": { select: ContestProblemSelection } } }).exec(function (err, contest) {
     if (err) return handleContestError(err, req, res);
     if (!contest) return handleContestError("inconsistent session", req, res);
 
@@ -4655,7 +4720,7 @@ router.get("/submissions", function (req, res, next) {
 
     Submission.find({ contest: req.auth2.user.contest }).sort("-time").select("-code").exec(function (err, subs) {
       if (err) return handleContestError(err, req, res);
-      res.json({ _user: req.auth2.user._id, submissions: subs });
+      res.json({ _user: req.auth2.user._id, submissions: subs.map(filterOutSub) });
     });
   });
 });
@@ -4664,6 +4729,7 @@ router.get("/submissions", function (req, res, next) {
 router.post("/submit", function (req, res, next) {
   if (!req.body.code || !req.body.language || !req.body.problem) return handleContestError("all fields must be filled", req, res);
   var user = req.auth2.user;
+
 
   if (!grader.availableLanguages.hasOwnProperty(req.body.language)) return handleContestError("language is invalid", req, res);
 
@@ -4683,36 +4749,36 @@ router.post("/submit", function (req, res, next) {
         return x.problem == req.body.problem;
       }) === -1) return handleContestError("problem not found", req, res);
 
-      if (!contest.hasStarted()) return handleContestError("contest not started", req, res);
+      if (!contest.hasStarted()) return handleContestError("contest has not started", req, res);
 
       var timeInContest = contest.getTimeInContest();
 
       if (contest.hasEnded()) timeInContest = -1;
 
       var verdict = {};
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
 
       try {
-        for (var _iterator = (0, _getIterator3.default)(problem.attr.datasets), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var data = _step.value;
+        for (var _iterator3 = (0, _getIterator3.default)(problem.attr.datasets), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var data = _step3.value;
 
           verdict[data.name] = {
             verdict: "VERDICT_INQ", passed: -1, score: 0, info: ""
           };
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
           }
         } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
+          if (_didIteratorError3) {
+            throw _iteratorError3;
           }
         }
       }
@@ -4783,37 +4849,39 @@ router.post("/submit", function (req, res, next) {
 router.get("/statement/:letter", function (req, res, next) {
   getUserContest(req.auth2.user).deepPopulate("problems.problem").exec(function (err, contest) {
     if (err) return handleContestError(err, req, res, next);
-    if (!contest) return next();
+    if (!contest) return handleContestError("contest not found", req, res);
 
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
+    if (!contest.hasStarted()) return handleContestError("contest has not started", req, res);
+
+    var _iteratorNormalCompletion4 = true;
+    var _didIteratorError4 = false;
+    var _iteratorError4 = undefined;
 
     try {
-      for (var _iterator2 = (0, _getIterator3.default)(contest.problems), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-        var prob = _step2.value;
+      for (var _iterator4 = (0, _getIterator3.default)(contest.problems), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+        var prob = _step4.value;
 
-        if (prob.letter == req.params.letter) {
+        if (prob.letter === req.params.letter) {
           // res.setHeader('Content-Disposition', 'attachment');
           return weedClient.read(prob.problem.statementFid, res);
         }
       }
     } catch (err) {
-      _didIteratorError2 = true;
-      _iteratorError2 = err;
+      _didIteratorError4 = true;
+      _iteratorError4 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-          _iterator2.return();
+        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+          _iterator4.return();
         }
       } finally {
-        if (_didIteratorError2) {
-          throw _iteratorError2;
+        if (_didIteratorError4) {
+          throw _iteratorError4;
         }
       }
     }
 
-    next();
+    return handleContestError("problem not found", req, res);
   });
 });
 
@@ -4826,9 +4894,9 @@ router.get("/submission/:id", function (req, res, next) {
       if (err) return handleContestError(err, req, res, next);
       if (!sub) return handleContestError("submission not found", req, res, next);
 
-      if (!sub._creator.equals(req.auth2.user._id) && !contest.hasEnded()) sub.code = undefined;
+      if (!sub._creator.equals(req.auth2.user._id) && !contest.hasEnded()) return res.json(filterOutSub(sub));
 
-      res.json(sub);
+      res.json(filterOutPrivateSub(sub));
     });
   });
 });
@@ -4887,7 +4955,7 @@ var evaluate = function () {
 
             // remove stdout and stderr, only for dbg
             _context.next = 5;
-            return iso.executeBufferized(command);
+            return iso.execute(command);
 
           case 5:
             res = _context.sent;
@@ -6719,7 +6787,8 @@ var Sandbox = function () {
   function Sandbox(env, store) {
     (0, _classCallCheck3.default)(this, Sandbox);
 
-    if (this.constuctor.name === Sandbox.name) throw "Cannot instantiate abstract class " + this.constructor.name;
+    //if (new.target == Sandbox)
+    //  throw `Cannot instantiate abstract class Sandbox`;
     this.cacher = store;
     this.env = env;
   }

@@ -39,3 +39,5 @@ const app = new Vue({
   el: "#app",
   render: h => h(App)
 });
+
+document.body.className = document.body.className.replace("no-js", "");

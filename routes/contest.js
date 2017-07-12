@@ -27,13 +27,32 @@ function getUserContest(user) {
   }
 }
 
+function filterOutSub(sub) {
+  for (const dataset of Object.keys(sub.verdict))
+    sub.verdict[dataset].info = {};
+
+  sub.code = undefined;
+  return sub;
+}
+
+function filterOutPrivateSub(sub) {
+  for (const dataset of Object.keys(sub.verdict)) {
+    if (sub.verdict[dataset].verdict !== "VERDICT_CE") {
+      if (sub.verdict[dataset].info)
+        sub.verdict[dataset].info.text = undefined;
+      else
+        sub.verdict[dataset].info = {};
+    }
+  }
+
+  return sub;
+}
+
 // ensure user is auth'ed
 router.use(auth2.isAuth("contestant"));
 
 router.get("/", (req, res, next) => {
-  getUserContest(req.auth2.user).deepPopulate("problems.problem", {
-    populate: {"problems.problem": { select: ContestProblemSelection }}
-  }).exec((err, contest) => {
+  getUserContest(req.auth2.user).deepPopulate("problems.problem", { populate: { "problems.problem": { select: ContestProblemSelection }}}).exec((err, contest) => {
     if (err)
       return handleContestError(err, req, res);
     if (!contest)
@@ -42,7 +61,7 @@ router.get("/", (req, res, next) => {
     if (!contest.hasStarted())
       contest.problems = [];
 
-    const contestObj = {...contest.toObject(), ...{ languages: Object.entries(grader.availableLanguages)}};
+    const contestObj = { ...contest.toObject(), ...{ languages: Object.entries(grader.availableLanguages) }};
 
     User.find({ contest: contest.id }).select("-password -email -handle").exec((err, teams) => {
       if (err)
@@ -80,7 +99,7 @@ router.get("/submissions", (req, res, next) => {
     Submission.find({ contest: req.auth2.user.contest }).sort("-time").select("-code").exec((err, subs) => {
       if (err)
         return handleContestError(err, req, res);
-      res.json({ _user: req.auth2.user._id, submissions: subs });
+      res.json({ _user: req.auth2.user._id, submissions: subs.map(filterOutSub) });
     });
   });
 });
@@ -89,7 +108,7 @@ router.get("/submissions", (req, res, next) => {
 router.post("/submit", (req, res, next) => {
   if (!req.body.code || !req.body.language || !req.body.problem)
     return handleContestError("all fields must be filled", req, res);
-  const user = req.auth2.user;
+  const { user } = req.auth2;
 
   if (!grader.availableLanguages.hasOwnProperty(req.body.language))
     return handleContestError("language is invalid", req, res);
@@ -113,7 +132,7 @@ router.post("/submit", (req, res, next) => {
         return handleContestError("problem not found", req, res);
 
       if (!contest.hasStarted())
-        return handleContestError("contest not started", req, res);
+        return handleContestError("contest has not started", req, res);
 
       let timeInContest = contest.getTimeInContest();
 
@@ -121,10 +140,11 @@ router.post("/submit", (req, res, next) => {
         timeInContest = -1;
 
       const verdict = {};
-      for (const data of problem.attr.datasets)
-        verdict[data.name] = { 
-verdict: "VERDICT_INQ", passed: -1, score: 0, info: "" 
-};
+      for (const data of problem.attr.datasets) {
+        verdict[data.name] = {
+          verdict: "VERDICT_INQ", passed: -1, score: 0, info: ""
+        };
+      }
 
 
       const sub = new Submission({
@@ -164,16 +184,19 @@ router.get("/statement/:letter", (req, res, next) => {
     if (err)
       return handleContestError(err, req, res, next);
     if (!contest)
-      return next();
+      return handleContestError("contest not found", req, res);
+
+    if (!contest.hasStarted())
+      return handleContestError("contest has not started", req, res);
 
     for (const prob of contest.problems) {
-      if (prob.letter == req.params.letter) {
+      if (prob.letter === req.params.letter) {
         // res.setHeader('Content-Disposition', 'attachment');
         return weedClient.read(prob.problem.statementFid, res);
       }
     }
 
-    next();
+    return handleContestError("problem not found", req, res);
   });
 });
 
@@ -191,10 +214,10 @@ router.get("/submission/:id", (req, res, next) => {
         return handleContestError("submission not found", req, res, next);
 
       if (!sub._creator.equals(req.auth2.user._id) && !contest.hasEnded())
-        sub.code = undefined;
+        return res.json(filterOutSub(sub));
 
 
-      res.json(sub);
+      res.json(filterOutPrivateSub(sub));
     });
   });
 });

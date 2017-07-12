@@ -1787,7 +1787,8 @@ var Scoring = function () {
     var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     (0, _classCallCheck3.default)(this, Scoring);
 
-    if (this.constructor.name === Scoring.name) throw "Cannot instantiate abstract class " + this.constructor.name;
+    //if (new.target == Scoring)
+    //  throw `Cannot instantiate abstract class Scoring`;
     this._task = task;
     this._opts = opts;
   }
@@ -2472,20 +2473,21 @@ function watch(env) {
                       switch (_context2.prev = _context2.next) {
                         case 0:
                           if (!err) {
-                            _context2.next = 3;
+                            _context2.next = 4;
                             break;
                           }
 
-                          logger.error("error processing message %s: %s", msg.id, err.toString());
+                          logger.error("error processing message %s", msg.id);
+                          console.error(err);
                           return _context2.abrupt("return", resolve(false));
 
-                        case 3:
-                          _context2.prev = 3;
+                        case 4:
+                          _context2.prev = 4;
                           packPath = env.cache.getFilePath(req.id.toString());
-                          _context2.next = 7;
+                          _context2.next = 8;
                           return grader.testPackage(env, packPath, req.code, req.lang);
 
-                        case 7:
+                        case 8:
                           verdict = _context2.sent;
 
                           ack = function () {
@@ -2534,7 +2536,8 @@ function watch(env) {
                             sub.verdict = verdict;
                             return sub.save(function (err3) {
                               if (err3) {
-                                logger.error("submission could not be saved: %s", err3.toString());
+                                logger.error("submission could not be saved");
+                                console.error(err3);
                                 return resolve(false);
                               }
 
@@ -2542,25 +2545,26 @@ function watch(env) {
                               return ack();
                             });
                           });
-                          _context2.next = 17;
+                          _context2.next = 19;
                           break;
 
-                        case 13:
-                          _context2.prev = 13;
-                          _context2.t0 = _context2["catch"](3);
+                        case 14:
+                          _context2.prev = 14;
+                          _context2.t0 = _context2["catch"](4);
 
-                          logger.error("error testing package %s: %s", req.id, _context2.t0.toString());
+                          logger.error("error testing package %s", req.id);
+                          console.error(_context2.t0);
                           return _context2.abrupt("return", resolve(false));
 
-                        case 17:
+                        case 19:
                           return _context2.abrupt("return", null);
 
-                        case 18:
+                        case 20:
                         case "end":
                           return _context2.stop();
                       }
                     }
-                  }, _callee2, _this, [[3, 13]]);
+                  }, _callee2, _this, [[4, 14]]);
                 }));
 
                 return function processMessage(_x2) {
@@ -2661,7 +2665,7 @@ var evaluate = function () {
 
             // remove stdout and stderr, only for dbg
             _context.next = 5;
-            return iso.executeBufferized(command);
+            return iso.execute(command);
 
           case 5:
             res = _context.sent;
@@ -4511,7 +4515,8 @@ var Sandbox = function () {
   function Sandbox(env, store) {
     (0, _classCallCheck3.default)(this, Sandbox);
 
-    if (this.constuctor.name === Sandbox.name) throw "Cannot instantiate abstract class " + this.constructor.name;
+    //if (new.target == Sandbox)
+    //  throw `Cannot instantiate abstract class Sandbox`;
     this.cacher = store;
     this.env = env;
   }
@@ -6327,7 +6332,8 @@ var Loader = function () {
   function Loader(store) {
     (0, _classCallCheck3.default)(this, Loader);
 
-    if (this.constructor.name === Loader.name) throw "Cannot instantiate abstract class " + this.constructor.name;
+    //if (new.target == Loader)
+    //  throw `Cannot instantiate abstract class Loader`;
     this.store = store;
   }
 

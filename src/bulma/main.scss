@@ -1,9 +1,22 @@
 @import "~bulma/css/bulma.css";
 @import "~bulma/sass/utilities/variables.sass";
 
-body, html {
+html {
   height: 100%;
+}
+
+body, html {
   margin: 0;
+}
+
+.site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.site-content {
+  flex: 1;
 }
 
 /* helpers */

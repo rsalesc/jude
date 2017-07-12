@@ -13,11 +13,6 @@
         <div class="column is-narrow">
           <div class="block has-text-right">
             <b-switch size="is-small"
-             :value="config.autoFetchStandings"
-             @change="setAutoFetch">
-              Auto-refresh
-            </b-switch>
-            <b-switch size="is-small"
               :value="config.compactTable"
               @change="setCompactTable">Compact Table</b-switch>
             <b-switch size="is-small"
@@ -83,14 +78,8 @@
     import BulmaUtils from "./bulmutils";
 
     export default {
-      mounted() {
-        this.fetchTimer = window.setInterval(async () => this.autoFetch(), 5000);
-      },
-      beforeDestroy() {
-        window.clearInterval(this.fetchTimer);
-      },
       data() {
-        return { renderedSubmissions: [], fetchTimer: null };
+        return { renderedSubmissions: [] };
       },
       computed: {
         ...Helper.mapModuleState("main", [
@@ -168,29 +157,11 @@
           }
           return res;
         },
-        setAutoFetch(val, $event) {
-          this.$store.commit(types.SET_AUTO_FETCH_STANDINGS, val);
-        },
         setCompactTable(val, $event) {
           this.$store.commit(types.SET_COMPACT_TABLE, val);
         },
         setFormattedPenalty(val, $event) {
           this.$store.commit(types.SET_FORMATTED_PENALTY, val);
-        },
-        async fetch() {
-          try {
-            const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
-            if (!loggedin)
-              this.$router.push("/");
-          } catch (err) {
-            new BulmaUtils(this).toast("Error contacting the server, turning off auto-refresh.", 4000, "is-danger");
-            this.$store.commit(types.SET_AUTO_FETCH_STANDINGS, false);
-            console.error(err);
-          }
-        },
-        async autoFetch() {
-          if (this.config.autoFetchStandings)
-            await this.fetch();
         }
       }
     };

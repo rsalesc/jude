@@ -5,11 +5,28 @@ html
   head
     meta(charset='utf-8')
     title Jude Contest System
+
+    style(type="text/css").   
+      body.no-js {
+        display: none;
+      }
     
     meta(name='viewport', content='width=device-width, initial-scale=1')
 
-  body
-    div#app
+  body.site.no-js
+    div.site-content
+      div#app
+    footer.footer
+      .container
+        .content.has-text-centered
+          p
+            strong Jude
+            |  by 
+            a(href='https://github.com/rsalesc' target="_blank") Roberto Sales
+            | .
+          p
+            a.icon(href='https://github.com/rsalesc/jude' target="_blank")
+              i.fa.fa-github
 
     // Components
     script(src='/static-jude/js/bulma/bulma-site.js')

@@ -34,7 +34,8 @@ function watch(env) {
     const req = msg.payload;
     const processMessage = async (err) => {
       if (err) {
-        logger.error("error processing message %s: %s", msg.id, err.toString());
+        logger.error("error processing message %s", msg.id);
+        console.error(err);
         return resolve(false);
       }
 
@@ -67,7 +68,8 @@ function watch(env) {
           sub.verdict = verdict;
           return sub.save((err3) => {
             if (err3) {
-              logger.error("submission could not be saved: %s", err3.toString());
+              logger.error("submission could not be saved");
+              console.error(err3);
               return resolve(false);
             }
 
@@ -76,7 +78,8 @@ function watch(env) {
           });
         });
       } catch (ex) {
-        logger.error("error testing package %s: %s", req.id, ex.toString());
+        logger.error("error testing package %s", req.id);
+        console.error(ex);
         return resolve(false);
       }
 

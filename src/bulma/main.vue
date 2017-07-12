@@ -37,9 +37,16 @@
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
               <span class="icon"><b-icon icon="user" size="is-small"></b-icon></span>
-              <span>Panel</span>
+              <span>Control Panel</span>
             </a>
             <div class="navbar-dropdown">
+              <span class="navbar-item">
+                <b-switch size="is-small"
+                :value="config.autoFetchStandings"
+                @change="setAutoFetch">
+                  Auto-Refresh
+                </b-switch>
+              </span>
               <a class="navbar-item" @click="doLogout()">Logout</a>
             </div>
           </div>
@@ -76,11 +83,17 @@
         window.setInterval(() => {
           this.countdownString = this.getRemainingTime();
         }, 1000);
+        this.fetchTimer = window.setInterval(async () => this.autoFetch(), 5000);
+      },
+      beforeDestroy() {
+        if (!this.fetchTimer)
+          window.clearInterval(this.fetchTimer);
       },
       data() {
         return { 
           countdownString: "-",
           SubmitComponent,
+          fetchTimer: null,
           submitModal: {
             active: false
           }
@@ -91,7 +104,8 @@
           "user",
           "rawContest",
           "rawSubmissions",
-          "rawTeams"
+          "rawTeams",
+          "config"
         ]),
         ...mapGetters([
           "problems",
@@ -133,13 +147,21 @@
             if (!loggedin)
               this.$router.push("/");
           } catch (err) {
-            new BulmaUtils(this).toast("Error contacting the server", 4000, "is-danger");
+            new BulmaUtils(this).toast("Error contacting the server, turning off auto-refresh.", 4000, "is-danger");
+            this.$store.commit(types.SET_AUTO_FETCH_STANDINGS, false);
             console.error(err);
           }
         },
         async doLogout() {
           await this.$http.post(Api.paths.logout);
           this.$router.push("/");
+        },
+        async autoFetch() {
+          if (this.config.autoFetchStandings)
+            await this.fetch();
+        },
+        setAutoFetch(val, $event) {
+          this.$store.commit(types.SET_AUTO_FETCH_STANDINGS, val);
         }
       },
       components: { 
