@@ -46,6 +46,11 @@ body, html {
   font-style: italic;
 }
 
+.ju-override-container {
+  width: auto !important;
+  max-width: auto !important;
+}
+
 .sidemenu {
   position: fixed;
   top: 0;

@@ -24,7 +24,7 @@
     </div>
     <hr class="rule"></hr>
     <div class="box-content">
-      <div class="container has-text-centered" v-if="teams.length === 0">
+      <div class="container ju-override-container has-text-centered" v-if="teams.length === 0">
         <p>There is no competitor to be shown.</p>
       </div>
       <table v-else class="table ju-standings" :class="getTableClasses()">

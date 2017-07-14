@@ -11,7 +11,7 @@
     </div>
     <hr class="rule"></hr>
     <div class="box-content">
-      <div class="container has-text-centered" v-if="getSubmissions().length === 0">
+      <div class="container ju-override-container has-text-centered" v-if="getSubmissions().length === 0">
         <p>There is no submission to be shown.</p>
       </div>
       <div v-else>
