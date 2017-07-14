@@ -48,8 +48,22 @@ function filterOutPrivateSub(sub) {
   return sub;
 }
 
+function filterPrivateUser(user) {
+  if (!user)
+    user = {};
+
+  user.password = undefined;
+  user.email = undefined;
+
+  return user;
+}
+
+function isAdmin(req) {
+  return req.auth2.roles.indexOf("admin") !== -1;
+}
+
 // ensure user is auth'ed
-router.use(auth2.isAuth("contestant"));
+router.use(auth2.isAuth(["contestant", "admin"]));
 
 router.get("/", (req, res, next) => {
   getUserContest(req.auth2.user).deepPopulate("problems.problem", { populate: { "problems.problem": { select: ContestProblemSelection }}}).exec((err, contest) => {
@@ -58,23 +72,24 @@ router.get("/", (req, res, next) => {
     if (!contest)
       return handleContestError("inconsistent session", req, res);
 
-    if (!contest.hasStarted())
+    if (!isAdmin(req) && !contest.hasStarted())
       contest.problems = [];
 
     const contestObj = { ...contest.toObject(), ...{ languages: Object.entries(grader.availableLanguages) }};
 
-    User.find({ contest: contest.id }).select("-password -email -handle").exec((err, teams) => {
+    User.find({ contest: contest.id, role: "contestant" }).select("-password -email -handle").exec((err, teams) => {
       if (err)
         return handleContestError(err, req, res);
       if (teams === null)
         return handleContestError("couldnt retrieve teams", req, res);
 
-      res.json({ _user: req.auth2.user._id, teams, contest: contestObj });
+      res.json({
+        _user: req.auth2.user._id, userObject: filterPrivateUser(req.auth2.user.toObject()), teams, contest: contestObj
+      });
     });
   });
 });
 
-// TODO: contest started check
 router.get("/my", (req, res, next) => {
   Submission.find({ contest: req.auth2.user.contest, _creator: req.auth2.user._id })
     .sort("-time")
@@ -109,6 +124,9 @@ router.post("/submit", (req, res, next) => {
   if (!req.body.code || !req.body.language || !req.body.problem)
     return handleContestError("all fields must be filled", req, res);
   const { user } = req.auth2;
+
+  if (isAdmin(req))
+    return handleContestError("admin cannot submit solutions", req, res);
 
   if (!grader.availableLanguages.hasOwnProperty(req.body.language))
     return handleContestError("language is invalid", req, res);
@@ -213,7 +231,7 @@ router.get("/submission/:id", (req, res, next) => {
       if (!sub)
         return handleContestError("submission not found", req, res, next);
 
-      if (!sub._creator.equals(req.auth2.user._id) && !contest.hasEnded())
+      if (!sub._creator.equals(req.auth2.user._id) && !contest.hasEnded() && !isAdmin(req))
         return res.json(filterOutSub(sub));
 
 

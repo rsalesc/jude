@@ -23,7 +23,7 @@ router.get("/", (req, res, next) => {
 });
 
 router.post("/api-logout", auth2.dispose());
-router.post("/api-login", auth2.authenticate(["contestant", "root"]));
+router.post("/api-login", auth2.authenticate(["contestant", "admin", "root"]));
 
 router.post("/upload/:id", auth2.isAuth(["root"]), (req, res, next) => {
   if (!req.files || !req.files.file)

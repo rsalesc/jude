@@ -1,6 +1,6 @@
 <template>
     <div class="columns" v-if="hasStarted()">
-      <div class="column">
+      <div class="column" :class="{'is-one-third': isAdmin() }">
         <ju-problems></ju-problems>
       </div>
       <div class="column">
@@ -35,10 +35,17 @@
         },
         computed: {
           ...Helper.mapModuleState("main", [
-            "rawContest"
+            "rawContest",
+            "userObject"
           ])
         },
         methods: {
+          getSelf() {
+            return this.userObject;
+          },
+          isAdmin() {
+            return this.getSelf().role === "admin";
+          },
           getCountdown() {
             return Helper.getRemainingTime(this.rawContest);
           },

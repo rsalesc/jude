@@ -4263,7 +4263,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/api-logout", auth2.dispose());
-router.post("/api-login", auth2.authenticate(["contestant", "root"]));
+router.post("/api-login", auth2.authenticate(["contestant", "admin", "root"]));
 
 router.post("/upload/:id", auth2.isAuth(["root"]), function (req, res, next) {
   if (!req.files || !req.files.file) return res.status(404).json({ message: "exactly one file should be uploaded" });
@@ -4750,28 +4750,42 @@ function filterOutPrivateSub(sub) {
   return sub;
 }
 
+function filterPrivateUser(user) {
+  if (!user) user = {};
+
+  user.password = undefined;
+  user.email = undefined;
+
+  return user;
+}
+
+function isAdmin(req) {
+  return req.auth2.roles.indexOf("admin") !== -1;
+}
+
 // ensure user is auth'ed
-router.use(auth2.isAuth("contestant"));
+router.use(auth2.isAuth(["contestant", "admin"]));
 
 router.get("/", function (req, res, next) {
   getUserContest(req.auth2.user).deepPopulate("problems.problem", { populate: { "problems.problem": { select: ContestProblemSelection } } }).exec(function (err, contest) {
     if (err) return handleContestError(err, req, res);
     if (!contest) return handleContestError("inconsistent session", req, res);
 
-    if (!contest.hasStarted()) contest.problems = [];
+    if (!isAdmin(req) && !contest.hasStarted()) contest.problems = [];
 
     var contestObj = (0, _extends3.default)({}, contest.toObject(), { languages: (0, _entries2.default)(grader.availableLanguages) });
 
-    User.find({ contest: contest.id }).select("-password -email -handle").exec(function (err, teams) {
+    User.find({ contest: contest.id, role: "contestant" }).select("-password -email -handle").exec(function (err, teams) {
       if (err) return handleContestError(err, req, res);
       if (teams === null) return handleContestError("couldnt retrieve teams", req, res);
 
-      res.json({ _user: req.auth2.user._id, teams: teams, contest: contestObj });
+      res.json({
+        _user: req.auth2.user._id, userObject: filterPrivateUser(req.auth2.user.toObject()), teams: teams, contest: contestObj
+      });
     });
   });
 });
 
-// TODO: contest started check
 router.get("/my", function (req, res, next) {
   Submission.find({ contest: req.auth2.user.contest, _creator: req.auth2.user._id }).sort("-time").exec(function (err, subs) {
     if (err) return handleContestError(err, req, res);
@@ -4799,6 +4813,8 @@ router.post("/submit", function (req, res, next) {
   if (!req.body.code || !req.body.language || !req.body.problem) return handleContestError("all fields must be filled", req, res);
   var user = req.auth2.user;
 
+
+  if (isAdmin(req)) return handleContestError("admin cannot submit solutions", req, res);
 
   if (!grader.availableLanguages.hasOwnProperty(req.body.language)) return handleContestError("language is invalid", req, res);
 
@@ -4963,7 +4979,7 @@ router.get("/submission/:id", function (req, res, next) {
       if (err) return handleContestError(err, req, res, next);
       if (!sub) return handleContestError("submission not found", req, res, next);
 
-      if (!sub._creator.equals(req.auth2.user._id) && !contest.hasEnded()) return res.json(filterOutSub(sub));
+      if (!sub._creator.equals(req.auth2.user._id) && !contest.hasEnded() && !isAdmin(req)) return res.json(filterOutSub(sub));
 
       res.json(filterOutPrivateSub(sub));
     });

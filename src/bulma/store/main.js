@@ -15,6 +15,7 @@ export const types = {
 
 export const state = {
   user: null,
+  userObject: {},
   rawContest: {},
   rawSubmissions: [],
   rawTeams: [],
@@ -30,6 +31,7 @@ export const state = {
 export const mutations = {
   [types.UPDATE_CONTEST_DATA](state, data) {
     state.user = data._user;
+    state.userObject = data.userObject;
     state.rawContest = data.contest;
     state.rawTeams = data.teams;
     state.rawSubmissions = data.submissions;

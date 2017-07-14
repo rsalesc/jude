@@ -1,7 +1,10 @@
 <template>
   <div class="box">
     <div class="box-title">
-      <p class="title is-4">My Submissions</p>
+      <p class="title is-4">
+        <span v-if="isAdmin()">Submissions</span>
+        <span v-else>My Submissions</span>
+      </p>
       <p class="subtitle ju-comment ju-secondary-text">
         {{ getTooltipText() }}
       </p>
@@ -10,10 +13,10 @@
     <div class="box-content">
       <b-table
         class="ju-b-table-less-compact"
-        :data="my.submissions"
+        :data="getSubmissions()"
         :narrowed="true"
         :paginated="true"
-        :per-page="5"
+        :per-page="getPerPage()"
         :backend-sorting="true">
         
         <template scope="props">
@@ -25,6 +28,10 @@
 
           <b-table-column label="Problem">
             {{ getProblem(props.row.problem).problem.name }}
+          </b-table-column>
+
+          <b-table-column v-if="isAdmin()" label="Contestant" >
+            {{ getContestantFromSubmission(props.row).name }}
           </b-table-column>
           
           <b-table-column label="Time">
@@ -41,7 +48,7 @@
           </b-table-column>
 
           <b-table-column label="-" numeric>
-            <b-tooltip label="Edit and re-submit">
+            <b-tooltip v-if="!isAdmin()" label="Edit and re-submit">
               <a class="button is-primary is-small" @click="resubmit(props.row)">
                 <b-icon size="is-small" icon="send"></b-icon>
               </a>
@@ -99,14 +106,38 @@
       },
       computed: {
         ...Helper.mapModuleState("main", [
-          "shownSubmission"
+          "shownSubmission",
+          "user",
+          "userObject"
         ]),
         ...mapGetters([
           "problems",
-          "my"
+          "my",
+          "submissions",
+          "teams"
         ])
       },
       methods: {
+        getSelf() {
+          return this.userObject;
+        },
+        isAdmin() {
+          return this.getSelf().role === "admin";
+        },
+        getPerPage() {
+          return this.isAdmin() ? 50 : 5;
+        },
+        getContestantFromSubmission(sub) {
+          for (let team of this.teams) {
+            if (team._id === sub._creator)
+              return team;
+          }
+
+          return { name: "-" };
+        },
+        getSubmissions() {
+          return this.isAdmin() ? this.submissions : this.my.submissions;
+        },
         getProblem(id) {
           for (const prob of this.problems) {
             if (prob.problem._id === id)
