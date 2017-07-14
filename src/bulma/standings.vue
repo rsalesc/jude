@@ -145,6 +145,7 @@
             this.$router.push("/");
         },
         getTooltipText() {
+          return "";
           return Helper.getTooltipText(`Click a problem/team cell to show details about the tries of a team for that problem.`);
         },
         getTableClasses() {
