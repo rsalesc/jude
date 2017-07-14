@@ -24,7 +24,10 @@
     </div>
     <hr class="rule"></hr>
     <div class="box-content">
-      <table class="table ju-standings" :class="getTableClasses()">
+      <div class="container has-text-centered" v-if="teams.length === 0">
+        <p>There is no competitor to be shown.</p>
+      </div>
+      <table v-else class="table ju-standings" :class="getTableClasses()">
         <thead>
           <tr>
             <th class="has-text-centered">#</th>
@@ -42,7 +45,7 @@
             <td style="width: 36px;" class="has-text-centered">
               <strong>{{ team.rank }}</strong>
             </td>
-            <td>
+            <td class="ju-contestant-cell" :class="{ 'ju-non-official': team.unofficial }">
               <p>{{ team.name }}</p>
               <p class="ju-comment ju-tertiary-text">
                 {{ team.description }}

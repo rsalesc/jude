@@ -42,6 +42,10 @@ body, html {
   }
 }
 
+.table .ju-non-official {
+  font-style: italic;
+}
+
 .sidemenu {
   position: fixed;
   top: 0;
@@ -144,6 +148,12 @@ body, html {
 .table.ju-standings {
   td, th {
     vertical-align: middle;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .table .ju-contestant-cell {
+    min-width: 300px;
   }
 }
 

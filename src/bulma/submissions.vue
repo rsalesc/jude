@@ -11,56 +11,61 @@
     </div>
     <hr class="rule"></hr>
     <div class="box-content">
-      <b-table
-        class="ju-b-table-less-compact"
-        :data="getSubmissions()"
-        :narrowed="true"
-        :paginated="true"
-        :per-page="getPerPage()"
-        :backend-sorting="true">
-        
-        <template scope="props">
-          <b-table-column label="" class="has-text-centered">
-            <span :style="{ color: '#'+lighten(getProblem(props.row.problem).color) }">
-              {{ getProblem(props.row.problem).letter }}
-            </span>
-          </b-table-column>
-
-          <b-table-column label="Problem">
-            {{ getProblem(props.row.problem).problem.name }}
-          </b-table-column>
-
-          <b-table-column v-if="isAdmin()" label="Contestant" >
-            {{ getContestantFromSubmission(props.row).name }}
-          </b-table-column>
+      <div class="container has-text-centered" v-if="getSubmissions().length === 0">
+        <p>There is no submission to be shown.</p>
+      </div>
+      <div v-else>
+        <b-table
+          class="ju-b-table-less-compact"
+          :data="getSubmissions()"
+          :narrowed="true"
+          :paginated="true"
+          :per-page="getPerPage()"
+          :backend-sorting="true">
           
-          <b-table-column label="Time">
-            <span class="ju-comment ju-secondary-text">
-              @ {{ getContestTime(props.row.timeInContest) }}
-            </span>
-          </b-table-column>
+          <template scope="props">
+            <b-table-column label="" class="has-text-centered">
+              <span :style="{ color: '#'+lighten(getProblem(props.row.problem).color) }">
+                {{ getProblem(props.row.problem).letter }}
+              </span>
+            </b-table-column>
 
-          <b-table-column label="Verdict" numeric>
-            <ju-verdict-tag 
-              :verdict="getMainVerdict(props.row.verdict, getProblem(props.row.problem).problem)" 
-              :weighted="my.scoring.hasWeight()">
-            </ju-verdict-tag>
-          </b-table-column>
+            <b-table-column label="Problem">
+              {{ getProblem(props.row.problem).problem.name }}
+            </b-table-column>
 
-          <b-table-column label="-" numeric>
-            <b-tooltip v-if="!isAdmin()" label="Edit and re-submit">
-              <a class="button is-primary is-small" @click="resubmit(props.row)">
-                <b-icon size="is-small" icon="send"></b-icon>
-              </a>
-            </b-tooltip>
-            <b-tooltip label="See more">
-              <a class="button is-primary is-small" @click="showCode(props.row)">
-                <b-icon size="is-small" icon="eye"></b-icon>
-              </a>
-            </b-tooltip>
-          </b-table-column>
-        </template>
-      </b-table>
+            <b-table-column v-if="isAdmin()" label="Contestant" >
+              {{ getContestantFromSubmission(props.row).name }}
+            </b-table-column>
+            
+            <b-table-column label="Time">
+              <span class="ju-comment ju-secondary-text">
+                @ {{ getContestTime(props.row.timeInContest) }}
+              </span>
+            </b-table-column>
+
+            <b-table-column label="Verdict" numeric>
+              <ju-verdict-tag 
+                :verdict="getMainVerdict(props.row.verdict, getProblem(props.row.problem).problem)" 
+                :weighted="my.scoring.hasWeight()">
+              </ju-verdict-tag>
+            </b-table-column>
+
+            <b-table-column label="-" numeric>
+              <b-tooltip v-if="!isAdmin()" label="Edit and re-submit">
+                <a class="button is-primary is-small" @click="resubmit(props.row)">
+                  <b-icon size="is-small" icon="send"></b-icon>
+                </a>
+              </b-tooltip>
+              <b-tooltip label="See more">
+                <a class="button is-primary is-small" @click="showCode(props.row)">
+                  <b-icon size="is-small" icon="eye"></b-icon>
+                </a>
+              </b-tooltip>
+            </b-table-column>
+          </template>
+        </b-table>
+      </div>
     </div>
 
     <b-modal

@@ -5,7 +5,10 @@
       </div>
       <hr class="rule"></hr>
       <div class="box-content">
-        <div class="media" v-for="prob in problems" :key="prob.problem._id">
+        <div class="container has-text-centered" v-if="problems.length === 0">
+          <p>There is no problem to be shown.</p>
+        </div>
+        <div v-else class="media" v-for="prob in problems" :key="prob.problem._id">
           <div class="media-left ju-circle"
             :style="{ color: `#${prob.color}`, borderColor: `#${prob.color}` }">
             <span>{{ prob.letter }}</span>
