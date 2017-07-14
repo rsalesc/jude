@@ -31,6 +31,8 @@ function watch(env) {
     if (!msg)
       return resolve(null);
 
+    env.ack = msg.ack;
+
     const req = msg.payload;
     const processMessage = async (err) => {
       if (err) {

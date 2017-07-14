@@ -19,11 +19,11 @@ const JudgeConfig = {
   CHECKING_TL: 10,
   CHECKING_ML: 512,
   CHECKING_WTL: 20,
-  WT_MULTIPLIER: 4,
+  WT_MULTIPLIER: 8,
   OUTPUT_LIMIT: 1 << 24,
   TEMP_DIR: "/tmp",
   ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
-  VISIBILITY_WINDOW: 30,
+  VISIBILITY_WINDOW: 15,
   BOUND_ML: 2048
 };
 
@@ -111,10 +111,24 @@ class JudgeEnvironment {
     this.nextSandboxId = 0;
     this.db = db;
     this.cache = new PackageCacher();
+    this.ack = null;
 
     this.seaweed = seaweed;
     if (db)
       this.queue = new MongoQueue2(db, "jude-queue2");
+  }
+
+  async pingCurrent() {
+    if (!this.ack)
+      return null;
+    
+    try {
+      await this.queue.ping(this.ack);
+    } catch (ex) {
+      console.error(`couldnt ack ${this.ack}`);
+    }
+
+    return null;
   }
 
   getNextBoxId() {

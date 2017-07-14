@@ -551,6 +551,8 @@ async function testDataset(env, store, task, lang, dataset) {
 
       // eslint-disable-next-line no-await-in-loop
       const res = await Promise.all(cases.map(promiseReflect));
+      env.pingCurrent().then(() => null).catch(console.error);
+
       for (let j = 0; j < JudgeConfig.MAX_SIMUL_TESTS && i + j < n; j++) {
         const { status } = res[j];
 
