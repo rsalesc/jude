@@ -232,7 +232,6 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
         Submission configuration
      */
   submission.listView().fields([
-    nga.field("_id").label("#").isDetailLink(true).editable(false),
     nga.field("contest", "reference")
       .targetEntity(contest)
       .targetField(nga.field("name")),
