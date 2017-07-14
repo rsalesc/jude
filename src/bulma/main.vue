@@ -1,11 +1,21 @@
 <template>
-  <div>
+  <div :class="{ 'sidemenu-active': isSideMenuActive }">
+    <div class="sidemenu">
+      <ul>
+        <li><router-link class="sidemenu-item" to="dashboard">Dashboard</router-link></li>
+        <li><router-link class="sidemenu-item" to="standings">Standings</router-link></li>
+        <hr class="rule">
+        <li><span class="sidemenu-item ju-secondary-text">{{ countdownString }}</span></li>
+        <li><a class="sidemenu-item" @click="doLogout()">Logout</a></li>
+      </ul>
+    </div>
+
     <nav class="navbar">
       <div class="navbar-brand">
         <a class="navbar-item">
           <img src="/static-jude/images/crown-48.png" width="48" height="38">
         </a>
-        <div class="navbar-burger burger">
+        <div class="navbar-burger burger" @click="isSideMenuActive = !isSideMenuActive">
           <span></span>
           <span></span>
           <span></span>
@@ -24,7 +34,7 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item">
+          <div class="navbar-item" v-if="hasStarted()">
             <div class="field">
               <p class="control">
                 <a class="button is-primary" @click="submitModal.active = true">
@@ -33,6 +43,9 @@
                 </a>
               </p>
             </div>
+          </div>
+          <div class="navbar-item ju-secondary-text">
+            {{ countdownString }}
           </div>
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
@@ -54,7 +67,7 @@
       </div>
     </nav>
     <div class="indeterminate" :class="{ active: isFetching }"></div>
-    <section class="section">
+    <section class="section main-section">
       <router-view></router-view>
     </section>
 
@@ -80,7 +93,7 @@
     export default {
       mounted() {
         this.fetch();
-        window.setInterval(() => {
+        this.countdownTimer = window.setInterval(() => {
           this.countdownString = this.getRemainingTime();
         }, 1000);
         this.fetchTimer = window.setInterval(async () => this.autoFetch(), 5000);
@@ -88,12 +101,16 @@
       beforeDestroy() {
         if (!this.fetchTimer)
           window.clearInterval(this.fetchTimer);
+        if (this.countdownTimer)
+          window.clearInterval(this.countdownTimer);
       },
       data() {
-        return { 
+        return {
+          isSideMenuActive: false, 
           countdownString: "-",
           SubmitComponent,
           fetchTimer: null,
+          countdownTimer: null,
           submitModal: {
             active: false
           }
@@ -140,6 +157,9 @@
           if (!contest)
             return "-";
           return moment(contest.end_time).format("LLL (Z)");
+        },
+        hasStarted() {
+          return Helper.hasContestStarted(this.rawContest);
         },
         async fetch() {
           try {

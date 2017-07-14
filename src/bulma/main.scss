@@ -42,6 +42,54 @@ body, html {
   }
 }
 
+.sidemenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 220px;
+  height: 100%;
+  padding-top: 10px;
+  background: white;
+
+  -webkit-box-shadow: 2px 0px 12px -1px rgba(0,0,0,0.54);
+  -moz-box-shadow: 2px 0px 12px -1px rgba(0,0,0,0.54);
+  box-shadow: 2px 0px 12px -1px rgba(0,0,0,0.54);
+
+  li .sidemenu-item {
+    display: block;
+    margin: 0 10px;
+    padding: 10px;
+    color: $text;
+    text-decoration: none;
+
+    &:hover {
+      background: $primary;
+      color: white;
+    }
+  }
+
+  -webkit-transform: translateX(-220px);
+	-moz-transform: translateX(-220px);
+	-ms-transform: translateX(-220px);
+	transform: translateX(-220px);
+	-webkit-transition: all .25s linear;
+	-moz-transition: all .25s linear;
+	-ms-transition: all .25s linear;
+	transition: all .25s linear;
+}
+
+@media only screen and (max-width: 999px) {
+  .sidemenu-active {
+    .sidemenu {
+      -webkit-transform: translateX(0);
+      -moz-transform: translateX(0);
+      -ms-transform: translateX(0);
+      transform: translateX(0);
+    }
+  }
+}
+
 .rule {
   width: 100%;
   display: block;

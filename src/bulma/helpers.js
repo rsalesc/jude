@@ -185,3 +185,7 @@ export function mapModuleState(nesting, states = []) {
 export function getTooltipText(s) {
   return `${s}`;
 }
+
+export function hasContestStarted(contest) {
+  return new Date(contest.start_time) <= Date.now();
+}

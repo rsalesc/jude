@@ -1,5 +1,5 @@
 <template>
-    <div class="columns">
+    <div class="columns" v-if="hasStarted()">
       <div class="column">
         <ju-problems></ju-problems>
       </div>
@@ -7,14 +7,44 @@
         <ju-submissions></ju-submissions>
       </div>
     </div>
+
+    <div class="columns" v-else>
+      <div class="column container has-text-centered">
+        <h1 class="title">{{ updatedCountdown }}</h1>
+      </div>
+    </div>
 </template>
 
 <script type="text/babel">
+    import * as Helper from "./helpers";
     import ProblemsComponent from './problems.vue';
     import SubmissionsComponent from './submissions.vue';
     export default {
+        mounted() {
+          this.countdownTimer = window.setInterval(() => this.updatedCountdown = this.getCountdown(), 1000);
+        },
+        beforeDestroy() {
+          if (this.countdownTimer)
+            window.clearInterval(this.countdownTimer);
+        },
         data()  {
-            return {};
+            return {
+              countdownTimer: null,
+              updatedCountdown: "-"
+            }
+        },
+        computed: {
+          ...Helper.mapModuleState("main", [
+            "rawContest"
+          ])
+        },
+        methods: {
+          getCountdown() {
+            return Helper.getRemainingTime(this.rawContest);
+          },
+          hasStarted() {
+            return Helper.hasContestStarted(this.rawContest);
+          }
         },
         components: {
             JuProblems: ProblemsComponent,
