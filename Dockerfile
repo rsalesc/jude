@@ -22,7 +22,7 @@ ADD https://api.github.com/repos/MikeMirzayanov/testlib/compare/master...HEAD /d
 RUN git clone https://github.com/MikeMirzayanov/testlib
 
 WORKDIR /usr/include
-RUN mv /opt/testlib/testlib.h .
+RUN mv /opt/testlib/testlib.h . && g++ -std=c++11 testlib.h
 
 # install node and jude
 WORKDIR /opt/jude
