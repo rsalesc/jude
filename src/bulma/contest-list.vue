@@ -5,7 +5,7 @@
           <div class="columns">
             <div class="column">
               <h1 class="title">Jude Contest System</h1>
-              <h2 class="subtitle">A modern judge designed for real-time programming contests.</h2>
+              <h2 class="subtitle">A modern judge designed for on-site programming contests.</h2>
             </div>
             <div class="column">
               <div class="card ju-centered ju-main-card">
