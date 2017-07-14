@@ -124,6 +124,7 @@ class JudgeEnvironment {
     
     try {
       await this.queue.ping(this.ack);
+      console.log(`pinged ${this.ack}`);
     } catch (ex) {
       console.error(`couldnt ack ${this.ack}`);
     }

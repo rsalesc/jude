@@ -456,6 +456,14 @@ module.exports = require("babel-runtime/helpers/inherits");
 "use strict";
 
 
+var _regenerator = __webpack_require__(4);
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = __webpack_require__(5);
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
 var _slicedToArray2 = __webpack_require__(10);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
@@ -499,11 +507,11 @@ var JudgeConfig = {
   CHECKING_TL: 10,
   CHECKING_ML: 512,
   CHECKING_WTL: 20,
-  WT_MULTIPLIER: 4,
+  WT_MULTIPLIER: 8,
   OUTPUT_LIMIT: 1 << 24,
   TEMP_DIR: "/tmp",
   ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
-  VISIBILITY_WINDOW: 30,
+  VISIBILITY_WINDOW: 15,
   BOUND_ML: 2048
 };
 
@@ -653,12 +661,61 @@ var JudgeEnvironment = function () {
     this.nextSandboxId = 0;
     this.db = db;
     this.cache = new PackageCacher();
+    this.ack = null;
 
     this.seaweed = seaweed;
     if (db) this.queue = new MongoQueue2(db, "jude-queue2");
   }
 
   (0, _createClass3.default)(JudgeEnvironment, [{
+    key: "pingCurrent",
+    value: function () {
+      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+        return _regenerator2.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (this.ack) {
+                  _context.next = 2;
+                  break;
+                }
+
+                return _context.abrupt("return", null);
+
+              case 2:
+                _context.prev = 2;
+                _context.next = 5;
+                return this.queue.ping(this.ack);
+
+              case 5:
+                console.log("pinged " + this.ack);
+                _context.next = 11;
+                break;
+
+              case 8:
+                _context.prev = 8;
+                _context.t0 = _context["catch"](2);
+
+                console.error("couldnt ack " + this.ack);
+
+              case 11:
+                return _context.abrupt("return", null);
+
+              case 12:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[2, 8]]);
+      }));
+
+      function pingCurrent() {
+        return _ref.apply(this, arguments);
+      }
+
+      return pingCurrent;
+    }()
+  }, {
     key: "getNextBoxId",
     value: function getNextBoxId() {
       var res = this.nextSandboxId++;
@@ -2463,6 +2520,9 @@ function watch(env) {
               return _context3.abrupt("return", resolve(null));
 
             case 13:
+
+              env.ack = msg.ack;
+
               req = msg.payload;
 
               processMessage = function () {
@@ -2580,7 +2640,7 @@ function watch(env) {
 
               return _context3.abrupt("return", null);
 
-            case 17:
+            case 18:
             case "end":
               return _context3.stop();
           }
@@ -3025,7 +3085,7 @@ var testDataset = function () {
 
           case 6:
             if (!(i < n)) {
-              _context16.next = 34;
+              _context16.next = 35;
               break;
             }
 
@@ -3045,24 +3105,29 @@ var testDataset = function () {
 
           case 12:
             res = _context16.sent;
+
+            env.pingCurrent().then(function () {
+              return null;
+            }).catch(console.error);
+
             _j = 0;
 
-          case 14:
+          case 15:
             if (!(_j < JudgeConfig.MAX_SIMUL_TESTS && i + _j < n)) {
-              _context16.next = 29;
+              _context16.next = 30;
               break;
             }
 
             status = res[_j].status;
 
             if (!(status === "rejected")) {
-              _context16.next = 18;
+              _context16.next = 19;
               break;
             }
 
             throw res[_j].error;
 
-          case 18:
+          case 19:
             caseResult = res[_j].data;
 
             totalTime += boxes[_j].getRunningTime();
@@ -3070,7 +3135,7 @@ var testDataset = function () {
             if (caseResult.info.hasOwnProperty("time")) execTime = Math.max(execTime, caseResult.info.time);
 
             if (!(caseResult.verdict !== "VERDICT_AC")) {
-              _context16.next = 26;
+              _context16.next = 27;
               break;
             }
 
@@ -3078,13 +3143,13 @@ var testDataset = function () {
             if (execTime >= 0) caseResult.info.time = execTime;
             return _context16.abrupt("return", caseResult);
 
-          case 26:
+          case 27:
             _j++;
-            _context16.next = 14;
+            _context16.next = 15;
             break;
 
-          case 29:
-            _context16.next = 31;
+          case 30:
+            _context16.next = 32;
             return _promise2.default.all(boxes.map(function () {
               var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee15(box) {
                 return _regenerator2.default.wrap(function _callee15$(_context15) {
@@ -3106,34 +3171,34 @@ var testDataset = function () {
               };
             }()));
 
-          case 31:
+          case 32:
             i += JudgeConfig.MAX_SIMUL_TESTS;
             _context16.next = 6;
             break;
 
-          case 34:
+          case 35:
 
             console.log("rt", totalTime);
             console.log("wt", wallTime);
-            _context16.next = 42;
+            _context16.next = 43;
             break;
 
-          case 38:
-            _context16.prev = 38;
+          case 39:
+            _context16.prev = 39;
             _context16.t0 = _context16["catch"](1);
 
             logger.error("dataset test failed - %s", _context16.t0.toString());
             return _context16.abrupt("return", new Verdict(0, "VERDICT_JE"));
 
-          case 42:
+          case 43:
             return _context16.abrupt("return", new Verdict(1, "VERDICT_AC", dataset.testcases.length, { time: execTime }));
 
-          case 43:
+          case 44:
           case "end":
             return _context16.stop();
         }
       }
-    }, _callee16, this, [[1, 38]]);
+    }, _callee16, this, [[1, 39]]);
   }));
 
   return function testDataset(_x50, _x51, _x52, _x53, _x54) {
