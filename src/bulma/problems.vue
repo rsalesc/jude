@@ -7,7 +7,7 @@
       <div class="box-content">
         <div class="media" v-for="prob in problems" :key="prob.problem._id">
           <div class="media-left ju-circle"
-            :style="{ color: `#${lighten(prob.color)}`, borderColor: `#${lighten(prob.color)}` }">
+            :style="{ color: `#${prob.color}`, borderColor: `#${prob.color}` }">
             <span>{{ prob.letter }}</span>
           </div>
 
@@ -79,6 +79,9 @@
             },
             lighten(t){
                 return Helper.lighten(t);
+            },
+            darken(t) {
+              return Helper.darken(t);
             },
             getTooltipText() {
               return Helper.getTooltipText(`Click in the page icon to download the statement for a problem.`);

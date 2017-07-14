@@ -129,11 +129,15 @@ body, html {
   font-size: 1.5em;
   color: #666;
   border: 1px solid #666;
+  padding-left: 2px;
 
   span {
     text-align: center;
     line-height: 1.5em;
     display: block;
+    transform: scale(0.8);
+    -ms-transform: scale(0.8);
+    -webkit-transform: scale(0.8);
   }
 }
 

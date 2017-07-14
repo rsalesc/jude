@@ -59,7 +59,7 @@
               :class="{'ac-color': isAc(team, prob), 'wa-color': isWa(team, prob)}">
               <span v-if="prob.scoring.attempted(team.results[prob.problem._id])">
                   <p> {{ getProblemScore(team, prob) }}</p>
-                  <p class="score-info" v-if="my.scoring.hasPenalty() && isAc(team, prob)">
+                  <p class="ju-score-info" v-if="my.scoring.hasPenalty() && isAc(team, prob)">
                       {{ getContestTime(team.results[prob.problem._id].penalty) }}
                   </p>
               </span>

@@ -164,6 +164,10 @@ export function lighten(t) {
   return shadeColor2(`#${normalizeHexColor(t)}`, 0.3).substr(1);
 }
 
+export function darken(t) {
+  return shadeColor2(`#${normalizeHexColor(t)}`, -0.3).substr(1);
+}
+
 export function mapModuleState(nesting, states = []) {
   if (!Array.isArray(nesting))
     nesting = [nesting];
