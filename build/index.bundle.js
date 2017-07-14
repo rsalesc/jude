@@ -4271,83 +4271,131 @@ router.post("/upload/:id", auth2.isAuth(["root"]), function (req, res, next) {
     if (err) return res.status(400).json({ message: err.toString() });
     if (!problem) return res.status(400).json({ message: "problem not found" });
 
-    (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+    (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
       var file, task, store, loade;
-      return _regenerator2.default.wrap(function _callee$(_context) {
+      return _regenerator2.default.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
               file = req.files.file;
               task = null;
               store = new Storage();
-              _context.prev = 3;
+              _context2.prev = 3;
+              _context2.next = 6;
+              return store.loadZip(file.path);
 
-              store.loadZip(file.path);
+            case 6:
+              _context2.next = 8;
+              return Loader.autoDetect(store);
 
-              loade = Loader.autoDetect(store);
+            case 8:
+              loade = _context2.sent;
 
               if (!(loade === null)) {
-                _context.next = 8;
+                _context2.next = 11;
                 break;
               }
 
               throw new Error("Package is not loadable");
 
-            case 8:
+            case 11:
+              _context2.next = 13;
+              return new loade(store).load();
 
-              task = new loade(store).load();
-              _context.next = 14;
+            case 13:
+              task = _context2.sent;
+              _context2.next = 19;
               break;
 
-            case 11:
-              _context.prev = 11;
-              _context.t0 = _context["catch"](3);
-              return _context.abrupt("return", res.status(400).json({ message: _context.t0.toString() }));
+            case 16:
+              _context2.prev = 16;
+              _context2.t0 = _context2["catch"](3);
+              return _context2.abrupt("return", res.status(400).json({ message: _context2.t0.toString() }));
 
-            case 14:
+            case 19:
               if (task) {
-                _context.next = 16;
+                _context2.next = 21;
                 break;
               }
 
-              return _context.abrupt("return", res.status(400).json({ message: "package could not be loaded" }));
+              return _context2.abrupt("return", res.status(400).json({ message: "package could not be loaded" }));
 
-            case 16:
+            case 21:
 
               console.log("Uploading package " + file.path);
 
-              weedClient.write(file.path).then(function (info) {
-                problem.fid = info.fid;
-                problem.attr = task.toJSON();
+              weedClient.write(file.path).then(function () {
+                var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(info) {
+                  return _regenerator2.default.wrap(function _callee$(_context) {
+                    while (1) {
+                      switch (_context.prev = _context.next) {
+                        case 0:
+                          problem.fid = info.fid;
+                          problem.attr = task.toJSON();
 
-                if (task.hasStatement()) {
-                  weedClient.write(store.getFileBuffer(task.getStatement())).then(function (infoStatement) {
-                    problem.statementFid = infoStatement.fid;
-                    info.statementFid = infoStatement.fid;
+                          if (!task.hasStatement()) {
+                            _context.next = 12;
+                            break;
+                          }
 
-                    problem.save(function (err) {
-                      if (err) return res.status(400).json({ message: err.toString() });
-                      res.send(info);
-                    });
-                  }).catch(function (err) {
-                    res.status(400).json({ message: err.toString() });
-                  });
-                } else {
-                  problem.save(function (err) {
-                    if (err) return res.status(400).json({ message: err.toString() });
-                    res.send(info);
-                  });
-                }
-              }).catch(function (err) {
-                res.status(400).json({ message: err.toString() });
+                          _context.t0 = weedClient;
+                          _context.next = 6;
+                          return store.getFileBuffer(task.getStatement());
+
+                        case 6:
+                          _context.t1 = _context.sent;
+
+                          _context.t2 = function (infoStatement) {
+                            problem.statementFid = infoStatement.fid;
+                            info.statementFid = infoStatement.fid;
+
+                            problem.save(function (err) {
+                              if (err) return res.status(400).json({ message: err.toString() });
+                              res.send(info);
+                            });
+                          };
+
+                          _context.t3 = function (err) {
+                            console.error(err);
+                            res.status(400).json({ message: err.toString() });
+                          };
+
+                          _context.t0.write.call(_context.t0, _context.t1).then(_context.t2).catch(_context.t3);
+
+                          _context.next = 13;
+                          break;
+
+                        case 12:
+                          problem.save(function (err) {
+                            if (err) {
+                              console.error(err);
+                              return res.status(400).json({ message: err.toString() });
+                            }
+                            res.send(info);
+                          });
+
+                        case 13:
+                        case "end":
+                          return _context.stop();
+                      }
+                    }
+                  }, _callee, undefined);
+                }));
+
+                return function (_x) {
+                  return _ref2.apply(this, arguments);
+                };
+              }()).catch(function (err) {
+                console.error(err);
+                return res.status(400).json({ message: err.toString() });
               });
 
-            case 18:
+            case 23:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee, undefined, [[3, 11]]);
+      }, _callee2, undefined, [[3, 16]]);
     }))();
   });
 });

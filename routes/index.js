@@ -40,13 +40,13 @@ router.post("/upload/:id", auth2.isAuth(["root"]), (req, res, next) => {
       let task = null;
       const store = new Storage();
       try {
-        store.loadZip(file.path);
+        await store.loadZip(file.path);
 
-        const loade = Loader.autoDetect(store);
+        const loade = await Loader.autoDetect(store);
         if (loade === null)
           throw new Error("Package is not loadable");
 
-        task = new loade(store).load();
+        task = await (new loade(store)).load();
       } catch (ex) {
         return res.status(400).json({ message: ex.toString() });
       }
@@ -57,12 +57,12 @@ router.post("/upload/:id", auth2.isAuth(["root"]), (req, res, next) => {
 
       console.log(`Uploading package ${file.path}`);
 
-      weedClient.write(file.path).then((info) => {
+      weedClient.write(file.path).then(async (info) => {
         problem.fid = info.fid;
         problem.attr = task.toJSON();
 
         if (task.hasStatement()) {
-          weedClient.write(store.getFileBuffer(task.getStatement())).then((infoStatement) => {
+          weedClient.write(await store.getFileBuffer(task.getStatement())).then((infoStatement) => {
             problem.statementFid = infoStatement.fid;
             info.statementFid = infoStatement.fid;
 
@@ -72,17 +72,21 @@ router.post("/upload/:id", auth2.isAuth(["root"]), (req, res, next) => {
               res.send(info);
             });
           }).catch((err) => {
+            console.error(err);
             res.status(400).json({ message: err.toString() });
           });
         } else {
           problem.save((err) => {
-            if (err)
+            if (err) {
+              console.error(err);
               return res.status(400).json({ message: err.toString() });
+            }
             res.send(info);
           });
         }
       }).catch((err) => {
-        res.status(400).json({ message: err.toString() });
+        console.error(err);
+        return res.status(400).json({ message: err.toString() });
       });
     })();
   });
