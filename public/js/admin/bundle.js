@@ -2947,7 +2947,7 @@ function addUsersController($stateParams, notification, Restangular) {
   this.contestId = $stateParams.contestId;
   this.restangular = Restangular;
   this.notification = notification;
-  this.content = { users: [] };
+  this.content = "";
   this.dummyField = {
     name: function name() {
       return "dummyField";
@@ -2965,14 +2965,14 @@ addUsersController.inject = ["$stateParams", "notification", "Restangular"];
 addUsersController.prototype.submit = function () {
   var _this = this;
 
-  this.restangular.one("contests", this.contestId).customPOST(this.content, "addUsers").then(function () {
+  this.restangular.one("contests", this.contestId).customPOST(JSON.parse(this.content), "addUsers").then(function () {
     return _this.notification.log("Users were added.", { addnCls: "humane-flatty-success" });
   }).catch(function (e) {
     return _this.notification.log("A problem occurred, please try again.", { addnCls: "humane-flatty-error" }) && console.error(e);
   });
 };
 
-var addUsersTemplate = "\n  <div class=\"row\"><div class=\"col-lg-12\">\n    <ma-view-actions><ma-back-button></ma-back-button></ma-view-actions>\n    <div class=\"page-header\">\n      <h1>Add Users to Contest</h1>\n    </div>\n  </div></div>\n  <div class=\"row\">\n    <div class=\"col-lg-5\">\n      <ma-json-field field=\"controller.dummyField\" value=\"controller.content\"></ma-json-field>  \n    </div>\n    <div class=\"col-lg-5\">\n      <a class=\"btn btn-default\" ng-click=\"controller.submit()\">Submit</a>\n    </div>\n  </div>\n";
+var addUsersTemplate = "\n  <div class=\"row\"><div class=\"col-lg-12\">\n    <div class=\"page-header\">\n      <h1>Add Users to Contest</h1>\n    </div>\n  </div></div>\n  <div class=\"row\">\n    <div class=\"col-lg-5\">\n      <ma-text-field field=\"controller.dummyField\" value=\"controller.content\"></ma-text-field>  \n    </div>\n    <div class=\"col-lg-5\">\n      <a class=\"btn btn-default\" ng-click=\"controller.submit()\">Submit</a>\n    </div>\n  </div>\n";
 // 
 // 
 
