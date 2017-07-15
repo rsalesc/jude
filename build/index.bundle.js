@@ -3606,6 +3606,7 @@ app.use(auth2.initialize({
   usernameField: "handle",
   usernameSchema: "handle",
   model: models.User,
+  age: 12 * 60 * 60,
   roleFn: function roleFn(user) {
     var roles = [];
     if (user.role) roles.push(user.role);
