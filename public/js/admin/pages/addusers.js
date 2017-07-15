@@ -1,8 +1,7 @@
-function addUsersController($stateParams, notification, Restangular, $state) {
+function addUsersController($stateParams, notification, Restangular) {
   this.contestId = $stateParams.contestId;
   this.restangular = Restangular;
   this.notification = notification;
-  this.$state = $state;
   this.content = { users: []};
   this.dummyField = {
     name() {
@@ -17,10 +16,9 @@ function addUsersController($stateParams, notification, Restangular, $state) {
   };
 }
 
-addUsersController.inject = ["$stateParams", "notification", "Restangular", "$state"];
+addUsersController.inject = ["$stateParams", "notification", "Restangular"];
 addUsersController.prototype.submit = function () {
   this.restangular.one("contests", this.contestId).customPOST(this.content, "addUsers")
-    .then(() => this.$state.reload())
     .then(() => this.notification.log(`Users were added.`, { addnCls: "humane-flatty-success" }))
     .catch(e => this.notification.log("A problem occurred, please try again.", { addnCls: "humane-flatty-error" }) && console.error(e));
 };
