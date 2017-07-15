@@ -4,6 +4,7 @@ const myApp = angular.module("myApp", ["ng-admin"]);
 myApp.config((RestangularProvider) => {
   RestangularProvider.setErrorInterceptor((response) => {
     if (response.status === 401 || response.status === 403) {
+      window.location.hash = "";
       window.location = "/";
       return false;
     }

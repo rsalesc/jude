@@ -493,7 +493,7 @@ module.exports = require("babel-runtime/helpers/slicedToArray");
 "use strict";
 
 
-var _extends2 = __webpack_require__(24);
+var _extends2 = __webpack_require__(19);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -767,7 +767,7 @@ module.exports = {
 /* 19 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/object/assign");
+module.exports = require("babel-runtime/helpers/extends");
 
 /***/ }),
 /* 20 */
@@ -1876,12 +1876,6 @@ module.exports = function(module) {
 
 /***/ }),
 /* 24 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/extends");
-
-/***/ }),
-/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1905,6 +1899,12 @@ router.use('/submissions', submissionRouter);
 module.exports = router;
 
 /***/ }),
+/* 25 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/object/assign");
+
+/***/ }),
 /* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1922,13 +1922,13 @@ var weed_host = process.env.WEED_HOST || 'localhost';
 
 var uri = 'mongodb://' + mongo_host + '/jude-dev';
 if (!global.db) {
-    global.db = mongoose.createConnection(uri);
-    global.db.mods = {};
-    global.judeQueue = new MongoQueue2(db, "jude-queue2");
-    global.weedClient = new weed({
-        server: weed_host,
-        port: 9333
-    });
+  global.db = mongoose.createConnection(uri);
+  global.db.mods = {};
+  global.judeQueue = new MongoQueue2(db, "jude-queue2");
+  global.weedClient = new weed({
+    server: weed_host,
+    port: 9333
+  });
 }
 
 module.exports = global.db;
@@ -3267,6 +3267,7 @@ var path = __webpack_require__(0);
 var MongoQueue2 = __webpack_require__(27);
 
 var JudgeConfig = {
+  MAX_TRIES: 5,
   EPS: 1e-7,
   MAX_SANDBOXES: 10,
   MAX_SIMUL_TESTS: 3,
@@ -3532,7 +3533,7 @@ app.listen(port, function () {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(__dirname) {
 
-var _extends2 = __webpack_require__(24);
+var _extends2 = __webpack_require__(19);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -3552,7 +3553,7 @@ var flash = __webpack_require__(46);
 var router = express.Router();
 // var methodOverride = require('method-override');
 var restify = __webpack_require__(47);
-var apiRoutes = __webpack_require__(25);
+var apiRoutes = __webpack_require__(24);
 var staticCompressed = __webpack_require__(57);
 
 // expose db object globally
@@ -3786,7 +3787,7 @@ var _promise = __webpack_require__(11);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _assign = __webpack_require__(19);
+var _assign = __webpack_require__(25);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -4247,7 +4248,7 @@ var Problem = models.Problem,
 var Storage = __webpack_require__(22).MemoryStorage;
 var Loader = __webpack_require__(31);
 var utils = __webpack_require__(10);
-var api = __webpack_require__(25);
+var api = __webpack_require__(24);
 var contest = __webpack_require__(69);
 var admin = __webpack_require__(81);
 var auth2 = __webpack_require__(18);
@@ -4691,7 +4692,7 @@ var _entries = __webpack_require__(70);
 
 var _entries2 = _interopRequireDefault(_entries);
 
-var _extends2 = __webpack_require__(24);
+var _extends2 = __webpack_require__(19);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -6666,7 +6667,7 @@ module.exports = require("promise-reflect");
 "use strict";
 
 
-var _assign = __webpack_require__(19);
+var _assign = __webpack_require__(25);
 
 var _assign2 = _interopRequireDefault(_assign);
 

@@ -500,6 +500,7 @@ var path = __webpack_require__(1);
 var MongoQueue2 = __webpack_require__(21);
 
 var JudgeConfig = {
+  MAX_TRIES: 5,
   EPS: 1e-7,
   MAX_SANDBOXES: 10,
   MAX_SIMUL_TESTS: 3,
@@ -801,13 +802,13 @@ var weed_host = process.env.WEED_HOST || 'localhost';
 
 var uri = 'mongodb://' + mongo_host + '/jude-dev';
 if (!global.db) {
-    global.db = mongoose.createConnection(uri);
-    global.db.mods = {};
-    global.judeQueue = new MongoQueue2(db, "jude-queue2");
-    global.weedClient = new weed({
-        server: weed_host,
-        port: 9333
-    });
+  global.db = mongoose.createConnection(uri);
+  global.db.mods = {};
+  global.judeQueue = new MongoQueue2(db, "jude-queue2");
+  global.weedClient = new weed({
+    server: weed_host,
+    port: 9333
+  });
 }
 
 module.exports = global.db;
@@ -2486,7 +2487,7 @@ function watch(env) {
 
   return new _promise2.default(function () {
     var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(resolve) {
-      var msg, req, processMessage, writeStream;
+      var msg, req, ack, processMessage, writeStream;
       return _regenerator2.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -2520,14 +2521,57 @@ function watch(env) {
               return _context3.abrupt("return", resolve(null));
 
             case 13:
+              req = msg.payload;
+
+              ack = function () {
+                var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+                  return _regenerator2.default.wrap(function _callee$(_context) {
+                    while (1) {
+                      switch (_context.prev = _context.next) {
+                        case 0:
+                          _context.prev = 0;
+                          _context.next = 3;
+                          return env.queue.ackById(new mongodb.ObjectID(msg.id));
+
+                        case 3:
+                          resolve(true);
+                          _context.next = 10;
+                          break;
+
+                        case 6:
+                          _context.prev = 6;
+                          _context.t0 = _context["catch"](0);
+
+                          console.log(_context.t0);
+                          resolve(false);
+
+                        case 10:
+                        case "end":
+                          return _context.stop();
+                      }
+                    }
+                  }, _callee, _this, [[0, 6]]);
+                }));
+
+                return function ack() {
+                  return _ref2.apply(this, arguments);
+                };
+              }();
+
+              if (!(msg.tries > JudgeConfig.MAX_TRIES)) {
+                _context3.next = 17;
+                break;
+              }
+
+              return _context3.abrupt("return", ack());
+
+            case 17:
 
               env.ack = msg.ack;
 
-              req = msg.payload;
-
               processMessage = function () {
-                var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(err) {
-                  var packPath, verdict, ack;
+                var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(err) {
+                  var packPath, verdict;
                   return _regenerator2.default.wrap(function _callee2$(_context2) {
                     while (1) {
                       switch (_context2.prev = _context2.next) {
@@ -2550,40 +2594,6 @@ function watch(env) {
                         case 8:
                           verdict = _context2.sent;
 
-                          ack = function () {
-                            var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
-                              return _regenerator2.default.wrap(function _callee$(_context) {
-                                while (1) {
-                                  switch (_context.prev = _context.next) {
-                                    case 0:
-                                      _context.prev = 0;
-                                      _context.next = 3;
-                                      return env.queue.ackById(new mongodb.ObjectID(msg.id));
-
-                                    case 3:
-                                      resolve(true);
-                                      _context.next = 10;
-                                      break;
-
-                                    case 6:
-                                      _context.prev = 6;
-                                      _context.t0 = _context["catch"](0);
-
-                                      console.log(_context.t0);
-                                      resolve(false);
-
-                                    case 10:
-                                    case "end":
-                                      return _context.stop();
-                                  }
-                                }
-                              }, _callee, _this, [[0, 6]]);
-                            }));
-
-                            return function ack() {
-                              return _ref3.apply(this, arguments);
-                            };
-                          }();
 
                           console.log(verdict);
                           Submission.findById(req.subid).exec(function (err2, sub) {
@@ -2605,30 +2615,30 @@ function watch(env) {
                               return ack();
                             });
                           });
-                          _context2.next = 19;
+                          _context2.next = 18;
                           break;
 
-                        case 14:
-                          _context2.prev = 14;
+                        case 13:
+                          _context2.prev = 13;
                           _context2.t0 = _context2["catch"](4);
 
                           logger.error("error testing package %s", req.id);
                           console.error(_context2.t0);
                           return _context2.abrupt("return", resolve(false));
 
-                        case 19:
+                        case 18:
                           return _context2.abrupt("return", null);
 
-                        case 20:
+                        case 19:
                         case "end":
                           return _context2.stop();
                       }
                     }
-                  }, _callee2, _this, [[4, 14]]);
+                  }, _callee2, _this, [[4, 13]]);
                 }));
 
                 return function processMessage(_x2) {
-                  return _ref2.apply(this, arguments);
+                  return _ref3.apply(this, arguments);
                 };
               }();
 
@@ -2640,7 +2650,7 @@ function watch(env) {
 
               return _context3.abrupt("return", null);
 
-            case 18:
+            case 21:
             case "end":
               return _context3.stop();
           }

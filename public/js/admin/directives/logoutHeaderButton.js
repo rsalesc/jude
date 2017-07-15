@@ -7,6 +7,7 @@ export default ["$http", function ($http) {
     link(scope, element) {
       scope.logout = async function logout() {
         await $http({ method: "POST", url: "/api-logout" });
+        window.location.hash = "";
         window.location = "/";
       };
     },
