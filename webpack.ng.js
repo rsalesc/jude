@@ -28,6 +28,6 @@ module.exports = {
   },
   plugins: [
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
-    new webpack.optimize.UglifyJsPlugin()
+    //new webpack.optimize.UglifyJsPlugin()
   ]
 };
