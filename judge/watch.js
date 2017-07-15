@@ -31,9 +31,22 @@ function watch(env) {
     if (!msg)
       return resolve(null);
 
-    env.ack = msg.ack;
-
     const req = msg.payload;
+
+    const ack = async () => {
+      try {
+        await env.queue.ackById(new mongodb.ObjectID(msg.id));
+        resolve(true);
+      } catch (ex) {
+        console.log(ex);
+        resolve(false);
+      }
+    };
+    
+    if (msg.tries > JudgeConfig.MAX_TRIES)
+      return ack();
+
+    env.ack = msg.ack;
     const processMessage = async (err) => {
       if (err) {
         logger.error("error processing message %s", msg.id);
@@ -47,16 +60,6 @@ function watch(env) {
                                                  packPath,
                                                  req.code,
                                                  req.lang);
-
-        const ack = async () => {
-          try {
-            await env.queue.ackById(new mongodb.ObjectID(msg.id));
-            resolve(true);
-          } catch (ex) {
-            console.log(ex);
-            resolve(false);
-          }
-        };
 
         console.log(verdict);
         Submission.findById(req.subid).exec((err2, sub) => {

@@ -12,6 +12,7 @@ const path = require("path");
 const MongoQueue2 = require("mongo-queue2");
 
 const JudgeConfig = {
+  MAX_TRIES: 5,
   EPS: 1e-7,
   MAX_SANDBOXES: 10,
   MAX_SIMUL_TESTS: 3,
