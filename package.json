@@ -39,7 +39,7 @@
     "jade": "~1.11.0",
     "jude-seaweedfs": "^1.1.4",
     "moment": "^2.15.0",
-    "mongo-queue2": "1.0.6",
+    "mongo-queue2": "^1.0.6",
     "mongodb-queue": "^2.1.0",
     "mongoose": "^4.5.4",
     "mongoose-deep-populate": "^3.0.0",
