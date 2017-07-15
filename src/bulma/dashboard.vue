@@ -1,5 +1,5 @@
 <template>
-    <div class="columns" v-if="hasStarted()">
+    <div class="columns" v-if="hasStarted() || true">
       <div class="column" :class="{'is-one-third': isAdmin() }">
         <ju-problems></ju-problems>
       </div>

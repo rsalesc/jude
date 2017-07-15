@@ -34,7 +34,7 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item" v-if="hasStarted()">
+          <div class="navbar-item" v-if="hasStarted() || true">
             <div class="field">
               <p class="control">
                 <a class="button is-primary" @click="submitModal.active = true">
