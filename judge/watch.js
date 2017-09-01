@@ -55,7 +55,7 @@ function watch(env) {
       }
 
       try {
-        const packPath = env.cache.getFilePath(req.id.toString());
+        const packPath = env.cache.getFilePath(req.fid.toString());
         const verdict = await grader.testPackage(env,
                                                  packPath,
                                                  req.code,
@@ -91,8 +91,8 @@ function watch(env) {
       return null;
     };
 
-    if (!env.cache.exists(req.id.toString())) {
-      const writeStream = env.cache.addFromStream(req.id.toString(), processMessage);
+    if (!env.cache.exists(req.fid.toString())) {
+      const writeStream = env.cache.addFromStream(req.fid.toString(), processMessage);
       env.seaweed.read(req.fid, writeStream);
     } else
       processMessage();
