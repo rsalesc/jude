@@ -199,7 +199,6 @@ class SubtaskScoring extends Scoring {
 
   eval(verdicts) {
     let res = 0;
-    let index = 0;
 
     for (const key of Object.keys(verdicts)) {
       const verdict = verdicts[key];
@@ -210,9 +209,8 @@ class SubtaskScoring extends Scoring {
       }
 
       res += verdict.verdict === "VERDICT_AC"
-        ? this.task.getDataset(index).percentage
+        ? this.task.getDatasetFromName(key).percentage
         : 0;
-      index++;
     }
 
     return {
