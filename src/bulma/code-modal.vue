@@ -33,7 +33,7 @@
             <b-table-column label="Verdict">
               <ju-verdict-tag 
                 :verdict="props.row.verdict.verdict" 
-                :weighted="my.scoring.hasWeight()">
+                :weighted="false">
               </ju-verdict-tag>
             </b-table-column>
           </template>
@@ -88,7 +88,8 @@ export default {
     ]),
     ...mapGetters([
       "languages",
-      "my"
+      "my",
+      "problems"
     ])
   },
   methods: {
@@ -104,6 +105,14 @@ export default {
       }
 
       return "";
+    },
+    getProblem(id) {
+      for (const prob of this.problems) {
+        if (prob.problem._id === id)
+          return prob;
+      }
+
+      return undefined;
     },
     getCodeContent() {
       const submission = this.shownSubmission || {};

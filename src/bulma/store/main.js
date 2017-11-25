@@ -68,6 +68,7 @@ export const computed = {
 
       const subs = (my.submissions || []).filter(v => v.problem === prob.problem._id);
 
+      const scoringClass = Helper.getScoringClass(prob, contest);
       const scoring = Helper.getScoring(prob, contest);
       const evaluation = scoring.evalContext(subs);
 
@@ -78,7 +79,7 @@ export const computed = {
       const pending = subs.filter(v => Object.keys(v.verdict).map(k => v.verdict[k]).filter(w => w.verdict === "VERDICT_INQ").length > 0).length > 0;
 
       Vue.set(problems, i, {
-        ...prob, scoring, points, solved, attempted, pending
+        ...prob, scoringClass, scoring, points, solved, attempted, pending
       });
     }
 

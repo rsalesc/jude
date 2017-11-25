@@ -3,7 +3,7 @@
     {{ getHumanVerdict() }}
   </span>
   <span v-else class="tag is-dark">
-    {{ props.row.score.score }} pt
+    {{ getScore() }}
   </span>
 </template>
 
@@ -14,6 +14,9 @@ export default {
     return {};
   },
   props: {
+    score: {
+      default: false
+    },
     verdict: {
       default: ""
     },
@@ -28,6 +31,9 @@ export default {
     },
     getTagClass() {
       return Helper.getVerdictTag(this.verdict);
+    },
+    getScore() {
+      return `${this.score.score} pt(s)`;
     }
   }
 };

@@ -181,7 +181,7 @@ var _asyncToGenerator2 = __webpack_require__(4);
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var exists = function () {
-  var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(p) {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(p) {
     return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -212,7 +212,7 @@ var exists = function () {
 }();
 
 var fileExists = function () {
-  var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(p) {
+  var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(p) {
     var res;
     return _regenerator2.default.wrap(function _callee2$(_context2) {
       while (1) {
@@ -245,7 +245,7 @@ var fileExists = function () {
 }();
 
 var dirExists = function () {
-  var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(p) {
+  var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(p) {
     var res;
     return _regenerator2.default.wrap(function _callee3$(_context3) {
       while (1) {
@@ -279,7 +279,7 @@ var dirExists = function () {
 
 // eslint-disable-next-line require-await
 var globAsync = function () {
-  var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(pattern, opts) {
+  var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(pattern, opts) {
     return _regenerator2.default.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
@@ -305,7 +305,7 @@ var globAsync = function () {
 }();
 
 var mkdtemp = function () {
-  var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5() {
+  var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
@@ -817,7 +817,7 @@ router.post("/:id/rejudge", function (req, res, next) {
     if (err) return handleSubmissionError(err);
 
     sub.populate("problem", function () {
-      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(err, sub) {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(err, sub) {
         return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -975,7 +975,7 @@ function loadZipAsync(p) {
         return toWait.push(dealWithEntry(zipFile, entry));
       });
 
-      zipFile.once("end", (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+      zipFile.once("end", (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
         var resWait;
         return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
@@ -1036,7 +1036,7 @@ var Storage = function () {
   (0, _createClass3.default)(Storage, [{
     key: "load",
     value: function () {
-      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(p) {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(p) {
         return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -1080,7 +1080,7 @@ var Storage = function () {
   }, {
     key: "loadZip",
     value: function () {
-      var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(p) {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(p) {
         return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
@@ -1112,7 +1112,7 @@ var Storage = function () {
   }, {
     key: "createFileFromContent",
     value: function () {
-      var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(p, content) {
+      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(p, content) {
         return _regenerator2.default.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
@@ -1144,7 +1144,7 @@ var Storage = function () {
   }, {
     key: "getFileBuffer",
     value: function () {
-      var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5(p) {
+      var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(p) {
         return _regenerator2.default.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
@@ -1176,7 +1176,7 @@ var Storage = function () {
   }, {
     key: "getFileString",
     value: function () {
-      var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee6(p) {
+      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(p) {
         return _regenerator2.default.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
@@ -1205,7 +1205,7 @@ var Storage = function () {
   }, {
     key: "isReadable",
     value: function () {
-      var _ref7 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee7(p) {
+      var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7(p) {
         return _regenerator2.default.wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
@@ -1247,7 +1247,7 @@ var Storage = function () {
   }, {
     key: "glob",
     value: function () {
-      var _ref8 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee8(p) {
+      var _ref8 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee8(p) {
         var sort = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
         return _regenerator2.default.wrap(function _callee8$(_context8) {
           while (1) {
@@ -1279,7 +1279,7 @@ var Storage = function () {
   }, {
     key: "dispose",
     value: function () {
-      var _ref9 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee9(p) {
+      var _ref9 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee9(p) {
         return _regenerator2.default.wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
@@ -1325,7 +1325,7 @@ var RealStorage = function (_Storage) {
   (0, _createClass3.default)(RealStorage, [{
     key: "load",
     value: function () {
-      var _ref10 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee10(p) {
+      var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee10(p) {
         return _regenerator2.default.wrap(function _callee10$(_context10) {
           while (1) {
             switch (_context10.prev = _context10.next) {
@@ -1349,7 +1349,7 @@ var RealStorage = function (_Storage) {
   }, {
     key: "createFileFromContent",
     value: function () {
-      var _ref11 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee11(p, content) {
+      var _ref11 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee11(p, content) {
         var abs;
         return _regenerator2.default.wrap(function _callee11$(_context11) {
           while (1) {
@@ -1388,7 +1388,7 @@ var RealStorage = function (_Storage) {
   }, {
     key: "getFileBuffer",
     value: function () {
-      var _ref12 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee12(p) {
+      var _ref12 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee12(p) {
         var abs, res;
         return _regenerator2.default.wrap(function _callee12$(_context12) {
           while (1) {
@@ -1427,7 +1427,7 @@ var RealStorage = function (_Storage) {
   }, {
     key: "getFileString",
     value: function () {
-      var _ref13 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee13(p) {
+      var _ref13 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee13(p) {
         var abs, res;
         return _regenerator2.default.wrap(function _callee13$(_context13) {
           while (1) {
@@ -1482,7 +1482,7 @@ var MemoryStorage = function (_Storage2) {
   (0, _createClass3.default)(MemoryStorage, [{
     key: "load",
     value: function () {
-      var _ref14 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee15(p) {
+      var _ref14 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee15(p) {
         var _this4 = this;
 
         var absPath, res;
@@ -1498,7 +1498,7 @@ var MemoryStorage = function (_Storage2) {
                 res = _context15.sent;
                 _context15.next = 6;
                 return _promise2.default.all(res.map(function () {
-                  var _ref15 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee14(file) {
+                  var _ref15 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee14(file) {
                     return _regenerator2.default.wrap(function _callee14$(_context14) {
                       while (1) {
                         switch (_context14.prev = _context14.next) {
@@ -1539,7 +1539,7 @@ var MemoryStorage = function (_Storage2) {
   }, {
     key: "loadZip",
     value: function () {
-      var _ref16 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee16(p) {
+      var _ref16 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee16(p) {
         var _this5 = this;
 
         var res, promises;
@@ -1580,7 +1580,7 @@ var MemoryStorage = function (_Storage2) {
   }, {
     key: "createFileFromContent",
     value: function () {
-      var _ref18 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee17(p, content) {
+      var _ref18 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(p, content) {
         var norm;
         return _regenerator2.default.wrap(function _callee17$(_context17) {
           while (1) {
@@ -1610,7 +1610,7 @@ var MemoryStorage = function (_Storage2) {
   }, {
     key: "getFileBuffer",
     value: function () {
-      var _ref19 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee18(p) {
+      var _ref19 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee18(p) {
         var def = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
         var normalizedPath;
         return _regenerator2.default.wrap(function _callee18$(_context18) {
@@ -1657,7 +1657,7 @@ var MemoryStorage = function (_Storage2) {
   }, {
     key: "getFileString",
     value: function () {
-      var _ref20 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee19(p) {
+      var _ref20 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee19(p) {
         var def = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
         var normalizedPath;
         return _regenerator2.default.wrap(function _callee19$(_context19) {
@@ -1704,7 +1704,7 @@ var MemoryStorage = function (_Storage2) {
   }, {
     key: "glob",
     value: function () {
-      var _ref21 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee20(p) {
+      var _ref21 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee20(p) {
         var sort = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
         var normalizedPath, res, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, fn;
@@ -1782,7 +1782,7 @@ var MemoryStorage = function (_Storage2) {
   }, {
     key: "dispose",
     value: function () {
-      var _ref22 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee21() {
+      var _ref22 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee21() {
         return _regenerator2.default.wrap(function _callee21$(_context21) {
           while (1) {
             switch (_context21.prev = _context21.next) {
@@ -1810,7 +1810,7 @@ var MemoryStorage = function (_Storage2) {
 
 if (!module.parent && false) {
   // eslint-disable-next-line require-await
-  (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee22() {
+  (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee22() {
     var store;
     return _regenerator2.default.wrap(function _callee22$(_context22) {
       while (1) {
@@ -1889,10 +1889,10 @@ var router = express.Router();
 
 var contestRouter = __webpack_require__(48);
 var userRouter = __webpack_require__(56);
-var submissionRouter = __webpack_require__(21
+var submissionRouter = __webpack_require__(21);
 
 // middlewares
-);router.use('/contests', contestRouter);
+router.use('/contests', contestRouter);
 router.use('/users', userRouter);
 router.use('/submissions', submissionRouter);
 
@@ -2104,7 +2104,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 *   @param {Storage} storage object
 */
 var autoDetect = function () {
-  var _ref7 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee7(store) {
+  var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7(store) {
     var _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, _step3$value, _, loader;
 
     return _regenerator2.default.wrap(function _callee7$(_context7) {
@@ -2245,7 +2245,7 @@ var Loader = function () {
   }], [{
     key: "isLoadable",
     value: function () {
-      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(store) {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(store) {
         return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -2288,7 +2288,7 @@ var JudeLoader = function (_Loader) {
       *   @returns {Object[]} tests found
        */
     value: function () {
-      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(datasetPath) {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(datasetPath) {
         var testsPath, inputs, res, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, input, output;
 
         return _regenerator2.default.wrap(function _callee2$(_context2) {
@@ -2412,7 +2412,7 @@ var JudeLoader = function (_Loader) {
   }, {
     key: "parseDatasets",
     value: function () {
-      var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(datasets) {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(datasets) {
         var res, percentageSum, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, dataset, cur;
 
         return _regenerator2.default.wrap(function _callee3$(_context3) {
@@ -2446,8 +2446,7 @@ var JudeLoader = function (_Loader) {
                 _context3.t0 = dataset.name || dataset.path;
                 _context3.t1 = dataset.percentage || 0;
                 _context3.next = 16;
-                return this.getTestcases(dataset.path // eslint-disable-line no-await-in-loop
-                );
+                return this.getTestcases(dataset.path);
 
               case 16:
                 _context3.t2 = _context3.sent;
@@ -2538,7 +2537,7 @@ var JudeLoader = function (_Loader) {
   }, {
     key: "getTask",
     value: function () {
-      var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(cfg) {
+      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(cfg) {
         var lims, checks, multiplier, ratio, attr;
         return _regenerator2.default.wrap(function _callee4$(_context4) {
           while (1) {
@@ -2643,7 +2642,7 @@ var JudeLoader = function (_Loader) {
   }, {
     key: "load",
     value: function () {
-      var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5() {
+      var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {
         var cfg;
         return _regenerator2.default.wrap(function _callee5$(_context5) {
           while (1) {
@@ -2697,7 +2696,7 @@ var JudeLoader = function (_Loader) {
   }], [{
     key: "isLoadable",
     value: function () {
-      var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee6(store) {
+      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(store) {
         return _regenerator2.default.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
@@ -3065,8 +3064,151 @@ var ProductScoring = function (_Scoring) {
   return ProductScoring;
 }(Scoring);
 
-var IcpcScoring = function (_Scoring2) {
-  (0, _inherits3.default)(IcpcScoring, _Scoring2);
+var SubtaskScoring = function (_Scoring2) {
+  (0, _inherits3.default)(SubtaskScoring, _Scoring2);
+
+  function SubtaskScoring() {
+    (0, _classCallCheck3.default)(this, SubtaskScoring);
+    return (0, _possibleConstructorReturn3.default)(this, (SubtaskScoring.__proto__ || (0, _getPrototypeOf2.default)(SubtaskScoring)).apply(this, arguments));
+  }
+
+  (0, _createClass3.default)(SubtaskScoring, [{
+    key: "solved",
+    value: function solved(obj) {
+      return obj.score > 0;
+    }
+  }, {
+    key: "attempted",
+    value: function attempted(obj) {
+      return obj.affect || obj.fails > 0;
+    }
+  }, {
+    key: "fails",
+    value: function fails(obj) {
+      return obj.fails;
+    }
+  }, {
+    key: "eval",
+    value: function _eval(verdicts) {
+      var res = 0;
+      var index = 0;
+
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = (0, _getIterator3.default)((0, _keys2.default)(verdicts)), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var key = _step4.value;
+
+          var verdict = verdicts[key];
+          if (verdict.verdict === "VERDICT_INQ") {
+            return {
+              score: 0, affect: false, penalty: 0, fails: 0
+            };
+          }
+
+          res += verdict.verdict === "VERDICT_AC" ? this.task.getDataset(index).percentage : 0;
+          index++;
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
+      }
+
+      return {
+        score: parseInt(res * this.task.getWeight(), 10), penalty: 0, affect: true, fails: 0
+      };
+    }
+  }, {
+    key: "evalContest",
+    value: function evalContest(submissions) {
+      submissions.sort(submissionComparator);
+
+      var bestIndex = submissions.length;
+      var bestScore = 0;
+
+      for (var i = 0; i < submissions.length; i++) {
+        var evaluation = this.eval(submissions[i].verdict);
+        if (evaluation.affect && evaluation.score > bestScore) {
+          bestScore = evaluation.score;
+          bestIndex = i;
+        }
+      }
+
+      var fails = 0;
+      var opts = this.opts;
+
+
+      for (var _i = 0; _i < bestIndex; _i++) {
+        var submission = submissions[_i];
+
+        var _evaluation = this.eval(submission.verdict);
+        if (_evaluation.affect) {
+          fails++;
+        }
+      }
+
+      if (bestScore > 0) {
+        var _submission = submissions[bestIndex];
+        return {
+          score: bestScore,
+          penalty: _submission.timeInContest,
+          affect: true,
+          fails: fails
+        };
+      }
+
+      return {
+        score: 0, penalty: 0, affect: false, fails: fails
+      };
+    }
+  }], [{
+    key: "isTaskValid",
+
+    // eslint-disable-next-line no-unused-vars
+    value: function isTaskValid(tk) {
+      return true;
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      return true;
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      return true;
+    }
+  }, {
+    key: "mergeEvaluations",
+    value: function mergeEvaluations(evals) {
+      var opts = this.opts;
+
+
+      return evals.reduce(function (old, cur) {
+        return {
+          score: old.score + cur.score,
+          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 1)
+        };
+      }, { score: 0, penalty: 0 });
+    }
+  }]);
+  return SubtaskScoring;
+}(Scoring);
+
+var IcpcScoring = function (_Scoring3) {
+  (0, _inherits3.default)(IcpcScoring, _Scoring3);
 
   function IcpcScoring() {
     (0, _classCallCheck3.default)(this, IcpcScoring);
@@ -3092,13 +3234,13 @@ var IcpcScoring = function (_Scoring2) {
     key: "eval",
     value: function _eval(verdicts) {
       var res = 1;
-      var _iteratorNormalCompletion4 = true;
-      var _didIteratorError4 = false;
-      var _iteratorError4 = undefined;
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
 
       try {
-        for (var _iterator4 = (0, _getIterator3.default)((0, _keys2.default)(verdicts)), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-          var key = _step4.value;
+        for (var _iterator5 = (0, _getIterator3.default)((0, _keys2.default)(verdicts)), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var key = _step5.value;
 
           var verdict = verdicts[key];
           if (verdict.verdict === "VERDICT_INQ") {
@@ -3110,16 +3252,16 @@ var IcpcScoring = function (_Scoring2) {
           res *= verdict.verdict === "VERDICT_AC" ? 1 : 0;
         }
       } catch (err) {
-        _didIteratorError4 = true;
-        _iteratorError4 = err;
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion4 && _iterator4.return) {
-            _iterator4.return();
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
           }
         } finally {
-          if (_didIteratorError4) {
-            throw _iteratorError4;
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
@@ -3136,14 +3278,14 @@ var IcpcScoring = function (_Scoring2) {
       var fails = 0;
       var penalty = 0;
       var opts = this.opts;
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
 
       try {
 
-        for (var _iterator5 = (0, _getIterator3.default)(submissions), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var submission = _step5.value;
+        for (var _iterator6 = (0, _getIterator3.default)(submissions), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var submission = _step6.value;
 
           var evaluation = this.eval(submission.verdict);
           if (evaluation.affect) {
@@ -3161,16 +3303,16 @@ var IcpcScoring = function (_Scoring2) {
           }
         }
       } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
           }
         } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
+          if (_didIteratorError6) {
+            throw _iteratorError6;
           }
         }
       }
@@ -3213,7 +3355,8 @@ var IcpcScoring = function (_Scoring2) {
 module.exports = {
   _Scoring: Scoring,
   ProductScoring: ProductScoring,
-  IcpcScoring: IcpcScoring
+  IcpcScoring: IcpcScoring,
+  SubtaskScoring: SubtaskScoring
 };
 
 /***/ }),
@@ -3438,7 +3581,7 @@ var JudgeEnvironment = function () {
   (0, _createClass3.default)(JudgeEnvironment, [{
     key: "pingCurrent",
     value: function () {
-      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
         return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -3823,7 +3966,7 @@ function handleContestError(err, req, res, next) {
 var ContestSelection = "name start_time end_time _id registration_end collabs _creator";
 
 router.post("/:id/addUsers", function () {
-  var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(req, res) {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(req, res) {
     var _Object$assign, users, override, awaited, erred;
 
     return _regenerator2.default.wrap(function _callee$(_context) {
@@ -4273,7 +4416,7 @@ router.post("/upload/:id", auth2.isAuth(["root"]), function (req, res, next) {
     if (err) return res.status(400).json({ message: err.toString() });
     if (!problem) return res.status(400).json({ message: "problem not found" });
 
-    (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
+    (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
       var file, task, store, loade;
       return _regenerator2.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -4327,7 +4470,7 @@ router.post("/upload/:id", auth2.isAuth(["root"]), function (req, res, next) {
               console.log("Uploading package " + file.path);
 
               weedClient.write(file.path).then(function () {
-                var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(info) {
+                var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(info) {
                   return _regenerator2.default.wrap(function _callee$(_context) {
                     while (1) {
                       switch (_context.prev = _context.next) {
@@ -4609,6 +4752,45 @@ var Task = function () {
     value: function getWeight() {
       return this.weight || 1;
     }
+  }, {
+    key: "getDataset",
+    value: function getDataset(index) {
+      var datasets = this.getDatasets();
+      if (index >= datasets.length) return null;
+
+      return datasets[index];
+    }
+  }, {
+    key: "getDatasetFromName",
+    value: function getDatasetFromName(name) {
+      var datasets = this.getDatasets();
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = (0, _getIterator3.default)(datasets), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var dataset = _step.value;
+
+          if (dataset.name === name) return dataset;
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return null;
+    }
 
     /**
        * @return {Boolean} if task has a statement specified in package
@@ -4629,27 +4811,27 @@ var Task = function () {
     key: "toJSON",
     value: function toJSON() {
       var res = deepcopy(this.attr);
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator = (0, _getIterator3.default)(res.datasets), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var dataset = _step.value;
+        for (var _iterator2 = (0, _getIterator3.default)(res.datasets), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var dataset = _step2.value;
 
           delete dataset.testcases;
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
           }
         } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
+          if (_didIteratorError2) {
+            throw _iteratorError2;
           }
         }
       }
@@ -4929,7 +5111,7 @@ router.post("/submit", function (req, res, next) {
       });
 
       sub.save(function () {
-        var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(err) {
+        var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(err) {
           return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
               switch (_context.prev = _context.next) {
@@ -5076,7 +5258,7 @@ var _asyncToGenerator2 = __webpack_require__(4);
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var evaluate = function () {
-  var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(iso, store, command, input) {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(iso, store, command, input) {
     var output = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "output";
     var error = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "error";
     var res;
@@ -5120,7 +5302,7 @@ var evaluate = function () {
 *     + Isolate.getLog() result)
  */
 var compilationStepAsync = function () {
-  var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee12(env, store, lang) {
+  var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee12(env, store, lang) {
     var sol = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : SOURCE_PATH;
     var solExec = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : SOURCE_EXEC_PATH;
     var iso, result;
@@ -5203,7 +5385,7 @@ var compilationStepAsync = function () {
 
 
 var testCaseAsync = function () {
-  var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee14(env, store, iso, task, lang, dataset, testcase) {
+  var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee14(env, store, iso, task, lang, dataset, testcase) {
     var _this11 = this;
 
     return _regenerator2.default.wrap(function _callee14$(_context14) {
@@ -5211,7 +5393,7 @@ var testCaseAsync = function () {
         switch (_context14.prev = _context14.next) {
           case 0:
             return _context14.abrupt("return", new _promise2.default(function () {
-              var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee13(resolve) {
+              var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee13(resolve) {
                 var timelimit, memorylimit, evaluationResult, checkingResult, execTime, exitWith, execLog, dummy, exitStatus, exitCode, output, _dummy, _exitStatus, _exitCode;
 
                 return _regenerator2.default.wrap(function _callee13$(_context13) {
@@ -5432,7 +5614,7 @@ var testCaseAsync = function () {
 
 
 var testDataset = function () {
-  var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee16(env, store, task, lang, dataset) {
+  var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee16(env, store, task, lang, dataset) {
     var _this12 = this;
 
     var execTime, n, totalTime, wallTime, i, cases, boxes, j, iso, res, _j, status, caseResult;
@@ -5516,7 +5698,7 @@ var testDataset = function () {
           case 30:
             _context16.next = 32;
             return _promise2.default.all(boxes.map(function () {
-              var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee15(box) {
+              var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee15(box) {
                 return _regenerator2.default.wrap(function _callee15$(_context15) {
                   while (1) {
                     switch (_context15.prev = _context15.next) {
@@ -5585,7 +5767,7 @@ var testDataset = function () {
 
 
 var testTask = function () {
-  var _ref7 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee17(env, task, store, code, lang) {
+  var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(env, task, store, code, lang) {
     var _ref8, _ref9, compilationResult, checkerCompilationResult, dummy, exitStatus, output, _dummy2, _exitStatus2, exitCode, _output, verdicts, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, dataset, datasetVerdict;
 
     return _regenerator2.default.wrap(function _callee17$(_context17) {
@@ -5762,7 +5944,7 @@ var testTask = function () {
 
 
 var testPackage = function () {
-  var _ref10 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee18(env, pack, code, lang) {
+  var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee18(env, pack, code, lang) {
     var store, Loader, task, datasets, verdicts, res, i;
     return _regenerator2.default.wrap(function _callee18$(_context18) {
       while (1) {
@@ -5864,7 +6046,7 @@ var Evaluation = {
 
     var output = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : "output";
     var error = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : "error";
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
+    return (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
       var res;
       return _regenerator2.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -5914,7 +6096,7 @@ var Evaluation = {
 
     var output = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : "output";
     var error = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : "error";
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3() {
+    return (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
       var res;
       return _regenerator2.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -5971,7 +6153,7 @@ var Evaluation = {
 
     var output = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : "output";
     var error = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : "error";
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4() {
+    return (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {
       var res;
       return _regenerator2.default.wrap(function _callee4$(_context4) {
         while (1) {
@@ -6028,7 +6210,7 @@ var Evaluation = {
 
     var output = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : "output";
     var error = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : "error";
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5() {
+    return (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {
       var oldProc, oldEnv, oldCgTiming, oldCgMemory, oldCg, command, res;
       return _regenerator2.default.wrap(function _callee5$(_context5) {
         while (1) {
@@ -6129,7 +6311,7 @@ var Checking = {
 
     var checkerOutput = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : "checker_output";
     var checkerError = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : "checker_error";
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee6() {
+    return (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6() {
       var res;
       return _regenerator2.default.wrap(function _callee6$(_context6) {
         while (1) {
@@ -6183,7 +6365,7 @@ var Compilation = {
   CPP: function CPP(iso, store, file, execPath) {
     var _this6 = this;
 
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee7() {
+    return (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7() {
       var sourceFile, oldEnv, oldProc, oldTL, oldWTL, res;
       return _regenerator2.default.wrap(function _callee7$(_context7) {
         while (1) {
@@ -6266,7 +6448,7 @@ var Compilation = {
   C: function C(iso, store, file, execPath) {
     var _this7 = this;
 
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee8() {
+    return (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee8() {
       var sourceFile, oldEnv, oldProc, oldTL, oldWTL, res;
       return _regenerator2.default.wrap(function _callee8$(_context8) {
         while (1) {
@@ -6340,7 +6522,7 @@ var Compilation = {
   Java: function Java(iso, store, file) {
     var _this8 = this;
 
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee9() {
+    return (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee9() {
       var sourceFile, oldEnv, oldProc, oldTL, oldWTL, res;
       return _regenerator2.default.wrap(function _callee9$(_context9) {
         while (1) {
@@ -6421,7 +6603,7 @@ var Compilation = {
   Py2: function Py2(iso, store, file, execPath) {
     var _this9 = this;
 
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee10() {
+    return (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee10() {
       var sourceFile, oldEnv, oldProc, oldTL, oldWTL, res;
       return _regenerator2.default.wrap(function _callee10$(_context10) {
         while (1) {
@@ -6504,7 +6686,7 @@ var Compilation = {
   Py3: function Py3(iso, store, file, execPath) {
     var _this10 = this;
 
-    return (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee11() {
+    return (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee11() {
       var sourceFile, oldEnv, oldProc, oldTL, oldWTL, res;
       return _regenerator2.default.wrap(function _callee11$(_context11) {
         while (1) {
@@ -6591,7 +6773,7 @@ var SOURCE_PATH = "_/sol";
 var SOURCE_EXEC_PATH = "_/sol_exec";
 var CHECKER_PATH = "_/checker";
 var CHECKER_EXEC_PATH = "_/checker_exec";if (!module.parent && false) {
-  (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee19() {
+  (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee19() {
     var env, store, judeLoader, task, code, slow_code, tle_code, fake_mle_code, slow2_code, java_wacode, java_mlecode, java_rtecode, crazy_code, pycode;
     return _regenerator2.default.wrap(function _callee19$(_context19) {
       while (1) {
@@ -6992,7 +7174,7 @@ var Sandbox = function () {
   }, {
     key: "openFile",
     value: function () {
-      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(p) {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(p) {
         var flags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "wx+";
         var exec = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
         var absPath, fd;
@@ -7040,7 +7222,7 @@ var Sandbox = function () {
   }, {
     key: "createFile",
     value: function () {
-      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(p) {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(p) {
         var exec = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
         var absPath, fd;
         return _regenerator2.default.wrap(function _callee2$(_context2) {
@@ -7097,7 +7279,7 @@ var Sandbox = function () {
   }, {
     key: "createFileFromStorage",
     value: function () {
-      var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(p, d) {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(p, d) {
         var exec = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
         var absPath, buf;
         return _regenerator2.default.wrap(function _callee3$(_context3) {
@@ -7146,7 +7328,7 @@ var Sandbox = function () {
   }, {
     key: "createFileFromString",
     value: function () {
-      var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(p, content) {
+      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(p, content) {
         var exec = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
         var absPath;
         return _regenerator2.default.wrap(function _callee4$(_context4) {
@@ -7197,7 +7379,7 @@ var Sandbox = function () {
   }, {
     key: "getFile",
     value: function () {
-      var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5(p) {
+      var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(p) {
         var absPath, fd;
         return _regenerator2.default.wrap(function _callee5$(_context5) {
           while (1) {
@@ -7236,7 +7418,7 @@ var Sandbox = function () {
   }, {
     key: "getFileToString",
     value: function () {
-      var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee6(p) {
+      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(p) {
         var absPath;
         return _regenerator2.default.wrap(function _callee6$(_context6) {
           while (1) {
@@ -7289,7 +7471,7 @@ var Sandbox = function () {
   }, {
     key: "getFileToStorage",
     value: function () {
-      var _ref7 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee7(p, d) {
+      var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7(p, d) {
         var absPath;
         return _regenerator2.default.wrap(function _callee7$(_context7) {
           while (1) {
@@ -7334,7 +7516,7 @@ var Sandbox = function () {
   }, {
     key: "globToStorage",
     value: function () {
-      var _ref8 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee9(pattern, fun) {
+      var _ref8 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee9(pattern, fun) {
         var _this = this;
 
         var files;
@@ -7350,7 +7532,7 @@ var Sandbox = function () {
                 files = _context9.sent;
                 _context9.next = 6;
                 return Promise.all(files.map(function () {
-                  var _ref9 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee8(file) {
+                  var _ref9 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee8(file) {
                     return _regenerator2.default.wrap(function _callee8$(_context8) {
                       while (1) {
                         switch (_context8.prev = _context8.next) {
@@ -7406,7 +7588,7 @@ var Sandbox = function () {
   }, {
     key: "globFromStorage",
     value: function () {
-      var _ref10 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee11(pattern, fun) {
+      var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee11(pattern, fun) {
         var _this2 = this;
 
         var matches;
@@ -7421,7 +7603,7 @@ var Sandbox = function () {
                 matches = _context11.sent;
                 _context11.next = 5;
                 return Promise.all(matches.map(function () {
-                  var _ref11 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee10(match) {
+                  var _ref11 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee10(match) {
                     return _regenerator2.default.wrap(function _callee10$(_context10) {
                       while (1) {
                         switch (_context10.prev = _context10.next) {
@@ -7459,7 +7641,7 @@ var Sandbox = function () {
   }, {
     key: "getFileStats",
     value: function () {
-      var _ref12 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee12(p) {
+      var _ref12 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee12(p) {
         var res;
         return _regenerator2.default.wrap(function _callee12$(_context12) {
           while (1) {
@@ -7489,7 +7671,7 @@ var Sandbox = function () {
   }, {
     key: "chmod",
     value: function () {
-      var _ref13 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee13(p) {
+      var _ref13 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee13(p) {
         var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 436;
         return _regenerator2.default.wrap(function _callee13$(_context13) {
           while (1) {
@@ -7515,7 +7697,7 @@ var Sandbox = function () {
   }, {
     key: "pathExists",
     value: function () {
-      var _ref14 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee14(p) {
+      var _ref14 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee14(p) {
         return _regenerator2.default.wrap(function _callee14$(_context14) {
           while (1) {
             switch (_context14.prev = _context14.next) {
@@ -7549,7 +7731,7 @@ var Sandbox = function () {
   }, {
     key: "fileExists",
     value: function () {
-      var _ref15 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee15(p) {
+      var _ref15 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee15(p) {
         var res;
         return _regenerator2.default.wrap(function _callee15$(_context15) {
           while (1) {
@@ -7587,7 +7769,7 @@ var Sandbox = function () {
   }, {
     key: "dirExists",
     value: function () {
-      var _ref16 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee16(p) {
+      var _ref16 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee16(p) {
         var res;
         return _regenerator2.default.wrap(function _callee16$(_context16) {
           while (1) {
@@ -7623,7 +7805,7 @@ var Sandbox = function () {
   }, {
     key: "removeDir",
     value: function () {
-      var _ref17 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee17(p) {
+      var _ref17 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(p) {
         return _regenerator2.default.wrap(function _callee17$(_context17) {
           while (1) {
             switch (_context17.prev = _context17.next) {
@@ -7664,7 +7846,7 @@ var Sandbox = function () {
   }, {
     key: "removeFile",
     value: function () {
-      var _ref18 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee18(p) {
+      var _ref18 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee18(p) {
         return _regenerator2.default.wrap(function _callee18$(_context18) {
           while (1) {
             switch (_context18.prev = _context18.next) {
@@ -7773,7 +7955,7 @@ var Isolate = function (_Sandbox) {
   }, {
     key: "init",
     value: function () {
-      var _ref19 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee19() {
+      var _ref19 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee19() {
         var params;
         return _regenerator2.default.wrap(function _callee19$(_context19) {
           while (1) {
@@ -7974,7 +8156,7 @@ var Isolate = function (_Sandbox) {
   }, {
     key: "getLog",
     value: function () {
-      var _ref20 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee20(ex) {
+      var _ref20 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee20(ex) {
         var exec, fn, res, log, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, line, _line$split, _line$split2, key, value;
 
         return _regenerator2.default.wrap(function _callee20$(_context20) {
@@ -8181,7 +8363,7 @@ var Isolate = function (_Sandbox) {
   }, {
     key: "executeBufferized",
     value: function () {
-      var _ref21 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee21() {
+      var _ref21 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee21() {
         var oldVal,
             res,
             _args21 = arguments;
@@ -8226,7 +8408,7 @@ var Isolate = function (_Sandbox) {
   }, {
     key: "execute",
     value: function () {
-      var _ref22 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee22(comm) {
+      var _ref22 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee22(comm) {
         var capture = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ["ignore"];
         var promise = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
@@ -8340,7 +8522,7 @@ var Isolate = function (_Sandbox) {
   }, {
     key: "cleanup",
     value: function () {
-      var _ref23 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee23() {
+      var _ref23 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee23() {
         var args;
         return _regenerator2.default.wrap(function _callee23$(_context23) {
           while (1) {
@@ -8461,7 +8643,7 @@ var IsolatePool = function () {
 
 if (!module.parent && false) {
   // eslint-disable-next-line require-await
-  (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee24() {
+  (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee24() {
     var env, store, iso;
     return _regenerator2.default.wrap(function _callee24$(_context24) {
       while (1) {

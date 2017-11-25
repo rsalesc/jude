@@ -91,6 +91,12 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     { label: "Admin", value: "admin" }
   ];
 
+  const scorings = [
+    { label: "ICPC Scoring", value: "IcpcScoring" },
+    { label: "Subtask Scoring", value: "SubtaskScoring" },
+    { label: "Weighted Scoring", value: "ProductScoring" }
+  ];
+
 
   user.listView().fields([
     nga.field("_id").label("#").isDetailLink(true).editable(false),
@@ -161,7 +167,9 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
   ]);
 
   contest.showView().fields(contest.listView().fields().concat([
-    nga.field("scoring"),
+    nga.field("scoring", "choice")
+      .choices(scorings)
+      .validation({ required: true }),
     nga.field("hidden", "boolean").validation({ required: true }),
     nga.field("problems", "embedded_list").defaultValue([])
       .targetFields([
@@ -170,7 +178,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
             required: true,
             pattern: "[A-Z][0-9]*"
           }),
-        nga.field("color"),
+        nga.field("color").validation({ required: true }),
         nga.field("problem", "reference")
           .validation({ required: true })
           .targetEntity(problem)

@@ -21,8 +21,13 @@ WORKDIR /opt
 ADD https://api.github.com/repos/MikeMirzayanov/testlib/compare/master...HEAD /dev/null
 RUN git clone https://github.com/MikeMirzayanov/testlib
 
+# jngen.h
+ADD https://api.github.com/repos/ifsmirnov/jngen/compare/master...HEAD /dev/null
+RUN git clone https://github.com/ifsmirnov/jngen
+
 WORKDIR /usr/include
 RUN mv /opt/testlib/testlib.h . && g++ -std=c++11 testlib.h
+RUN mv /opt/jngen/jngen.h . && g++ -std=c++11 jngen.h
 
 # install node and jude
 WORKDIR /opt/jude

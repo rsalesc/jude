@@ -47,7 +47,8 @@
             <b-table-column label="Verdict" numeric>
               <ju-verdict-tag 
                 :verdict="getMainVerdict(props.row.verdict, getProblem(props.row.problem).problem)" 
-                :weighted="my.scoring.hasWeight()">
+                :weighted="getProblem(props.row.problem).scoringClass.hasWeight()"
+                :score="props.row.score">
               </ju-verdict-tag>
             </b-table-column>
 

@@ -95,7 +95,25 @@ class Task {
   }
 
   getWeight() {
-    return this.weight || 1;
+    return this.weight || (this.attr.weight || 1);
+  }
+
+  getDataset(index) {
+    const datasets = this.getDatasets();
+    if(index >= datasets.length)
+      return null;
+
+    return datasets[index];
+  }
+
+  getDatasetFromName(name) {
+    const datasets = this.getDatasets();
+    for(let dataset of datasets) {
+      if(dataset.name === name)
+        return dataset;
+    }
+
+    return null;
   }
 
   /**

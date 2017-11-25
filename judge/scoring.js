@@ -171,6 +171,105 @@ class ProductScoring extends Scoring {
   }
 }
 
+class SubtaskScoring extends Scoring {
+  // eslint-disable-next-line no-unused-vars
+  static isTaskValid(tk) {
+    return true;
+  }
+
+  static hasWeight() {
+    return true;
+  }
+
+  static hasPenalty() {
+    return true;
+  }
+
+  solved(obj) {
+    return obj.score > 0;
+  }
+
+  attempted(obj) {
+    return obj.affect || obj.fails > 0;
+  }
+
+  fails(obj) {
+    return obj.fails;
+  }
+
+  eval(verdicts) {
+    let res = 0;
+    let index = 0;
+
+    for (const key of Object.keys(verdicts)) {
+      const verdict = verdicts[key];
+      if (verdict.verdict === "VERDICT_INQ") {
+        return {
+          score: 0, affect: false, penalty: 0, fails: 0
+        };
+      }
+
+      res += verdict.verdict === "VERDICT_AC"
+        ? this.task.getDataset(index).percentage
+        : 0;
+      index++;
+    }
+
+    return {
+      score: parseInt(res * this.task.getWeight(), 10), penalty: 0, affect: true, fails: 0
+    };
+  }
+
+  evalContest(submissions) {
+    submissions.sort(submissionComparator);
+
+    let bestIndex = submissions.length;
+    let bestScore = 0;
+
+    for(let i = 0; i < submissions.length; i++) {
+      const evaluation = this.eval(submissions[i].verdict);
+      if(evaluation.affect && evaluation.score > bestScore) {
+        bestScore = evaluation.score;
+        bestIndex = i;
+      }
+    }
+
+    let fails = 0;
+    const { opts } = this;
+
+    for (let i = 0; i < bestIndex; i++) {
+      const submission = submissions[i];
+
+      const evaluation = this.eval(submission.verdict);
+      if (evaluation.affect) {
+        fails++
+      }
+    }
+
+    if(bestScore > 0) {
+      const submission = submissions[bestIndex];
+      return {
+        score: bestScore,
+        penalty: submission.timeInContest,
+        affect: true,
+        fails
+      }
+    }
+
+    return {
+      score: 0, penalty: 0, affect: false, fails
+    };
+  }
+
+  static mergeEvaluations(evals) {
+
+    return evals.reduce((old, cur) => ({
+      score: old.score + cur.score,
+      penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails // TODO: change
+    }), { score: 0, penalty: 0 });
+  }
+}
+
 class IcpcScoring extends Scoring {
   // eslint-disable-next-line no-unused-vars
   static isTaskValid(tk) {
@@ -257,5 +356,6 @@ class IcpcScoring extends Scoring {
 module.exports = {
   _Scoring: Scoring,
   ProductScoring,
-  IcpcScoring
+  IcpcScoring,
+  SubtaskScoring
 };
