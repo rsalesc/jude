@@ -147,8 +147,8 @@ const Evaluation = {
     if (await iso.fileExists("submission_jvm_crash.log"))
       throw new Error("JVM somehow crashed");
 
-    if (!await iso.fileExists("state"))
-      throw new Error("State file not found");
+    //if (!await iso.fileExists("state"))
+      //throw new Error("State file not found");
 
     await iso.removeFile(input);
     iso.dirs.pop();

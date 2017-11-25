@@ -2143,7 +2143,6 @@ var SubtaskScoring = function (_Scoring2) {
     key: "eval",
     value: function _eval(verdicts) {
       var res = 0;
-      var index = 0;
 
       var _iteratorNormalCompletion4 = true;
       var _didIteratorError4 = false;
@@ -2160,8 +2159,7 @@ var SubtaskScoring = function (_Scoring2) {
             };
           }
 
-          res += verdict.verdict === "VERDICT_AC" ? this.task.getDataset(index).percentage : 0;
-          index++;
+          res += verdict.verdict === "VERDICT_AC" ? this.task.getDatasetFromName(key).percentage : 0;
         }
       } catch (err) {
         _didIteratorError4 = true;
@@ -2245,13 +2243,11 @@ var SubtaskScoring = function (_Scoring2) {
   }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
-      var opts = this.opts;
-
 
       return evals.reduce(function (old, cur) {
         return {
           score: old.score + cur.score,
-          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 1)
+          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails // TODO: change
         };
       }, { score: 0, penalty: 0 });
     }
@@ -3871,21 +3867,9 @@ var Evaluation = {
 
             case 27:
               _context5.next = 29;
-              return iso.fileExists("state");
-
-            case 29:
-              if (_context5.sent) {
-                _context5.next = 31;
-                break;
-              }
-
-              throw new Error("State file not found");
-
-            case 31:
-              _context5.next = 33;
               return iso.removeFile(input);
 
-            case 33:
+            case 29:
               iso.dirs.pop();
               iso.dirs.pop();
               iso.setEnv = oldEnv;
@@ -3896,7 +3880,7 @@ var Evaluation = {
 
               return _context5.abrupt("return", res);
 
-            case 41:
+            case 37:
             case "end":
               return _context5.stop();
           }
@@ -7219,7 +7203,7 @@ var Task = function () {
   }, {
     key: "getWeight",
     value: function getWeight() {
-      return this.weight || 1;
+      return this.weight || this.attr.weight || 1;
     }
   }, {
     key: "getDataset",
