@@ -61,7 +61,7 @@
               v-for="prob in problems" :key="prob.problem._id"
               :class="{'ac-color': isAc(team, prob), 'wa-color': isWa(team, prob)}">
               <span v-if="prob.scoring.attempted(team.results[prob.problem._id])">
-                  <p> {{ getProblemScore(team, prob) }}</p>
+                  <p> {{ getProblemScore(team, prob) }}  <span class="fails">{{ getProblemWeightedFails(team, prob) }}</span></p>
                   <p class="ju-score-info" v-if="my.scoring.hasPenalty() && isAc(team, prob)">
                       {{ getContestTime(team.results[prob.problem._id].penalty) }}
                   </p>
@@ -123,12 +123,13 @@
         getProblemScore(team, prob) {
           const result = team.results[prob.problem._id];
           if(prob.scoring.hasWeight()) {
+            let scoreString = "";
             if(this.isAc(team, prob))
-              return `${result.score}`;
+              scoreString = `${result.score}`;
             else if(this.isWa(team, prob))
-              return "0";
-            
-            return "";
+              scoreString = "0";
+
+            return scoreString;
           }
 
           if (this.isAc(team, prob)) {
@@ -139,6 +140,14 @@
             return `-${result.fails}`;
     
           return "";
+        },
+        getProblemWeightedFails(team, prob) {
+          const result = team.results[prob.problem._id];
+          if(prob.scoring.hasWeight() && result.fails > 0) {
+            return `(${result.fails})`;
+          } else {
+            return "";
+          }
         },
         lighten(t) {
           return Helper.lighten(t);

@@ -176,6 +176,11 @@ body, html {
     color: red;
     background-color: rgba(255, 164, 156, 0.4) !important;
   }
+
+  .fails {
+    color: red;
+    @extend .ju-secondary-text;
+  }
 }
 
 /* text related CSS */
