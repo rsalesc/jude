@@ -34,7 +34,7 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item" v-if="hasStarted() || true">
+          <div class="navbar-item" v-if="!isAdmin()">
             <div class="field">
               <p class="control">
                 <a class="button is-primary" @click="submitModal.active = true">
@@ -112,6 +112,7 @@
       computed: {
         ...Helper.mapModuleState("main", [
           "user",
+          "userObject",
           "rawContest",
           "rawSubmissions",
           "rawTeams",
@@ -129,6 +130,12 @@
         ])
       },
       methods: {
+        getSelf() {
+          return this.userObject;
+        },
+        isAdmin() {
+          return this.getSelf().role === "admin";
+        },
         getRemainingTime() {
           return Helper.getRemainingTime(this.rawContest);
         },

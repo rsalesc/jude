@@ -28,7 +28,7 @@
                 <b-icon size="is-small" icon="file-text"></b-icon>
               </a>
             </b-tooltip>
-            <b-tooltip label="Quick submit">
+            <b-tooltip label="Quick submit" v-if="!isAdmin()">
               <a class="button is-primary is-small" @click="quickSubmit(prob)">
                 <b-icon size="is-small" icon="send"></b-icon>
               </a>
@@ -65,12 +65,21 @@
             };
         },
         computed: {
+            ...Helper.mapModuleState("main", [
+              "userObject"
+            ]),
             ...mapGetters([
                 "problems",
                 "my"
             ])
         },
         methods: {
+            getSelf() {
+              return this.userObject;         
+            },
+            isAdmin() {
+              return this.getSelf().role === "admin";
+            },
             isPending(prob){
                 return prob.pending && !prob.solved;
             },
