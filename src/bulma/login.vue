@@ -9,10 +9,12 @@
         </header>
         <div class="card-content">
           <b-field label="Username">
-            <b-input v-model="handle" placeholder="Type your handle here" icon="user"></b-input>
+            <b-input v-model="handle" placeholder="Type your handle here" icon="user"
+            @keyup.enter.native="formLogin()"></b-input>
           </b-field>
           <b-field label="Password">
-            <b-input v-model="password" type="password" placeholder="ssshhh!" icon="lock"></b-input>
+            <b-input v-model="password" type="password" placeholder="ssshhh!" icon="lock"
+            @keyup.enter.native="formLogin()"></b-input>
           </b-field>
         </div>
         <div class="card-footer">
