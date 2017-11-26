@@ -2882,10 +2882,28 @@ var Scoring = function () {
   }
 
   (0, _createClass3.default)(Scoring, [{
-    key: "solved",
+    key: "isTaskValid",
 
 
     // eslint-disable-next-line no-unused-vars
+    value: function isTaskValid(tk) {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      throw new Error("Function not implemented in this class");
+    }
+
+    // eslint-disable-next-line no-unused-vars
+
+  }, {
+    key: "solved",
     value: function solved(obj) {
       throw new Error("Function not implemented in this class");
     }
@@ -2965,6 +2983,11 @@ var Scoring = function () {
     // eslint-disable-next-line no-unused-vars
 
   }, {
+    key: "mergeEvaluations",
+    value: function mergeEvaluations(evals) {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
     key: "task",
     get: function get() {
       return this._task;
@@ -2973,29 +2996,6 @@ var Scoring = function () {
     key: "opts",
     get: function get() {
       return this._opts;
-    }
-
-    // eslint-disable-next-line no-unused-vars
-
-  }], [{
-    key: "isTaskValid",
-    value: function isTaskValid(tk) {
-      throw new Error("Function not implemented in this class");
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      throw new Error("Function not implemented in this class");
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      throw new Error("Function not implemented in this class");
-    }
-  }, {
-    key: "mergeEvaluations",
-    value: function mergeEvaluations(evals) {
-      throw new Error("Function not implemented in this class");
     }
   }]);
   return Scoring;
@@ -3010,6 +3010,23 @@ var ProductScoring = function (_Scoring) {
   }
 
   (0, _createClass3.default)(ProductScoring, [{
+    key: "isTaskValid",
+
+    // eslint-disable-next-line no-unused-vars
+    value: function isTaskValid(tk) {
+      return true;
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      return true;
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      return true;
+    }
+  }, {
     key: "solved",
     value: function solved(obj) {
       return obj.score === this.task.getWeight();
@@ -3115,23 +3132,6 @@ var ProductScoring = function (_Scoring) {
         score: 0, penalty: 0, affect: false, fails: fails
       };
     }
-  }], [{
-    key: "isTaskValid",
-
-    // eslint-disable-next-line no-unused-vars
-    value: function isTaskValid(tk) {
-      return true;
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      return true;
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      return true;
-    }
   }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
@@ -3155,6 +3155,23 @@ var SubtaskScoring = function (_Scoring2) {
   }
 
   (0, _createClass3.default)(SubtaskScoring, [{
+    key: "isTaskValid",
+
+    // eslint-disable-next-line no-unused-vars
+    value: function isTaskValid(tk) {
+      return true;
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      return true;
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      return true;
+    }
+  }, {
     key: "solved",
     value: function solved(obj) {
       return obj.score > 0;
@@ -3253,23 +3270,6 @@ var SubtaskScoring = function (_Scoring2) {
         score: 0, penalty: 0, affect: false, fails: fails
       };
     }
-  }], [{
-    key: "isTaskValid",
-
-    // eslint-disable-next-line no-unused-vars
-    value: function isTaskValid(tk) {
-      return true;
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      return true;
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      return true;
-    }
   }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
@@ -3294,6 +3294,23 @@ var IcpcScoring = function (_Scoring3) {
   }
 
   (0, _createClass3.default)(IcpcScoring, [{
+    key: "isTaskValid",
+
+    // eslint-disable-next-line no-unused-vars
+    value: function isTaskValid(tk) {
+      return true;
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      return false;
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      return true;
+    }
+  }, {
     key: "solved",
     value: function solved(obj) {
       return obj.score > 0;
@@ -3398,23 +3415,6 @@ var IcpcScoring = function (_Scoring3) {
       return {
         score: 0, penalty: 0, affect: false, fails: fails
       };
-    }
-  }], [{
-    key: "isTaskValid",
-
-    // eslint-disable-next-line no-unused-vars
-    value: function isTaskValid(tk) {
-      return true;
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      return false;
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      return true;
     }
   }, {
     key: "mergeEvaluations",

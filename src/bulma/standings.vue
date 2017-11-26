@@ -122,7 +122,7 @@
         },
         getProblemScore(team, prob) {
           const result = team.results[prob.problem._id];
-          if(prob.scoringClass.hasWeight()) {
+          if(prob.scoring.hasWeight()) {
             if(this.isAc(team, prob))
               return `${result.score}`;
             else if(this.isWa(team, prob))

@@ -25,15 +25,15 @@ class Scoring {
   }
 
   // eslint-disable-next-line no-unused-vars
-  static isTaskValid(tk) {
+   isTaskValid(tk) {
     throw new Error("Function not implemented in this class");
   }
 
-  static hasWeight() {
+   hasWeight() {
     throw new Error("Function not implemented in this class");
   }
 
-  static hasPenalty() {
+   hasPenalty() {
     throw new Error("Function not implemented in this class");
   }
 
@@ -83,22 +83,22 @@ class Scoring {
   }
 
   // eslint-disable-next-line no-unused-vars
-  static mergeEvaluations(evals) {
+   mergeEvaluations(evals) {
     throw new Error("Function not implemented in this class");
   }
 }
 
 class ProductScoring extends Scoring {
   // eslint-disable-next-line no-unused-vars
-  static isTaskValid(tk) {
+   isTaskValid(tk) {
     return true;
   }
 
-  static hasWeight() {
+   hasWeight() {
     return true;
   }
 
-  static hasPenalty() {
+   hasPenalty() {
     return true;
   }
 
@@ -163,7 +163,7 @@ class ProductScoring extends Scoring {
     };
   }
 
-  static mergeEvaluations(evals) {
+   mergeEvaluations(evals) {
     return evals.reduce((old, cur) => ({
       score: old.score + cur.score,
       penalty: old.penalty + cur.penalty
@@ -173,15 +173,15 @@ class ProductScoring extends Scoring {
 
 class SubtaskScoring extends Scoring {
   // eslint-disable-next-line no-unused-vars
-  static isTaskValid(tk) {
+   isTaskValid(tk) {
     return true;
   }
 
-  static hasWeight() {
+   hasWeight() {
     return true;
   }
 
-  static hasPenalty() {
+   hasPenalty() {
     return true;
   }
 
@@ -259,7 +259,7 @@ class SubtaskScoring extends Scoring {
     };
   }
 
-  static mergeEvaluations(evals) {
+   mergeEvaluations(evals) {
 
     return evals.reduce((old, cur) => ({
       score: old.score + cur.score,
@@ -270,15 +270,15 @@ class SubtaskScoring extends Scoring {
 
 class IcpcScoring extends Scoring {
   // eslint-disable-next-line no-unused-vars
-  static isTaskValid(tk) {
+   isTaskValid(tk) {
     return true;
   }
 
-  static hasWeight() {
+   hasWeight() {
     return false;
   }
 
-  static hasPenalty() {
+   hasPenalty() {
     return true;
   }
 
@@ -343,7 +343,7 @@ class IcpcScoring extends Scoring {
     };
   }
 
-  static mergeEvaluations(evals) {
+   mergeEvaluations(evals) {
     return evals.reduce((old, cur) => ({
       score: old.score + cur.score,
       penalty: old.penalty + cur.penalty

@@ -25,6 +25,10 @@ export function getScoring(prob, contest) {
   return new (getScoringClass(prob, contest))(new Task(prob.problem.attr));
 }
 
+export function getScoringFromString(sc) {
+  return new (getScoringClassFromString(sc))(null);
+}
+
 export function getHumanVerdict(v) {
   return VerdictConst[v];
 }

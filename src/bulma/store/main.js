@@ -88,11 +88,12 @@ export const computed = {
   my: (state, getters) => {
     if (!state.rawContest || getters.submissions === undefined)
       return { submissions: []};
-    const scoring = Helper.getScoringClassFromString(state.rawContest.scoring);
+    const scoringClass = Helper.getScoringClassFromString(state.rawContest.scoring);
+    const scoring = Helper.getScoringFromString(state.rawContest.scoring);
 
     const submissions = getters.submissions.filter(v => v._creator === state.user);
 
-    return { scoring, submissions, languages: state.rawContest.languages };
+    return { scoring, scoringClass, submissions, languages: state.rawContest.languages };
   },
   submissions: (state, getters) => {
     const contest = state.rawContest;
