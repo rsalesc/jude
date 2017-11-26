@@ -23,6 +23,7 @@ module.exports = () => {
     timeInContest: { type: Number, default: 0 },
     language: String, // add enum validator? maybe not, language set is mutable
     code: String,
+    codeHash: { type: String, default: "" },
     verdict: Schema.Types.Mixed
   });
 
@@ -30,7 +31,7 @@ module.exports = () => {
   SubmissionSchema.index({ contest: 1, problem: 1 });
   SubmissionSchema.index({ contest: 1, time: 1 });
   SubmissionSchema.index({ contest: 1, timeInContest: 1 });
-  SubmissionSchema.index({ problem: 1 });
+  SubmissionSchema.index({ problem: 1, _creator: 1 });
   SubmissionSchema.index({ _creator: 1 });
 
   SubmissionSchema.pre("save", function (next) {

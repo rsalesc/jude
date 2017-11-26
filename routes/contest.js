@@ -8,6 +8,7 @@ const express = require("express");
 const router = express.Router();
 
 const models = require("../models/");
+const sha256 = require("sha256");
 
 const ContestProblemSelection
     = "code name _id attr.weight attr.author attr.datasets attr.scoring attr.limits attr.blockedLanguages";
@@ -17,6 +18,10 @@ const {
 
 function handleContestError(err, req, res, next) {
   res.status(400).json({ error: err.toString() });
+}
+
+function getCodeHash(st) {
+
 }
 
 function getUserContest(user) {
@@ -60,6 +65,17 @@ function filterPrivateUser(user) {
 
 function isAdmin(req) {
   return req.auth2.roles.indexOf("admin") !== -1;
+}
+
+function checkForDuplicateSubmission(user, contest, problem, hashCode) {
+  return new Promise((resolve, reject) => {
+    Submission.findOne({ _creator: user, contest, problem, codeHash: hashCode }).exec((err, result) => {
+      if(err)
+        return reject(err);
+
+      resolve(result != null);
+    })
+  });
 }
 
 // ensure user is auth'ed
@@ -143,7 +159,7 @@ router.post("/submit", (req, res, next) => {
     if (!contest)
       return handleContestError("contest not found", req, res);
 
-    Problem.findById(req.body.problem).exec((err, problem) => {
+    Problem.findById(req.body.problem).exec(async (err, problem) => {
       if (err)
         return handleContestError(err, req, res);
       if (!problem || contest.problems.findIndex(x => x.problem == req.body.problem) === -1)
@@ -151,6 +167,15 @@ router.post("/submit", (req, res, next) => {
 
       if (!contest.hasStarted())
         return handleContestError("contest has not started", req, res);
+
+      let hashCode = sha256(req.body.code);
+
+      try {
+        if(await checkForDuplicateSubmission(user._id, contest._id, req.body.problem, hashCode))
+          return handleContestError("you can't submit the same code twice", req, res);
+      } catch(ex) {
+        return handleContestError(ex, req, res);
+      }
 
       let timeInContest = contest.getTimeInContest();
 
@@ -172,6 +197,7 @@ router.post("/submit", (req, res, next) => {
         timeInContest,
         language: req.body.language,
         code: req.body.code,
+        codeHash: hashCode,
         verdict
       });
 
