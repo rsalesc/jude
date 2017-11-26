@@ -53,13 +53,6 @@
               <span>Control Panel</span>
             </a>
             <div class="navbar-dropdown">
-              <span class="navbar-item">
-                <b-switch size="is-small"
-                :value="config.autoFetchStandings"
-                @change="setAutoFetch">
-                  Auto-Refresh
-                </b-switch>
-              </span>
               <a class="navbar-item" @click="doLogout()">Logout</a>
             </div>
           </div>
@@ -96,10 +89,10 @@
         this.countdownTimer = window.setInterval(() => {
           this.countdownString = this.getRemainingTime();
         }, 1000);
-        this.fetchTimer = window.setInterval(async () => this.autoFetch(), 5000);
+        // this.fetchTimer = window.setInterval(async () => this.autoFetch(), 5000);
       },
       beforeDestroy() {
-        if (!this.fetchTimer)
+        if (this.fetchTimer)
           window.clearInterval(this.fetchTimer);
         if (this.countdownTimer)
           window.clearInterval(this.countdownTimer);
