@@ -139,18 +139,16 @@ class ProductScoring extends Scoring {
 
     let fails = 0;
     let penalty = 0;
-    const { opts } = this;
 
     for (const submission of submissions) {
       const evaluation = this.eval(submission.verdict);
       if (evaluation.affect) {
         if (evaluation.score === 0) {
-          penalty += opts.penalty || 20;
           fails++;
         } else {
           return {
             score: evaluation.score,
-            penalty: penalty + submission.timeInContest,
+            penalty: submission.timeInContest,
             affect: true,
             fails
           };
@@ -164,14 +162,16 @@ class ProductScoring extends Scoring {
   }
 
    mergeEvaluations(evals) {
+    const { opts } = this;
+
     return evals.reduce((old, cur) => ({
       score: old.score + cur.score,
-      penalty: old.penalty + cur.penalty
+      penalty: old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
     }), { score: 0, penalty: 0 });
   }
 }
 
-class SubtaskScoring extends Scoring {
+class SubtaskSumScoring extends Scoring {
   // eslint-disable-next-line no-unused-vars
    isTaskValid(tk) {
     return true;
@@ -233,7 +233,6 @@ class SubtaskScoring extends Scoring {
     }
 
     let fails = 0;
-    const { opts } = this;
 
     for (let i = 0; i < bestIndex; i++) {
       const submission = submissions[i];
@@ -260,11 +259,25 @@ class SubtaskScoring extends Scoring {
   }
 
    mergeEvaluations(evals) {
+    const { opts } = this;
 
     return evals.reduce((old, cur) => ({
       score: old.score + cur.score,
-      penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails // TODO: change
+      penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 1)
     }), { score: 0, penalty: 0 });
+  }
+}
+
+class SubtaskMaxScoring extends SubtaskSumScoring {
+  mergeEvaluations(evals) {
+    const { opts } = this;
+
+    const maxTime = evals.reduce((old, cur) => Math.max(old, cur.affect ? cur.penalty : 0), 0);
+
+    return evals.reduce((old, cur) => ({
+      score: old.score + cur.score,
+      penalty: !cur.affect ? old.penalty : old.penalty + cur.fails * (opts.penalty || 1)
+    }), { score: 0, penalty: maxTime });
   }
 }
 
@@ -318,19 +331,16 @@ class IcpcScoring extends Scoring {
     submissions.sort(submissionComparator);
 
     let fails = 0;
-    let penalty = 0;
-    const { opts } = this;
 
     for (const submission of submissions) {
       const evaluation = this.eval(submission.verdict);
       if (evaluation.affect) {
         if (evaluation.score === 0) {
-          penalty += opts.penalty || 20;
           fails++;
         } else {
           return {
             score: 1,
-            penalty: penalty + submission.timeInContest,
+            penalty: submission.timeInContest,
             affect: true,
             fails
           };
@@ -344,9 +354,11 @@ class IcpcScoring extends Scoring {
   }
 
    mergeEvaluations(evals) {
+    const { opts } = this;
+
     return evals.reduce((old, cur) => ({
       score: old.score + cur.score,
-      penalty: old.penalty + cur.penalty
+      penalty: old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
     }), { score: 0, penalty: 0 });
   }
 }
@@ -355,5 +367,7 @@ module.exports = {
   _Scoring: Scoring,
   ProductScoring,
   IcpcScoring,
-  SubtaskScoring
+  SubtaskMaxScoring,
+  SubtaskSumScoring,
+  SubtaskScoring: SubtaskMaxScoring // Maintaining backward-compatibility
 };

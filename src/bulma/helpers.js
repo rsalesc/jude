@@ -14,6 +14,11 @@ export function getScoringString(prob, contest) {
 }
 
 export function getScoringClassFromString(sc) {
+  if(!Scoring.hasOwnProperty(sc)) {
+    console.log(`There is no such thing like ${sc} in scoring package. Falling back to ProductScoring.`);
+    return Scoring["ProductScoring"];
+  }
+
   return Scoring[sc];
 }
 

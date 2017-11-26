@@ -93,7 +93,8 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
 
   const scorings = [
     { label: "ICPC Scoring", value: "IcpcScoring" },
-    { label: "Subtask Scoring", value: "SubtaskScoring" },
+    { label: "Subtask Scoring (add penalties)", value: "SubtaskSumScoring" },
+    { label: "Subtask Scoring (max penalties)", value: "SubtaskMaxScoring" },
     { label: "Weighted Scoring", value: "ProductScoring" }
   ];
 

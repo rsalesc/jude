@@ -86,7 +86,7 @@ export const computed = {
     return problems;
   },
   my: (state, getters) => {
-    if (!state.rawContest || getters.submissions === undefined)
+    if (!state.rawContest || !state.rawContest.scoring || getters.submissions === undefined)
       return { submissions: []};
     const scoringClass = Helper.getScoringClassFromString(state.rawContest.scoring);
     const scoring = Helper.getScoringFromString(state.rawContest.scoring);

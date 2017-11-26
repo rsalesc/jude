@@ -849,7 +849,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
      */
   var roles = [{ label: "Contestant", value: "contestant" }, { label: "Admin", value: "admin" }];
 
-  var scorings = [{ label: "ICPC Scoring", value: "IcpcScoring" }, { label: "Subtask Scoring", value: "SubtaskScoring" }, { label: "Weighted Scoring", value: "ProductScoring" }];
+  var scorings = [{ label: "ICPC Scoring", value: "IcpcScoring" }, { label: "Subtask Scoring (add penalties)", value: "SubtaskSumScoring" }, { label: "Subtask Scoring (max penalties)", value: "SubtaskMaxScoring" }, { label: "Weighted Scoring", value: "ProductScoring" }];
 
   user.listView().fields([nga.field("_id").label("#").isDetailLink(true).editable(false), nga.field("handle").validation({
     required: true,
