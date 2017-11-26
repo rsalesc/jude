@@ -74,13 +74,13 @@ module.exports = require("path");
 /* 1 */
 /***/ (function(module, exports) {
 
-module.exports = require("mongoose");
+module.exports = require("babel-runtime/core-js/get-iterator");
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/get-iterator");
+module.exports = require("mongoose");
 
 /***/ }),
 /* 3 */
@@ -110,7 +110,7 @@ module.exports = require("express");
 /* eslint-disable */
 var path = __webpack_require__(0),
     fs = __webpack_require__(20),
-    mongoose = __webpack_require__(1);
+    mongoose = __webpack_require__(2);
 // files = fs.readdirSync(__dirname);
 
 __webpack_require__(26);
@@ -168,7 +168,7 @@ var _keys = __webpack_require__(9);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -499,7 +499,7 @@ var _extends3 = _interopRequireDefault(_extends2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mongoose = __webpack_require__(1);
+var mongoose = __webpack_require__(2);
 var models = __webpack_require__(6);
 var crypto = __webpack_require__(80);
 
@@ -782,6 +782,10 @@ module.exports = require("fs");
 "use strict";
 
 
+var _getIterator2 = __webpack_require__(1);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
 var _regenerator = __webpack_require__(3);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -806,66 +810,144 @@ var Submission = models.Submission;
 var SubmissionNoCode = "_id _creator contest problem language code verdict";
 
 function handleSubmissionError(err, req, res, next) {
-  res.status(400).json([err]);
+    res.status(400).json([err]);
 }
 
 // TODO: set back to IN_QUEUE status
 router.post("/:id/rejudge", function (req, res, next) {
-  if (!req.params.id) return handleSubmissionError("no rejudge id provided");
+    if (!req.params.id) return handleSubmissionError("no rejudge id provided", req, res);
 
-  Submission.findByIdAndUpdate(req.params.id, {}, { new: true }, function (err, sub) {
-    if (err) return handleSubmissionError(err);
+    Submission.findByIdAndUpdate(req.params.id, {}, { new: true }, function (err, sub) {
+        if (err) return handleSubmissionError(err, req, res);
 
-    sub.populate("problem", function () {
-      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(err, sub) {
-        return _regenerator2.default.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                if (!err) {
-                  _context.next = 2;
-                  break;
-                }
+        sub.populate("problem", function () {
+            var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(err, sub) {
+                var verdict, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, data;
 
-                return _context.abrupt("return", handleSubmissionError(err));
+                return _regenerator2.default.wrap(function _callee2$(_context2) {
+                    while (1) {
+                        switch (_context2.prev = _context2.next) {
+                            case 0:
+                                if (!err) {
+                                    _context2.next = 2;
+                                    break;
+                                }
 
-              case 2:
-                _context.prev = 2;
-                _context.next = 5;
-                return judeQueue.add({
-                  id: sub.problem._id,
-                  subid: sub._id,
-                  fid: sub.problem.fid,
-                  code: sub.code,
-                  lang: sub.language
-                });
+                                return _context2.abrupt("return", handleSubmissionError(err, req, res));
 
-              case 5:
-                _context.next = 10;
-                break;
+                            case 2:
+                                _context2.prev = 2;
+                                _context2.next = 5;
+                                return judeQueue.add({
+                                    id: sub.problem._id,
+                                    subid: sub._id,
+                                    fid: sub.problem.fid,
+                                    code: sub.code,
+                                    lang: sub.language
+                                });
 
-              case 7:
-                _context.prev = 7;
-                _context.t0 = _context["catch"](2);
-                return _context.abrupt("return", handleSubmissionError(_context.t0, req, res));
+                            case 5:
+                                _context2.next = 10;
+                                break;
 
-              case 10:
+                            case 7:
+                                _context2.prev = 7;
+                                _context2.t0 = _context2["catch"](2);
+                                return _context2.abrupt("return", handleSubmissionError(_context2.t0, req, res));
 
-                res.json({ success: "rejudged" });
+                            case 10:
+                                verdict = {};
+                                _iteratorNormalCompletion = true;
+                                _didIteratorError = false;
+                                _iteratorError = undefined;
+                                _context2.prev = 14;
 
-              case 11:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, undefined, [[2, 7]]);
-      }));
+                                for (_iterator = (0, _getIterator3.default)(sub.problem.attr.datasets); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                                    data = _step.value;
 
-      return function (_x, _x2) {
-        return _ref.apply(this, arguments);
-      };
-    }());
-  });
+                                    verdict[data.name] = {
+                                        verdict: "VERDICT_INQ", passed: -1, score: 0, info: ""
+                                    };
+                                }
+
+                                _context2.next = 22;
+                                break;
+
+                            case 18:
+                                _context2.prev = 18;
+                                _context2.t1 = _context2["catch"](14);
+                                _didIteratorError = true;
+                                _iteratorError = _context2.t1;
+
+                            case 22:
+                                _context2.prev = 22;
+                                _context2.prev = 23;
+
+                                if (!_iteratorNormalCompletion && _iterator.return) {
+                                    _iterator.return();
+                                }
+
+                            case 25:
+                                _context2.prev = 25;
+
+                                if (!_didIteratorError) {
+                                    _context2.next = 28;
+                                    break;
+                                }
+
+                                throw _iteratorError;
+
+                            case 28:
+                                return _context2.finish(25);
+
+                            case 29:
+                                return _context2.finish(22);
+
+                            case 30:
+                                sub.verdict = verdict;
+                                sub.save(function () {
+                                    var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(err2) {
+                                        return _regenerator2.default.wrap(function _callee$(_context) {
+                                            while (1) {
+                                                switch (_context.prev = _context.next) {
+                                                    case 0:
+                                                        if (!err2) {
+                                                            _context.next = 2;
+                                                            break;
+                                                        }
+
+                                                        return _context.abrupt("return", handleSubmissionError(err2, req, res));
+
+                                                    case 2:
+
+                                                        res.json({ success: "rejudged" });
+
+                                                    case 3:
+                                                    case "end":
+                                                        return _context.stop();
+                                                }
+                                            }
+                                        }, _callee, undefined);
+                                    }));
+
+                                    return function (_x3) {
+                                        return _ref2.apply(this, arguments);
+                                    };
+                                }());
+
+                            case 32:
+                            case "end":
+                                return _context2.stop();
+                        }
+                    }
+                }, _callee2, undefined, [[2, 7], [14, 18, 22, 30], [23,, 25, 29]]);
+            }));
+
+            return function (_x, _x2) {
+                return _ref.apply(this, arguments);
+            };
+        }());
+    });
 });
 
 module.exports = router;
@@ -882,7 +964,7 @@ var _keys = __webpack_require__(9);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -1911,7 +1993,7 @@ module.exports = require("babel-runtime/core-js/object/assign");
 "use strict";
 
 
-var mongoose = __webpack_require__(1);
+var mongoose = __webpack_require__(2);
 var MongoQueue2 = __webpack_require__(27);
 var weed = __webpack_require__(49);
 
@@ -1946,7 +2028,7 @@ module.exports = require("mongo-queue2");
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -1957,7 +2039,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var path = __webpack_require__(0);
-var mongoose = __webpack_require__(1);
+var mongoose = __webpack_require__(2);
 var Schema = mongoose.Schema;
 
 // TODO: add creation time (with a plugin)
@@ -2067,7 +2149,7 @@ var _map = __webpack_require__(32);
 
 var _map2 = _interopRequireDefault(_map);
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -2765,7 +2847,7 @@ var _keys = __webpack_require__(9);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -3091,7 +3173,6 @@ var SubtaskScoring = function (_Scoring2) {
     key: "eval",
     value: function _eval(verdicts) {
       var res = 0;
-      var index = 0;
 
       var _iteratorNormalCompletion4 = true;
       var _didIteratorError4 = false;
@@ -3108,8 +3189,7 @@ var SubtaskScoring = function (_Scoring2) {
             };
           }
 
-          res += verdict.verdict === "VERDICT_AC" ? this.task.getDataset(index).percentage : 0;
-          index++;
+          res += verdict.verdict === "VERDICT_AC" ? this.task.getDatasetFromName(key).percentage : 0;
         }
       } catch (err) {
         _didIteratorError4 = true;
@@ -3193,13 +3273,11 @@ var SubtaskScoring = function (_Scoring2) {
   }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
-      var opts = this.opts;
-
 
       return evals.reduce(function (old, cur) {
         return {
           score: old.score + cur.score,
-          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 1)
+          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails // TODO: change
         };
       }, { score: 0, penalty: 0 });
     }
@@ -3378,7 +3456,7 @@ var _slicedToArray2 = __webpack_require__(17);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -3685,7 +3763,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var express = __webpack_require__(5);
 var session = __webpack_require__(39);
 var MongoStore = __webpack_require__(40)(session);
-var mongoose = __webpack_require__(1);
+var mongoose = __webpack_require__(2);
 var path = __webpack_require__(0);
 var favicon = __webpack_require__(41);
 var logger = __webpack_require__(42);
@@ -3948,7 +4026,7 @@ var express = __webpack_require__(5);
 var router = express.Router();
 var path = __webpack_require__(0);
 
-var mongoose = __webpack_require__(1);
+var mongoose = __webpack_require__(2);
 var models = __webpack_require__(6);
 var Contest = models.Contest,
     User = models.User;
@@ -4056,7 +4134,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 14/07/16.
  */
-var mongoose = __webpack_require__(1);
+var mongoose = __webpack_require__(2);
 var deepPopulate = __webpack_require__(52)(mongoose);
 var Schema = mongoose.Schema;
 
@@ -4171,7 +4249,7 @@ module.exports = require("mongoose-deep-populate");
 /**
  * Created by rsalesc on 14/07/16.
  */
-var mongoose = __webpack_require__(1);
+var mongoose = __webpack_require__(2);
 var Schema = mongoose.Schema;
 var sha256 = __webpack_require__(54);
 
@@ -4246,7 +4324,7 @@ module.exports = require("sha256");
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -4256,7 +4334,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/07/16.
  */
 
-var mongoose = __webpack_require__(1);
+var mongoose = __webpack_require__(2);
 var Schema = mongoose.Schema;
 
 
@@ -4337,7 +4415,7 @@ module.exports = function () {
 
 var express = __webpack_require__(5);
 var path = __webpack_require__(0);
-var mongoose = __webpack_require__(1);
+var mongoose = __webpack_require__(2);
 // eslint-disable-next-line new-cap
 var router = express.Router();
 var models = __webpack_require__(6);
@@ -4607,7 +4685,7 @@ module.exports = require("es6-promisify");
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -4750,7 +4828,7 @@ var Task = function () {
   }, {
     key: "getWeight",
     value: function getWeight() {
-      return this.weight || 1;
+      return this.weight || this.attr.weight || 1;
     }
   }, {
     key: "getDataset",
@@ -4883,14 +4961,14 @@ var _keys = __webpack_require__(9);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var path = __webpack_require__(0);
-var mongoose = __webpack_require__(1);
+var mongoose = __webpack_require__(2);
 var grader = __webpack_require__(71);
 var precheck = __webpack_require__(79);
 var auth2 = __webpack_require__(18);
@@ -5237,7 +5315,7 @@ module.exports = require("babel-runtime/core-js/object/entries");
 "use strict";
 /* WEBPACK VAR INJECTION */(function(module) {
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -6264,21 +6342,9 @@ var Evaluation = {
 
             case 27:
               _context5.next = 29;
-              return iso.fileExists("state");
-
-            case 29:
-              if (_context5.sent) {
-                _context5.next = 31;
-                break;
-              }
-
-              throw new Error("State file not found");
-
-            case 31:
-              _context5.next = 33;
               return iso.removeFile(input);
 
-            case 33:
+            case 29:
               iso.dirs.pop();
               iso.dirs.pop();
               iso.setEnv = oldEnv;
@@ -6289,7 +6355,7 @@ var Evaluation = {
 
               return _context5.abrupt("return", res);
 
-            case 41:
+            case 37:
             case "end":
               return _context5.stop();
           }
@@ -6995,7 +7061,7 @@ var _keys = __webpack_require__(9);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -8753,7 +8819,7 @@ var _keys = __webpack_require__(9);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _getIterator2 = __webpack_require__(2);
+var _getIterator2 = __webpack_require__(1);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -8901,7 +8967,7 @@ module.exports = require("crypto");
 
 
 var path = __webpack_require__(0);
-var mongoose = __webpack_require__(1);
+var mongoose = __webpack_require__(2);
 var passport = __webpack_require__(35);
 var auth2 = __webpack_require__(18);
 
