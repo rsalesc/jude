@@ -202,3 +202,7 @@ export function getTooltipText(s) {
 export function hasContestStarted(contest) {
   return new Date(contest.start_time) <= Date.now();
 }
+
+export function hasContestEnded(contest) {
+  return new Date(contest.end_time) <= Date.now();
+}

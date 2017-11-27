@@ -59,6 +59,7 @@
             </td>
             <td class="ju-problem-cell"
               v-for="prob in problems" :key="prob.problem._id"
+              @dblclick.stop="showScore(team, prob)"
               :class="{'ac-color': isAc(team, prob), 'wa-color': isWa(team, prob)}">
               <span v-if="prob.scoring.attempted(team.results[prob.problem._id])">
                   <p> {{ getProblemScore(team, prob) }}  <span class="fails">{{ getProblemWeightedFails(team, prob) }}</span></p>
@@ -71,6 +72,12 @@
         </tbody>
       </table>
     </div>
+
+    <b-modal
+      :component="SubmissionsModalComponent"
+      :active.sync="submissionsModal.active"
+      :props="submissionsModal.props">
+    </b-modal>
   </div>
 </template>
 
@@ -79,14 +86,27 @@
     import { types } from "./store/";
     import { mapGetters } from "vuex";
     import BulmaUtils from "./bulmutils";
+    import SubmissionsModalComponent from "./submissions-modal.vue";
 
     export default {
       data() {
-        return { renderedSubmissions: [] };
+        return {
+          SubmissionsModalComponent,
+          submissionsModal: {
+            active: false,
+            props: {
+              team: null,
+              problem: null,
+              shownSubmissions: null
+            }
+          }
+        };
       },
       computed: {
         ...Helper.mapModuleState("main", [
-          "config"
+          "config",
+          "rawContest",
+          "userObject"
         ]),
         ...mapGetters([
           "problems",
@@ -96,6 +116,12 @@
         ])
       },
       methods: {
+        getSelf() {
+          return this.userObject;
+        },
+        isAdmin() {
+          return this.getSelf().role === "admin";
+        },
         isWa(team, prob) {
           const result = team.results[prob.problem._id];
           return prob.scoring.attempted(result) && !prob.scoring.solved(result);
@@ -152,21 +178,20 @@
         lighten(t) {
           return Helper.lighten(t);
         },
-        showScore(id, problem) {
-          const modal = $("#modal-standings");
-          const group = this.groupedSubs[id];
+        showScore(team, prob) {
+          const group = this.groupedSubs[team._id];
           if (!group)
             return;
-          this.renderedSubmissions = group.filter(x => x.problem === problem._id);
-          // modal.openModal();
-        },
-        async showCode(sub) {
-          const loggedin = await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
-          if (!loggedin)
-            this.$router.push("/");
+          const renderedSubmissions = group.filter(x => x.problem === prob.problem._id);
+          this.submissionsModal.props = {
+            team,
+            problem: prob,
+            shownSubmissions: renderedSubmissions
+          };
+
+          this.submissionsModal.active = true;
         },
         getTooltipText() {
-          return "";
           return Helper.getTooltipText(`Click a problem/team cell to show details about the tries of a team for that problem.`);
         },
         getTableClasses() {
