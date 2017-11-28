@@ -1,3 +1,31 @@
+import Papa from 'papaparse';
+
+function correctlyParse(content) {
+  try {
+    return JSON.parse(content);
+  } catch (ex) {
+    let parsed = Papa.parse(content, { delimiter: ":", encoding: "utf-8", skipEmptyLines: true });
+    if(!parsed.data)
+      return { users: [] };
+
+    for(const row of parsed.data) {
+      if(row.length != 3) {
+        return { users: [] };
+      }
+    }
+
+    return {
+      override: true,
+      users: parsed.data.map(x => ({
+        handle: x[0],
+        password: x[1],
+        name: x[2],
+        role: "contestant"
+      }))
+    };
+  }
+}
+
 function addUsersController($stateParams, notification, Restangular) {
   this.contestId = $stateParams.contestId;
   this.restangular = Restangular;
@@ -18,8 +46,10 @@ function addUsersController($stateParams, notification, Restangular) {
 
 addUsersController.inject = ["$stateParams", "notification", "Restangular"];
 addUsersController.prototype.submit = function () {
-  this.restangular.one("contests", this.contestId).customPOST(JSON.parse(this.content), "addUsers")
-    .then(() => this.notification.log(`Users were added.`, { addnCls: "humane-flatty-success" }))
+  const parsed = correctlyParse(this.content);
+  const len = !parsed.users ? 0 : parsed.users.length;
+  this.restangular.one("contests", this.contestId).customPOST(parsed, "addUsers")
+    .then(() => this.notification.log(`${len} users were added.`, { addnCls: "humane-flatty-success" }))
     .catch(e => this.notification.log("A problem occurred, please try again.", { addnCls: "humane-flatty-error" }) && console.error(e));
 };
 

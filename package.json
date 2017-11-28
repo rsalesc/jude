@@ -46,6 +46,7 @@
     "morgan": "~1.6.1",
     "multer": "0.1.8",
     "node-wildcard": "0.0.9",
+    "papaparse": "^4.3.6",
     "passport": "^0.3.2",
     "passport-custom": "^1.0.5",
     "passport-local": "^1.0.0",
