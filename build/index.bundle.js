@@ -4210,7 +4210,8 @@ module.exports = function () {
                 message: 'Contest cannot have repeated letters and problems must be an array'
             }
         },
-        hidden: Boolean
+        hidden: Boolean,
+        upseeing: { type: Boolean, required: true, default: false }
     });
 
     ContestSchema.index({ name: 1 });
@@ -5423,7 +5424,7 @@ router.get("/submission/:id", function (req, res, next) {
       if (err) return handleContestError(err, req, res, next);
       if (!sub) return handleContestError("submission not found", req, res, next);
 
-      if (!sub._creator.equals(req.auth2.user._id) && !contest.hasEnded() && !isAdmin(req)) return res.json(filterOutSub(sub));
+      if (!sub._creator.equals(req.auth2.user._id) && !(contest.hasEnded() && contest.upseeing) && !isAdmin(req)) return res.json(filterOutSub(sub));
 
       res.json(filterOutPrivateSub(sub));
     });

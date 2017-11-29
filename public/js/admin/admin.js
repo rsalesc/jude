@@ -172,6 +172,8 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
       .choices(scorings)
       .validation({ required: true }),
     nga.field("hidden", "boolean").validation({ required: true }),
+    nga.field("upseeing", "boolean").label("Users can see others codes after the competition")
+      .validation({ required: true }),
     nga.field("problems", "embedded_list").defaultValue([])
       .targetFields([
         nga.field("letter")

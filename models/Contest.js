@@ -40,7 +40,8 @@ module.exports = () => {
                 message: 'Contest cannot have repeated letters and problems must be an array'
             }
         },
-        hidden: Boolean
+        hidden: Boolean,
+        upseeing: {type: Boolean, required: true, default: false}
     });
 
     ContestSchema.index({name: 1});

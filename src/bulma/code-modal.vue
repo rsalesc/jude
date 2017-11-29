@@ -38,14 +38,16 @@
             </b-table-column>
           </template>
         </b-table>
-        <hr class="rule">
-        <p class="title is-6">Code</p>
-        <brace
-          :id="braceId"
-          :value="getCodeContent()"
-          style="height: 175px;"
-          :readonly="true"
-          :theme="'github'" :mode="getBraceMode()"></brace>
+        <div v-show="getCodeContent()">
+          <hr class="rule">
+          <p class="title is-6">Code</p>
+          <brace
+            :id="braceId"
+            :value="getCodeContent()"
+            style="height: 175px;"
+            :readonly="true"
+            :theme="'github'" :mode="getBraceMode()"></brace>
+        </div>
       </section>
       <footer class="modal-card-foot">
         <a class="button" @click="close()">Close</a>

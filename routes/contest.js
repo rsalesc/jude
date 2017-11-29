@@ -257,7 +257,7 @@ router.get("/submission/:id", (req, res, next) => {
       if (!sub)
         return handleContestError("submission not found", req, res, next);
 
-      if (!sub._creator.equals(req.auth2.user._id) && !contest.hasEnded() && !isAdmin(req))
+      if (!sub._creator.equals(req.auth2.user._id) && !(contest.hasEnded() && contest.upseeing) && !isAdmin(req))
         return res.json(filterOutSub(sub));
 
 
