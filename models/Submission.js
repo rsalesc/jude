@@ -25,7 +25,7 @@ module.exports = () => {
     code: String,
     codeHash: { type: String, default: "" },
     verdict: Schema.Types.Mixed
-  });
+  }, {timestamps: true});
 
   SubmissionSchema.index({ contest: 1, _creator: 1 });
   SubmissionSchema.index({ contest: 1, problem: 1 });

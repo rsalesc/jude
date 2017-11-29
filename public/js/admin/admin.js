@@ -15,7 +15,7 @@ myApp.config((RestangularProvider) => {
   RestangularProvider.addFullRequestInterceptor((element, operation, what, url, headers, params, httpConfig) => {
     if (operation == "getList") {
       if (params._sortField) {
-        const dir = params._sortDir == "DESC" ? "-" : "";
+        const dir = params._sortDir == "ASC" ? "" : "-";
         params.sort = `${dir}${params._sortField}`;
 
         delete params._sortField;
@@ -123,6 +123,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
       nga.field("contest", "reference")
         .targetEntity(contest)
         .targetField(nga.field("name"))
+        .sortField("createdAt")
         .remoteComplete(false),
       qField(nga)
     ]).listActions([
@@ -137,6 +138,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     nga.field("contest", "reference")
       .targetEntity(contest)
       .targetField(nga.field("name"))
+      .sortField("createdAt")
       .remoteComplete(false)
   ]));
 
@@ -165,7 +167,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     filteredList("users", "{contest: entry.values.id}", "Users"),
     "<ma-add-users size='xs' contest='entry'></ma-add-users>",
     "edit", "delete"
-  ]);
+  ]).sortField("createdAt");
 
   contest.showView().fields(contest.listView().fields().concat([
     nga.field("scoring", "choice")
@@ -186,8 +188,9 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
           .validation({ required: true })
           .targetEntity(problem)
           .targetField(nga.field("name"))
+          .sortField("createdAt")
           .remoteComplete(true, {
-            refreshDelay: 300,
+            refreshDelay: 200,
             searchQuery: search => ({ q: search })
           })
       ])
@@ -226,7 +229,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     "edit",
     "delete",
     filteredList("submissions", "{problem: entry.values.id}", "Submissions")
-  ]);
+  ]).sortField("createdAt");
 
   problem.showView().fields(problem.listView().fields().concat([
     nga.field("attr.limits.memory").label("Memory Limit").editable(false),
@@ -269,18 +272,19 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
       nga.field("problem", "reference")
         .targetEntity(problem)
         .targetField(nga.field("name").map((v, e) => `[${e.code}] ${e.name}`))
+        .sortField("createdAt")
         .remoteComplete(true, {
-          refreshDelay: 300,
+          refreshDelay: 200,
           searchQuery: search => ({ q: search })
         }),
       nga.field("_creator", "reference")
         .targetEntity(user)
         .targetField(nga.field("name").map((v, e) => `[${e.handle}] ${e.name}`))
         .remoteComplete(true, {
-          refreshDelay: 300,
+          refreshDelay: 200,
           searchQuery: search => ({ q: search })
         })
-    ]);
+    ]).sortField("time");
 
   submission.showView().fields(submission.listView().fields().concat([
     nga.field("code", "text"),

@@ -32,7 +32,7 @@ module.exports = () => {
         contest: {type: Schema.Types.ObjectId, ref: 'Contest'},
         unofficial: {type: Boolean, default: false},
         role: {type: String, default: "contestant"}
-    })
+    }, {timestamps: true});
 
     UserSchema.index({handle: 1, contest: 1}, {unique: true});
     UserSchema.index({handle: 'text', name: 'text'}, {

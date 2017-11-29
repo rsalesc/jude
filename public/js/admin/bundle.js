@@ -849,7 +849,7 @@ myApp.config(["RestangularProvider", function (RestangularProvider) {
   RestangularProvider.addFullRequestInterceptor(function (element, operation, what, url, headers, params, httpConfig) {
     if (operation == "getList") {
       if (params._sortField) {
-        var dir = params._sortDir == "DESC" ? "-" : "";
+        var dir = params._sortDir == "ASC" ? "" : "-";
         params.sort = "" + dir + params._sortField;
 
         delete params._sortField;
@@ -923,9 +923,9 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     minlength: 4,
     maxlength: 48,
     required: true
-  }), nga.field("role", "choice").choices(roles).validation({ required: true })]).filters([nga.field("handle"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).remoteComplete(false), (0, _q2.default)(nga)]).listActions(["edit", "delete", (0, _filtered2.default)("submissions", "{_creator: entry.values.id, contest: entry.values.contest}", "Submissions")]);
+  }), nga.field("role", "choice").choices(roles).validation({ required: true })]).filters([nga.field("handle"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").remoteComplete(false), (0, _q2.default)(nga)]).listActions(["edit", "delete", (0, _filtered2.default)("submissions", "{_creator: entry.values.id, contest: entry.values.contest}", "Submissions")]);
 
-  user.showView().fields(user.listView().fields().concat([nga.field("unofficial", "boolean").validation({ required: true }), nga.field("email", "email"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).remoteComplete(false)]));
+  user.showView().fields(user.listView().fields().concat([nga.field("unofficial", "boolean").validation({ required: true }), nga.field("email", "email"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").remoteComplete(false)]));
 
   user.editionView().fields(user.showView().fields(), nga.field("password", "password"));
   user.creationView().fields(user.editionView().fields());
@@ -937,13 +937,13 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     required: true,
     minlength: 4,
     maxlength: 64
-  }), nga.field("start_time", "datetime"), nga.field("end_time", "datetime")]).filters([(0, _q2.default)(nga)]).listActions([(0, _filtered2.default)("submissions", "{contest: entry.values.id}", "Submissions"), (0, _filtered2.default)("users", "{contest: entry.values.id}", "Users"), "<ma-add-users size='xs' contest='entry'></ma-add-users>", "edit", "delete"]);
+  }), nga.field("start_time", "datetime"), nga.field("end_time", "datetime")]).filters([(0, _q2.default)(nga)]).listActions([(0, _filtered2.default)("submissions", "{contest: entry.values.id}", "Submissions"), (0, _filtered2.default)("users", "{contest: entry.values.id}", "Users"), "<ma-add-users size='xs' contest='entry'></ma-add-users>", "edit", "delete"]).sortField("createdAt");
 
   contest.showView().fields(contest.listView().fields().concat([nga.field("scoring", "choice").choices(scorings).validation({ required: true }), nga.field("hidden", "boolean").validation({ required: true }), nga.field("upseeing", "boolean").label("Users can see others codes after the competition").validation({ required: true }), nga.field("problems", "embedded_list").defaultValue([]).targetFields([nga.field("letter").validation({
     required: true,
     pattern: "[A-Z][0-9]*"
-  }), nga.field("color").validation({ required: true }), nga.field("problem", "reference").validation({ required: true }).targetEntity(problem).targetField(nga.field("name")).remoteComplete(true, {
-    refreshDelay: 300,
+  }), nga.field("color").validation({ required: true }), nga.field("problem", "reference").validation({ required: true }).targetEntity(problem).targetField(nga.field("name")).sortField("createdAt").remoteComplete(true, {
+    refreshDelay: 200,
     searchQuery: function searchQuery(search) {
       return { q: search };
     }
@@ -966,7 +966,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     maxlength: 64
   })]);
 
-  problem.listView().fields([nga.field("_id").label("#").editable(false)], problem.creationView().fields(), [nga.field("attr.limits.time").label("Time Limit").editable(false), nga.field("attr.scoring").label("Scoring").editable(false)]).filters([(0, _q2.default)(nga)]).listActions(["edit", "delete", (0, _filtered2.default)("submissions", "{problem: entry.values.id}", "Submissions")]);
+  problem.listView().fields([nga.field("_id").label("#").editable(false)], problem.creationView().fields(), [nga.field("attr.limits.time").label("Time Limit").editable(false), nga.field("attr.scoring").label("Scoring").editable(false)]).filters([(0, _q2.default)(nga)]).listActions(["edit", "delete", (0, _filtered2.default)("submissions", "{problem: entry.values.id}", "Submissions")]).sortField("createdAt");
 
   problem.showView().fields(problem.listView().fields().concat([nga.field("attr.limits.memory").label("Memory Limit").editable(false), nga.field("statementFid").label("Statement Fid").editable(false)]));
 
@@ -977,19 +977,19 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
      */
   submission.listView().fields([nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")), nga.field("time", "datetime"), nga.field("problem", "reference").targetEntity(problem).targetField(nga.field("name")), nga.field("_creator", "reference").label("User").targetEntity(user).targetField(nga.field("name"))]).listActions(["<ma-rejudge-action size='xs' submission='entry'></ma-rejudge-action>", "show", "delete"]).batchActions(["<ma-rejudge-batch selection='selection'></ma-rejudge-batch>", "delete"]).filters([nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")), nga.field("problem", "reference").targetEntity(problem).targetField(nga.field("name").map(function (v, e) {
     return "[" + e.code + "] " + e.name;
-  })).remoteComplete(true, {
-    refreshDelay: 300,
+  })).sortField("createdAt").remoteComplete(true, {
+    refreshDelay: 200,
     searchQuery: function searchQuery(search) {
       return { q: search };
     }
   }), nga.field("_creator", "reference").targetEntity(user).targetField(nga.field("name").map(function (v, e) {
     return "[" + e.handle + "] " + e.name;
   })).remoteComplete(true, {
-    refreshDelay: 300,
+    refreshDelay: 200,
     searchQuery: function searchQuery(search) {
       return { q: search };
     }
-  })]);
+  })]).sortField("time");
 
   submission.showView().fields(submission.listView().fields().concat([nga.field("code", "text"), nga.field("language") // choices actually
   // nga.field('verdict', 'embedded_list')

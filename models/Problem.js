@@ -28,7 +28,7 @@ module.exports = () => {
         statementFid: String,
         fid: String,
         attr: Schema.Types.Mixed
-    });
+    }, {timestamps: true});
 
     ProblemSchema.index({code: 1}, {unique: 1});
     ProblemSchema.index({name: 1});

@@ -2063,7 +2063,7 @@ module.exports = function () {
         statementFid: String,
         fid: String,
         attr: Schema.Types.Mixed
-    });
+    }, { timestamps: true });
 
     ProblemSchema.index({ code: 1 }, { unique: 1 });
     ProblemSchema.index({ name: 1 });
@@ -4212,7 +4212,7 @@ module.exports = function () {
         },
         hidden: Boolean,
         upseeing: { type: Boolean, required: true, default: false }
-    });
+    }, { timestamps: true });
 
     ContestSchema.index({ name: 1 });
     ContestSchema.index({ name: 'text' });
@@ -4318,7 +4318,7 @@ module.exports = function () {
         contest: { type: Schema.Types.ObjectId, ref: 'Contest' },
         unofficial: { type: Boolean, default: false },
         role: { type: String, default: "contestant" }
-    });
+    }, { timestamps: true });
 
     UserSchema.index({ handle: 1, contest: 1 }, { unique: true });
     UserSchema.index({ handle: 'text', name: 'text' }, {
@@ -4389,7 +4389,7 @@ module.exports = function () {
     code: String,
     codeHash: { type: String, default: "" },
     verdict: Schema.Types.Mixed
-  });
+  }, { timestamps: true });
 
   SubmissionSchema.index({ contest: 1, _creator: 1 });
   SubmissionSchema.index({ contest: 1, problem: 1 });

@@ -42,7 +42,7 @@ module.exports = () => {
         },
         hidden: Boolean,
         upseeing: {type: Boolean, required: true, default: false}
-    });
+    }, {timestamps: true});
 
     ContestSchema.index({name: 1});
     ContestSchema.index({name: 'text'});
