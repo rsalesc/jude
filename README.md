@@ -1,4 +1,27 @@
 ## Development
+
+### Codemap
+
+- App: files `app.js` and `index.js`
+  - There are all the definitions needed to initiate the webservice.
+- DB: file `db.js`
+  - All the definitions to access the MongoDB database via Mongoose are here. You will notice that this is exposed globally and this file is required in basically every file that needs database access (almost every back-end module).
+- Models: folder `models`
+  - Those are all the Mongoose models defined in the project. You can google more about mongoose, it is just a nice way of defining schemas and adding behavior to MongoDB documents (which if you don't know and like JS, you should definitely google about).
+- Auth2: file `auth2.js`
+  - It is the file responsible for handling auth. It's a middleware (it is like an interceptor for Express) which checks if user has the permissions (role) to do the request, process login requests, logout requests and all that stuff.
+- Judge: folder `judge`
+  - This is the component responsible for judging the solutions of the contestants. It also exposes some modules to the other components.
+- Webservice/API: folder `routes`
+  - This is the component responsible for processing the requests of the clients, like submitting, retrieving contest info (or not retrieving them if the user has no permission).
+  - You will notice that there are functions which are not in there. That's because we use `express-mongoose-restify` to expose trivial functionalities like GET, POST, DELETE, etc. for each of the models defined in `mongoose`. Of course, those functionalities are only available for admins. Normal users will always do requests which are defined in the `routes` folder.
+  - You will notice as well that there is probably only one or two non-API kinds of request, which renders the page the user see. That's because the front-end app is actually a single-page application.
+- Front-end app: folder `src/bulma`
+  - It is a single-page application built on top of VueJS, a nice framework like AngularJS and React (way more like AngularJS). It also uses Bulma and Buefy. Bulma is just a CSS framework, and Buefy is a VueJS integration with Bulma: it exposes components with logic leveraging Bulma cool-looking design. All the components in SPA are there, and of course, there are some external imports, like for `judge/scoring.js`. Here is where all the processing comes in. The standings are actually generated on client-side, not on server-side, and the score is defined here is a well. Well, if a client change his own score in his own computer, how does it matter? The main goal is to leave more computational resources available to the judge.
+  - If you want to contribute here, you should start reading about VueJS. It is a long way.
+- Admin panel: `public/admin`
+  - The admin panel, built on AngularJS + ng-admin library and likely to change. Not too much on this, avoid touching it. Seriously.
+
 #### Docker Usage for Development
 
 ```
