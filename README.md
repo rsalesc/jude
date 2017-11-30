@@ -19,7 +19,7 @@
 - Front-end app: folder `src/bulma`
   - It is a single-page application built on top of VueJS, a nice framework like AngularJS and React (way more like AngularJS). It also uses Bulma and Buefy. Bulma is just a CSS framework, and Buefy is a VueJS integration with Bulma: it exposes components with logic leveraging Bulma cool-looking design. All the components in SPA are there, and of course, there are some external imports, like for `judge/scoring.js`. Here is where all the processing comes in. The standings are actually generated on client-side, not on server-side, and the score is defined here is a well. Well, if a client change his own score in his own computer, how does it matter? The main goal is to leave more computational resources available to the judge.
   - If you want to contribute here, you should start reading about VueJS. It is a long way.
-- Admin panel: `public/admin`
+- Admin panel: `public/js/admin`
   - The admin panel, built on AngularJS + ng-admin library and likely to change. Not too much on this, avoid touching it. Seriously.
 
 #### Docker Usage for Development
