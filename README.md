@@ -1,5 +1,23 @@
 ## Development
 
+This documentation is purely intended to be used by developers.
+There is still no official documentation on how to install and
+configure Jude for use.
+
+### Step zero
+
+Get Docker running, please.
+
+### First step to start developing
+
+Clone the project, go to its root and run `npm install` to make sure
+all the dependencies (prod and dev ones) are correctly installed. Also make
+sure you get global `webpack` and `gulp` installations by running `sudo npm install -g webpack gulp`.
+
+### VSCode
+
+Using VSCode here is highly encouraged. You should get at least the following extensions: `ESLint`, `Vetur` and `Mocha sidebar`. If you are unable to use VSCode, try at least to get a similar functionality from your current text editor/IDE to avoid submitting bad or untested code.
+
 ### Codemap
 
 - App: files `app.js` and `index.js`
@@ -9,7 +27,7 @@
 - Models: folder `models`
   - Those are all the Mongoose models defined in the project. You can google more about mongoose, it is just a nice way of defining schemas and adding behavior to MongoDB documents (which if you don't know and like JS, you should definitely google about).
 - Auth2: file `auth2.js`
-  - It is the file responsible for handling auth. It's a middleware (it is like an interceptor for Express) which checks if user has the permissions (role) to do the request, process login requests, logout requests and all that stuff.
+  - It is the file responsible for handling auth. It's a middleware (it is like an interceptor for Express) which checks if user has the permissions (role) to do the request, process login requests, logout requests and all that stuff. I'm planning to move this to an external module eventually, or make it wrap a well maintained module that does something similar.
 - Judge: folder `judge`
   - This is the component responsible for judging the solutions of the contestants. It also exposes some modules to the other components.
 - Webservice/API: folder `routes`
@@ -22,30 +40,10 @@
 - Admin panel: `public/js/admin`
   - The admin panel, built on AngularJS + ng-admin library and likely to change. Not too much on this, avoid touching it. Seriously.
 
-#### Docker Usage for Development
+#### Some other interesting things
 
-```
-./dcomp.sh build && ./dcomp.sh up
-```
-
-This will initiate `judge`, `site`, `mongo` and `seaweedfs` containers. That's all needed
-to run a minimal version of `Jude`.
-
-Hit `CTRL+C` twice to stop the containers. The DB will persist across `dcomp` calls
-as long as its container is stopped, not destroyed.
-
-To add a root/root user to your database:
-
-```
-docker-compose run site bash
-node dev/make_db.js # run this in the recently initiated sh session of the container
-```
-
-If you do not destroy your DB container, you will probably do it only once.
-
-The container port `3000` will be exposed and binded to the host `3001`. 
-You can use Nginx or similar to route some URL to it, but in development mode
-it should be fine to access `http://localhost:3001`.
+- `seaweedfs`: It's a module used by Jude to expose a cool distributed filesystem to make sure that, when needed, we can easily change it all to be distributed and highly available (for instance, when holding Brazilian sub-regionals? (: )
+- `eslint`: ESLint is used everywhere to make sure that code is compliant with some style and good practices constraints. Notice that there is some old code that is not compliant with it. If you touch such code, make sure you make it compliant with `eslint`, and when writing new code, please run it with `./node_modules/.bin/eslint [your_file]`, where `[your_file]` is your JS file or some glob pattern. If you use VSCode, install the ESlint extension.
 
 #### Webpack and Gulp
 
@@ -83,7 +81,32 @@ You can install these tools and make them globally available (as shown above)
 by running `npm install -g gulp webpack`, or you can install them locally
 as well.
 
-## Host Installation [DEPRECATED FOR NOW]
+#### Lifting up a dev instance of Jude
+
+```
+./dcomp.sh build && ./dcomp.sh up
+```
+
+This will initiate `judge`, `site`, `mongo` and `seaweedfs` containers. That's all needed
+to run a minimal version of `Jude`.
+
+Hit `CTRL+C` twice to stop the containers. The DB will persist across `dcomp` calls
+as long as its container is stopped, not destroyed.
+
+To add a root/root user to your database:
+
+```
+docker-compose run site bash
+node dev/make_db.js # run this in the recently initiated sh session of the container
+```
+
+If you do not destroy your DB container, you will probably do it only once.
+
+The container port `3000` will be exposed and binded to the host `3001`. 
+You can use Nginx or similar to route some URL to it, but in development mode
+it should be fine to access `http://localhost:3001`.
+
+## Host Installation [DEPRECATED FOR NOW, PLEASE USE DOCKER]
 
 _All installation commands provided target Ubuntu 16.04 / Debian._
 

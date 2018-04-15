@@ -14,6 +14,11 @@
         "eslint:recommended",
         "plugin:promise/recommended"
     ],
+    "settings": {
+        "import/resolver": {
+            "babel-module": {}
+        }
+    },
     "plugins": [
         "promise",
         "prefer-object-spread",
@@ -24,13 +29,12 @@
         "html"
     ],
     "rules": {
-        "import/no-unresolved": 2,
+        "import/no-unresolved": [2, { "commonjs": true, "amd": true }],
         "import/no-dynamic-require": 2,
         "import/no-absolute-path": 2,
         "prefer-object-spread/prefer-object-spread": 2,
         "class-property/class-property-semicolon": 2,
         "dependencies/case-sensitive": 2,
-        "dependencies/no-unresolved": 2,
         "dependencies/require-json-ext": 2,
         "no-return-await": 2,
         "promise/prefer-await-to-then": 1,

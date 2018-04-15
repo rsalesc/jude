@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "no-unused-vars": [2, { "vars": "all", "argsIgnorePattern": "[Ee]rr$|^_", "varsIgnorePattern": "^_|[A-Z_]+|it|describe" }],
+  }
+}

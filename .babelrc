@@ -1,4 +1,13 @@
 {
     "presets": ["es2015", "stage-0"],
-    "plugins": ["transform-runtime"]
+    "plugins": [
+        "transform-runtime",
+        ["module-resolver", {
+            "alias": {
+                "~": "./",
+                "@front": "./src/bulma",
+                "@judge": "./judge"
+            }
+        }]
+    ]
 }

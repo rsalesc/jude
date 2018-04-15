@@ -5,15 +5,15 @@ install_nvm(){
 	wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
 }
 
-# Use version 6*
+# Use version 8*
 # Make node visible to other users
 install_node(){
 	install_nvm
 	. ~/.nvm/nvm.sh || (. ~/.bashrc && . ~/.profile)
 
-	nvm install 7
-	nvm use 7
-	nvm alias default 7
+	nvm install 8
+	nvm use 8
+	nvm alias default 8
 
 }
 
