@@ -6,7 +6,7 @@ configure Jude for use.
 
 ### Step zero
 
-Get Docker running, please.
+Go to Google and make sure you can get Docker and Node 8+ running, please. The `install_node.sh` is a cool way of getting Node 8 installed if you are lazy.
 
 ### First step to start developing
 
@@ -44,6 +44,7 @@ Using VSCode here is highly encouraged. You should get at least the following ex
 
 - `seaweedfs`: It's a module used by Jude to expose a cool distributed filesystem to make sure that, when needed, we can easily change it all to be distributed and highly available (for instance, when holding Brazilian sub-regionals? (: )
 - `eslint`: ESLint is used everywhere to make sure that code is compliant with some style and good practices constraints. Notice that there is some old code that is not compliant with it. If you touch such code, make sure you make it compliant with `eslint`, and when writing new code, please run it with `./node_modules/.bin/eslint [your_file]`, where `[your_file]` is your JS file or some glob pattern. If you use VSCode, install the ESlint extension.
+- Root imports: There are some aliases defined so you can import your code from the root of the project. This is a long-term encouraged practice although we don't use it extensively yet. Ex: `import "../../../src/bulma/index.js"` can be replaced by `import "@front/index.js"`. You can check all the defined aliases (and define your own if it makes sense) in `.babelrc`. ESLint will handle those cool looking imports gracefully, but other tools may not, so avoid using them (for example, in your own cool IDE).
 
 #### Webpack and Gulp
 
