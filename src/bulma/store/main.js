@@ -109,6 +109,10 @@ export const computed = {
       const timeInContest = sub.timeInContest;
 
       const problem = getters.getRawProblem(sub.problem);
+      if (problem == null) {
+        // This problem was removed from the contest.
+        continue;
+      }
 
       const scoring = Helper.getScoring(problem, contest);
       const score = scoring.eval(sub.verdict);
@@ -201,7 +205,7 @@ export const getters = {
         return prob;
     }
 
-    return undefined;
+    return null;
   }
 };
 

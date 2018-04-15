@@ -14,7 +14,8 @@
     "start-index": "node build/index.bundle.js",
     "start-judge": "node build/judge.bundle.js",
     "serve-index": "NODE_ENV=production node build/index.bundle.js",
-    "serve-judge": "NODE_ENV=production node build/judge.bundle.js"
+    "serve-judge": "NODE_ENV=production node build/judge.bundle.js",
+    "test": "nyc mocha --recursive"
   },
   "dependencies": {
     "asyncawait": "^1.0.3",
@@ -78,6 +79,7 @@
     "babel-runtime": "^6.11.6",
     "brotli-webpack-plugin": "^0.3.0",
     "buefy": "^0.4.4",
+    "chai": "^4.1.2",
     "compression-webpack-plugin": "^0.4.0",
     "css-loader": "^0.23.1",
     "eslint": "^4.0.0",
@@ -102,7 +104,9 @@
     "html-loader": "^0.4.5",
     "less": "^2.7.2",
     "less-loader": "^4.0.4",
+    "mocha": "^5.1.0",
     "node-sass": "^4.5.3",
+    "nyc": "^11.6.0",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.13.2",
     "url-loader": "^0.5.9",
