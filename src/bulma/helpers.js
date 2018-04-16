@@ -7,27 +7,28 @@ import * as Api from "./api.js";
 import moment from "moment";
 import { mapState } from "vuex";
 
-export function getScoringString(prob, contest) {
+export function getScoringString(contestProb, contest) {
   if (contest)
-    return contest.scoring || prob.problem.attr.scoring;
-  return prob.problem.attr.scoring;
+    return contest.scoring || contestProb.problem.attr.scoring;
+  return contestProb.problem.attr.scoring;
 }
 
 export function getScoringClassFromString(sc) {
-  if(!Scoring.hasOwnProperty(sc)) {
+  if (!Scoring.hasOwnProperty(sc)) {
     console.log(`There is no such thing like ${sc} in scoring package. Falling back to ProductScoring.`);
-    return Scoring["ProductScoring"];
+    return Scoring.ProductScoring;
   }
 
   return Scoring[sc];
 }
 
-export function getScoringClass(prob, contest) {
-  return Scoring[getScoringString(prob, contest)];
+export function getScoringClass(contestProb, contest) {
+  return Scoring[getScoringString(contestProb, contest)];
 }
 
-export function getScoring(prob, contest) {
-  return new (getScoringClass(prob, contest))(new Task(prob.problem.attr));
+export function getScoring(contestProb, contest) {
+  const task = new Task(contestProb.problem.attr);
+  return new (getScoringClass(contestProb, contest))(task);
 }
 
 export function getScoringFromString(sc) {
@@ -57,7 +58,7 @@ export function getCodeMirrorMode(lang) {
 export function getBraceMode(lang) {
   if (!lang)
     return "c_cpp";
-    
+   
   const modes = {
     CPP: "c_cpp",
     C: "c_cpp",
@@ -85,7 +86,7 @@ export function getMainVerdict(verdicts, task) {
   for (const data of [].concat(task.attr.datasets).reverse()) {
     if (!verdicts.hasOwnProperty(data.name))
       continue;
-    if (verdicts[data.name].verdict != "VERDICT_SKIP")
+    if (verdicts[data.name].verdict !== "VERDICT_SKIP")
       return verdicts[data.name].verdict;
   }
 
@@ -93,7 +94,9 @@ export function getMainVerdict(verdicts, task) {
 }
 
 export function getPassed(n) {
-  return n < 0 ? "-" : n;
+  return n < 0
+    ? "-"
+    : String(n);
 }
 
 export function getExecTime(verdict) {
@@ -124,10 +127,10 @@ export function getRemainingTime(contest) {
     return "contest has ended";
   else if (Date.now() < startTs) {
     const res = getCountdown(moment(contest.start_time));
-    return `contest will start in ${res}`;
+    return `contest will start ${res}`;
   }
   const res = getCountdown(moment(contest.end_time));
-  return `contest will end in ${res}`;
+  return `contest will end ${res}`;
 }
 
 export function getFormattedContestTime(t) {
@@ -200,9 +203,9 @@ export function getTooltipText(s) {
 }
 
 export function hasContestStarted(contest) {
-  return new Date(contest.start_time) <= Date.now();
+  return new Date(contest.start_time) <= new Date();
 }
 
 export function hasContestEnded(contest) {
-  return new Date(contest.end_time) <= Date.now();
+  return new Date(contest.end_time) <= new Date();
 }

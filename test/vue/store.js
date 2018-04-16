@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
-import { assert } from "chai";
-import { computed } from "@front/store/main.js";
+import { expect } from "chai";
+import { computed } from "@front/store/main";
 
 describe("computed properties", () => {
   describe("submissions()", () => {

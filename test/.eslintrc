@@ -1,5 +1,7 @@
 {
   "rules": {
-    "no-unused-vars": [2, { "vars": "all", "argsIgnorePattern": "[Ee]rr$|^_", "varsIgnorePattern": "^_|[A-Z_]+|it|describe" }],
+    "no-unused-vars": [2, { "vars": "local", "argsIgnorePattern": "[Ee]rr$|^_", "varsIgnorePattern": "^_|[A-Z_]+|assert|expect|should|it|describe|setup|teardown" }],
+    "func-names": 0,
+    "prefer-arrow-callback": 0
   }
 }

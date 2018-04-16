@@ -2,7 +2,7 @@
  * Created by rsalesc on 14/06/16.
  */
 
-const scoring = require(`${__dirname}/scoring`);
+const scoring = require("./scoring");
 const deepcopy = require("deepcopy");
 
 class Task {

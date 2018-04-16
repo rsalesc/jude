@@ -6,7 +6,9 @@
             "alias": {
                 "~": "./",
                 "@front": "./src/bulma",
-                "@judge": "./judge"
+                "@judge": "./judge",
+                "@models": "./models",
+                "@test": "./test"
             }
         }]
     ]
