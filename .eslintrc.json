@@ -94,7 +94,7 @@
         "eol-last": [2, "always"],
         "func-call-spacing": [2, "never"],
         "func-name-matching": "off",
-        "func-names": 1,
+        "func-names": 0,
         "func-style": "off",
         "indent": [2, 2, {
             "FunctionDeclaration": { "parameters": "first", "body": 1 },

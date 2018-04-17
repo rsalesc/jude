@@ -10,7 +10,7 @@ function submissionComparator(a, b) {
 
 class Scoring {
   constructor(task, opts = {}) {
-    //if (new.target == Scoring)
+    // if (new.target == Scoring)
     //  throw `Cannot instantiate abstract class Scoring`;
     this._task = task;
     this._opts = opts;
@@ -25,15 +25,15 @@ class Scoring {
   }
 
   // eslint-disable-next-line no-unused-vars
-   isTaskValid(tk) {
+  isTaskValid(tk) {
     throw new Error("Function not implemented in this class");
   }
 
-   hasWeight() {
+  hasWeight() {
     throw new Error("Function not implemented in this class");
   }
 
-   hasPenalty() {
+  hasPenalty() {
     throw new Error("Function not implemented in this class");
   }
 
@@ -83,22 +83,22 @@ class Scoring {
   }
 
   // eslint-disable-next-line no-unused-vars
-   mergeEvaluations(evals) {
+  mergeEvaluations(evals) {
     throw new Error("Function not implemented in this class");
   }
 }
 
 class ProductScoring extends Scoring {
   // eslint-disable-next-line no-unused-vars
-   isTaskValid(tk) {
+  isTaskValid(tk) {
     return true;
   }
 
-   hasWeight() {
+  hasWeight() {
     return true;
   }
 
-   hasPenalty() {
+  hasPenalty() {
     return true;
   }
 
@@ -138,14 +138,13 @@ class ProductScoring extends Scoring {
     submissions.sort(submissionComparator);
 
     let fails = 0;
-    let penalty = 0;
 
     for (const submission of submissions) {
       const evaluation = this.eval(submission.verdict);
       if (evaluation.affect) {
-        if (evaluation.score === 0) {
+        if (evaluation.score === 0)
           fails++;
-        } else {
+        else {
           return {
             score: evaluation.score,
             penalty: submission.timeInContest,
@@ -157,11 +156,11 @@ class ProductScoring extends Scoring {
     }
 
     return {
-      score: 0, penalty: 0, affect: false, fails
+      score: 0, penalty: 0, affect: fails > 0, fails
     };
   }
 
-   mergeEvaluations(evals) {
+  mergeEvaluations(evals) {
     const { opts } = this;
 
     return evals.reduce((old, cur) => ({
@@ -173,15 +172,15 @@ class ProductScoring extends Scoring {
 
 class SubtaskSumScoring extends Scoring {
   // eslint-disable-next-line no-unused-vars
-   isTaskValid(tk) {
+  isTaskValid(tk) {
     return true;
   }
 
-   hasWeight() {
+  hasWeight() {
     return true;
   }
 
-   hasPenalty() {
+  hasPenalty() {
     return true;
   }
 
@@ -190,7 +189,7 @@ class SubtaskSumScoring extends Scoring {
   }
 
   attempted(obj) {
-    return obj.affect || obj.fails > 0;
+    return obj.affect;
   }
 
   fails(obj) {
@@ -224,9 +223,9 @@ class SubtaskSumScoring extends Scoring {
     let bestIndex = submissions.length;
     let bestScore = 0;
 
-    for(let i = 0; i < submissions.length; i++) {
+    for (let i = 0; i < submissions.length; i++) {
       const evaluation = this.eval(submissions[i].verdict);
-      if(evaluation.affect && evaluation.score > bestScore) {
+      if (evaluation.affect && evaluation.score > bestScore) {
         bestScore = evaluation.score;
         bestIndex = i;
       }
@@ -238,19 +237,18 @@ class SubtaskSumScoring extends Scoring {
       const submission = submissions[i];
 
       const evaluation = this.eval(submission.verdict);
-      if (evaluation.affect) {
-        fails++
-      }
+      if (evaluation.affect)
+        fails++;
     }
 
-    if(bestScore > 0) {
+    if (bestScore > 0) {
       const submission = submissions[bestIndex];
       return {
         score: bestScore,
         penalty: submission.timeInContest,
         affect: true,
         fails
-      }
+      };
     }
 
     return {
@@ -258,7 +256,7 @@ class SubtaskSumScoring extends Scoring {
     };
   }
 
-   mergeEvaluations(evals) {
+  mergeEvaluations(evals) {
     const { opts } = this;
 
     return evals.reduce((old, cur) => ({
@@ -283,15 +281,15 @@ class SubtaskMaxScoring extends SubtaskSumScoring {
 
 class IcpcScoring extends Scoring {
   // eslint-disable-next-line no-unused-vars
-   isTaskValid(tk) {
+  isTaskValid(tk) {
     return true;
   }
 
-   hasWeight() {
+  hasWeight() {
     return false;
   }
 
-   hasPenalty() {
+  hasPenalty() {
     return true;
   }
 
@@ -300,7 +298,7 @@ class IcpcScoring extends Scoring {
   }
 
   attempted(obj) {
-    return obj.affect || obj.fails > 0;
+    return obj.affect;
   }
 
   fails(obj) {
@@ -335,9 +333,9 @@ class IcpcScoring extends Scoring {
     for (const submission of submissions) {
       const evaluation = this.eval(submission.verdict);
       if (evaluation.affect) {
-        if (evaluation.score === 0) {
+        if (evaluation.score === 0)
           fails++;
-        } else {
+        else {
           return {
             score: 1,
             penalty: submission.timeInContest,
@@ -349,11 +347,11 @@ class IcpcScoring extends Scoring {
     }
 
     return {
-      score: 0, penalty: 0, affect: false, fails
+      score: 0, penalty: 0, affect: fails > 0, fails
     };
   }
 
-   mergeEvaluations(evals) {
+  mergeEvaluations(evals) {
     const { opts } = this;
 
     return evals.reduce((old, cur) => ({
@@ -369,5 +367,6 @@ module.exports = {
   IcpcScoring,
   SubtaskMaxScoring,
   SubtaskSumScoring,
-  SubtaskScoring: SubtaskMaxScoring // Maintaining backward-compatibility
+  // Maintaining backward-compatibility
+  SubtaskScoring: SubtaskMaxScoring
 };

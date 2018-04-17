@@ -15,7 +15,7 @@
     "start-judge": "node build/judge.bundle.js",
     "serve-index": "NODE_ENV=production node build/index.bundle.js",
     "serve-judge": "NODE_ENV=production node build/judge.bundle.js",
-    "test": "nyc mocha --recursive -r babel-register -r jsdom-global/register -r mock-local-storage"
+    "test": "nyc mocha --recursive --use_strict -r babel-register -r jsdom-global/register -r mock-local-storage"
   },
   "dependencies": {
     "asyncawait": "^1.0.3",

@@ -1,0 +1,8 @@
+{
+  "mocha.requires": [
+    "babel-register", 
+    "jsdom-global/register", 
+    "mock-local-storage"
+  ],
+  "editor.tabSize": 2
+}

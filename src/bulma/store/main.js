@@ -57,7 +57,7 @@ export const mutations = {
 export const computed = {
   problems: (state, getters) => {
     const contest = state.rawContest;
-    const my = getters.my;
+    const { my } = getters;
 
     if (!my || !contest || !contest.problems)
       return [];
@@ -87,32 +87,31 @@ export const computed = {
   },
   my: (state, getters) => {
     if (!state.rawContest || !state.rawContest.scoring || getters.submissions === undefined)
-      return { submissions: []};
+      return { submissions: [], languages: getters.languages };
     const scoringClass = Helper.getScoringClassFromString(state.rawContest.scoring);
     const scoring = Helper.getScoringFromString(state.rawContest.scoring);
 
     const submissions = getters.submissions.filter(v => v._creator === state.user);
 
-    return { scoring, scoringClass, submissions, languages: state.rawContest.languages };
+    return { scoring, scoringClass, submissions, languages: getters.languages };
   },
   submissions: (state, getters) => {
     const contest = state.rawContest;
     if (!state.rawSubmissions)
       return [];
 
-    const submissions = Vue.util.extend([], state.rawSubmissions);
+    // Filter out submissions for problems that were removed.
+    const submissions = Vue.util.extend([], state.rawSubmissions)
+      .filter(sub => getters.getRawProblem(sub.problem) != null);
+
     if (!submissions || !contest || !contest.problems)
       return [];
 
     for (let i = 0; i < submissions.length; i++) {
       const sub = submissions[i];
-      const timeInContest = sub.timeInContest;
+      const { timeInContest } = sub;
 
       const problem = getters.getRawProblem(sub.problem);
-      if (problem == null) {
-        // This problem was removed from the contest.
-        continue;
-      }
 
       const scoring = Helper.getScoring(problem, contest);
       const score = scoring.eval(sub.verdict);
@@ -123,7 +122,7 @@ export const computed = {
     return submissions.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
   },
   groupedSubs: (state, getters) => {
-    const submissions = getters.submissions;
+    const { submissions } = getters;
     if (!submissions)
       return {};
 
@@ -138,8 +137,7 @@ export const computed = {
     return res;
   },
   teams: (state, getters) => {
-    const my = getters.my;
-    const problems = getters.problems;
+    const { my, problems } = getters;
 
     if (!state.rawTeams)
       return [];
@@ -148,7 +146,7 @@ export const computed = {
     if (!teams || !my || !problems || !state.rawContest
             || !my.scoring || !getters.groupedSubs)
       return [];
-    const groupedSubs = getters.groupedSubs;
+    const { groupedSubs } = getters;
 
     for (let i = 0; i < teams.length; i++) {
       const results = {};
@@ -188,9 +186,9 @@ export const computed = {
 
     return teams;
   },
-  languages: (state, getters) => {
+  languages: (state) => {
     if (!state.rawContest || !state.rawContest.languages)
-      return [];
+      return {};
     return state.rawContest.languages;
   }
 };

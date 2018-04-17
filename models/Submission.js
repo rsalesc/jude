@@ -21,11 +21,12 @@ module.exports = () => {
     problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
     time: { type: Date, default: Date.now },
     timeInContest: { type: Number, default: 0 },
-    language: String, // add enum validator? maybe not, language set is mutable
+    // add enum validator? maybe not, language set is mutable
+    language: String,
     code: String,
     codeHash: { type: String, default: "" },
     verdict: Schema.Types.Mixed
-  }, {timestamps: true});
+  }, { timestamps: true });
 
   SubmissionSchema.index({ contest: 1, _creator: 1 });
   SubmissionSchema.index({ contest: 1, problem: 1 });
