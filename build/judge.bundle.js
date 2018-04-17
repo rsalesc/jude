@@ -1845,7 +1845,7 @@ var Scoring = function () {
     var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     (0, _classCallCheck3.default)(this, Scoring);
 
-    //if (new.target == Scoring)
+    // if (new.target == Scoring)
     //  throw `Cannot instantiate abstract class Scoring`;
     this._task = task;
     this._opts = opts;
@@ -2057,26 +2057,21 @@ var ProductScoring = function (_Scoring) {
       submissions.sort(submissionComparator);
 
       var fails = 0;
-      var penalty = 0;
-      var opts = this.opts;
+
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
       var _iteratorError3 = undefined;
 
       try {
-
         for (var _iterator3 = (0, _getIterator3.default)(submissions), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
           var submission = _step3.value;
 
           var evaluation = this.eval(submission.verdict);
           if (evaluation.affect) {
-            if (evaluation.score === 0) {
-              penalty += opts.penalty || 20;
-              fails++;
-            } else {
+            if (evaluation.score === 0) fails++;else {
               return {
                 score: evaluation.score,
-                penalty: penalty + submission.timeInContest,
+                penalty: submission.timeInContest,
                 affect: true,
                 fails: fails
               };
@@ -2099,16 +2094,19 @@ var ProductScoring = function (_Scoring) {
       }
 
       return {
-        score: 0, penalty: 0, affect: false, fails: fails
+        score: 0, penalty: 0, affect: fails > 0, fails: fails
       };
     }
   }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
+      var opts = this.opts;
+
+
       return evals.reduce(function (old, cur) {
         return {
           score: old.score + cur.score,
-          penalty: old.penalty + cur.penalty
+          penalty: old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
         };
       }, { score: 0, penalty: 0 });
     }
@@ -2116,15 +2114,15 @@ var ProductScoring = function (_Scoring) {
   return ProductScoring;
 }(Scoring);
 
-var SubtaskScoring = function (_Scoring2) {
-  (0, _inherits3.default)(SubtaskScoring, _Scoring2);
+var SubtaskSumScoring = function (_Scoring2) {
+  (0, _inherits3.default)(SubtaskSumScoring, _Scoring2);
 
-  function SubtaskScoring() {
-    (0, _classCallCheck3.default)(this, SubtaskScoring);
-    return (0, _possibleConstructorReturn3.default)(this, (SubtaskScoring.__proto__ || (0, _getPrototypeOf2.default)(SubtaskScoring)).apply(this, arguments));
+  function SubtaskSumScoring() {
+    (0, _classCallCheck3.default)(this, SubtaskSumScoring);
+    return (0, _possibleConstructorReturn3.default)(this, (SubtaskSumScoring.__proto__ || (0, _getPrototypeOf2.default)(SubtaskSumScoring)).apply(this, arguments));
   }
 
-  (0, _createClass3.default)(SubtaskScoring, [{
+  (0, _createClass3.default)(SubtaskSumScoring, [{
     key: "isTaskValid",
 
     // eslint-disable-next-line no-unused-vars
@@ -2149,7 +2147,7 @@ var SubtaskScoring = function (_Scoring2) {
   }, {
     key: "attempted",
     value: function attempted(obj) {
-      return obj.affect || obj.fails > 0;
+      return obj.affect;
     }
   }, {
     key: "fails",
@@ -2214,16 +2212,12 @@ var SubtaskScoring = function (_Scoring2) {
       }
 
       var fails = 0;
-      var opts = this.opts;
-
 
       for (var _i = 0; _i < bestIndex; _i++) {
         var submission = submissions[_i];
 
         var _evaluation = this.eval(submission.verdict);
-        if (_evaluation.affect) {
-          fails++;
-        }
+        if (_evaluation.affect) fails++;
       }
 
       if (bestScore > 0) {
@@ -2243,17 +2237,48 @@ var SubtaskScoring = function (_Scoring2) {
   }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
+      var opts = this.opts;
+
 
       return evals.reduce(function (old, cur) {
         return {
           score: old.score + cur.score,
-          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails // TODO: change
+          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 1)
         };
       }, { score: 0, penalty: 0 });
     }
   }]);
-  return SubtaskScoring;
+  return SubtaskSumScoring;
 }(Scoring);
+
+var SubtaskMaxScoring = function (_SubtaskSumScoring) {
+  (0, _inherits3.default)(SubtaskMaxScoring, _SubtaskSumScoring);
+
+  function SubtaskMaxScoring() {
+    (0, _classCallCheck3.default)(this, SubtaskMaxScoring);
+    return (0, _possibleConstructorReturn3.default)(this, (SubtaskMaxScoring.__proto__ || (0, _getPrototypeOf2.default)(SubtaskMaxScoring)).apply(this, arguments));
+  }
+
+  (0, _createClass3.default)(SubtaskMaxScoring, [{
+    key: "mergeEvaluations",
+    value: function mergeEvaluations(evals) {
+      var opts = this.opts;
+
+
+      var maxTime = evals.reduce(function (old, cur) {
+        return Math.max(old, cur.affect ? cur.penalty : 0);
+      }, 0);
+
+      return evals.reduce(function (old, cur) {
+        return {
+          score: old.score + cur.score,
+          penalty: !cur.affect ? old.penalty : old.penalty + cur.fails * (opts.penalty || 1)
+        };
+      }, { score: 0, penalty: maxTime });
+    }
+  }]);
+  return SubtaskMaxScoring;
+}(SubtaskSumScoring);
 
 var IcpcScoring = function (_Scoring3) {
   (0, _inherits3.default)(IcpcScoring, _Scoring3);
@@ -2288,7 +2313,7 @@ var IcpcScoring = function (_Scoring3) {
   }, {
     key: "attempted",
     value: function attempted(obj) {
-      return obj.affect || obj.fails > 0;
+      return obj.affect;
     }
   }, {
     key: "fails",
@@ -2341,26 +2366,21 @@ var IcpcScoring = function (_Scoring3) {
       submissions.sort(submissionComparator);
 
       var fails = 0;
-      var penalty = 0;
-      var opts = this.opts;
+
       var _iteratorNormalCompletion6 = true;
       var _didIteratorError6 = false;
       var _iteratorError6 = undefined;
 
       try {
-
         for (var _iterator6 = (0, _getIterator3.default)(submissions), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
           var submission = _step6.value;
 
           var evaluation = this.eval(submission.verdict);
           if (evaluation.affect) {
-            if (evaluation.score === 0) {
-              penalty += opts.penalty || 20;
-              fails++;
-            } else {
+            if (evaluation.score === 0) fails++;else {
               return {
                 score: 1,
-                penalty: penalty + submission.timeInContest,
+                penalty: submission.timeInContest,
                 affect: true,
                 fails: fails
               };
@@ -2383,16 +2403,19 @@ var IcpcScoring = function (_Scoring3) {
       }
 
       return {
-        score: 0, penalty: 0, affect: false, fails: fails
+        score: 0, penalty: 0, affect: fails > 0, fails: fails
       };
     }
   }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
+      var opts = this.opts;
+
+
       return evals.reduce(function (old, cur) {
         return {
           score: old.score + cur.score,
-          penalty: old.penalty + cur.penalty
+          penalty: old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
         };
       }, { score: 0, penalty: 0 });
     }
@@ -2404,7 +2427,10 @@ module.exports = {
   _Scoring: Scoring,
   ProductScoring: ProductScoring,
   IcpcScoring: IcpcScoring,
-  SubtaskScoring: SubtaskScoring
+  SubtaskMaxScoring: SubtaskMaxScoring,
+  SubtaskSumScoring: SubtaskSumScoring,
+  // Maintaining backward-compatibility
+  SubtaskScoring: SubtaskMaxScoring
 };
 
 /***/ }),
@@ -2449,7 +2475,7 @@ module.exports = function () {
         statementFid: String,
         fid: String,
         attr: Schema.Types.Mixed
-    });
+    }, { timestamps: true });
 
     ProblemSchema.index({ code: 1 }, { unique: 1 });
     ProblemSchema.index({ name: 1 });
@@ -7500,8 +7526,9 @@ module.exports = function () {
                 message: 'Contest cannot have repeated letters and problems must be an array'
             }
         },
-        hidden: Boolean
-    });
+        hidden: Boolean,
+        upseeing: { type: Boolean, required: true, default: false }
+    }, { timestamps: true });
 
     ContestSchema.index({ name: 1 });
     ContestSchema.index({ name: 'text' });
@@ -7607,7 +7634,7 @@ module.exports = function () {
         contest: { type: Schema.Types.ObjectId, ref: 'Contest' },
         unofficial: { type: Boolean, default: false },
         role: { type: String, default: "contestant" }
-    });
+    }, { timestamps: true });
 
     UserSchema.index({ handle: 1, contest: 1 }, { unique: true });
     UserSchema.index({ handle: 'text', name: 'text' }, {
@@ -7680,16 +7707,18 @@ module.exports = function () {
     problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
     time: { type: Date, default: Date.now },
     timeInContest: { type: Number, default: 0 },
-    language: String, // add enum validator? maybe not, language set is mutable
+    // add enum validator? maybe not, language set is mutable
+    language: String,
     code: String,
+    codeHash: { type: String, default: "" },
     verdict: Schema.Types.Mixed
-  });
+  }, { timestamps: true });
 
   SubmissionSchema.index({ contest: 1, _creator: 1 });
   SubmissionSchema.index({ contest: 1, problem: 1 });
   SubmissionSchema.index({ contest: 1, time: 1 });
   SubmissionSchema.index({ contest: 1, timeInContest: 1 });
-  SubmissionSchema.index({ problem: 1 });
+  SubmissionSchema.index({ problem: 1, _creator: 1 });
   SubmissionSchema.index({ _creator: 1 });
 
   SubmissionSchema.pre("save", function (next) {

@@ -23,7 +23,7 @@
           :per-page="getPerPage()"
           :backend-sorting="true">
           
-          <template scope="props">
+          <template slot-scope="props">
             <b-table-column label="" class="has-text-centered">
               <span :style="{ color: '#'+lighten(getProblem(props.row.problem).color) }">
                 {{ getProblem(props.row.problem).letter }}

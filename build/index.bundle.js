@@ -2881,7 +2881,7 @@ var Scoring = function () {
     var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     (0, _classCallCheck3.default)(this, Scoring);
 
-    //if (new.target == Scoring)
+    // if (new.target == Scoring)
     //  throw `Cannot instantiate abstract class Scoring`;
     this._task = task;
     this._opts = opts;
@@ -3093,7 +3093,6 @@ var ProductScoring = function (_Scoring) {
       submissions.sort(submissionComparator);
 
       var fails = 0;
-      var penalty = 0;
 
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
@@ -3105,9 +3104,7 @@ var ProductScoring = function (_Scoring) {
 
           var evaluation = this.eval(submission.verdict);
           if (evaluation.affect) {
-            if (evaluation.score === 0) {
-              fails++;
-            } else {
+            if (evaluation.score === 0) fails++;else {
               return {
                 score: evaluation.score,
                 penalty: submission.timeInContest,
@@ -3133,7 +3130,7 @@ var ProductScoring = function (_Scoring) {
       }
 
       return {
-        score: 0, penalty: 0, affect: false, fails: fails
+        score: 0, penalty: 0, affect: fails > 0, fails: fails
       };
     }
   }, {
@@ -3186,7 +3183,7 @@ var SubtaskSumScoring = function (_Scoring2) {
   }, {
     key: "attempted",
     value: function attempted(obj) {
-      return obj.affect || obj.fails > 0;
+      return obj.affect;
     }
   }, {
     key: "fails",
@@ -3256,9 +3253,7 @@ var SubtaskSumScoring = function (_Scoring2) {
         var submission = submissions[_i];
 
         var _evaluation = this.eval(submission.verdict);
-        if (_evaluation.affect) {
-          fails++;
-        }
+        if (_evaluation.affect) fails++;
       }
 
       if (bestScore > 0) {
@@ -3354,7 +3349,7 @@ var IcpcScoring = function (_Scoring3) {
   }, {
     key: "attempted",
     value: function attempted(obj) {
-      return obj.affect || obj.fails > 0;
+      return obj.affect;
     }
   }, {
     key: "fails",
@@ -3418,9 +3413,7 @@ var IcpcScoring = function (_Scoring3) {
 
           var evaluation = this.eval(submission.verdict);
           if (evaluation.affect) {
-            if (evaluation.score === 0) {
-              fails++;
-            } else {
+            if (evaluation.score === 0) fails++;else {
               return {
                 score: 1,
                 penalty: submission.timeInContest,
@@ -3446,7 +3439,7 @@ var IcpcScoring = function (_Scoring3) {
       }
 
       return {
-        score: 0, penalty: 0, affect: false, fails: fails
+        score: 0, penalty: 0, affect: fails > 0, fails: fails
       };
     }
   }, {
@@ -3472,7 +3465,8 @@ module.exports = {
   IcpcScoring: IcpcScoring,
   SubtaskMaxScoring: SubtaskMaxScoring,
   SubtaskSumScoring: SubtaskSumScoring,
-  SubtaskScoring: SubtaskMaxScoring // Maintaining backward-compatibility
+  // Maintaining backward-compatibility
+  SubtaskScoring: SubtaskMaxScoring
 };
 
 /***/ }),
@@ -4385,7 +4379,8 @@ module.exports = function () {
     problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
     time: { type: Date, default: Date.now },
     timeInContest: { type: Number, default: 0 },
-    language: String, // add enum validator? maybe not, language set is mutable
+    // add enum validator? maybe not, language set is mutable
+    language: String,
     code: String,
     codeHash: { type: String, default: "" },
     verdict: Schema.Types.Mixed

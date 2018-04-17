@@ -20,7 +20,7 @@
           :narrowed="true"
           :paginated="false"
           :backend-sorting="true">
-          <template scope="props">
+          <template slot-scope="props">
             <b-table-column label="Dataset">
               {{ props.row.name }}
             </b-table-column>

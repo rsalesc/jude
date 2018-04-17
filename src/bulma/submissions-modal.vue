@@ -15,7 +15,7 @@
           :paginated="true"
           :per-page="5"
           :backend-sorting="true">
-          <template scope="props">
+          <template slot-scope="props">
             <b-table-column label="Time In Contest">
               {{ getContestTime(props.row) }}
             </b-table-column>

@@ -24,7 +24,7 @@
                     :default-sort="['end_time', 'desc']"
                     :selected.sync="selectedContest">
                     
-                    <template scope="props">
+                    <template slot-scope="props">
                       <b-table-column label="Contest">
                         {{ props.row.name }}
                       </b-table-column>
