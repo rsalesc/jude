@@ -7492,94 +7492,107 @@ var mongoose = __webpack_require__(6);
 var deepPopulate = __webpack_require__(54)(mongoose);
 var Schema = mongoose.Schema;
 
+
 module.exports = function () {
-    if (db.models.Contest) return db.model("Contest");
+  if (db.models.Contest) return db.model("Contest");
 
-    var Problem = __webpack_require__(26)();
+  var Problem = __webpack_require__(26)();
 
-    var ContestProblem = new Schema({
-        letter: {
-            type: String,
-            required: true,
-            match: /[A-Z][0-9]*/
+  var ContestProblem = new Schema({
+    letter: {
+      type: String,
+      required: true,
+      match: /[A-Z][0-9]*/
+    },
+    problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
+    color: { type: String, default: "000" }
+  }, { _id: false });
+
+  var ContestSchema = new Schema({
+    name: { type: String, minlength: 4, maxlength: 64 },
+    start_time: { type: Date, required: true },
+    end_time: { type: Date, required: true },
+    scoring: { type: String, required: true },
+    problems: {
+      type: [ContestProblem],
+      validate: {
+        validator: function validator(v) {
+          if (!Array.isArray(v)) return false;
+          var letters = v.map(function (val) {
+            return val.letter;
+          });
+
+          return new _set2.default(letters).size === letters.length;
         },
-        problem: { type: Schema.Types.ObjectId, ref: 'Problem', required: true },
-        color: { type: String, default: "000" }
-    }, { _id: false });
 
-    var ContestSchema = new Schema({
-        name: { type: String, minlength: 4, maxlength: 64 },
-        start_time: { type: Date, required: true },
-        end_time: { type: Date, required: true },
-        scoring: { type: String, required: true },
-        problems: {
-            type: [ContestProblem],
-            validate: {
-                validator: function validator(v) {
-                    if (!Array.isArray(v)) return false;
-                    var letters = v.map(function (val) {
-                        return val.letter;
-                    });
+        message: "Contest cannot have repeated letters and problems must be an array"
+      }
+    },
+    hidden: Boolean,
+    upseeing: { type: Boolean, required: true, default: false },
+    blind: { type: Number, default: 0 },
+    freeze: { type: Number, default: 0 },
+    hideFreeze: { type: Boolean, default: true }
+  }, { timestamps: true });
 
-                    return new _set2.default(letters).size == letters.length;
-                },
-                message: 'Contest cannot have repeated letters and problems must be an array'
-            }
-        },
-        hidden: Boolean,
-        upseeing: { type: Boolean, required: true, default: false }
-    }, { timestamps: true });
+  ContestSchema.index({ name: 1 });
+  ContestSchema.index({ name: "text" });
+  ContestSchema.plugin(deepPopulate);
 
-    ContestSchema.index({ name: 1 });
-    ContestSchema.index({ name: 'text' });
-    ContestSchema.plugin(deepPopulate);
+  ContestSchema.pre("save", function (next) {
+    this.problems.sort(function (a, b) {
+      try {
+        return function (x, y) {
+          var xd = parseInt(x.slice(1), 10) || 0;
+          var yd = parseInt(y.slice(1), 10) || 0;
 
-    ContestSchema.pre('save', function (next) {
-        this.problems.sort(function (a, b) {
-            try {
-                return function (x, y) {
-                    var xd = parseInt(x.slice(1)) || 0;
-                    var yd = parseInt(y.slice(1)) || 0;
+          if (x[0] === y[0]) return xd < yd ? -1 : xd > yd ? 1 : 0;
 
-                    if (x[0] == y[0]) return xd < yd ? -1 : xd > yd ? 1 : 0;
-
-                    return x[0] < y[0] ? -1 : 1;
-                }(a.letter, b.letter);
-            } catch (ex) {
-                return false;
-            }
-        });
-
-        next();
+          return x[0] < y[0] ? -1 : 1;
+        }(a.letter, b.letter);
+      } catch (ex) {
+        return false;
+      }
     });
 
-    ContestSchema.methods.hasStarted = function () {
-        return this.start_time.getTime() <= Date.now();
-    };
+    next();
+  });
 
-    ContestSchema.methods.hasEnded = function () {
-        return this.end_time.getTime() <= Date.now();
-    };
+  ContestSchema.methods.hasStarted = function () {
+    return this.start_time.getTime() <= Date.now();
+  };
 
-    ContestSchema.methods.isRunning = function () {
-        return this.hasStarted() && !this.hasEnded();
-    };
+  ContestSchema.methods.hasEnded = function () {
+    return this.end_time.getTime() <= Date.now();
+  };
 
-    ContestSchema.methods.getTimeInContest = function () {
-        return parseInt((Date.now() - this.start_time.getTime()) / 60 / 1000);
-    };
+  ContestSchema.methods.isRunning = function () {
+    return this.hasStarted() && !this.hasEnded();
+  };
 
-    ContestSchema.pre("remove", function (next) {
-        db.model("Submission").remove({ contest: this._id }, function (err) {
-            if (err) console.error(err);
-        });
-        db.model("User").remove({ contest: this._id }, function (err) {
-            if (err) console.error(err);
-        });
-        next();
+  ContestSchema.methods.getTimeInContest = function () {
+    return parseInt((Date.now() - this.start_time.getTime()) / 60 / 1000, 10);
+  };
+
+  ContestSchema.methods.isFrozen = function () {
+    return this.isRunning() && this.getTimeInContest() >= this.freeze;
+  };
+
+  ContestSchema.methods.isBlind = function () {
+    return this.isRunning() && this.getTimeInContest() >= this.blind;
+  };
+
+  ContestSchema.pre("remove", function (next) {
+    db.model("Submission").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
     });
+    db.model("User").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
+    });
+    next();
+  });
 
-    return db.model('Contest', ContestSchema);
+  return db.model("Contest", ContestSchema);
 };
 
 /***/ }),

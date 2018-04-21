@@ -67,7 +67,6 @@ export const computed = {
       const prob = problems[i];
 
       const subs = (my.submissions || []).filter(v => v.problem === prob.problem._id);
-
       const scoringClass = Helper.getScoringClass(prob, contest);
       const scoring = Helper.getScoring(prob, contest);
       const evaluation = scoring.evalContext(subs);

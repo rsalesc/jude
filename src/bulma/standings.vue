@@ -14,10 +14,10 @@
           <div class="block has-text-right">
             <b-switch size="is-small"
               :value="config.compactTable"
-              @change="setCompactTable">Compact Table</b-switch>
+              @input="setCompactTable">Compact Table</b-switch>
             <b-switch size="is-small"
               :value="config.formattedPenalty"
-              @change="setFormattedPenalty">Format Penalty</b-switch>
+              @input="setFormattedPenalty">Format Penalty</b-switch>
           </div>
         </div>  
       </div>

@@ -16,12 +16,8 @@ const {
   Contest, Submission, Problem, User
 } = models;
 
-function handleContestError(err, req, res, next) {
+function handleContestError(err, req, res) {
   res.status(400).json({ error: err.toString() });
-}
-
-function getCodeHash(st) {
-
 }
 
 function getUserContest(user) {
@@ -70,18 +66,18 @@ function isAdmin(req) {
 function checkForDuplicateSubmission(user, contest, problem, hashCode) {
   return new Promise((resolve, reject) => {
     Submission.findOne({ _creator: user, contest, problem, codeHash: hashCode }).exec((err, result) => {
-      if(err)
+      if (err)
         return reject(err);
 
       resolve(result != null);
-    })
+    });
   });
 }
 
 // ensure user is auth'ed
 router.use(auth2.isAuth(["contestant", "admin"]));
 
-router.get("/", (req, res, next) => {
+router.get("/", (req, res) => {
   getUserContest(req.auth2.user).deepPopulate("problems.problem", { populate: { "problems.problem": { select: ContestProblemSelection }}}).exec((err, contest) => {
     if (err)
       return handleContestError(err, req, res);
@@ -117,7 +113,7 @@ router.get("/my", (req, res, next) => {
     });
 });
 
-router.get("/submissions", (req, res, next) => {
+router.get("/submissions", (req, res) => {
   getUserContest(req.auth2.user).exec((err, contest) => {
     if (err)
       return handleContestError(err, req, res);
@@ -127,16 +123,17 @@ router.get("/submissions", (req, res, next) => {
     if (!contest.hasStarted())
       return res.json({ _user: req.auth2.user._id, submissions: []});
 
-    Submission.find({ contest: req.auth2.user.contest }).sort("-time").select("-code").exec((err, subs) => {
-      if (err)
-        return handleContestError(err, req, res);
-      res.json({ _user: req.auth2.user._id, submissions: subs.map(filterOutSub) });
-    });
+    return Submission.find({ contest: req.auth2.user.contest }).sort("-time").select("-code")
+      .exec((err, subs) => {
+        if (err)
+          return handleContestError(err, req, res);
+        return res.json({ _user: req.auth2.user._id, submissions: subs.map(filterOutSub) });
+      });
   });
 });
 
 // TODO: hash submissions to avoid duplicates
-router.post("/submit", (req, res, next) => {
+router.post("/submit", (req, res) => {
   if (!req.body.code || !req.body.language || !req.body.problem)
     return handleContestError("all fields must be filled", req, res);
   const { user } = req.auth2;
@@ -168,12 +165,12 @@ router.post("/submit", (req, res, next) => {
       if (!contest.hasStarted())
         return handleContestError("contest has not started", req, res);
 
-      let hashCode = sha256(req.body.code);
+      const hashCode = sha256(req.body.code);
 
       try {
-        if(await checkForDuplicateSubmission(user._id, contest._id, req.body.problem, hashCode))
+        if (await checkForDuplicateSubmission(user._id, contest._id, req.body.problem, hashCode))
           return handleContestError("you can't submit the same code twice", req, res);
-      } catch(ex) {
+      } catch (ex) {
         return handleContestError(ex, req, res);
       }
 
@@ -251,9 +248,9 @@ router.get("/submission/:id", (req, res, next) => {
     if (!contest)
       return handleContestError("contest not found", req, res, next);
 
-    Submission.findById(req.params.id).lean().exec((err, sub) => {
-      if (err)
-        return handleContestError(err, req, res, next);
+    Submission.findById(req.params.id).lean().exec((err2, sub) => {
+      if (err2)
+        return handleContestError(err2, req, res, next);
       if (!sub)
         return handleContestError("submission not found", req, res, next);
 
@@ -261,11 +258,11 @@ router.get("/submission/:id", (req, res, next) => {
         return res.json(filterOutSub(sub));
 
 
-      res.json(filterOutPrivateSub(sub));
+      return res.json(filterOutPrivateSub(sub));
     });
   });
 });
 
-router.get("/languages", (req, res, next) => res.json(Object.entries(grader.availableLanguages)));
+router.get("/languages", (req, res) => res.json(Object.entries(grader.availableLanguages)));
 
 module.exports = router;

@@ -4170,94 +4170,107 @@ var mongoose = __webpack_require__(2);
 var deepPopulate = __webpack_require__(53)(mongoose);
 var Schema = mongoose.Schema;
 
+
 module.exports = function () {
-    if (db.models.Contest) return db.model("Contest");
+  if (db.models.Contest) return db.model("Contest");
 
-    var Problem = __webpack_require__(28)();
+  var Problem = __webpack_require__(28)();
 
-    var ContestProblem = new Schema({
-        letter: {
-            type: String,
-            required: true,
-            match: /[A-Z][0-9]*/
+  var ContestProblem = new Schema({
+    letter: {
+      type: String,
+      required: true,
+      match: /[A-Z][0-9]*/
+    },
+    problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
+    color: { type: String, default: "000" }
+  }, { _id: false });
+
+  var ContestSchema = new Schema({
+    name: { type: String, minlength: 4, maxlength: 64 },
+    start_time: { type: Date, required: true },
+    end_time: { type: Date, required: true },
+    scoring: { type: String, required: true },
+    problems: {
+      type: [ContestProblem],
+      validate: {
+        validator: function validator(v) {
+          if (!Array.isArray(v)) return false;
+          var letters = v.map(function (val) {
+            return val.letter;
+          });
+
+          return new _set2.default(letters).size === letters.length;
         },
-        problem: { type: Schema.Types.ObjectId, ref: 'Problem', required: true },
-        color: { type: String, default: "000" }
-    }, { _id: false });
 
-    var ContestSchema = new Schema({
-        name: { type: String, minlength: 4, maxlength: 64 },
-        start_time: { type: Date, required: true },
-        end_time: { type: Date, required: true },
-        scoring: { type: String, required: true },
-        problems: {
-            type: [ContestProblem],
-            validate: {
-                validator: function validator(v) {
-                    if (!Array.isArray(v)) return false;
-                    var letters = v.map(function (val) {
-                        return val.letter;
-                    });
+        message: "Contest cannot have repeated letters and problems must be an array"
+      }
+    },
+    hidden: Boolean,
+    upseeing: { type: Boolean, required: true, default: false },
+    blind: { type: Number, default: 0 },
+    freeze: { type: Number, default: 0 },
+    hideFreeze: { type: Boolean, default: true }
+  }, { timestamps: true });
 
-                    return new _set2.default(letters).size == letters.length;
-                },
-                message: 'Contest cannot have repeated letters and problems must be an array'
-            }
-        },
-        hidden: Boolean,
-        upseeing: { type: Boolean, required: true, default: false }
-    }, { timestamps: true });
+  ContestSchema.index({ name: 1 });
+  ContestSchema.index({ name: "text" });
+  ContestSchema.plugin(deepPopulate);
 
-    ContestSchema.index({ name: 1 });
-    ContestSchema.index({ name: 'text' });
-    ContestSchema.plugin(deepPopulate);
+  ContestSchema.pre("save", function (next) {
+    this.problems.sort(function (a, b) {
+      try {
+        return function (x, y) {
+          var xd = parseInt(x.slice(1), 10) || 0;
+          var yd = parseInt(y.slice(1), 10) || 0;
 
-    ContestSchema.pre('save', function (next) {
-        this.problems.sort(function (a, b) {
-            try {
-                return function (x, y) {
-                    var xd = parseInt(x.slice(1)) || 0;
-                    var yd = parseInt(y.slice(1)) || 0;
+          if (x[0] === y[0]) return xd < yd ? -1 : xd > yd ? 1 : 0;
 
-                    if (x[0] == y[0]) return xd < yd ? -1 : xd > yd ? 1 : 0;
-
-                    return x[0] < y[0] ? -1 : 1;
-                }(a.letter, b.letter);
-            } catch (ex) {
-                return false;
-            }
-        });
-
-        next();
+          return x[0] < y[0] ? -1 : 1;
+        }(a.letter, b.letter);
+      } catch (ex) {
+        return false;
+      }
     });
 
-    ContestSchema.methods.hasStarted = function () {
-        return this.start_time.getTime() <= Date.now();
-    };
+    next();
+  });
 
-    ContestSchema.methods.hasEnded = function () {
-        return this.end_time.getTime() <= Date.now();
-    };
+  ContestSchema.methods.hasStarted = function () {
+    return this.start_time.getTime() <= Date.now();
+  };
 
-    ContestSchema.methods.isRunning = function () {
-        return this.hasStarted() && !this.hasEnded();
-    };
+  ContestSchema.methods.hasEnded = function () {
+    return this.end_time.getTime() <= Date.now();
+  };
 
-    ContestSchema.methods.getTimeInContest = function () {
-        return parseInt((Date.now() - this.start_time.getTime()) / 60 / 1000);
-    };
+  ContestSchema.methods.isRunning = function () {
+    return this.hasStarted() && !this.hasEnded();
+  };
 
-    ContestSchema.pre("remove", function (next) {
-        db.model("Submission").remove({ contest: this._id }, function (err) {
-            if (err) console.error(err);
-        });
-        db.model("User").remove({ contest: this._id }, function (err) {
-            if (err) console.error(err);
-        });
-        next();
+  ContestSchema.methods.getTimeInContest = function () {
+    return parseInt((Date.now() - this.start_time.getTime()) / 60 / 1000, 10);
+  };
+
+  ContestSchema.methods.isFrozen = function () {
+    return this.isRunning() && this.getTimeInContest() >= this.freeze;
+  };
+
+  ContestSchema.methods.isBlind = function () {
+    return this.isRunning() && this.getTimeInContest() >= this.blind;
+  };
+
+  ContestSchema.pre("remove", function (next) {
+    db.model("Submission").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
     });
+    db.model("User").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
+    });
+    next();
+  });
 
-    return db.model('Contest', ContestSchema);
+  return db.model("Contest", ContestSchema);
 };
 
 /***/ }),
@@ -5019,11 +5032,9 @@ var Contest = models.Contest,
     User = models.User;
 
 
-function handleContestError(err, req, res, next) {
+function handleContestError(err, req, res) {
   res.status(400).json({ error: err.toString() });
 }
-
-function getCodeHash(st) {}
 
 function getUserContest(user) {
   try {
@@ -5122,7 +5133,7 @@ function checkForDuplicateSubmission(user, contest, problem, hashCode) {
 // ensure user is auth'ed
 router.use(auth2.isAuth(["contestant", "admin"]));
 
-router.get("/", function (req, res, next) {
+router.get("/", function (req, res) {
   getUserContest(req.auth2.user).deepPopulate("problems.problem", { populate: { "problems.problem": { select: ContestProblemSelection } } }).exec(function (err, contest) {
     if (err) return handleContestError(err, req, res);
     if (!contest) return handleContestError("inconsistent session", req, res);
@@ -5150,22 +5161,22 @@ router.get("/my", function (req, res, next) {
   });
 });
 
-router.get("/submissions", function (req, res, next) {
+router.get("/submissions", function (req, res) {
   getUserContest(req.auth2.user).exec(function (err, contest) {
     if (err) return handleContestError(err, req, res);
     if (!contest) return handleContestError("non existent contest", req, res);
 
     if (!contest.hasStarted()) return res.json({ _user: req.auth2.user._id, submissions: [] });
 
-    Submission.find({ contest: req.auth2.user.contest }).sort("-time").select("-code").exec(function (err, subs) {
+    return Submission.find({ contest: req.auth2.user.contest }).sort("-time").select("-code").exec(function (err, subs) {
       if (err) return handleContestError(err, req, res);
-      res.json({ _user: req.auth2.user._id, submissions: subs.map(filterOutSub) });
+      return res.json({ _user: req.auth2.user._id, submissions: subs.map(filterOutSub) });
     });
   });
 });
 
 // TODO: hash submissions to avoid duplicates
-router.post("/submit", function (req, res, next) {
+router.post("/submit", function (req, res) {
   if (!req.body.code || !req.body.language || !req.body.problem) return handleContestError("all fields must be filled", req, res);
   var user = req.auth2.user;
 
@@ -5415,18 +5426,18 @@ router.get("/submission/:id", function (req, res, next) {
     if (err) return handleContestError(err, req, res, next);
     if (!contest) return handleContestError("contest not found", req, res, next);
 
-    Submission.findById(req.params.id).lean().exec(function (err, sub) {
-      if (err) return handleContestError(err, req, res, next);
+    Submission.findById(req.params.id).lean().exec(function (err2, sub) {
+      if (err2) return handleContestError(err2, req, res, next);
       if (!sub) return handleContestError("submission not found", req, res, next);
 
       if (!sub._creator.equals(req.auth2.user._id) && !(contest.hasEnded() && contest.upseeing) && !isAdmin(req)) return res.json(filterOutSub(sub));
 
-      res.json(filterOutPrivateSub(sub));
+      return res.json(filterOutPrivateSub(sub));
     });
   });
 });
 
-router.get("/languages", function (req, res, next) {
+router.get("/languages", function (req, res) {
   return res.json((0, _entries2.default)(grader.availableLanguages));
 });
 
