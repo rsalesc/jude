@@ -3,7 +3,7 @@
     <div class="container">
       <div class="content has-text-centered">
         <p>
-          <strong>Jude</strong> by <a href="https://github.com/rsalesc">Roberto Sales</a>.
+          <strong>Jude</strong> by <a href="https://github.com/rsalesc">Roberio Sales</a>.
         </p>
         <p>
           <a class="icon" href="https://github.com/rsalesc/jude">
