@@ -12,6 +12,48 @@ import * as Scoring from "@judge/scoring";
 import moment from "moment";
 
 describe("helpers", function () {
+  describe("checkRole()", function () {
+    const tests = [
+      {
+        name: "no roles",
+        roles: [],
+        needle: "admin",
+        want: false
+      },
+      {
+        name: "matching role",
+        roles: ["frango", "admin"],
+        needle: "admin",
+        want: true
+      },
+      {
+        name: "null roles",
+        roles: null,
+        needle: "admin",
+        want: false
+      },
+      {
+        name: "non-array matching role",
+        roles: "admin",
+        needle: "admin",
+        want: false
+      },
+      {
+        name: "no matching role",
+        roles: ["frango", "carne"],
+        needle: "admin",
+        want: false
+      }
+    ];
+
+    tests.forEach((tc) => {
+      it(tc.name, function () {
+        const got = Helper.checkRole(tc.roles, tc.needle);
+        expect(got).to.equal(tc.want);
+      });
+    });
+  });
+
   describe("getScoringString()", function () {
     const tests = [
       {

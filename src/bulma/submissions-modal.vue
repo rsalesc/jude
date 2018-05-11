@@ -92,7 +92,7 @@ export default {
       return this.userObject;
     },
     isAdmin() {
-      return this.getSelf().role === "admin";
+      return Helper.isAdmin(this.getSelf());
     },
     getSubmissions() {
       if(!this.shownSubmissions)

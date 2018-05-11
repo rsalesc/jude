@@ -7,6 +7,7 @@ import Login from "./login.vue";
 import MainPage from "./main.vue";
 import Dashboard from "./dashboard.vue";
 import Rankings from "./rankings.vue";
+import Settings from "./admin/settings.vue";
 import { store } from "./store/";
 import Buefy from "buefy";
 import "buefy/lib/buefy.css";
@@ -26,6 +27,7 @@ const routes = [
     children: [
       { path: "dashboard", component: Dashboard },
       { path: "standings", component: Rankings },
+      { path: "settings", component: Settings },
       { path: "", redirect: "dashboard" }
     ]
   }

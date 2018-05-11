@@ -74,31 +74,31 @@ module.exports = require("path");
 /* 1 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/get-iterator");
+module.exports = require("mongoose");
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = require("mongoose");
+module.exports = require("babel-runtime/core-js/get-iterator");
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/regenerator");
+module.exports = require("express");
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/asyncToGenerator");
+module.exports = require("babel-runtime/regenerator");
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
-module.exports = require("express");
+module.exports = require("babel-runtime/helpers/asyncToGenerator");
 
 /***/ }),
 /* 6 */
@@ -110,10 +110,10 @@ module.exports = require("express");
 /* eslint-disable */
 var path = __webpack_require__(0),
     fs = __webpack_require__(20),
-    mongoose = __webpack_require__(2);
+    mongoose = __webpack_require__(1);
 // files = fs.readdirSync(__dirname);
 
-__webpack_require__(26);
+__webpack_require__(25);
 
 /* files.forEach(function(file) {
     var name = path.basename(file, '.js');
@@ -125,10 +125,10 @@ __webpack_require__(26);
 });*/
 
 module.exports = {
-  Contest: __webpack_require__(51)(),
-  User: __webpack_require__(54)(),
-  Submission: __webpack_require__(55)(),
-  Problem: __webpack_require__(28)()
+  Contest: __webpack_require__(52)(),
+  User: __webpack_require__(55)(),
+  Submission: __webpack_require__(56)(),
+  Problem: __webpack_require__(27)()
 };
 
 /***/ }),
@@ -151,343 +151,6 @@ module.exports = require("babel-runtime/core-js/object/keys");
 
 /***/ }),
 /* 10 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/core-js/promise");
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _promise = __webpack_require__(10);
-
-var _promise2 = _interopRequireDefault(_promise);
-
-var _typeof2 = __webpack_require__(61);
-
-var _typeof3 = _interopRequireDefault(_typeof2);
-
-var _keys = __webpack_require__(9);
-
-var _keys2 = _interopRequireDefault(_keys);
-
-var _getIterator2 = __webpack_require__(1);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-var _regenerator = __webpack_require__(3);
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
-var _asyncToGenerator2 = __webpack_require__(4);
-
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
-
-var exists = function () {
-  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(p) {
-    return _regenerator2.default.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            _context.next = 3;
-            return fs.stat(p);
-
-          case 3:
-            return _context.abrupt("return", true);
-
-          case 6:
-            _context.prev = 6;
-            _context.t0 = _context["catch"](0);
-            return _context.abrupt("return", false);
-
-          case 9:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, this, [[0, 6]]);
-  }));
-
-  return function exists(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-var fileExists = function () {
-  var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(p) {
-    var res;
-    return _regenerator2.default.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
-            return fs.stat(p);
-
-          case 3:
-            res = _context2.sent;
-            return _context2.abrupt("return", res.isFile());
-
-          case 7:
-            _context2.prev = 7;
-            _context2.t0 = _context2["catch"](0);
-            return _context2.abrupt("return", false);
-
-          case 10:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2, this, [[0, 7]]);
-  }));
-
-  return function fileExists(_x2) {
-    return _ref2.apply(this, arguments);
-  };
-}();
-
-var dirExists = function () {
-  var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(p) {
-    var res;
-    return _regenerator2.default.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            _context3.prev = 0;
-            _context3.next = 3;
-            return fs.statAsync(p);
-
-          case 3:
-            res = _context3.sent;
-            return _context3.abrupt("return", res.isDirectory());
-
-          case 7:
-            _context3.prev = 7;
-            _context3.t0 = _context3["catch"](0);
-            return _context3.abrupt("return", false);
-
-          case 10:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3, this, [[0, 7]]);
-  }));
-
-  return function dirExists(_x3) {
-    return _ref3.apply(this, arguments);
-  };
-}();
-
-// eslint-disable-next-line require-await
-var globAsync = function () {
-  var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(pattern, opts) {
-    return _regenerator2.default.wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            return _context4.abrupt("return", new _promise2.default(function (resolve, reject) {
-              glob(pattern, opts, function (err, files) {
-                if (err) return reject(err);
-                return resolve(files);
-              });
-            }));
-
-          case 1:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4, this);
-  }));
-
-  return function globAsync(_x5, _x6) {
-    return _ref4.apply(this, arguments);
-  };
-}();
-
-var mkdtemp = function () {
-  var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _regenerator2.default.wrap(function _callee5$(_context5) {
-      while (1) {
-        switch (_context5.prev = _context5.next) {
-          case 0:
-            return _context5.abrupt("return", new _promise2.default(function (resolve, reject) {
-              return fs.mkdtemp.apply(fs, args.concat([function (err, result) {
-                if (err) return reject(err);
-                return resolve(result);
-              }]));
-            }));
-
-          case 1:
-          case "end":
-            return _context5.stop();
-        }
-      }
-    }, _callee5, this);
-  }));
-
-  return function mkdtemp() {
-    return _ref5.apply(this, arguments);
-  };
-}();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Created by rsalesc on 14/06/16.
- */
-
-var path = __webpack_require__(0);
-var fs = __webpack_require__(15);
-var util = __webpack_require__(62);
-var glob = __webpack_require__(30);
-
-function inspect(p) {
-  return util.inspect(p, false, null);
-}
-
-function logInspect(p) {
-  return console.log(inspect(p));
-}
-
-function fillUpTo(arr) {
-  var n = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-
-  if (n === 0) return [];
-  if (!(arr instanceof Array) || arr.length === 0) arr = [undefined];
-
-  while (arr.length > n) {
-    arr.pop();
-  }while (arr.length < n) {
-    var el = arr.pop();
-    arr.push(el);
-    arr.push(el);
-  }
-
-  return arr;
-}
-
-function destroy(obj) {
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = (0, _getIterator3.default)((0, _keys2.default)(obj)), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var prop = _step.value;
-
-      var property = obj[prop];
-      if (property != null && (typeof property === "undefined" ? "undefined" : (0, _typeof3.default)(property)) === "object") destroy(property);else obj[prop] = null;
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-}
-
-function normalizePath(p) {
-  var normalizedPath = path.normalize(p);
-  if (normalizedPath[-1] === "/") return normalizedPath.slice(0, -1);
-  return normalizedPath;
-}
-
-module.exports = {
-  exists: exists,
-  fileExists: fileExists,
-  dirExists: dirExists,
-  inspect: inspect,
-  logInspect: logInspect,
-  fillUpTo: fillUpTo,
-  destroy: destroy,
-  globAsync: globAsync,
-  mkdtemp: mkdtemp
-};
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/core-js/object/get-prototype-of");
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/inherits");
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports) {
-
-module.exports = require("fs-extra");
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(__dirname) {
-
-/**
- * Created by rsalesc on 14/06/16.
- */
-var winston = __webpack_require__(64);
-var process = __webpack_require__(31);
-
-var logger = new winston.Logger({
-    level: process.env.LOG_LEVEL || "info",
-    transports: [new winston.transports.Console({
-        // eslint-disable-next-line no-constant-condition
-        level: process.env.VERBOSE || true ? "debug" : "warn"
-        // handleExceptions: true
-    }), new winston.transports.File({
-        name: "info-file",
-        level: "info",
-        filename: __dirname + "/../logs/info.log"
-    }), new winston.transports.File({
-        name: "error-file",
-        level: "warn",
-        filename: __dirname + "/../logs/error.log"
-        // handleExceptions: true, json: true
-    })]
-});
-
-module.exports = logger;
-/* WEBPACK VAR INJECTION */}.call(exports, "judge"))
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/slicedToArray");
-
-/***/ }),
-/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -499,9 +162,9 @@ var _extends3 = _interopRequireDefault(_extends2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mongoose = __webpack_require__(2);
+var mongoose = __webpack_require__(1);
 var models = __webpack_require__(6);
-var crypto = __webpack_require__(80);
+var crypto = __webpack_require__(71);
 
 var Schema = mongoose.Schema;
 
@@ -764,6 +427,343 @@ module.exports = {
 };
 
 /***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/promise");
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _promise = __webpack_require__(11);
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _typeof2 = __webpack_require__(62);
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
+var _keys = __webpack_require__(9);
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _getIterator2 = __webpack_require__(2);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _regenerator = __webpack_require__(4);
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = __webpack_require__(5);
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var exists = function () {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(p) {
+    return _regenerator2.default.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            _context.next = 3;
+            return fs.stat(p);
+
+          case 3:
+            return _context.abrupt("return", true);
+
+          case 6:
+            _context.prev = 6;
+            _context.t0 = _context["catch"](0);
+            return _context.abrupt("return", false);
+
+          case 9:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this, [[0, 6]]);
+  }));
+
+  return function exists(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+var fileExists = function () {
+  var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(p) {
+    var res;
+    return _regenerator2.default.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            _context2.next = 3;
+            return fs.stat(p);
+
+          case 3:
+            res = _context2.sent;
+            return _context2.abrupt("return", res.isFile());
+
+          case 7:
+            _context2.prev = 7;
+            _context2.t0 = _context2["catch"](0);
+            return _context2.abrupt("return", false);
+
+          case 10:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, this, [[0, 7]]);
+  }));
+
+  return function fileExists(_x2) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+var dirExists = function () {
+  var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(p) {
+    var res;
+    return _regenerator2.default.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            _context3.next = 3;
+            return fs.statAsync(p);
+
+          case 3:
+            res = _context3.sent;
+            return _context3.abrupt("return", res.isDirectory());
+
+          case 7:
+            _context3.prev = 7;
+            _context3.t0 = _context3["catch"](0);
+            return _context3.abrupt("return", false);
+
+          case 10:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, this, [[0, 7]]);
+  }));
+
+  return function dirExists(_x3) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+
+// eslint-disable-next-line require-await
+var globAsync = function () {
+  var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(pattern, opts) {
+    return _regenerator2.default.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            return _context4.abrupt("return", new _promise2.default(function (resolve, reject) {
+              glob(pattern, opts, function (err, files) {
+                if (err) return reject(err);
+                return resolve(files);
+              });
+            }));
+
+          case 1:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, this);
+  }));
+
+  return function globAsync(_x5, _x6) {
+    return _ref4.apply(this, arguments);
+  };
+}();
+
+var mkdtemp = function () {
+  var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _regenerator2.default.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            return _context5.abrupt("return", new _promise2.default(function (resolve, reject) {
+              return fs.mkdtemp.apply(fs, args.concat([function (err, result) {
+                if (err) return reject(err);
+                return resolve(result);
+              }]));
+            }));
+
+          case 1:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5, this);
+  }));
+
+  return function mkdtemp() {
+    return _ref5.apply(this, arguments);
+  };
+}();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Created by rsalesc on 14/06/16.
+ */
+
+var path = __webpack_require__(0);
+var fs = __webpack_require__(16);
+var util = __webpack_require__(63);
+var glob = __webpack_require__(29);
+
+function inspect(p) {
+  return util.inspect(p, false, null);
+}
+
+function logInspect(p) {
+  return console.log(inspect(p));
+}
+
+function fillUpTo(arr) {
+  var n = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+  if (n === 0) return [];
+  if (!(arr instanceof Array) || arr.length === 0) arr = [undefined];
+
+  while (arr.length > n) {
+    arr.pop();
+  }while (arr.length < n) {
+    var el = arr.pop();
+    arr.push(el);
+    arr.push(el);
+  }
+
+  return arr;
+}
+
+function destroy(obj) {
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = (0, _getIterator3.default)((0, _keys2.default)(obj)), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var prop = _step.value;
+
+      var property = obj[prop];
+      if (property != null && (typeof property === "undefined" ? "undefined" : (0, _typeof3.default)(property)) === "object") destroy(property);else obj[prop] = null;
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+}
+
+function normalizePath(p) {
+  var normalizedPath = path.normalize(p);
+  if (normalizedPath[-1] === "/") return normalizedPath.slice(0, -1);
+  return normalizedPath;
+}
+
+module.exports = {
+  exists: exists,
+  fileExists: fileExists,
+  dirExists: dirExists,
+  inspect: inspect,
+  logInspect: logInspect,
+  fillUpTo: fillUpTo,
+  destroy: destroy,
+  globAsync: globAsync,
+  mkdtemp: mkdtemp
+};
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/object/get-prototype-of");
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/helpers/inherits");
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs-extra");
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(__dirname) {
+
+/**
+ * Created by rsalesc on 14/06/16.
+ */
+var winston = __webpack_require__(65);
+var process = __webpack_require__(30);
+
+var logger = new winston.Logger({
+    level: process.env.LOG_LEVEL || "info",
+    transports: [new winston.transports.Console({
+        // eslint-disable-next-line no-constant-condition
+        level: process.env.VERBOSE || true ? "debug" : "warn"
+        // handleExceptions: true
+    }), new winston.transports.File({
+        name: "info-file",
+        level: "info",
+        filename: __dirname + "/../logs/info.log"
+    }), new winston.transports.File({
+        name: "error-file",
+        level: "warn",
+        filename: __dirname + "/../logs/error.log"
+        // handleExceptions: true, json: true
+    })]
+});
+
+module.exports = logger;
+/* WEBPACK VAR INJECTION */}.call(exports, "judge"))
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/helpers/slicedToArray");
+
+/***/ }),
 /* 19 */
 /***/ (function(module, exports) {
 
@@ -782,15 +782,15 @@ module.exports = require("fs");
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _regenerator = __webpack_require__(3);
+var _regenerator = __webpack_require__(4);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(4);
+var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -799,7 +799,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 15/07/16.
  */
-var express = __webpack_require__(5);
+var express = __webpack_require__(3);
 var router = express.Router();
 var path = __webpack_require__(0);
 
@@ -964,19 +964,19 @@ var _keys = __webpack_require__(9);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(12);
+var _getPrototypeOf = __webpack_require__(13);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(13);
+var _possibleConstructorReturn2 = __webpack_require__(14);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(14);
+var _inherits2 = __webpack_require__(15);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -988,15 +988,15 @@ var _createClass2 = __webpack_require__(8);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _regenerator = __webpack_require__(3);
+var _regenerator = __webpack_require__(4);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(4);
+var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _promise = __webpack_require__(10);
+var _promise = __webpack_require__(11);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -1006,15 +1006,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/06/16.
  */
 
-var yauzl = __webpack_require__(59);
-var concatStream = __webpack_require__(60);
-var utils = __webpack_require__(11);
-var wildcard = __webpack_require__(63);
+var yauzl = __webpack_require__(60);
+var concatStream = __webpack_require__(61);
+var utils = __webpack_require__(12);
+var wildcard = __webpack_require__(64);
 var path = __webpack_require__(0);
-var logger = __webpack_require__(16);
-var fs = __webpack_require__(15);
-var promisify = __webpack_require__(65);
-var glob = promisify(__webpack_require__(30).glob);
+var logger = __webpack_require__(17);
+var fs = __webpack_require__(16);
+var promisify = __webpack_require__(66);
+var glob = promisify(__webpack_require__(29).glob);
 
 /* Helper Functions for storage */
 function dealWithEntry(zipFile, entry) {
@@ -1958,44 +1958,20 @@ module.exports = function(module) {
 
 /***/ }),
 /* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Created by rsalesc on 15/07/16.
- */
-var express = __webpack_require__(5);
-var router = express.Router();
-
-var contestRouter = __webpack_require__(49);
-var userRouter = __webpack_require__(56);
-var submissionRouter = __webpack_require__(21);
-
-// middlewares
-router.use('/contests', contestRouter);
-router.use('/users', userRouter);
-router.use('/submissions', submissionRouter);
-
-module.exports = router;
-
-/***/ }),
-/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/object/assign");
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var mongoose = __webpack_require__(2);
-var MongoQueue2 = __webpack_require__(27);
-var weed = __webpack_require__(50);
+var mongoose = __webpack_require__(1);
+var MongoQueue2 = __webpack_require__(26);
+var weed = __webpack_require__(51);
 
 // mongodb setup
 
@@ -2016,19 +1992,19 @@ if (!global.db) {
 module.exports = global.db;
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = require("mongo-queue2");
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -2039,7 +2015,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var path = __webpack_require__(0);
-var mongoose = __webpack_require__(2);
+var mongoose = __webpack_require__(1);
 var Schema = mongoose.Schema;
 
 // TODO: add creation time (with a plugin)
@@ -2123,59 +2099,59 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports) {
 
 module.exports = require("sha256");
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports) {
 
 module.exports = require("glob");
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports) {
 
 module.exports = require("process");
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _slicedToArray2 = __webpack_require__(17);
+var _slicedToArray2 = __webpack_require__(18);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _map = __webpack_require__(33);
+var _map = __webpack_require__(32);
 
 var _map2 = _interopRequireDefault(_map);
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(12);
+var _getPrototypeOf = __webpack_require__(13);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(13);
+var _possibleConstructorReturn2 = __webpack_require__(14);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(14);
+var _inherits2 = __webpack_require__(15);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _regenerator = __webpack_require__(3);
+var _regenerator = __webpack_require__(4);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(4);
+var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -2288,11 +2264,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var path = __webpack_require__(0);
-var task = __webpack_require__(66);
-var YAML = __webpack_require__(68);
-var logger = __webpack_require__(16);
-var utils = __webpack_require__(11);
-var scoring = __webpack_require__(34);
+var task = __webpack_require__(67);
+var YAML = __webpack_require__(69);
+var logger = __webpack_require__(17);
+var utils = __webpack_require__(12);
+var scoring = __webpack_require__(33);
 
 var JUDE_FN = "jude.yml";
 
@@ -2825,27 +2801,27 @@ var LOADERS = new _map2.default([
 };
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/map");
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _getPrototypeOf = __webpack_require__(12);
+var _getPrototypeOf = __webpack_require__(13);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(13);
+var _possibleConstructorReturn2 = __webpack_require__(14);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(14);
+var _inherits2 = __webpack_require__(15);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -2853,7 +2829,7 @@ var _keys = __webpack_require__(9);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -3470,29 +3446,58 @@ module.exports = {
 };
 
 /***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(6),
+    Contest = _require.Contest;
+
+function getUserContest(user) {
+  try {
+    return Contest.findById(user.contest);
+  } catch (ex) {
+    return { exec: function exec(cb) {
+        return cb(ex);
+      } };
+  }
+}
+
+function isAdmin(req) {
+  return req.auth2.roles.indexOf("admin") !== -1;
+}
+
+module.exports = {
+  getUserContest: getUserContest,
+  isAdmin: isAdmin
+};
+
+/***/ }),
 /* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _regenerator = __webpack_require__(3);
+var _regenerator = __webpack_require__(4);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(4);
+var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _slicedToArray2 = __webpack_require__(17);
+var _slicedToArray2 = __webpack_require__(18);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _map = __webpack_require__(33);
+var _map = __webpack_require__(32);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -3511,13 +3516,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var fs = __webpack_require__(20);
-var fse = __webpack_require__(15);
-var tmp = __webpack_require__(76);
+var fse = __webpack_require__(16);
+var tmp = __webpack_require__(81);
 tmp.setGracefulCleanup();
 
 var path = __webpack_require__(0);
 
-var MongoQueue2 = __webpack_require__(27);
+var MongoQueue2 = __webpack_require__(26);
 
 var JudgeConfig = {
   MAX_TRIES: 5,
@@ -3792,10 +3797,10 @@ var _extends3 = _interopRequireDefault(_extends2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var express = __webpack_require__(5);
+var express = __webpack_require__(3);
 var session = __webpack_require__(40);
 var MongoStore = __webpack_require__(41)(session);
-var mongoose = __webpack_require__(2);
+var mongoose = __webpack_require__(1);
 var path = __webpack_require__(0);
 var favicon = __webpack_require__(42);
 var logger = __webpack_require__(43);
@@ -3806,15 +3811,15 @@ var flash = __webpack_require__(47);
 var router = express.Router();
 // var methodOverride = require('method-override');
 var restify = __webpack_require__(48);
-var apiRoutes = __webpack_require__(24);
-var staticCompressed = __webpack_require__(57);
+var apiRoutes = __webpack_require__(49);
+var staticCompressed = __webpack_require__(58);
 
 // expose db object globally
-__webpack_require__(26);
+__webpack_require__(25);
 
 var app = express();
-var routes = __webpack_require__(58);
-var auth2 = __webpack_require__(18);
+var routes = __webpack_require__(59);
+var auth2 = __webpack_require__(10);
 var models = __webpack_require__(6);
 
 // app.use(express.static(path.join(__dirname, "public")));
@@ -4033,19 +4038,43 @@ module.exports = require("express-restify-mongoose");
 "use strict";
 
 
-var _regenerator = __webpack_require__(3);
+/**
+ * Created by rsalesc on 15/07/16.
+ */
+var express = __webpack_require__(3);
+var router = express.Router();
+
+var contestRouter = __webpack_require__(50);
+var userRouter = __webpack_require__(57);
+var submissionRouter = __webpack_require__(21);
+
+// middlewares
+router.use("/contests", contestRouter);
+router.use("/users", userRouter);
+router.use("/submissions", submissionRouter);
+
+module.exports = router;
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _regenerator = __webpack_require__(4);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _promise = __webpack_require__(10);
+var _promise = __webpack_require__(11);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _assign = __webpack_require__(25);
+var _assign = __webpack_require__(24);
 
 var _assign2 = _interopRequireDefault(_assign);
 
-var _asyncToGenerator2 = __webpack_require__(4);
+var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -4054,11 +4083,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 15/07/16.
  */
-var express = __webpack_require__(5);
+var express = __webpack_require__(3);
 var router = express.Router();
 var path = __webpack_require__(0);
 
-var mongoose = __webpack_require__(2);
+var mongoose = __webpack_require__(1);
 var models = __webpack_require__(6);
 var Contest = models.Contest,
     User = models.User;
@@ -4145,19 +4174,19 @@ router.post("/:id/addUsers", function () {
 module.exports = router;
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports) {
 
 module.exports = require("jude-seaweedfs");
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _set = __webpack_require__(52);
+var _set = __webpack_require__(53);
 
 var _set2 = _interopRequireDefault(_set);
 
@@ -4166,15 +4195,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 14/07/16.
  */
-var mongoose = __webpack_require__(2);
-var deepPopulate = __webpack_require__(53)(mongoose);
+var mongoose = __webpack_require__(1);
+var deepPopulate = __webpack_require__(54)(mongoose);
 var Schema = mongoose.Schema;
 
 
 module.exports = function () {
   if (db.models.Contest) return db.model("Contest");
 
-  var Problem = __webpack_require__(28)();
+  var Problem = __webpack_require__(27)();
 
   var ContestProblem = new Schema({
     letter: {
@@ -4274,19 +4303,19 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/set");
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports) {
 
 module.exports = require("mongoose-deep-populate");
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4295,9 +4324,9 @@ module.exports = require("mongoose-deep-populate");
 /**
  * Created by rsalesc on 14/07/16.
  */
-var mongoose = __webpack_require__(2);
+var mongoose = __webpack_require__(1);
 var Schema = mongoose.Schema;
-var sha256 = __webpack_require__(29);
+var sha256 = __webpack_require__(28);
 
 module.exports = function () {
     if (db.models.User) return db.model("User");
@@ -4358,13 +4387,13 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -4374,7 +4403,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/07/16.
  */
 
-var mongoose = __webpack_require__(2);
+var mongoose = __webpack_require__(1);
 var Schema = mongoose.Schema;
 
 
@@ -4449,15 +4478,15 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var express = __webpack_require__(5);
+var express = __webpack_require__(3);
 var path = __webpack_require__(0);
-var mongoose = __webpack_require__(2);
+var mongoose = __webpack_require__(1);
 // eslint-disable-next-line new-cap
 var router = express.Router();
 var models = __webpack_require__(6);
@@ -4479,29 +4508,29 @@ function handleUserError(err, req, res) {
 module.exports = router;
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-static-gzip");
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _regenerator = __webpack_require__(3);
+var _regenerator = __webpack_require__(4);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(4);
+var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var express = __webpack_require__(5);
+var express = __webpack_require__(3);
 var router = express.Router();
 var path = __webpack_require__(0);
 var models = __webpack_require__(6);
@@ -4510,12 +4539,12 @@ var Problem = models.Problem,
 
 
 var Storage = __webpack_require__(22).MemoryStorage;
-var Loader = __webpack_require__(32);
-var utils = __webpack_require__(11);
-var api = __webpack_require__(24);
-var contest = __webpack_require__(69);
-var admin = __webpack_require__(81);
-var auth2 = __webpack_require__(18);
+var Loader = __webpack_require__(31);
+var utils = __webpack_require__(12);
+var api2 = __webpack_require__(70);
+var contest = __webpack_require__(74);
+var admin = __webpack_require__(85);
+var auth2 = __webpack_require__(10);
 var passport = __webpack_require__(36);
 
 function handleInternalError(err, req, res, next) {
@@ -4675,59 +4704,60 @@ router.get("/contest-list", function (req, res, next) {
 
 router.use("/contest", contest);
 router.use("/admin", admin);
+router.use("/api/v2", api2);
 
 module.exports = router;
-
-/***/ }),
-/* 59 */
-/***/ (function(module, exports) {
-
-module.exports = require("yauzl");
 
 /***/ }),
 /* 60 */
 /***/ (function(module, exports) {
 
-module.exports = require("concat-stream");
+module.exports = require("yauzl");
 
 /***/ }),
 /* 61 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/typeof");
+module.exports = require("concat-stream");
 
 /***/ }),
 /* 62 */
 /***/ (function(module, exports) {
 
-module.exports = require("util");
+module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
 /* 63 */
 /***/ (function(module, exports) {
 
-module.exports = require("node-wildcard");
+module.exports = require("util");
 
 /***/ }),
 /* 64 */
 /***/ (function(module, exports) {
 
-module.exports = require("winston");
+module.exports = require("node-wildcard");
 
 /***/ }),
 /* 65 */
 /***/ (function(module, exports) {
 
-module.exports = require("es6-promisify");
+module.exports = require("winston");
 
 /***/ }),
 /* 66 */
+/***/ (function(module, exports) {
+
+module.exports = require("es6-promisify");
+
+/***/ }),
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -4745,8 +4775,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 14/06/16.
  */
 
-var scoring = __webpack_require__(34);
-var deepcopy = __webpack_require__(67);
+var scoring = __webpack_require__(33);
+var deepcopy = __webpack_require__(68);
 
 var Task = function () {
   function Task(attr) {
@@ -4965,33 +4995,134 @@ var Task = function () {
 module.exports = { Task: Task };
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports) {
 
 module.exports = require("deepcopy");
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports) {
 
 module.exports = require("yamljs");
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _regenerator = __webpack_require__(3);
+/**
+ * Created by rsalesc on 15/07/16.
+ */
+var express = __webpack_require__(3);
+var router = express.Router();
+var auth2 = __webpack_require__(10);
+
+var contest = __webpack_require__(72);
+
+router.use(auth2.isAuth(["root", "admin"]));
+router.use(contest);
+
+module.exports = router;
+
+/***/ }),
+/* 71 */
+/***/ (function(module, exports) {
+
+module.exports = require("crypto");
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var express = __webpack_require__(3);
+var router = express.Router();
+var auth2 = __webpack_require__(10);
+
+var _require = __webpack_require__(73),
+    checkAdminContest = _require.checkAdminContest,
+    handleApiError = _require.handleApiError;
+
+var _require2 = __webpack_require__(6),
+    Contest = _require2.Contest;
+
+router.post("/contest/:id", function (req, res) {
+  checkAdminContest(req.params.id)(req, res, function () {
+    Contest.update({ _id: req.params.id }, { $set: req.body.contest }, { runValidators: true }, function (err) {
+      if (err) return handleApiError(res, err);
+      return res.send(200);
+    });
+  });
+});
+
+router.get("/contest/:id", function (req, res) {
+  checkAdminContest(req.params.id)(req, res, function () {
+    Contest.findById(req.params.id, function (err, contest) {
+      if (err) return handleApiError(res, err);
+      if (!contest) return res.status(400).json({ error: "contest not found" });
+      return res.json(contest);
+    });
+  });
+});
+
+module.exports = router;
+
+/***/ }),
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var mongoose = __webpack_require__(1);
+
+var _require = __webpack_require__(34),
+    isAdmin = _require.isAdmin,
+    getUserContest = _require.getUserContest;
+
+function handleApiError(res, error) {
+  return res.status(400).json({ error: error });
+}
+
+function checkAdminContest(contestId) {
+  return function (req, res, next) {
+    if (isAdmin(req)) {
+      getUserContest(req.auth2.user).exec(function (err, contest) {
+        if (err) return handleApiError(res, err);
+        if (!contest) return res.status(400).json({ error: "contest not found" });
+        if (!contest._id.equals(mongoose.Types.ObjectId(contestId))) return res.status(401).json({ error: "unauthorized" });
+        return next();
+      });
+    } else return next();
+  };
+}
+
+module.exports = {
+  checkAdminContest: checkAdminContest,
+  handleApiError: handleApiError
+};
+
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _regenerator = __webpack_require__(4);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(4);
+var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _entries = __webpack_require__(70);
+var _entries = __webpack_require__(75);
 
 var _entries2 = _interopRequireDefault(_entries);
 
@@ -4999,7 +5130,7 @@ var _extends2 = __webpack_require__(19);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _promise = __webpack_require__(10);
+var _promise = __webpack_require__(11);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -5007,23 +5138,23 @@ var _keys = __webpack_require__(9);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var path = __webpack_require__(0);
-var mongoose = __webpack_require__(2);
-var grader = __webpack_require__(71);
-var precheck = __webpack_require__(79);
-var auth2 = __webpack_require__(18);
+var mongoose = __webpack_require__(1);
+var grader = __webpack_require__(76);
+var precheck = __webpack_require__(84);
+var auth2 = __webpack_require__(10);
 
-var express = __webpack_require__(5);
+var express = __webpack_require__(3);
 var router = express.Router();
 
 var models = __webpack_require__(6);
-var sha256 = __webpack_require__(29);
+var sha256 = __webpack_require__(28);
 
 var ContestProblemSelection = "code name _id attr.weight attr.author attr.datasets attr.scoring attr.limits attr.blockedLanguages";
 var Contest = models.Contest,
@@ -5031,19 +5162,12 @@ var Contest = models.Contest,
     Problem = models.Problem,
     User = models.User;
 
+var _require = __webpack_require__(34),
+    getUserContest = _require.getUserContest,
+    isAdmin = _require.isAdmin;
 
 function handleContestError(err, req, res) {
   res.status(400).json({ error: err.toString() });
-}
-
-function getUserContest(user) {
-  try {
-    return Contest.findById(user.contest);
-  } catch (ex) {
-    return { exec: function exec(cb) {
-        return cb(ex);
-      } };
-  }
 }
 
 function filterOutSub(sub) {
@@ -5114,10 +5238,6 @@ function filterPrivateUser(user) {
   user.email = undefined;
 
   return user;
-}
-
-function isAdmin(req) {
-  return req.auth2.roles.indexOf("admin") !== -1;
 }
 
 function checkForDuplicateSubmission(user, contest, problem, hashCode) {
@@ -5444,35 +5564,35 @@ router.get("/languages", function (req, res) {
 module.exports = router;
 
 /***/ }),
-/* 70 */
+/* 75 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/object/entries");
 
 /***/ }),
-/* 71 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(module) {
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _slicedToArray2 = __webpack_require__(17);
+var _slicedToArray2 = __webpack_require__(18);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _promise = __webpack_require__(10);
+var _promise = __webpack_require__(11);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _regenerator = __webpack_require__(3);
+var _regenerator = __webpack_require__(4);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(4);
+var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -6230,16 +6350,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // eslint-disable-next-line no-unused-vars
 var fs = __webpack_require__(20);
 var path = __webpack_require__(0);
-var promiseReflect = __webpack_require__(72);
+var promiseReflect = __webpack_require__(77);
 
-var verdict = __webpack_require__(73);
-var utils = __webpack_require__(11);
-var logger = __webpack_require__(16);
-var sandbox = __webpack_require__(74);
+var verdict = __webpack_require__(78);
+var utils = __webpack_require__(12);
+var logger = __webpack_require__(17);
+var sandbox = __webpack_require__(79);
 var environment = __webpack_require__(35);
 
-var loader = __webpack_require__(32);
-var Profiler = __webpack_require__(78);
+var loader = __webpack_require__(31);
+var Profiler = __webpack_require__(83);
 
 var Storage = __webpack_require__(22).MemoryStorage;
 
@@ -7045,19 +7165,19 @@ module.exports = { testTask: testTask, testPackage: testPackage, availableLangua
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 72 */
+/* 77 */
 /***/ (function(module, exports) {
 
 module.exports = require("promise-reflect");
 
 /***/ }),
-/* 73 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _assign = __webpack_require__(25);
+var _assign = __webpack_require__(24);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -7188,13 +7308,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 74 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(module) {
 
-var _slicedToArray2 = __webpack_require__(17);
+var _slicedToArray2 = __webpack_require__(18);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -7202,27 +7322,27 @@ var _keys = __webpack_require__(9);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(12);
+var _getPrototypeOf = __webpack_require__(13);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(13);
+var _possibleConstructorReturn2 = __webpack_require__(14);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(14);
+var _inherits2 = __webpack_require__(15);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _regenerator = __webpack_require__(3);
+var _regenerator = __webpack_require__(4);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(4);
+var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -7239,21 +7359,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 15/06/16.
  */
-var Promise = __webpack_require__(75);
+var Promise = __webpack_require__(80);
 
-var fs = __webpack_require__(15);
+var fs = __webpack_require__(16);
 
 var path = __webpack_require__(0);
-var logger = __webpack_require__(16);
+var logger = __webpack_require__(17);
 var jenv = __webpack_require__(35);
-var utils = __webpack_require__(11);
+var utils = __webpack_require__(12);
 var globAsync = utils.globAsync;
 
 
 var Storage = __webpack_require__(22).MemoryStorage;
 var JudgeConfig = jenv.JudgeConfig;
 
-var spawnDetachedPromise = __webpack_require__(77).spawn;
+var spawnDetachedPromise = __webpack_require__(82).spawn;
 
 /*
 *   spawnDetached async version (promisified)
@@ -8932,25 +9052,25 @@ module.exports = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 75 */
+/* 80 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");
 
 /***/ }),
-/* 76 */
+/* 81 */
 /***/ (function(module, exports) {
 
 module.exports = require("tmp");
 
 /***/ }),
-/* 77 */
+/* 82 */
 /***/ (function(module, exports) {
 
 module.exports = require("child-process-promise");
 
 /***/ }),
-/* 78 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8960,7 +9080,7 @@ var _keys = __webpack_require__(9);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _getIterator2 = __webpack_require__(1);
+var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -8974,7 +9094,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var process = __webpack_require__(31);
+var process = __webpack_require__(30);
 
 function getSeconds(tuple) {
   return tuple[0] + tuple[1] / 1e9;
@@ -9056,7 +9176,7 @@ var Profiler = function () {
 module.exports = Profiler;
 
 /***/ }),
-/* 79 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9095,24 +9215,18 @@ module.exports = {
 };
 
 /***/ }),
-/* 80 */
-/***/ (function(module, exports) {
-
-module.exports = require("crypto");
-
-/***/ }),
-/* 81 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var path = __webpack_require__(0);
-var mongoose = __webpack_require__(2);
+var mongoose = __webpack_require__(1);
 var passport = __webpack_require__(36);
-var auth2 = __webpack_require__(18);
+var auth2 = __webpack_require__(10);
 
-var express = __webpack_require__(5);
+var express = __webpack_require__(3);
 var router = express.Router();
 
 var models = __webpack_require__(6);

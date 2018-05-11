@@ -22,6 +22,11 @@ export const submissions = Vue.resource(resolveToRoot("/contest/submissions"));
 export const submit = Vue.resource(resolveToRoot("/contest/submit"));
 export const submission = Vue.resource(resolveToRoot("/contest/submission{/id}"));
 
+// admin api v2
+export const admin = {
+  contest: Vue.resource(resolveToRoot("/api/v2/contest{/id}"))
+};
+
 export const paths = {
   login: "/api-login",
   logout: "/api-logout"

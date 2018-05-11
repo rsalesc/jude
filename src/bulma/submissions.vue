@@ -128,7 +128,7 @@
           return this.userObject;
         },
         isAdmin() {
-          return this.getSelf().role === "admin";
+          return Helper.isAdmin(this.getSelf());
         },
         getPerPage() {
           return this.isAdmin() ? 50 : 5;

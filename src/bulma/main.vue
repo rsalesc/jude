@@ -31,6 +31,10 @@
             <b-icon icon="users" size="is-small"></b-icon>
             <span>Standings</span>
           </router-link>
+          <!--<router-link v-if="isAdmin()" class="navbar-item" to="settings">
+            <b-icon icon="users" size="is-small"></b-icon>
+            <span>Settings</span>
+          </router-link>-->
         </div>
 
         <div class="navbar-end">
@@ -134,7 +138,7 @@
           return this.userObject;
         },
         isAdmin() {
-          return this.getSelf().role === "admin";
+          return Helper.isAdmin(this.getSelf());
         },
         getRemainingTime() {
           return Helper.getRemainingTime(this.rawContest);

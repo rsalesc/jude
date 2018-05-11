@@ -107,7 +107,7 @@ module.exports = function (it) {
 /* 3 */
 /***/ (function(module, exports) {
 
-var core = module.exports = { version: '2.5.1' };
+var core = module.exports = { version: '2.5.5' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 
@@ -159,6 +159,7 @@ var global = __webpack_require__(0);
 var core = __webpack_require__(3);
 var ctx = __webpack_require__(9);
 var hide = __webpack_require__(4);
+var has = __webpack_require__(12);
 var PROTOTYPE = 'prototype';
 
 var $export = function (type, name, source) {
@@ -176,7 +177,7 @@ var $export = function (type, name, source) {
   for (key in source) {
     // contains in native
     own = !IS_FORCED && target && target[key] !== undefined;
-    if (own && key in exports) continue;
+    if (own && has(exports, key)) continue;
     // export native or passed
     out = own ? target[key] : source[key];
     // prevent global pollution for namespaces
@@ -434,7 +435,6 @@ var LIBRARY = __webpack_require__(24);
 var $export = __webpack_require__(8);
 var redefine = __webpack_require__(55);
 var hide = __webpack_require__(4);
-var has = __webpack_require__(12);
 var Iterators = __webpack_require__(7);
 var $iterCreate = __webpack_require__(56);
 var setToStringTag = __webpack_require__(19);
@@ -472,7 +472,7 @@ module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE
       // Set @@toStringTag to native iterators
       setToStringTag(IteratorPrototype, TAG, true);
       // fix for some old engines
-      if (!LIBRARY && !has(IteratorPrototype, ITERATOR)) hide(IteratorPrototype, ITERATOR, returnThis);
+      if (!LIBRARY && typeof IteratorPrototype[ITERATOR] != 'function') hide(IteratorPrototype, ITERATOR, returnThis);
     }
   }
   // fix Array#{values, @@iterator}.name in V8 / FF
@@ -847,9 +847,9 @@ myApp.config(["RestangularProvider", function (RestangularProvider) {
   });
 
   RestangularProvider.addFullRequestInterceptor(function (element, operation, what, url, headers, params, httpConfig) {
-    if (operation == "getList") {
+    if (operation === "getList") {
       if (params._sortField) {
-        var dir = params._sortDir == "ASC" ? "" : "-";
+        var dir = params._sortDir === "ASC" ? "" : "-";
         params.sort = "" + dir + params._sortField;
 
         delete params._sortField;
@@ -923,9 +923,9 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     minlength: 4,
     maxlength: 48,
     required: true
-  }), nga.field("role", "choice").choices(roles).validation({ required: true })]).filters([nga.field("handle"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").remoteComplete(false), (0, _q2.default)(nga)]).listActions(["edit", "delete", (0, _filtered2.default)("submissions", "{_creator: entry.values.id, contest: entry.values.contest}", "Submissions")]);
+  }), nga.field("role", "choice").choices(roles).validation({ required: true })]).filters([nga.field("handle"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").perPage(100).remoteComplete(false), (0, _q2.default)(nga)]).listActions(["edit", "delete", (0, _filtered2.default)("submissions", "{_creator: entry.values.id, contest: entry.values.contest}", "Submissions")]);
 
-  user.showView().fields(user.listView().fields().concat([nga.field("unofficial", "boolean").validation({ required: true }), nga.field("email", "email"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").remoteComplete(false)]));
+  user.showView().fields(user.listView().fields().concat([nga.field("unofficial", "boolean").validation({ required: true }), nga.field("email", "email"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").perPage(100).remoteComplete(false)]));
 
   user.editionView().fields(user.showView().fields(), nga.field("password", "password"));
   user.creationView().fields(user.editionView().fields());
@@ -942,7 +942,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
   contest.showView().fields(contest.listView().fields().concat([nga.field("scoring", "choice").choices(scorings).validation({ required: true }), nga.field("hidden", "boolean").validation({ required: true }), nga.field("upseeing", "boolean").label("Users can see others codes after the competition").validation({ required: true }), nga.field("problems", "embedded_list").defaultValue([]).targetFields([nga.field("letter").validation({
     required: true,
     pattern: "[A-Z][0-9]*"
-  }), nga.field("color").validation({ required: true }), nga.field("problem", "reference").validation({ required: true }).targetEntity(problem).targetField(nga.field("name")).sortField("createdAt").remoteComplete(true, {
+  }), nga.field("color").validation({ required: true }), nga.field("problem", "reference").validation({ required: true }).targetEntity(problem).targetField(nga.field("name")).sortField("createdAt").perPage(100).remoteComplete(true, {
     refreshDelay: 200,
     searchQuery: function searchQuery(search) {
       return { q: search };
@@ -975,16 +975,16 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
   /*
         Submission configuration
      */
-  submission.listView().fields([nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")), nga.field("time", "datetime"), nga.field("problem", "reference").targetEntity(problem).targetField(nga.field("name")), nga.field("_creator", "reference").label("User").targetEntity(user).targetField(nga.field("name"))]).listActions(["<ma-rejudge-action size='xs' submission='entry'></ma-rejudge-action>", "show", "delete"]).batchActions(["<ma-rejudge-batch selection='selection'></ma-rejudge-batch>", "delete"]).filters([nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")), nga.field("problem", "reference").targetEntity(problem).targetField(nga.field("name").map(function (v, e) {
+  submission.listView().fields([nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")), nga.field("time", "datetime"), nga.field("problem", "reference").targetEntity(problem).targetField(nga.field("name")), nga.field("_creator", "reference").label("User").targetEntity(user).targetField(nga.field("name"))]).listActions(["<ma-rejudge-action size='xs' submission='entry'></ma-rejudge-action>", "show", "delete"]).batchActions(["<ma-rejudge-batch selection='selection'></ma-rejudge-batch>", "delete"]).filters([nga.field("contest", "reference").targetEntity(contest).perPage(100).targetField(nga.field("name")), nga.field("problem", "reference").targetEntity(problem).targetField(nga.field("name").map(function (v, e) {
     return "[" + e.code + "] " + e.name;
-  })).sortField("createdAt").remoteComplete(true, {
+  })).sortField("createdAt").perPage(100).remoteComplete(true, {
     refreshDelay: 200,
     searchQuery: function searchQuery(search) {
       return { q: search };
     }
   }), nga.field("_creator", "reference").targetEntity(user).targetField(nga.field("name").map(function (v, e) {
     return "[" + e.handle + "] " + e.name;
-  })).remoteComplete(true, {
+  })).perPage(100).remoteComplete(true, {
     refreshDelay: 200,
     searchQuery: function searchQuery(search) {
       return { q: search };
@@ -1269,6 +1269,13 @@ module.exports = __webpack_require__(47);
 /* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 // This method of obtaining a reference to the global object needs to be
 // kept identical to the way it is obtained in runtime.js
 var g = (function() { return this })() || Function("return this")();
@@ -1304,13 +1311,10 @@ if (hadRuntime) {
 /***/ (function(module, exports) {
 
 /**
- * Copyright (c) 2014, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2014-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * https://raw.github.com/facebook/regenerator/master/LICENSE file. An
- * additional grant of patent rights can be found in the PATENTS file in
- * the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 !(function(global) {
@@ -2478,7 +2482,7 @@ var notify = function (promise, isReject) {
       var resolve = reaction.resolve;
       var reject = reaction.reject;
       var domain = reaction.domain;
-      var result, then;
+      var result, then, exited;
       try {
         if (handler) {
           if (!ok) {
@@ -2488,8 +2492,11 @@ var notify = function (promise, isReject) {
           if (handler === true) result = value;
           else {
             if (domain) domain.enter();
-            result = handler(value);
-            if (domain) domain.exit();
+            result = handler(value); // may throw
+            if (domain) {
+              domain.exit();
+              exited = true;
+            }
           }
           if (result === reaction.promise) {
             reject(TypeError('Promise-chain cycle'));
@@ -2498,6 +2505,7 @@ var notify = function (promise, isReject) {
           } else resolve(result);
         } else reject(value);
       } catch (e) {
+        if (domain && !exited) domain.exit();
         reject(e);
       }
     };
@@ -2529,14 +2537,7 @@ var onUnhandled = function (promise) {
   });
 };
 var isUnhandled = function (promise) {
-  if (promise._h == 1) return false;
-  var chain = promise._a || promise._c;
-  var i = 0;
-  var reaction;
-  while (chain.length > i) {
-    reaction = chain[i++];
-    if (reaction.fail || !isUnhandled(reaction.promise)) return false;
-  } return true;
+  return promise._h !== 1 && (promise._a || promise._c).length === 0;
 };
 var onHandleUnhandled = function (promise) {
   task.call(global, function () {
@@ -2837,8 +2838,8 @@ module.exports = function () {
     notify = function () {
       process.nextTick(flush);
     };
-  // browsers with MutationObserver
-  } else if (Observer) {
+  // browsers with MutationObserver, except iOS Safari - https://github.com/zloirock/core-js/issues/339
+  } else if (Observer && !(global.navigator && global.navigator.standalone)) {
     var toggle = true;
     var node = document.createTextNode('');
     new Observer(flush).observe(node, { characterData: true }); // eslint-disable-line no-new
@@ -3209,7 +3210,7 @@ module.exports = __webpack_require__(3).getIterator = function (it) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	Papa Parse
-	v4.3.6
+	v4.3.7
 	https://github.com/mholt/PapaParse
 	License: MIT
 */
@@ -3924,7 +3925,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 		this._chunkError = function()
 		{
-			this._sendError(reader.error);
+			this._sendError(reader.error.message);
 		}
 
 	}
@@ -4364,7 +4365,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 		var step = config.step;
 		var preview = config.preview;
 		var fastMode = config.fastMode;
-		var quoteChar = config.quoteChar || '"';
+		/** Allows for no quoteChar by setting quoteChar to undefined in config */
+		if (config.quoteChar === undefined){
+			var quoteChar = '"';
+		} else {
+			var quoteChar = config.quoteChar;
+		}
 
 		// Delimiter must be valid
 		if (typeof delim !== 'string'

@@ -10,6 +10,7 @@ services:
       - fs
     volumes:
       - .:/app
+      - .:/opt/jude
     environment:
       - MONGO_HOST=db
       - WEED_HOST=fs

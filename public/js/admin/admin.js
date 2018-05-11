@@ -13,9 +13,9 @@ myApp.config((RestangularProvider) => {
   });
 
   RestangularProvider.addFullRequestInterceptor((element, operation, what, url, headers, params, httpConfig) => {
-    if (operation == "getList") {
+    if (operation === "getList") {
       if (params._sortField) {
-        const dir = params._sortDir == "ASC" ? "" : "-";
+        const dir = params._sortDir === "ASC" ? "" : "-";
         params.sort = `${dir}${params._sortField}`;
 
         delete params._sortField;
@@ -124,6 +124,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
         .targetEntity(contest)
         .targetField(nga.field("name"))
         .sortField("createdAt")
+        .perPage(100)
         .remoteComplete(false),
       qField(nga)
     ]).listActions([
@@ -139,6 +140,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
       .targetEntity(contest)
       .targetField(nga.field("name"))
       .sortField("createdAt")
+      .perPage(100)
       .remoteComplete(false)
   ]));
 
@@ -189,6 +191,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
           .targetEntity(problem)
           .targetField(nga.field("name"))
           .sortField("createdAt")
+          .perPage(100)
           .remoteComplete(true, {
             refreshDelay: 200,
             searchQuery: search => ({ q: search })
@@ -268,11 +271,13 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     ]).filters([
       nga.field("contest", "reference")
         .targetEntity(contest)
+        .perPage(100)
         .targetField(nga.field("name")),
       nga.field("problem", "reference")
         .targetEntity(problem)
         .targetField(nga.field("name").map((v, e) => `[${e.code}] ${e.name}`))
         .sortField("createdAt")
+        .perPage(100)
         .remoteComplete(true, {
           refreshDelay: 200,
           searchQuery: search => ({ q: search })
@@ -280,6 +285,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
       nga.field("_creator", "reference")
         .targetEntity(user)
         .targetField(nga.field("name").map((v, e) => `[${e.handle}] ${e.name}`))
+        .perPage(100)
         .remoteComplete(true, {
           refreshDelay: 200,
           searchQuery: search => ({ q: search })

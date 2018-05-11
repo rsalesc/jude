@@ -16,16 +16,10 @@ const {
   Contest, Submission, Problem, User
 } = models;
 
+const { getUserContest, isAdmin } = require("@routes/common");
+
 function handleContestError(err, req, res) {
   res.status(400).json({ error: err.toString() });
-}
-
-function getUserContest(user) {
-  try {
-    return Contest.findById(user.contest);
-  } catch (ex) {
-    return { exec: cb => cb(ex) };
-  }
 }
 
 function filterOutSub(sub) {
@@ -57,10 +51,6 @@ function filterPrivateUser(user) {
   user.email = undefined;
 
   return user;
-}
-
-function isAdmin(req) {
-  return req.auth2.roles.indexOf("admin") !== -1;
 }
 
 function checkForDuplicateSubmission(user, contest, problem, hashCode) {

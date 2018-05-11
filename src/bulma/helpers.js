@@ -7,6 +7,39 @@ import * as Api from "./api.js";
 import moment from "moment";
 import { mapState } from "vuex";
 
+export function dateEquals(a, b) {
+  return a.getTime() === b.getTime();
+}
+
+export function getOnlyDate(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+}
+
+export function getOnlyTime(date) {
+  return new Date(0, 0, 0, date.getHours(), date.getMinutes(), 0, 0);
+}
+
+export function mergeDateAndTime(date, time) {
+  const newDate = new Date(date);
+  newDate.setHours(time.getHours());
+  newDate.setMinutes(time.getMinutes());
+  return newDate;
+}
+
+export function checkRole(role, needle) {
+  if (Array.isArray(role))
+    return role.indexOf(needle) !== -1;
+  return role === needle;
+}
+
+export function isAdmin(userObject) {
+  return checkRole(userObject.role, "admin");
+}
+
+export function isContestant(userObject) {
+  return checkRole(userObject.role, "contestant");
+}
+
 export function getScoringString(contestProb, contest) {
   if (contest)
     return contest.scoring || contestProb.problem.attr.scoring;
@@ -58,7 +91,7 @@ export function getCodeMirrorMode(lang) {
 export function getBraceMode(lang) {
   if (!lang)
     return "c_cpp";
-   
+
   const modes = {
     CPP: "c_cpp",
     C: "c_cpp",
@@ -196,6 +229,20 @@ export function mapModuleState(nesting, states = []) {
   }
 
   return mapState(res);
+}
+
+export function getTimezone() {
+  const minutes = new Date().getTimezoneOffset();
+  const absMinutes = minutes < 0
+    ? -minutes
+    : minutes;
+  const h = parseInt(absMinutes / 60, 10);
+  const m = parseInt(absMinutes % 60, 10);
+  if (minutes === 0)
+    return "UTC 0:00";
+  else if (minutes > 0)
+    return `UTC -${h}:${pad(m, 2)}`;
+  return `UTC +${h}:${pad(m, 2)}`;
 }
 
 export function getTooltipText(s) {

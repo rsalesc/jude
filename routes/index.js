@@ -7,7 +7,7 @@ const { Problem, Contest } = models;
 const Storage = require("../judge/storage").MemoryStorage;
 const Loader = require("../judge/loader");
 const utils = require("../judge/utils");
-const api = require("./api");
+const api2 = require("./api/v2");
 const contest = require("./contest");
 const admin = require("./admin");
 const auth2 = require("../auth2");
@@ -103,5 +103,6 @@ router.get("/contest-list", (req, res, next) => {
 
 router.use("/contest", contest);
 router.use("/admin", admin);
+router.use("/api/v2", api2);
 
 module.exports = router;

@@ -5,6 +5,7 @@
         ["module-resolver", {
             "alias": {
                 "~": "./",
+                "@routes": "./routes",
                 "@front": "./src/bulma",
                 "@judge": "./judge",
                 "@models": "./models",

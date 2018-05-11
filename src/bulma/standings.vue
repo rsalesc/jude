@@ -120,7 +120,7 @@
           return this.userObject;
         },
         isAdmin() {
-          return this.getSelf().role === "admin";
+          return Helper.isAdmin(this.getSelf());
         },
         isWa(team, prob) {
           const result = team.results[prob.problem._id];
