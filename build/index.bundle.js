@@ -3118,7 +3118,7 @@ var ProductScoring = function (_Scoring) {
       return evals.reduce(function (old, cur) {
         return {
           score: old.score + cur.score,
-          penalty: old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
+          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
         };
       }, { score: 0, penalty: 0 });
     }
@@ -3159,7 +3159,7 @@ var SubtaskSumScoring = function (_Scoring2) {
   }, {
     key: "attempted",
     value: function attempted(obj) {
-      return obj.affect;
+      return obj.affect || obj.fails > 0;
     }
   }, {
     key: "fails",
@@ -3325,7 +3325,7 @@ var IcpcScoring = function (_Scoring3) {
   }, {
     key: "attempted",
     value: function attempted(obj) {
-      return obj.affect;
+      return obj.affect || obj.fails > 0;
     }
   }, {
     key: "fails",
@@ -3427,7 +3427,7 @@ var IcpcScoring = function (_Scoring3) {
       return evals.reduce(function (old, cur) {
         return {
           score: old.score + cur.score,
-          penalty: old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
+          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
         };
       }, { score: 0, penalty: 0 });
     }

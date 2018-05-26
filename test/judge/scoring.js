@@ -298,7 +298,7 @@ describe("Scoring classes", function () {
       });
     });
 
-    describe("evalContest()", function () {
+    describe("mergeEvaluations()", function () {
       const tests = [
         {
           name: "no evals",
@@ -317,12 +317,12 @@ describe("Scoring classes", function () {
           evaluations: [{
             score: 0,
             penalty: 0,
-            affect: true,
+            affect: false,
             fails: 1
           }],
           want: {
             score: 0,
-            penalty: 20
+            penalty: 0
           }
         },
         {
@@ -332,12 +332,12 @@ describe("Scoring classes", function () {
           evaluations: [{
             score: 0,
             penalty: 0,
-            affect: true,
+            affect: false,
             fails: 1
           }],
           want: {
             score: 0,
-            penalty: 42
+            penalty: 0
           }
         },
         {
@@ -348,7 +348,7 @@ describe("Scoring classes", function () {
             {
               score: 0,
               penalty: 0,
-              affect: true,
+              affect: false,
               fails: 2
             },
             {
@@ -360,7 +360,7 @@ describe("Scoring classes", function () {
           ],
           want: {
             score: 10,
-            penalty: 26
+            penalty: 12
           }
         }
       ];
@@ -410,7 +410,7 @@ describe("Scoring classes", function () {
         },
         {
           name: "has fails",
-          evaluation: { affect: true, fails: 1 },
+          evaluation: { affect: false, fails: 1 },
           want: true
         },
         {
@@ -622,12 +622,12 @@ describe("Scoring classes", function () {
           evaluations: [{
             score: 0,
             penalty: 0,
-            affect: true,
+            affect: false,
             fails: 1
           }],
           want: {
             score: 0,
-            penalty: 20
+            penalty: 0
           }
         },
         {
@@ -637,12 +637,12 @@ describe("Scoring classes", function () {
           evaluations: [{
             score: 0,
             penalty: 0,
-            affect: true,
+            affect: false,
             fails: 1
           }],
           want: {
             score: 0,
-            penalty: 42
+            penalty: 0
           }
         },
         {
@@ -653,7 +653,7 @@ describe("Scoring classes", function () {
             {
               score: 0,
               penalty: 0,
-              affect: true,
+              affect: false,
               fails: 2
             },
             {
@@ -665,7 +665,7 @@ describe("Scoring classes", function () {
           ],
           want: {
             score: 1,
-            penalty: 26
+            penalty: 12
           }
         }
       ];

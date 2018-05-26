@@ -165,7 +165,7 @@ class ProductScoring extends Scoring {
 
     return evals.reduce((old, cur) => ({
       score: old.score + cur.score,
-      penalty: old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
+      penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
     }), { score: 0, penalty: 0 });
   }
 }
@@ -189,7 +189,7 @@ class SubtaskSumScoring extends Scoring {
   }
 
   attempted(obj) {
-    return obj.affect;
+    return obj.affect || obj.fails > 0;
   }
 
   fails(obj) {
@@ -298,7 +298,7 @@ class IcpcScoring extends Scoring {
   }
 
   attempted(obj) {
-    return obj.affect;
+    return obj.affect || obj.fails > 0;
   }
 
   fails(obj) {
@@ -356,7 +356,7 @@ class IcpcScoring extends Scoring {
 
     return evals.reduce((old, cur) => ({
       score: old.score + cur.score,
-      penalty: old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
+      penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
     }), { score: 0, penalty: 0 });
   }
 }
