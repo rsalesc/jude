@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="box-content">
-                <div class="container">
+                <div class="container" v-if="!isContestLoading">
                     <ju-contest-settings :id="getContestId()" :contest="data.contest" @submit="onContestSubmit"></ju-contest-settings>
                 </div>
             </div>
@@ -36,7 +36,8 @@
             return {
                 data: {
                     contest: {}
-                }
+                },
+                isContestLoading: true
             };
         },
         mounted() {
@@ -67,6 +68,7 @@
                 }
             },
             async fetch() {
+                this.isContestLoading = true;
                 if (this.getContestId() == null) return;
                 try {
                     const [contest] = await Promise.all([Api.admin.contest.get({ id: this.getContestId() })]);
@@ -78,6 +80,7 @@
                     new BulmaUtils(this).toast("Error contacting the server.", 4000, "is-danger");
                     console.error(response);
                 }
+                this.isContestLoading = false;
             },
             async onContestSubmit(contest) {
                 if (this.getContestId() == null) return;

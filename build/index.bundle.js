@@ -3106,7 +3106,7 @@ var ProductScoring = function (_Scoring) {
       }
 
       return {
-        score: 0, penalty: 0, affect: fails > 0, fails: fails
+        score: 0, penalty: 0, affect: false, fails: fails
       };
     }
   }, {
@@ -3415,7 +3415,7 @@ var IcpcScoring = function (_Scoring3) {
       }
 
       return {
-        score: 0, penalty: 0, affect: fails > 0, fails: fails
+        score: 0, penalty: 0, affect: false, fails: fails
       };
     }
   }, {

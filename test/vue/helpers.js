@@ -36,7 +36,7 @@ describe("helpers", function () {
         name: "non-array matching role",
         roles: "admin",
         needle: "admin",
-        want: false
+        want: true
       },
       {
         name: "no matching role",

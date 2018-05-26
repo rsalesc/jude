@@ -31,10 +31,10 @@
             <b-icon icon="users" size="is-small"></b-icon>
             <span>Standings</span>
           </router-link>
-          <!--<router-link v-if="isAdmin()" class="navbar-item" to="settings">
+          <router-link v-if="isAdmin()" class="navbar-item" to="settings">
             <b-icon icon="users" size="is-small"></b-icon>
             <span>Settings</span>
-          </router-link>-->
+          </router-link>
         </div>
 
         <div class="navbar-end">

@@ -4,12 +4,14 @@
       ref="datepicker"
       icon="calendar-alt"
       placeholder="Select a date..."
-      v-model="dateValue">
+      :value="dateValue"
+      @input="refreshDate">
     </b-datepicker>
     <b-timepicker
       ref="timepicker"
       placeholder="Pick a time..."
-      v-model="timeValue">
+      :value="timeValue"
+      @input="refreshTime">
     </b-timepicker>
     <p class="control">
       <span class="button is-static ju-comment">{{ getTimezone() }}</span>
@@ -22,29 +24,17 @@
 
   export default {
     props: {
-      value: { type: Object }
+      value: { type: Date }
     },
     data() {
       return {
-        dateValue: null,
-        timeValue: null
+        dateValue: this.value == null ? null : Helper.getOnlyDate(this.value),
+        timeValue: this.value == null ? null : Helper.getOnlyTime(this.value)
       };
     },
-    mounted() {
-      this.setDate(this.value);
-    },
     watch: {
-      dateValue(newVal, oldVal) {
-        if (newVal == null) this.refresh(null, null);
-        if (Helper.dateEquals(newVal, oldVal)) return;
-        this.refresh(newVal, this.timeValue);
-      },
-      timeValue(newVal, oldVal) {
-        if (newVal == null) this.refresh(null, null);
-        if (Helper.dateEquals(newVal, oldVal)) return;
-        this.refresh(this.dateValue, newVal);
-      },
-      value(newVal) {
+      value(newVal, oldVal) {
+        if(Helper.dateEquals(newVal, oldVal)) return;
         this.setDate(newVal);
       }
     },
@@ -53,15 +43,22 @@
         return Helper.getTimezone();
       },
       setDate(date) {
-        if(date == null) {
-          this.dateValue = Helper.getOnlyDate(new Date());
-          this.timeValue = Helper.getOnlyTime(new Date());
-        } else {
+        if (date != null) {
           this.dateValue = Helper.getOnlyDate(new Date(date));
           this.timeValue = Helper.getOnlyTime(new Date(date));
         }
       },
+      refreshDate(newVal) {
+        if (newVal == null) this.refresh(null, null);
+        this.refresh(newVal, this.timeValue);
+      },
+      refreshTime(newVal) {
+        if (newVal == null) this.refresh(null, null);
+        this.refresh(this.dateValue, newVal);
+      },
       refresh(date, time) {
+        this.dateValue = date;
+        this.timeValue = time;
         const merged = date == null ? null : Helper.mergeDateAndTime(Helper.getOnlyDate(date), Helper.getOnlyTime(time));
         this.$emit("input", merged);
         this.$emit("change", merged);

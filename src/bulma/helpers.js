@@ -8,6 +8,10 @@ import moment from "moment";
 import { mapState } from "vuex";
 
 export function dateEquals(a, b) {
+  if (a == null && b == null)
+    return true;
+  if (a == null || b == null)
+    return false;
   return a.getTime() === b.getTime();
 }
 

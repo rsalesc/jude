@@ -156,7 +156,7 @@ class ProductScoring extends Scoring {
     }
 
     return {
-      score: 0, penalty: 0, affect: fails > 0, fails
+      score: 0, penalty: 0, affect: false, fails
     };
   }
 
@@ -347,7 +347,7 @@ class IcpcScoring extends Scoring {
     }
 
     return {
-      score: 0, penalty: 0, affect: fails > 0, fails
+      score: 0, penalty: 0, affect: false, fails
     };
   }
 

@@ -250,7 +250,7 @@ describe("Scoring classes", function () {
           want: {
             score: 0,
             penalty: 0,
-            affect: true,
+            affect: false,
             fails: 1
           }
         },
@@ -555,7 +555,7 @@ describe("Scoring classes", function () {
           want: {
             score: 0,
             penalty: 0,
-            affect: true,
+            affect: false,
             fails: 1
           }
         },
@@ -603,7 +603,7 @@ describe("Scoring classes", function () {
       });
     });
 
-    describe("evalContest()", function () {
+    describe("mergeEvaluations()", function () {
       const tests = [
         {
           name: "no evals",
