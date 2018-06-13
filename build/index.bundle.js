@@ -128,7 +128,8 @@ module.exports = {
   Contest: __webpack_require__(52)(),
   User: __webpack_require__(55)(),
   Submission: __webpack_require__(56)(),
-  Problem: __webpack_require__(27)()
+  Problem: __webpack_require__(27)(),
+  Clarification: __webpack_require__(57)()
 };
 
 /***/ }),
@@ -164,7 +165,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mongoose = __webpack_require__(1);
 var models = __webpack_require__(6);
-var crypto = __webpack_require__(71);
+var crypto = __webpack_require__(72);
 
 var Schema = mongoose.Schema;
 
@@ -443,7 +444,7 @@ var _promise = __webpack_require__(11);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _typeof2 = __webpack_require__(62);
+var _typeof2 = __webpack_require__(63);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -625,7 +626,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = __webpack_require__(0);
 var fs = __webpack_require__(16);
-var util = __webpack_require__(63);
+var util = __webpack_require__(64);
 var glob = __webpack_require__(29);
 
 function inspect(p) {
@@ -733,7 +734,7 @@ module.exports = require("fs-extra");
 /**
  * Created by rsalesc on 14/06/16.
  */
-var winston = __webpack_require__(65);
+var winston = __webpack_require__(66);
 var process = __webpack_require__(30);
 
 var logger = new winston.Logger({
@@ -1006,14 +1007,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/06/16.
  */
 
-var yauzl = __webpack_require__(60);
-var concatStream = __webpack_require__(61);
+var yauzl = __webpack_require__(61);
+var concatStream = __webpack_require__(62);
 var utils = __webpack_require__(12);
-var wildcard = __webpack_require__(64);
+var wildcard = __webpack_require__(65);
 var path = __webpack_require__(0);
 var logger = __webpack_require__(17);
 var fs = __webpack_require__(16);
-var promisify = __webpack_require__(66);
+var promisify = __webpack_require__(67);
 var glob = promisify(__webpack_require__(29).glob);
 
 /* Helper Functions for storage */
@@ -2264,8 +2265,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var path = __webpack_require__(0);
-var task = __webpack_require__(67);
-var YAML = __webpack_require__(69);
+var task = __webpack_require__(68);
+var YAML = __webpack_require__(70);
 var logger = __webpack_require__(17);
 var utils = __webpack_require__(12);
 var scoring = __webpack_require__(33);
@@ -3517,7 +3518,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var fs = __webpack_require__(20);
 var fse = __webpack_require__(16);
-var tmp = __webpack_require__(81);
+var tmp = __webpack_require__(82);
 tmp.setGracefulCleanup();
 
 var path = __webpack_require__(0);
@@ -3812,13 +3813,13 @@ var router = express.Router();
 // var methodOverride = require('method-override');
 var restify = __webpack_require__(48);
 var apiRoutes = __webpack_require__(49);
-var staticCompressed = __webpack_require__(58);
+var staticCompressed = __webpack_require__(59);
 
 // expose db object globally
 __webpack_require__(25);
 
 var app = express();
-var routes = __webpack_require__(59);
+var routes = __webpack_require__(60);
 var auth2 = __webpack_require__(10);
 var models = __webpack_require__(6);
 
@@ -4045,7 +4046,7 @@ var express = __webpack_require__(3);
 var router = express.Router();
 
 var contestRouter = __webpack_require__(50);
-var userRouter = __webpack_require__(57);
+var userRouter = __webpack_require__(58);
 var submissionRouter = __webpack_require__(21);
 
 // middlewares
@@ -4484,6 +4485,38 @@ module.exports = function () {
 "use strict";
 
 
+var mongoose = __webpack_require__(1);
+var Schema = mongoose.Schema;
+
+
+module.exports = function () {
+  if (db.models.Clarification) return db.model("Clarification");
+
+  var CommentSchema = new Schema({
+    _creator: { type: Schema.Types.ObjectId, ref: "User" },
+    text: String
+  }, { timestamps: true });
+
+  var ClarificationSchema = new Schema({
+    _creator: { type: Schema.Types.ObjectId, ref: "User" },
+    contest: { type: Schema.Types.ObjectId, ref: "Contest" },
+    broadcast: { type: Boolean, default: false },
+    comments: [CommentSchema]
+  }, { timestamps: true });
+
+  ClarificationSchema.index({ _creator: 1, contest: 1 });
+  ClarificationSchema.index({ contest: 1, broadcast: 1 });
+
+  return db.model("Clarification", ClarificationSchema);
+};
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var express = __webpack_require__(3);
 var path = __webpack_require__(0);
 var mongoose = __webpack_require__(1);
@@ -4508,13 +4541,13 @@ function handleUserError(err, req, res) {
 module.exports = router;
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-static-gzip");
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4541,9 +4574,9 @@ var Problem = models.Problem,
 var Storage = __webpack_require__(22).MemoryStorage;
 var Loader = __webpack_require__(31);
 var utils = __webpack_require__(12);
-var api2 = __webpack_require__(70);
-var contest = __webpack_require__(74);
-var admin = __webpack_require__(85);
+var api2 = __webpack_require__(71);
+var contest = __webpack_require__(75);
+var admin = __webpack_require__(86);
 var auth2 = __webpack_require__(10);
 var passport = __webpack_require__(36);
 
@@ -4709,49 +4742,49 @@ router.use("/api/v2", api2);
 module.exports = router;
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports) {
 
 module.exports = require("yauzl");
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports) {
 
 module.exports = require("concat-stream");
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports) {
 
 module.exports = require("util");
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports) {
 
 module.exports = require("node-wildcard");
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports) {
 
 module.exports = require("winston");
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports) {
 
 module.exports = require("es6-promisify");
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4776,7 +4809,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var scoring = __webpack_require__(33);
-var deepcopy = __webpack_require__(68);
+var deepcopy = __webpack_require__(69);
 
 var Task = function () {
   function Task(attr) {
@@ -4995,19 +5028,19 @@ var Task = function () {
 module.exports = { Task: Task };
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports) {
 
 module.exports = require("deepcopy");
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports) {
 
 module.exports = require("yamljs");
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5020,7 +5053,7 @@ var express = __webpack_require__(3);
 var router = express.Router();
 var auth2 = __webpack_require__(10);
 
-var contest = __webpack_require__(72);
+var contest = __webpack_require__(73);
 
 router.use(auth2.isAuth(["root", "admin"]));
 router.use(contest);
@@ -5028,13 +5061,13 @@ router.use(contest);
 module.exports = router;
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports) {
 
 module.exports = require("crypto");
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5044,7 +5077,7 @@ var express = __webpack_require__(3);
 var router = express.Router();
 var auth2 = __webpack_require__(10);
 
-var _require = __webpack_require__(73),
+var _require = __webpack_require__(74),
     checkAdminContest = _require.checkAdminContest,
     handleApiError = _require.handleApiError;
 
@@ -5073,7 +5106,7 @@ router.get("/contest/:id", function (req, res) {
 module.exports = router;
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5108,7 +5141,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5122,7 +5155,7 @@ var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _entries = __webpack_require__(75);
+var _entries = __webpack_require__(76);
 
 var _entries2 = _interopRequireDefault(_entries);
 
@@ -5146,8 +5179,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = __webpack_require__(0);
 var mongoose = __webpack_require__(1);
-var grader = __webpack_require__(76);
-var precheck = __webpack_require__(84);
+var grader = __webpack_require__(77);
+var precheck = __webpack_require__(85);
 var auth2 = __webpack_require__(10);
 
 var express = __webpack_require__(3);
@@ -5160,11 +5193,15 @@ var ContestProblemSelection = "code name _id attr.weight attr.author attr.datase
 var Contest = models.Contest,
     Submission = models.Submission,
     Problem = models.Problem,
-    User = models.User;
+    User = models.User,
+    Clarification = models.Clarification;
 
 var _require = __webpack_require__(34),
     getUserContest = _require.getUserContest,
     isAdmin = _require.isAdmin;
+
+var ObjectId = mongoose.mongo.ObjectId;
+
 
 function handleContestError(err, req, res) {
   res.status(400).json({ error: err.toString() });
@@ -5277,7 +5314,20 @@ router.get("/my", function (req, res, next) {
   Submission.find({ contest: req.auth2.user.contest, _creator: req.auth2.user._id }).sort("-time").exec(function (err, subs) {
     if (err) return handleContestError(err, req, res);
 
-    res.json({ _user: req.auth2.user._id, submissions: subs });
+    var clarificationQuery = isAdmin(req) ? { contest: req.auth2.user.contest } : {
+      contest: req.auth2.user.contest,
+      $or: [{ _creator: req.auth2.user._id }, { broadcast: true }]
+    };
+
+    return Clarification.find(clarificationQuery).sort("-updatedAt").exec(function (err2, clars) {
+      if (err2) return handleContestError(err, req, res);
+
+      return res.json({
+        _user: req.auth2.user._id,
+        submissions: subs,
+        clarifications: clars
+      });
+    });
   });
 });
 
@@ -5557,6 +5607,60 @@ router.get("/submission/:id", function (req, res, next) {
   });
 });
 
+router.post("/clarification", function (req, res, next) {
+  getUserContest(req.auth2.user).exec(function (err, contest) {
+    if (err) return handleContestError(err, req, res, next);
+    if (!contest) return handleContestError("contest not found", req, res, next);
+
+    // TODO: validate if comments are really strings
+
+    var insertData = {
+      _creator: req.auth2.user,
+      contest: contest._id,
+      comments: req.body.$push || []
+    };
+
+    if (isAdmin(req) && req.body.broadcast != null) insertData = (0, _extends3.default)({}, insertData, { broadcast: req.body.broadcast });
+
+    return new Clarification(insertData).save(function (err2) {
+      if (err2) return handleContestError(err2, req, res, next);
+      return res.json({ success: "posted" });
+    });
+  });
+});
+
+router.post("/clarification/:id", function (req, res, next) {
+  getUserContest(req.auth2.user).exec(function (err, contest) {
+    if (err) return handleContestError(err, req, res, next);
+    if (!contest) return handleContestError("contest not found", req, res, next);
+
+    return Clarification.findById(req.params.id, function (err2, clar) {
+      if (err2) return handleContestError(err2, req, res, next);
+      if (!clar || !clar.contest.equals(ObjectId(req.auth2.user.contest))) return handleContestError("clarification not found", req, res, next);
+      if (!isAdmin(req) && !clar._creator.equals(ObjectId(req.auth2.user))) {
+        return handleContestError("no permission on this clarification", req, res, next);
+      }
+      if (req.body.$push.length && clar.broadcast && !isAdmin(req)) {
+        return handleContestError("cant comment on a broadcast clarification", req, res, next);
+      }
+      // TODO: validate if comments are really strings
+
+      var updateQuery = {
+        _id: req.params.id,
+        $push: { comments: { $each: req.body.$push || [] } }
+      };
+
+      if (isAdmin(req) && req.body.broadcast != null) updateQuery = (0, _extends3.default)({}, updateQuery, { broadcast: req.body.broadcast });
+
+      return Clarification.update(updateQuery, function (err3) {
+        if (err) return handleContestError(err3, req, res, next);
+
+        return res.json({ success: "posted" });
+      });
+    });
+  });
+});
+
 router.get("/languages", function (req, res) {
   return res.json((0, _entries2.default)(grader.availableLanguages));
 });
@@ -5564,13 +5668,13 @@ router.get("/languages", function (req, res) {
 module.exports = router;
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/object/entries");
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6350,16 +6454,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // eslint-disable-next-line no-unused-vars
 var fs = __webpack_require__(20);
 var path = __webpack_require__(0);
-var promiseReflect = __webpack_require__(77);
+var promiseReflect = __webpack_require__(78);
 
-var verdict = __webpack_require__(78);
+var verdict = __webpack_require__(79);
 var utils = __webpack_require__(12);
 var logger = __webpack_require__(17);
-var sandbox = __webpack_require__(79);
+var sandbox = __webpack_require__(80);
 var environment = __webpack_require__(35);
 
 var loader = __webpack_require__(31);
-var Profiler = __webpack_require__(83);
+var Profiler = __webpack_require__(84);
 
 var Storage = __webpack_require__(22).MemoryStorage;
 
@@ -7165,13 +7269,13 @@ module.exports = { testTask: testTask, testPackage: testPackage, availableLangua
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports) {
 
 module.exports = require("promise-reflect");
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7308,7 +7412,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7359,7 +7463,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 15/06/16.
  */
-var Promise = __webpack_require__(80);
+var Promise = __webpack_require__(81);
 
 var fs = __webpack_require__(16);
 
@@ -7373,7 +7477,7 @@ var globAsync = utils.globAsync;
 var Storage = __webpack_require__(22).MemoryStorage;
 var JudgeConfig = jenv.JudgeConfig;
 
-var spawnDetachedPromise = __webpack_require__(82).spawn;
+var spawnDetachedPromise = __webpack_require__(83).spawn;
 
 /*
 *   spawnDetached async version (promisified)
@@ -9052,25 +9156,25 @@ module.exports = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports) {
 
 module.exports = require("tmp");
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports) {
 
 module.exports = require("child-process-promise");
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9176,7 +9280,7 @@ var Profiler = function () {
 module.exports = Profiler;
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9215,7 +9319,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

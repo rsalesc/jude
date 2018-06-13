@@ -923,7 +923,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     minlength: 4,
     maxlength: 48,
     required: true
-  }), nga.field("role", "choice").choices(roles).validation({ required: true })]).filters([nga.field("handle"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").perPage(100).remoteComplete(false), (0, _q2.default)(nga)]).listActions(["edit", "delete", (0, _filtered2.default)("submissions", "{_creator: entry.values.id, contest: entry.values.contest}", "Submissions")]);
+  }), nga.field("description"), nga.field("role", "choice").choices(roles).validation({ required: true })]).filters([nga.field("handle"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").perPage(100).remoteComplete(false), (0, _q2.default)(nga)]).listActions(["edit", "delete", (0, _filtered2.default)("submissions", "{_creator: entry.values.id, contest: entry.values.contest}", "Submissions")]);
 
   user.showView().fields(user.listView().fields().concat([nga.field("unofficial", "boolean").validation({ required: true }), nga.field("email", "email"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").perPage(100).remoteComplete(false)]));
 

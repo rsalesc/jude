@@ -114,6 +114,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
         maxlength: 48,
         required: true
       }),
+    nga.field("description"),
     nga.field("role", "choice")
       .choices(roles)
       .validation({ required: true })

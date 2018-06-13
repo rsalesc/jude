@@ -19,5 +19,6 @@ module.exports = {
   Contest: require("./Contest")(),
   User: require("./User")(),
   Submission: require("./Submission")(),
-  Problem: require("./Problem")()
+  Problem: require("./Problem")(),
+  Clarification: require("./Clarification")()
 };

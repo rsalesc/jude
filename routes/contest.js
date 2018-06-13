@@ -13,10 +13,11 @@ const sha256 = require("sha256");
 const ContestProblemSelection
     = "code name _id attr.weight attr.author attr.datasets attr.scoring attr.limits attr.blockedLanguages";
 const {
-  Contest, Submission, Problem, User
+  Contest, Submission, Problem, User, Clarification
 } = models;
 
 const { getUserContest, isAdmin } = require("@routes/common");
+const { ObjectId } = mongoose.mongo;
 
 function handleContestError(err, req, res) {
   res.status(400).json({ error: err.toString() });
@@ -99,7 +100,27 @@ router.get("/my", (req, res, next) => {
       if (err)
         return handleContestError(err, req, res);
 
-      res.json({ _user: req.auth2.user._id, submissions: subs });
+      const clarificationQuery = isAdmin(req)
+        ? { contest: req.auth2.user.contest }
+        : {
+          contest: req.auth2.user.contest,
+          $or: [
+            { _creator: req.auth2.user._id },
+            { broadcast: true }
+          ]
+        };
+
+      return Clarification.find(clarificationQuery)
+        .sort("-updatedAt").exec((err2, clars) => {
+          if (err2)
+            return handleContestError(err, req, res);
+
+          return res.json({
+            _user: req.auth2.user._id,
+            submissions: subs,
+            clarifications: clars
+          });
+        });
     });
 });
 
@@ -249,6 +270,72 @@ router.get("/submission/:id", (req, res, next) => {
 
 
       return res.json(filterOutPrivateSub(sub));
+    });
+  });
+});
+
+router.post("/clarification", (req, res, next) => {
+  getUserContest(req.auth2.user).exec((err, contest) => {
+    if (err)
+      return handleContestError(err, req, res, next);
+    if (!contest)
+      return handleContestError("contest not found", req, res, next);
+
+    // TODO: validate if comments are really strings
+
+    let insertData = {
+      _creator: req.auth2.user,
+      contest: contest._id,
+      comments: req.body.$push || []
+    };
+
+    if (isAdmin(req) && req.body.broadcast != null)
+      insertData = { ...insertData, broadcast: req.body.broadcast };
+
+    return new Clarification(insertData).save((err2) => {
+      if (err2)
+        return handleContestError(err2, req, res, next);
+      return res.json({ success: "posted" });
+    });
+  });
+});
+
+router.post("/clarification/:id", (req, res, next) => {
+  getUserContest(req.auth2.user).exec((err, contest) => {
+    if (err)
+      return handleContestError(err, req, res, next);
+    if (!contest)
+      return handleContestError("contest not found", req, res, next);
+
+    return Clarification.findById(req.params.id, (err2, clar) => {
+      if (err2)
+        return handleContestError(err2, req, res, next);
+      if (!clar || !clar.contest.equals(ObjectId(req.auth2.user.contest)))
+        return handleContestError("clarification not found", req, res, next);
+      if (!isAdmin(req) && !clar._creator.equals(ObjectId(req.auth2.user))) {
+        return handleContestError("no permission on this clarification",
+                                  req, res, next);
+      }
+      if (req.body.$push.length && clar.broadcast && !isAdmin(req)) {
+        return handleContestError("cant comment on a broadcast clarification",
+                                  req, res, next);
+      }
+      // TODO: validate if comments are really strings
+
+      let updateQuery = {
+        _id: req.params.id,
+        $push: { comments: { $each: req.body.$push || []}}
+      };
+
+      if (isAdmin(req) && req.body.broadcast != null)
+        updateQuery = { ...updateQuery, broadcast: req.body.broadcast };
+
+      return Clarification.update(updateQuery, (err3) => {
+        if (err)
+          return handleContestError(err3, req, res, next);
+
+        return res.json({ success: "posted" });
+      });
     });
   });
 });
