@@ -17,6 +17,10 @@ module.exports = {
     // here we are only configuring vue-loader
     loaders: [
       {
+        test: /\.tpl$/,
+        loader: "raw-loader"
+      },
+      {
         test: /\.vue$/, // a regex for matching all files that end in `.vue`
         loader: "vue-loader", // loader to use for matched files,
         options: {

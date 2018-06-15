@@ -13,6 +13,7 @@ module.exports = () => {
   const ClarificationSchema = new Schema({
     _creator: { type: Schema.Types.ObjectId, ref: "User" },
     contest: { type: Schema.Types.ObjectId, ref: "Contest" },
+    problem: { type: Schema.Types.ObjectId, ref: "Problem" },
     broadcast: { type: Boolean, default: false },
     comments: [CommentSchema]
   }, { timestamps: true });

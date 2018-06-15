@@ -130,11 +130,7 @@
                         return this.$router.push("/");
                     }
 
-                    if(!err.body.error) {
-                      console.error(err);
-                      new BulmaUtils(this).toast("Error contacting the server", 4000, "is-danger");
-                    } else 
-                      new BulmaUtils(this).toast(`Submission error: ${err.body.error}`, 4000, "is-danger");
+                    new BulmaUtils(this).toastResponseError(err, "Internal submission error");
                 });
             },
             getMode() {

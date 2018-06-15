@@ -5,7 +5,36 @@ import { VerdictConst, VerdictTag } from "../../judge/verdict.js";
 import Vue from "vue";
 import * as Api from "./api.js";
 import moment from "moment";
+import "moment/locale/en-gb";
+
 import { mapState } from "vuex";
+
+moment.locale("en-gb");
+
+export function escapeHTML(s) { 
+    return s.replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+}
+
+export function appendStyle(doc, css) {
+  var head = doc.head || doc.getElementsByTagName('head')[0],
+    style = doc.createElement('style');
+
+  style.type = "text/css";
+  if (style.styleSheet){
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+
+  head.appendChild(style);
+}
+
+export function getDatetimeString(date) {
+  return moment(date).format("LLL");
+}
 
 export function dateEquals(a, b) {
   if (a == null && b == null)

@@ -10,7 +10,9 @@ export const types = {
   CLEAR_MODAL_TRIGGER: "main/CLEAR_MODAL_TRIGGER",
   SET_AUTO_FETCH_STANDINGS: "main/SET_AUTO_FETCH_STANDINGS",
   SET_COMPACT_TABLE: "main/SET_COMPACT_TABLE",
-  SET_FORMATTED_PENALTY: "main/SET_FORMATTED_PENALTY"
+  SET_FORMATTED_PENALTY: "main/SET_FORMATTED_PENALTY",
+  SET_DASHBOARD_TAB: "main/SET_DASHBOARD_TAB",
+  CHECK_CLARIFICATIONS: "main/CHECK_CLARIFICATIONS"
 };
 
 export const state = {
@@ -18,9 +20,15 @@ export const state = {
   userObject: {},
   rawContest: {},
   rawSubmissions: [],
+  rawClarifications: [],
+  rawPrintouts: [],
   rawTeams: [],
   shownSubmission: {},
   codeModalTrigger: false,
+  persist: {
+    dashboardTab: 0,
+    checkClarifications: new Date()
+  },
   config: {
     autoFetchStandings: false,
     compactTable: false,
@@ -35,6 +43,8 @@ export const mutations = {
     state.rawContest = data.contest;
     state.rawTeams = data.teams;
     state.rawSubmissions = data.submissions;
+    state.rawClarifications = data.clarifications;
+    state.rawPrintouts = data.printouts;
   },
   [types.UPDATE_SHOWN_SUBMISSION](state, submission) {
     state.shownSubmission = submission;
@@ -51,6 +61,12 @@ export const mutations = {
   },
   [types.SET_FORMATTED_PENALTY](state, value) {
     state.config.formattedPenalty = value;
+  },
+  [types.SET_DASHBOARD_TAB](state, value) {
+    state.persist.dashboardTab = value;
+  },
+  [types.CHECK_CLARIFICATIONS](state) {
+    state.persist.checkClarifications = new Date();
   }
 };
 
@@ -83,6 +99,19 @@ export const computed = {
     }
 
     return problems;
+  },
+  clarifications: (state, getters) => {
+    const { problems } = getters;
+    if (!state.rawClarifications || !state.rawContest || !problems)
+      return [];
+
+    return Vue.util.extend([], state.rawClarifications)
+      .filter(c => !c.problem || getters.getRawProblem(c.problem) != null);
+  },
+  printouts: (state) => {
+    if (!state.rawPrintouts || !state.rawContest)
+      return [];
+    return state.rawPrintouts;
   },
   my: (state, getters) => {
     if (!state.rawContest || !state.rawContest.scoring || getters.submissions === undefined)
@@ -185,10 +214,27 @@ export const computed = {
 
     return teams;
   },
+  teamMapping: (state, getters) => {
+    const { teams } = getters;
+    if (!teams)
+      return {};
+    const res = {};
+    for (const team of teams)
+      res[team._id] = team;
+    return res;
+  },
   languages: (state) => {
     if (!state.rawContest || !state.rawContest.languages)
       return {};
     return state.rawContest.languages;
+  },
+  unchecked: (state, getters) => {
+    const { clarifications, printouts } = getters;
+    return {
+      clarifications: clarifications
+        .filter(c => c.updatedAt > state.persist.checkClarifications).length,
+      printouts: printouts.filter(p => !p.done).length
+    };
   }
 };
 

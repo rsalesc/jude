@@ -20,5 +20,6 @@ module.exports = {
   User: require("./User")(),
   Submission: require("./Submission")(),
   Problem: require("./Problem")(),
-  Clarification: require("./Clarification")()
+  Clarification: require("./Clarification")(),
+  Printout: require("./Printout")()
 };

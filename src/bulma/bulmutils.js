@@ -11,4 +11,11 @@ export default class {
       position
     });
   }
+
+  toastResponseError(response, internal = "Internal server error.") {
+    if (response.status === 400)
+      this.toast(`error: ${response.body.error}`, 4000, "is-danger");
+    else
+      this.toast(internal);
+  }
 }

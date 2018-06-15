@@ -45,6 +45,6 @@ export const store = new Vuex.Store({
   mutations,
   getters,
   plugins: [createPersistedState({
-    paths: ["main.config"]
+    paths: ["main.config", "main.persist"]
   })]
 });
