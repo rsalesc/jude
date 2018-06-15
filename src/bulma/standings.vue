@@ -34,7 +34,8 @@
             <th></th>
             <th class="ju-problem-cell ju-score-cell">Score</th>
             <th class="ju-problem-cell" v-for="prob in problems"
-              :key="prob.problem._id">
+              :key="prob.problem._id"
+              :style="getProblemBorder(prob)">
               <p>{{ prob.letter }}</p>
               <p class="ju-comment ju-tertiary-text"></p>
             </th>
@@ -136,6 +137,10 @@
           }
 
           return undefined;
+        },
+        getProblemBorder(prob) {
+          const style = { borderBottom: `2px solid #${prob.color}` };
+          return style;
         },
         getMainVerdict(a, b) {
           return Helper.getMainVerdict(a, b);

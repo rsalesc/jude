@@ -1,6 +1,6 @@
 <template>
   <div class="columns">
-    <div class="column is-narrow ju-min-tablet-550">
+    <div class="column is-narrow ju-min-tablet-550 ju-max-550">
       <div class="box">
         <div class="box-title">
           <p class="title is-4">
@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-    <div class="column is-narrow ju-min-tablet-500">
+    <div class="column is-narrow ju-min-tablet-500 ju-max-500">
       <div class="box">
         <div class="box-title">
           <p class="title is-4">Public Clarifications</p>
@@ -127,11 +127,15 @@ export default {
         broadcast: false
       };
     },
-    answer(clar) {
+    answer(data) {
       this.clear();
-      this.selectedClarification = clar;
-      this.newClarification.broadcast = clar.broadcast;
-      this.$refs.text.focus();
+      this.selectedClarification = data.clarification;
+      this.newClarification.broadcast = data.clarification.broadcast;
+      this.newClarification.text = data.answer || "";
+      if (data.answer)
+        this.submit();
+      else
+        this.$refs.text.focus();
     },
     isAnswering() {
       return Boolean(this.selectedClarification);

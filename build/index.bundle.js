@@ -61,7 +61,7 @@ require("source-map-support").install();
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 37);
+/******/ 	return __webpack_require__(__webpack_require__.s = 38);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -109,7 +109,7 @@ module.exports = require("babel-runtime/helpers/asyncToGenerator");
 
 /* eslint-disable */
 var path = __webpack_require__(1),
-    fs = __webpack_require__(20),
+    fs = __webpack_require__(21),
     mongoose = __webpack_require__(0);
 // files = fs.readdirSync(__dirname);
 
@@ -125,10 +125,10 @@ __webpack_require__(25);
 });*/
 
 module.exports = {
-  Contest: __webpack_require__(52)(),
+  Contest: __webpack_require__(53)(),
   User: __webpack_require__(55)(),
   Submission: __webpack_require__(56)(),
-  Problem: __webpack_require__(27)(),
+  Problem: __webpack_require__(28)(),
   Clarification: __webpack_require__(57)(),
   Printout: __webpack_require__(58)()
 };
@@ -149,16 +149,22 @@ module.exports = require("babel-runtime/helpers/createClass");
 /* 9 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/object/keys");
+module.exports = require("babel-runtime/core-js/promise");
 
 /***/ }),
 /* 10 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/object/keys");
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _extends2 = __webpack_require__(19);
+var _extends2 = __webpack_require__(20);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -429,19 +435,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/core-js/promise");
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _promise = __webpack_require__(11);
+var _promise = __webpack_require__(9);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -449,7 +449,7 @@ var _typeof2 = __webpack_require__(64);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
-var _keys = __webpack_require__(9);
+var _keys = __webpack_require__(10);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -626,9 +626,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var path = __webpack_require__(1);
-var fs = __webpack_require__(16);
+var fs = __webpack_require__(17);
 var util = __webpack_require__(65);
-var glob = __webpack_require__(29);
+var glob = __webpack_require__(30);
 
 function inspect(p) {
   return util.inspect(p, false, null);
@@ -703,30 +703,233 @@ module.exports = {
 
 /***/ }),
 /* 13 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = require("babel-runtime/core-js/object/get-prototype-of");
+"use strict";
+
+
+var _regenerator = __webpack_require__(4);
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _getIterator2 = __webpack_require__(2);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _asyncToGenerator2 = __webpack_require__(5);
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _promise = __webpack_require__(9);
+
+var _promise2 = _interopRequireDefault(_promise);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Created by rsalesc on 15/07/16.
+ */
+var express = __webpack_require__(3);
+var router = express.Router();
+var path = __webpack_require__(1);
+
+var models = __webpack_require__(6);
+var Submission = models.Submission;
+
+
+var SubmissionNoCode = "_id _creator contest problem language code verdict";
+
+function handleSubmissionError(err, req, res, next) {
+  res.status(500).json([err]);
+}
+
+function handleRequestError(err, req, res, next) {
+  res.status(400).json({ err: err.toString() });
+}
+
+function rejudge(id) {
+  var _this = this;
+
+  return new _promise2.default(function (resolve, reject) {
+    Submission.findByIdAndUpdate(id, {}, { new: true }, function (err, sub) {
+      if (err) return reject(err);
+
+      sub.populate("problem", function () {
+        var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(err, sub) {
+          var verdict, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, data;
+
+          return _regenerator2.default.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  if (!err) {
+                    _context.next = 2;
+                    break;
+                  }
+
+                  return _context.abrupt("return", reject(err));
+
+                case 2:
+                  _context.prev = 2;
+                  _context.next = 5;
+                  return judeQueue.add({
+                    id: sub.problem._id,
+                    subid: sub._id,
+                    fid: sub.problem.fid,
+                    code: sub.code,
+                    lang: sub.language
+                  });
+
+                case 5:
+                  _context.next = 10;
+                  break;
+
+                case 7:
+                  _context.prev = 7;
+                  _context.t0 = _context["catch"](2);
+                  return _context.abrupt("return", reject(_context.t0));
+
+                case 10:
+                  verdict = {};
+                  _iteratorNormalCompletion = true;
+                  _didIteratorError = false;
+                  _iteratorError = undefined;
+                  _context.prev = 14;
+
+                  for (_iterator = (0, _getIterator3.default)(sub.problem.attr.datasets); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    data = _step.value;
+
+                    verdict[data.name] = {
+                      verdict: "VERDICT_INQ", passed: -1, score: 0, info: ""
+                    };
+                  }
+
+                  _context.next = 22;
+                  break;
+
+                case 18:
+                  _context.prev = 18;
+                  _context.t1 = _context["catch"](14);
+                  _didIteratorError = true;
+                  _iteratorError = _context.t1;
+
+                case 22:
+                  _context.prev = 22;
+                  _context.prev = 23;
+
+                  if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                  }
+
+                case 25:
+                  _context.prev = 25;
+
+                  if (!_didIteratorError) {
+                    _context.next = 28;
+                    break;
+                  }
+
+                  throw _iteratorError;
+
+                case 28:
+                  return _context.finish(25);
+
+                case 29:
+                  return _context.finish(22);
+
+                case 30:
+                  sub.verdict = verdict;
+                  sub.save(function (err) {
+                    if (err) return reject(err);
+                    return resolve();
+                  });
+
+                case 32:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee, _this, [[2, 7], [14, 18, 22, 30], [23,, 25, 29]]);
+        }));
+
+        return function (_x, _x2) {
+          return _ref.apply(this, arguments);
+        };
+      }());
+    });
+  });
+}
+
+// TODO: set back to IN_QUEUE status
+router.post("/:id/rejudge", function () {
+  var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(req, res, next) {
+    return _regenerator2.default.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            if (req.params.id) {
+              _context2.next = 2;
+              break;
+            }
+
+            return _context2.abrupt("return", handleSubmissionError("no rejudge id provided", req, res));
+
+          case 2:
+            _context2.prev = 2;
+            _context2.next = 5;
+            return rejudge(req.params.id, req, res, next);
+
+          case 5:
+            return _context2.abrupt("return", res.json({ success: "rejudged" }));
+
+          case 8:
+            _context2.prev = 8;
+            _context2.t0 = _context2["catch"](2);
+            return _context2.abrupt("return", handleSubmissionError(_context2.t0, req, res));
+
+          case 11:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, undefined, [[2, 8]]);
+  }));
+
+  return function (_x3, _x4, _x5) {
+    return _ref2.apply(this, arguments);
+  };
+}());
+
+module.exports = router;
+module.exports.SubmissionNoCode = SubmissionNoCode;
+module.exports.rejudge = rejudge;
 
 /***/ }),
 /* 14 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
+module.exports = require("babel-runtime/core-js/object/get-prototype-of");
 
 /***/ }),
 /* 15 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/inherits");
+module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
 
 /***/ }),
 /* 16 */
 /***/ (function(module, exports) {
 
-module.exports = require("fs-extra");
+module.exports = require("babel-runtime/helpers/inherits");
 
 /***/ }),
 /* 17 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs-extra");
+
+/***/ }),
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -736,7 +939,7 @@ module.exports = require("fs-extra");
  * Created by rsalesc on 14/06/16.
  */
 var winston = __webpack_require__(67);
-var process = __webpack_require__(30);
+var process = __webpack_require__(31);
 
 var logger = new winston.Logger({
     level: process.env.LOG_LEVEL || "info",
@@ -760,200 +963,22 @@ module.exports = logger;
 /* WEBPACK VAR INJECTION */}.call(exports, "judge"))
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/slicedToArray");
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/extends");
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports) {
 
 module.exports = require("fs");
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _getIterator2 = __webpack_require__(2);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-var _regenerator = __webpack_require__(4);
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
-var _asyncToGenerator2 = __webpack_require__(5);
-
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Created by rsalesc on 15/07/16.
- */
-var express = __webpack_require__(3);
-var router = express.Router();
-var path = __webpack_require__(1);
-
-var models = __webpack_require__(6);
-var Submission = models.Submission;
-
-
-var SubmissionNoCode = "_id _creator contest problem language code verdict";
-
-function handleSubmissionError(err, req, res, next) {
-    res.status(400).json([err]);
-}
-
-// TODO: set back to IN_QUEUE status
-router.post("/:id/rejudge", function (req, res, next) {
-    if (!req.params.id) return handleSubmissionError("no rejudge id provided", req, res);
-
-    Submission.findByIdAndUpdate(req.params.id, {}, { new: true }, function (err, sub) {
-        if (err) return handleSubmissionError(err, req, res);
-
-        sub.populate("problem", function () {
-            var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(err, sub) {
-                var verdict, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, data;
-
-                return _regenerator2.default.wrap(function _callee2$(_context2) {
-                    while (1) {
-                        switch (_context2.prev = _context2.next) {
-                            case 0:
-                                if (!err) {
-                                    _context2.next = 2;
-                                    break;
-                                }
-
-                                return _context2.abrupt("return", handleSubmissionError(err, req, res));
-
-                            case 2:
-                                _context2.prev = 2;
-                                _context2.next = 5;
-                                return judeQueue.add({
-                                    id: sub.problem._id,
-                                    subid: sub._id,
-                                    fid: sub.problem.fid,
-                                    code: sub.code,
-                                    lang: sub.language
-                                });
-
-                            case 5:
-                                _context2.next = 10;
-                                break;
-
-                            case 7:
-                                _context2.prev = 7;
-                                _context2.t0 = _context2["catch"](2);
-                                return _context2.abrupt("return", handleSubmissionError(_context2.t0, req, res));
-
-                            case 10:
-                                verdict = {};
-                                _iteratorNormalCompletion = true;
-                                _didIteratorError = false;
-                                _iteratorError = undefined;
-                                _context2.prev = 14;
-
-                                for (_iterator = (0, _getIterator3.default)(sub.problem.attr.datasets); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                                    data = _step.value;
-
-                                    verdict[data.name] = {
-                                        verdict: "VERDICT_INQ", passed: -1, score: 0, info: ""
-                                    };
-                                }
-
-                                _context2.next = 22;
-                                break;
-
-                            case 18:
-                                _context2.prev = 18;
-                                _context2.t1 = _context2["catch"](14);
-                                _didIteratorError = true;
-                                _iteratorError = _context2.t1;
-
-                            case 22:
-                                _context2.prev = 22;
-                                _context2.prev = 23;
-
-                                if (!_iteratorNormalCompletion && _iterator.return) {
-                                    _iterator.return();
-                                }
-
-                            case 25:
-                                _context2.prev = 25;
-
-                                if (!_didIteratorError) {
-                                    _context2.next = 28;
-                                    break;
-                                }
-
-                                throw _iteratorError;
-
-                            case 28:
-                                return _context2.finish(25);
-
-                            case 29:
-                                return _context2.finish(22);
-
-                            case 30:
-                                sub.verdict = verdict;
-                                sub.save(function () {
-                                    var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(err2) {
-                                        return _regenerator2.default.wrap(function _callee$(_context) {
-                                            while (1) {
-                                                switch (_context.prev = _context.next) {
-                                                    case 0:
-                                                        if (!err2) {
-                                                            _context.next = 2;
-                                                            break;
-                                                        }
-
-                                                        return _context.abrupt("return", handleSubmissionError(err2, req, res));
-
-                                                    case 2:
-
-                                                        res.json({ success: "rejudged" });
-
-                                                    case 3:
-                                                    case "end":
-                                                        return _context.stop();
-                                                }
-                                            }
-                                        }, _callee, undefined);
-                                    }));
-
-                                    return function (_x3) {
-                                        return _ref2.apply(this, arguments);
-                                    };
-                                }());
-
-                            case 32:
-                            case "end":
-                                return _context2.stop();
-                        }
-                    }
-                }, _callee2, undefined, [[2, 7], [14, 18, 22, 30], [23,, 25, 29]]);
-            }));
-
-            return function (_x, _x2) {
-                return _ref.apply(this, arguments);
-            };
-        }());
-    });
-});
-
-module.exports = router;
-module.exports.SubmissionNoCode = SubmissionNoCode;
 
 /***/ }),
 /* 22 */
@@ -962,7 +987,7 @@ module.exports.SubmissionNoCode = SubmissionNoCode;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(module) {
 
-var _keys = __webpack_require__(9);
+var _keys = __webpack_require__(10);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -970,15 +995,15 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(13);
+var _getPrototypeOf = __webpack_require__(14);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(14);
+var _possibleConstructorReturn2 = __webpack_require__(15);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(15);
+var _inherits2 = __webpack_require__(16);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -998,7 +1023,7 @@ var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _promise = __webpack_require__(11);
+var _promise = __webpack_require__(9);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -1013,10 +1038,10 @@ var concatStream = __webpack_require__(63);
 var utils = __webpack_require__(12);
 var wildcard = __webpack_require__(66);
 var path = __webpack_require__(1);
-var logger = __webpack_require__(17);
-var fs = __webpack_require__(16);
+var logger = __webpack_require__(18);
+var fs = __webpack_require__(17);
 var promisify = __webpack_require__(68);
-var glob = promisify(__webpack_require__(29).glob);
+var glob = promisify(__webpack_require__(30).glob);
 
 /* Helper Functions for storage */
 function dealWithEntry(zipFile, entry) {
@@ -1973,7 +1998,7 @@ module.exports = require("babel-runtime/core-js/object/assign");
 
 var mongoose = __webpack_require__(0);
 var MongoQueue2 = __webpack_require__(26);
-var weed = __webpack_require__(51);
+var weed = __webpack_require__(52);
 
 // mongodb setup
 
@@ -2001,6 +2026,12 @@ module.exports = require("mongo-queue2");
 
 /***/ }),
 /* 27 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/set");
+
+/***/ }),
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2101,35 +2132,35 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 module.exports = require("sha256");
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports) {
 
 module.exports = require("glob");
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 module.exports = require("process");
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _slicedToArray2 = __webpack_require__(18);
+var _slicedToArray2 = __webpack_require__(19);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _map = __webpack_require__(32);
+var _map = __webpack_require__(33);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -2137,15 +2168,15 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(13);
+var _getPrototypeOf = __webpack_require__(14);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(14);
+var _possibleConstructorReturn2 = __webpack_require__(15);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(15);
+var _inherits2 = __webpack_require__(16);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -2268,9 +2299,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var path = __webpack_require__(1);
 var task = __webpack_require__(69);
 var YAML = __webpack_require__(71);
-var logger = __webpack_require__(17);
+var logger = __webpack_require__(18);
 var utils = __webpack_require__(12);
-var scoring = __webpack_require__(33);
+var scoring = __webpack_require__(34);
 
 var JUDE_FN = "jude.yml";
 
@@ -2803,31 +2834,31 @@ var LOADERS = new _map2.default([
 };
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/map");
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _getPrototypeOf = __webpack_require__(13);
+var _getPrototypeOf = __webpack_require__(14);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(14);
+var _possibleConstructorReturn2 = __webpack_require__(15);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(15);
+var _inherits2 = __webpack_require__(16);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _keys = __webpack_require__(9);
+var _keys = __webpack_require__(10);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -3448,7 +3479,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3477,7 +3508,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3491,7 +3522,7 @@ var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _slicedToArray2 = __webpack_require__(18);
+var _slicedToArray2 = __webpack_require__(19);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -3499,7 +3530,7 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _map = __webpack_require__(32);
+var _map = __webpack_require__(33);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -3517,9 +3548,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/06/16.
  */
 
-var fs = __webpack_require__(20);
-var fse = __webpack_require__(16);
-var tmp = __webpack_require__(83);
+var fs = __webpack_require__(21);
+var fse = __webpack_require__(17);
+var tmp = __webpack_require__(84);
 tmp.setGracefulCleanup();
 
 var path = __webpack_require__(1);
@@ -3760,26 +3791,26 @@ module.exports = {
 };
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports) {
 
 module.exports = require("passport");
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(38);
+module.exports = __webpack_require__(39);
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var app = __webpack_require__(39);
+var app = __webpack_require__(40);
 var port = process.env.PORT || 3000;
 
 app.listen(port, function () {
@@ -3787,33 +3818,33 @@ app.listen(port, function () {
 });
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(__dirname) {
 
-var _extends2 = __webpack_require__(19);
+var _extends2 = __webpack_require__(20);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var express = __webpack_require__(3);
-var session = __webpack_require__(40);
-var MongoStore = __webpack_require__(41)(session);
+var session = __webpack_require__(41);
+var MongoStore = __webpack_require__(42)(session);
 var mongoose = __webpack_require__(0);
 var path = __webpack_require__(1);
-var favicon = __webpack_require__(42);
-var logger = __webpack_require__(43);
-var cookieParser = __webpack_require__(44);
-var bodyParser = __webpack_require__(45);
-var multer = __webpack_require__(46);
-var flash = __webpack_require__(47);
+var favicon = __webpack_require__(43);
+var logger = __webpack_require__(44);
+var cookieParser = __webpack_require__(45);
+var bodyParser = __webpack_require__(46);
+var multer = __webpack_require__(47);
+var flash = __webpack_require__(48);
 var router = express.Router();
 // var methodOverride = require('method-override');
-var restify = __webpack_require__(48);
-var apiRoutes = __webpack_require__(49);
+var restify = __webpack_require__(49);
+var apiRoutes = __webpack_require__(50);
 var staticCompressed = __webpack_require__(60);
 
 // expose db object globally
@@ -3821,7 +3852,7 @@ __webpack_require__(25);
 
 var app = express();
 var routes = __webpack_require__(61);
-var auth2 = __webpack_require__(10);
+var auth2 = __webpack_require__(11);
 var models = __webpack_require__(6);
 
 // app.use(express.static(path.join(__dirname, "public")));
@@ -3980,61 +4011,61 @@ module.exports = app;
 /* WEBPACK VAR INJECTION */}.call(exports, ""))
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-session");
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports) {
 
 module.exports = require("connect-mongo");
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 module.exports = require("serve-favicon");
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports) {
 
 module.exports = require("morgan");
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 module.exports = require("cookie-parser");
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports) {
 
 module.exports = require("body-parser");
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports) {
 
 module.exports = require("multer");
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports) {
 
 module.exports = require("connect-flash");
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-restify-mongoose");
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4046,9 +4077,9 @@ module.exports = require("express-restify-mongoose");
 var express = __webpack_require__(3);
 var router = express.Router();
 
-var contestRouter = __webpack_require__(50);
+var contestRouter = __webpack_require__(51);
 var userRouter = __webpack_require__(59);
-var submissionRouter = __webpack_require__(21);
+var submissionRouter = __webpack_require__(13);
 
 // middlewares
 router.use("/contests", contestRouter);
@@ -4058,7 +4089,7 @@ router.use("/submissions", submissionRouter);
 module.exports = router;
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4068,7 +4099,7 @@ var _regenerator = __webpack_require__(4);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _promise = __webpack_require__(11);
+var _promise = __webpack_require__(9);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -4094,7 +4125,7 @@ var models = __webpack_require__(6);
 var Contest = models.Contest,
     User = models.User;
 
-var _require = __webpack_require__(21),
+var _require = __webpack_require__(13),
     SubmissionNoCode = _require.SubmissionNoCode;
 
 var ObjectId = mongoose.Types.ObjectId;
@@ -4176,19 +4207,19 @@ router.post("/:id/addUsers", function () {
 module.exports = router;
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports) {
 
 module.exports = require("jude-seaweedfs");
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _set = __webpack_require__(53);
+var _set = __webpack_require__(27);
 
 var _set2 = _interopRequireDefault(_set);
 
@@ -4205,7 +4236,7 @@ var Schema = mongoose.Schema;
 module.exports = function () {
   if (db.models.Contest) return db.model("Contest");
 
-  var Problem = __webpack_require__(27)();
+  var Problem = __webpack_require__(28)();
 
   var ContestProblem = new Schema({
     letter: {
@@ -4305,12 +4336,6 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 53 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/core-js/set");
-
-/***/ }),
 /* 54 */
 /***/ (function(module, exports) {
 
@@ -4328,7 +4353,7 @@ module.exports = require("mongoose-deep-populate");
  */
 var mongoose = __webpack_require__(0);
 var Schema = mongoose.Schema;
-var sha256 = __webpack_require__(28);
+var sha256 = __webpack_require__(29);
 
 module.exports = function () {
     if (db.models.User) return db.model("User");
@@ -4555,7 +4580,7 @@ var models = __webpack_require__(6);
 var User = models.User,
     Submission = models.Submission;
 
-var _require = __webpack_require__(21),
+var _require = __webpack_require__(13),
     SubmissionNoCode = _require.SubmissionNoCode;
 
 var ObjectId = mongoose.Types.ObjectId;
@@ -4601,13 +4626,13 @@ var Problem = models.Problem,
 
 
 var Storage = __webpack_require__(22).MemoryStorage;
-var Loader = __webpack_require__(31);
+var Loader = __webpack_require__(32);
 var utils = __webpack_require__(12);
 var api2 = __webpack_require__(72);
 var contest = __webpack_require__(76);
-var admin = __webpack_require__(87);
-var auth2 = __webpack_require__(10);
-var passport = __webpack_require__(36);
+var admin = __webpack_require__(88);
+var auth2 = __webpack_require__(11);
+var passport = __webpack_require__(37);
 
 function handleInternalError(err, req, res, next) {
   res.status(500).json({ error: err.toString() });
@@ -4837,7 +4862,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 14/06/16.
  */
 
-var scoring = __webpack_require__(33);
+var scoring = __webpack_require__(34);
 var deepcopy = __webpack_require__(70);
 
 var Task = function () {
@@ -5080,7 +5105,7 @@ module.exports = require("yamljs");
  */
 var express = __webpack_require__(3);
 var router = express.Router();
-var auth2 = __webpack_require__(10);
+var auth2 = __webpack_require__(11);
 
 var contest = __webpack_require__(74);
 
@@ -5104,7 +5129,7 @@ module.exports = require("crypto");
 
 var express = __webpack_require__(3);
 var router = express.Router();
-var auth2 = __webpack_require__(10);
+var auth2 = __webpack_require__(11);
 
 var _require = __webpack_require__(75),
     checkAdminContest = _require.checkAdminContest,
@@ -5143,7 +5168,7 @@ module.exports = router;
 
 var mongoose = __webpack_require__(0);
 
-var _require = __webpack_require__(34),
+var _require = __webpack_require__(35),
     isAdmin = _require.isAdmin,
     getUserContest = _require.getUserContest;
 
@@ -5176,6 +5201,14 @@ module.exports = {
 "use strict";
 
 
+var _set = __webpack_require__(27);
+
+var _set2 = _interopRequireDefault(_set);
+
+var _toConsumableArray2 = __webpack_require__(77);
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
 var _regenerator = __webpack_require__(4);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -5184,19 +5217,19 @@ var _asyncToGenerator2 = __webpack_require__(5);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _entries = __webpack_require__(77);
+var _entries = __webpack_require__(78);
 
 var _entries2 = _interopRequireDefault(_entries);
 
-var _extends2 = __webpack_require__(19);
+var _extends2 = __webpack_require__(20);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _promise = __webpack_require__(11);
+var _promise = __webpack_require__(9);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _keys = __webpack_require__(9);
+var _keys = __webpack_require__(10);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -5208,15 +5241,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = __webpack_require__(1);
 var mongoose = __webpack_require__(0);
-var grader = __webpack_require__(78);
-var precheck = __webpack_require__(86);
-var auth2 = __webpack_require__(10);
+var grader = __webpack_require__(79);
+var precheck = __webpack_require__(87);
+var auth2 = __webpack_require__(11);
 
 var express = __webpack_require__(3);
 var router = express.Router();
 
 var models = __webpack_require__(6);
-var sha256 = __webpack_require__(28);
+var sha256 = __webpack_require__(29);
 
 var ContestProblemSelection = "code name _id attr.weight attr.author attr.datasets attr.scoring attr.limits attr.blockedLanguages";
 var Contest = models.Contest,
@@ -5226,9 +5259,12 @@ var Contest = models.Contest,
     Clarification = models.Clarification,
     Printout = models.Printout;
 
-var _require = __webpack_require__(34),
-    getUserContest = _require.getUserContest,
-    isAdmin = _require.isAdmin;
+var _require = __webpack_require__(13),
+    rejudge = _require.rejudge;
+
+var _require2 = __webpack_require__(35),
+    getUserContest = _require2.getUserContest,
+    isAdmin = _require2.isAdmin;
 
 var ObjectId = mongoose.mongo.ObjectId;
 
@@ -5780,16 +5816,85 @@ router.get("/languages", function (req, res) {
   return res.json((0, _entries2.default)(grader.availableLanguages));
 });
 
+router.use(auth2.isAuth(["admin"]));
+
+router.post("/rejudge", function (req, res, next) {
+  getUserContest(req.auth2.user).exec(function () {
+    var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(err, contest) {
+      var toRejudge, reflect, ans;
+      return _regenerator2.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              if (!err) {
+                _context3.next = 2;
+                break;
+              }
+
+              return _context3.abrupt("return", handleContestError(err, req, res, next));
+
+            case 2:
+              if (contest) {
+                _context3.next = 4;
+                break;
+              }
+
+              return _context3.abrupt("return", handleContestError("contest not found", req, res, next));
+
+            case 4:
+
+              // filter by contest
+              toRejudge = [].concat((0, _toConsumableArray3.default)(new _set2.default(req.body.submissions || [])));
+
+              reflect = function reflect(p) {
+                return p.then(function (v) {
+                  return { v: v, status: true };
+                }, function (e) {
+                  return { e: e, status: false };
+                });
+              };
+
+              _context3.next = 8;
+              return _promise2.default.all(toRejudge.map(function (s) {
+                return rejudge(s);
+              }).map(reflect));
+
+            case 8:
+              ans = _context3.sent;
+              return _context3.abrupt("return", res.json({ success: ans.filter(function (r) {
+                  return r.status;
+                }).length }));
+
+            case 10:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, undefined);
+    }));
+
+    return function (_x4, _x5) {
+      return _ref3.apply(this, arguments);
+    };
+  }());
+});
+
 module.exports = router;
 
 /***/ }),
 /* 77 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/object/entries");
+module.exports = require("babel-runtime/helpers/toConsumableArray");
 
 /***/ }),
 /* 78 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/object/entries");
+
+/***/ }),
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5799,11 +5904,11 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _slicedToArray2 = __webpack_require__(18);
+var _slicedToArray2 = __webpack_require__(19);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _promise = __webpack_require__(11);
+var _promise = __webpack_require__(9);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -6567,18 +6672,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 // eslint-disable-next-line no-unused-vars
-var fs = __webpack_require__(20);
+var fs = __webpack_require__(21);
 var path = __webpack_require__(1);
-var promiseReflect = __webpack_require__(79);
+var promiseReflect = __webpack_require__(80);
 
-var verdict = __webpack_require__(80);
+var verdict = __webpack_require__(81);
 var utils = __webpack_require__(12);
-var logger = __webpack_require__(17);
-var sandbox = __webpack_require__(81);
-var environment = __webpack_require__(35);
+var logger = __webpack_require__(18);
+var sandbox = __webpack_require__(82);
+var environment = __webpack_require__(36);
 
-var loader = __webpack_require__(31);
-var Profiler = __webpack_require__(85);
+var loader = __webpack_require__(32);
+var Profiler = __webpack_require__(86);
 
 var Storage = __webpack_require__(22).MemoryStorage;
 
@@ -7384,13 +7489,13 @@ module.exports = { testTask: testTask, testPackage: testPackage, availableLangua
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports) {
 
 module.exports = require("promise-reflect");
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7527,17 +7632,17 @@ module.exports = {
 };
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(module) {
 
-var _slicedToArray2 = __webpack_require__(18);
+var _slicedToArray2 = __webpack_require__(19);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _keys = __webpack_require__(9);
+var _keys = __webpack_require__(10);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -7545,15 +7650,15 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(13);
+var _getPrototypeOf = __webpack_require__(14);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(14);
+var _possibleConstructorReturn2 = __webpack_require__(15);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(15);
+var _inherits2 = __webpack_require__(16);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -7578,13 +7683,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 15/06/16.
  */
-var Promise = __webpack_require__(82);
+var Promise = __webpack_require__(83);
 
-var fs = __webpack_require__(16);
+var fs = __webpack_require__(17);
 
 var path = __webpack_require__(1);
-var logger = __webpack_require__(17);
-var jenv = __webpack_require__(35);
+var logger = __webpack_require__(18);
+var jenv = __webpack_require__(36);
 var utils = __webpack_require__(12);
 var globAsync = utils.globAsync;
 
@@ -7592,7 +7697,7 @@ var globAsync = utils.globAsync;
 var Storage = __webpack_require__(22).MemoryStorage;
 var JudgeConfig = jenv.JudgeConfig;
 
-var spawnDetachedPromise = __webpack_require__(84).spawn;
+var spawnDetachedPromise = __webpack_require__(85).spawn;
 
 /*
 *   spawnDetached async version (promisified)
@@ -9271,31 +9376,31 @@ module.exports = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports) {
 
 module.exports = require("tmp");
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports) {
 
 module.exports = require("child-process-promise");
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _keys = __webpack_require__(9);
+var _keys = __webpack_require__(10);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -9313,7 +9418,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var process = __webpack_require__(30);
+var process = __webpack_require__(31);
 
 function getSeconds(tuple) {
   return tuple[0] + tuple[1] / 1e9;
@@ -9395,7 +9500,7 @@ var Profiler = function () {
 module.exports = Profiler;
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9434,7 +9539,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9442,8 +9547,8 @@ module.exports = {
 
 var path = __webpack_require__(1);
 var mongoose = __webpack_require__(0);
-var passport = __webpack_require__(36);
-var auth2 = __webpack_require__(10);
+var passport = __webpack_require__(37);
+var auth2 = __webpack_require__(11);
 
 var express = __webpack_require__(3);
 var router = express.Router();

@@ -21,11 +21,28 @@
             </button>
           </b-tooltip>
         </div>
-        <div class="level-item"> 
-          <button class="button is-primary is-small"
-                  v-if="isAdmin()"
-                  @click="select"
-                  :class="{ 'is-danger': !answeredByAdmin(clar) }">Answer</button>
+        <div class="level-item">
+          <b-field v-if="isAdmin()">
+            <p class="control">
+            <button class="button is-primary is-small"i
+                    @click="select()"
+                    :class="{ 'is-danger': !answeredByAdmin(clar) }">Answer</button>
+            </p>
+            <p class="control">
+            <b-dropdown position="is-bottom-left">
+              <button class="button is-primary is-small" slot="trigger"
+                :class="{ 'is-danger': !answeredByAdmin(clar) }">
+                <b-icon icon="caret-down"></b-icon>
+              </button>
+
+              <b-dropdown-item v-for="answer in defaultAnswers"
+                               :key="answer"
+                               @click="select(answer)">
+                {{ answer }}
+              </b-dropdown-item>
+            </b-dropdown>
+            </p>
+          </b-field>
         </div>
       </div>
     </div>
@@ -36,9 +53,9 @@
            :class="{ 'ju-flex-end': !comment._creator }">
         {{ creator(comment) }} ({{ getDatetimeString(comment) }})
       </div>
-      <div class="message-body">
+      <p class="message-body ju-overflow-wrap">
         {{ comment.text  }}
-      </div>
+      </p>
     </article>
   </div>
 </template>
@@ -52,7 +69,14 @@ import BulmaUtils from "./bulmutils";
 export default {
   mounted() {},
   data() {
-    return {};
+    return {
+      defaultAnswers: [
+        "Nothing to declare.",
+        "Please read the statement again.",
+        "Nada a declarar.",
+        "Por favor, releia o enunciado."
+      ]
+    };
   },
   props: ["clarification"],
   computed: {
@@ -75,8 +99,11 @@ export default {
     isAdmin() {
       return this.getSelf().role === "admin";
     },
-    select() {
-      this.$emit("select");
+    select(content) {
+      this.$emit("select", {
+        clarification: this.clar,
+        answer: content
+      });
     },
     answeredByAdmin(clar) {
       return clar.comments.filter(t => !t._creator).length > 0;

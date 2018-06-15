@@ -11,8 +11,11 @@ export const types = {
   SET_AUTO_FETCH_STANDINGS: "main/SET_AUTO_FETCH_STANDINGS",
   SET_COMPACT_TABLE: "main/SET_COMPACT_TABLE",
   SET_FORMATTED_PENALTY: "main/SET_FORMATTED_PENALTY",
+  SET_CLARIFICATIONS_CONFIG: "main/SET_CLARIFICATIONS_CONFIG",
+  SET_SUBMISSIONS_CONFIG: "main/SET_SUBMISSIONS_CONFIG",
   SET_DASHBOARD_TAB: "main/SET_DASHBOARD_TAB",
-  CHECK_CLARIFICATIONS: "main/CHECK_CLARIFICATIONS"
+  CHECK_CLARIFICATIONS: "main/CHECK_CLARIFICATIONS",
+  MARK_BALLOON: "main/MARK_BALLOON"
 };
 
 export const state = {
@@ -27,12 +30,21 @@ export const state = {
   codeModalTrigger: false,
   persist: {
     dashboardTab: 0,
-    checkClarifications: new Date()
+    checkClarifications: new Date(),
+    deliveredBalloons: {}
   },
   config: {
     autoFetchStandings: false,
     compactTable: false,
-    formattedPenalty: true
+    formattedPenalty: true,
+    clarifications: {
+      sortByAnswer: true,
+      onlyNonAnswered: false
+    },
+    submissions: {
+      onlyAc: false,
+      byProblem: null
+    }
   }
 };
 
@@ -62,11 +74,23 @@ export const mutations = {
   [types.SET_FORMATTED_PENALTY](state, value) {
     state.config.formattedPenalty = value;
   },
+  [types.SET_CLARIFICATIONS_CONFIG](state, value) {
+    state.config.clarifications = value;
+  },
+  [types.SET_SUBMISSIONS_CONFIG](state, value) {
+    state.config.submissions = value;
+  },
   [types.SET_DASHBOARD_TAB](state, value) {
     state.persist.dashboardTab = value;
   },
   [types.CHECK_CLARIFICATIONS](state) {
     state.persist.checkClarifications = new Date();
+  },
+  [types.MARK_BALLOON](state, value) {
+    const { deliveredBalloons } = state.persist;
+    if (!deliveredBalloons.hasOwnProperty(value.team))
+      deliveredBalloons[value.team] = {};
+    deliveredBalloons[value.team][value.problem] = value.state;
   }
 };
 
@@ -239,7 +263,7 @@ export const computed = {
 };
 
 export const getters = {
-  getRawProblem: (state, getters) => (id) => {
+  getRawProblem: state => (id) => {
     if (!state.rawContest)
       return undefined;
 
@@ -249,6 +273,12 @@ export const getters = {
     }
 
     return null;
+  },
+  getBalloon: state => (team, problem) => {
+    const { deliveredBalloons } = state.persist;
+    if (!deliveredBalloons.hasOwnProperty(team))
+      return false;
+    return Boolean(deliveredBalloons[team][problem]);
   }
 };
 

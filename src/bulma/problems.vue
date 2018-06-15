@@ -9,8 +9,7 @@
           <p>There are no problems to be shown.</p>
         </div>
         <div v-else class="media" v-for="prob in problems" :key="prob.problem._id">
-          <div class="media-left ju-circle"
-            :style="{ color: `#${prob.color}`, borderColor: `#${prob.color}` }">
+          <div class="media-left ju-circle">
             <span>{{ prob.letter }}</span>
           </div>
 

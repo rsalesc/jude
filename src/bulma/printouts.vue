@@ -1,6 +1,6 @@
 <template>
   <div class="columns">
-    <div class="column is-narrow ju-min-tablet-550">
+    <div class="column is-narrow ju-min-tablet-600">
       <div class="box">
         <div class="box-title">
           <p class="title is-4">
@@ -39,10 +39,13 @@
               :backend-sorting="false">
 
               <template slot-scope="props">
+                <b-table-column label="Time">
+                  {{ getDatetimeString(props.row.createdAt) }}
+                </b-table-column>
                 <b-table-column label="Contestant">
                   {{ getTeam(props.row).name }}
                 </b-table-column>
-                <b-table-column label="Estimated # of lines">
+                <b-table-column label="Lines">
                   {{ props.row.lines }}
                 </b-table-column>
                 <b-table-column numeric>
@@ -141,6 +144,9 @@ export default {
       }
 
       return undefined;
+    },
+    getDatetimeString(date) {
+      return Helper.getDatetimeString(date);
     },
     print(printout) {
       const win = window.open("", "_blank");

@@ -16,6 +16,7 @@ const {
   Contest, Submission, Problem, User, Clarification, Printout
 } = models;
 
+const { rejudge } = require("@routes/api/submission");
 const { getUserContest, isAdmin } = require("@routes/common");
 const { ObjectId } = mongoose.mongo;
 
@@ -431,5 +432,24 @@ router.post("/printout/:id", (req, res, next) => {
 });
 
 router.get("/languages", (req, res) => res.json(Object.entries(grader.availableLanguages)));
+
+router.use(auth2.isAuth(["admin"]));
+
+router.post("/rejudge", (req, res, next) => {
+  getUserContest(req.auth2.user).exec(async (err, contest) => {
+    if (err)
+      return handleContestError(err, req, res, next);
+    if (!contest)
+      return handleContestError("contest not found", req, res, next);
+
+    // filter by contest
+    const toRejudge = [...new Set((req.body.submissions || []))];
+
+    const reflect = (p => p.then(v => ({v, status: true }), e => ({e, status: false })));
+
+    const ans = await Promise.all(toRejudge.map(s => rejudge(s)).map(reflect));
+    return res.json({ success: ans.filter(r => r.status).length });
+  });
+});
 
 module.exports = router;

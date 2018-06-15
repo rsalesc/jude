@@ -23,6 +23,7 @@ export const submit = Vue.resource(resolveToRoot("/contest/submit"));
 export const submission = Vue.resource(resolveToRoot("/contest/submission{/id}"));
 export const clarification = Vue.resource(resolveToRoot("/contest/clarification{/id}"));
 export const printout = Vue.resource(resolveToRoot("/contest/printout{/id}"));
+export const rejudge = Vue.resource(resolveToRoot("/contest/rejudge"));
 
 // admin api v2
 export const admin = {

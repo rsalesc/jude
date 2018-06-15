@@ -28,7 +28,7 @@
             <span>
               Printouts
               <span class="is-danger tag ju-tag is-rounded"
-                    v-if="unchecked.printouts > 0">
+                    v-if="unchecked.printouts > 0 && isAdmin()">
                 {{ unchecked.printouts }}
               </span>
             </span>

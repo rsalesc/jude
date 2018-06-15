@@ -4,6 +4,12 @@
       <p class="title is-4">
         <span v-if="isAdmin()">Submissions</span>
         <span v-else>My Submissions</span>
+        <b-tooltip label="There are undelivered balloons."
+                   v-if="isAdmin() && undeliveredBalloons > 0">
+          <span class="is-danger tag ju-tag is-rounded">
+            {{ undeliveredBalloons }}
+          </span>
+        </b-tooltip>
       </p>
       <p class="subtitle ju-comment ju-secondary-text">
         {{ getTooltipText() }}
@@ -11,6 +17,40 @@
     </div>
     <hr class="rule"></hr>
     <div class="box-content">
+      <div class="level" v-if="isAdmin()">
+        <div class="level-left">
+          <div class="level-item ju-primary-text">Filters</div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <b-switch v-model="config.submissions.onlyAc"
+                      size="is-small"
+                      @input="changeConfig">
+              Show only AC
+            </b-switch>
+          </div>
+          <div class="level-item">
+            <b-select placeholder="By Problem"
+              v-model="config.submissions.byProblem"
+              @input="changeConfig"
+              size="is-small">
+              <option value=""></option>
+              <option v-for="prob in problems" :key="prob.problem._id"
+                      :value="prob.problem._id">
+              {{ prob.letter }}. {{ prob.problem.name }}
+              </option>
+            </b-select>
+          </div>
+          <div class="level-item">
+            <button class="button is-primary is-small"
+              @click="rejudge(getSubmissions())">
+              <b-icon size="is-small" icon="retweet"></b-icon>
+              <span>Rejudge Filtered</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="container ju-override-container has-text-centered" v-if="getSubmissions().length === 0">
         <p>There is no submission to be shown.</p>
       </div>
@@ -24,8 +64,9 @@
           :backend-sorting="true">
           
           <template slot-scope="props">
-            <b-table-column label="" class="has-text-centered">
-              <span :style="{ color: '#'+lighten(getProblem(props.row.problem).color) }">
+            <b-table-column label="" class="has-text-centered"
+              :style="{ borderLeft: `2px solid #${getProblem(props.row.problem).color}` }">
+              <span>
                 {{ getProblem(props.row.problem).letter }}
               </span>
             </b-table-column>
@@ -51,8 +92,16 @@
                 :score="props.row.score">
               </ju-verdict-tag>
             </b-table-column>
-
             <b-table-column label="-" numeric>
+              <b-tooltip label="Check if balloon for this problem was delivered"
+                         v-if="isAdmin() && isAc(props.row) && !isUpsolving(props.row)"
+                         position="is-left">
+                <a class="button is-small" @click="toggle(props.row)"
+                   :class="{ 'is-info': getBalloon(props.row) }">
+                  <b-icon size="is-small" icon="map-marker"></b-icon>
+                  <span>Balloon</span>
+                </a>
+              </b-tooltip>
               <b-tooltip v-if="!isAdmin()" label="Edit and re-submit">
                 <a class="button is-primary is-small" @click="resubmit(props.row)">
                   <b-icon size="is-small" icon="send"></b-icon>
@@ -61,6 +110,11 @@
               <b-tooltip label="See more">
                 <a class="button is-primary is-small" @click="showCode(props.row)">
                   <b-icon size="is-small" icon="eye"></b-icon>
+                </a>
+              </b-tooltip>
+              <b-tooltip label="Rejudge" v-if="isAdmin()">
+                <a class="button is-primary is-small" @click="rejudge(props.row)">
+                  <b-icon size="is-small" icon="retweet"></b-icon>
                 </a>
               </b-tooltip>
             </b-table-column>
@@ -114,16 +168,44 @@
         ...Helper.mapModuleState("main", [
           "shownSubmission",
           "user",
-          "userObject"
+          "userObject",
+          "config"
         ]),
         ...mapGetters([
           "problems",
           "my",
           "submissions",
-          "teams"
-        ])
+          "teams",
+          "teamMapping"
+        ]),
+        undeliveredBalloons() {
+          return [...new Set(this.submissions
+            .filter(s => !this.isUpsolving(s) && this.isAc(s) && !this.getBalloon(s))
+            .map(s => `${s.problem}/${s._creator}`))].length;
+        }
       },
       methods: {
+        isUpsolving(sub) {
+          return sub.timeInContest < 0;
+        },
+        changeConfig() {
+          const { submissions } = this.config;
+          this.$store.commit(types.SET_SUBMISSIONS_CONFIG, submissions);
+        },
+        getBalloon(sub) {
+          return this.$store.getters.getBalloon(
+            this.getContestantFromSubmission(sub)._id, sub.problem);
+        },
+        toggle(sub) {
+          const team = this.getContestantFromSubmission(sub);
+          if (!team._id)
+            return;
+          this.$store.commit(types.MARK_BALLOON, {
+            team: team._id,
+            problem: sub.problem,
+            state: !this.getBalloon(sub)
+          });
+        },
         getSelf() {
           return this.userObject;
         },
@@ -134,15 +216,13 @@
           return this.isAdmin() ? 50 : 5;
         },
         getContestantFromSubmission(sub) {
-          for (let team of this.teams) {
-            if (team._id === sub._creator)
-              return team;
-          }
-
-          return { name: "-" };
+          return this.teamMapping[sub._creator] || { name: "-" };
         },
         getSubmissions() {
-          return this.isAdmin() ? this.submissions : this.my.submissions;
+          const subs = this.isAdmin() ? this.submissions : this.my.submissions;
+          const { onlyAc, byProblem } = this.config.submissions;
+          return subs.filter(s => !onlyAc || this.isAc(s))
+            .filter(s => !byProblem || s.problem === byProblem);
         },
         getProblem(id) {
           for (const prob of this.problems) {
@@ -151,6 +231,12 @@
           }
 
           return undefined;
+        },
+        isAc(sub) {
+          const prob = this.getProblem(sub.problem);
+          if (!prob)
+            return false;
+          return this.getMainVerdict(sub.verdict, prob.problem) === "VERDICT_AC";
         },
         getPassed(n) {
           return Helper.getPassed(n);
@@ -170,6 +256,15 @@
         lighten(t) {
           return Helper.lighten(t);
         },
+        async fetchAll() {
+          try {
+            const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
+            if (!loggedin)
+              this.$router.push("/");
+          } catch (err) {
+            new BulmaUtils(this).toastResponseError(err);
+          }
+        },
         async showCode(sub) {
           try {
             const loggedin = await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
@@ -181,6 +276,23 @@
             console.error(err);
             new BulmaUtils(this).toast("Error contacting to the server", 4000, "is-danger");
           }
+        },
+        rejudge(subs) {
+          if (!Array.isArray(subs))
+            subs = [subs];
+          this.$dialog.confirm({
+            message: `Do you really want to rejudge ${subs.length} submission(s)?`,
+            onConfirm: async () => {
+              try {
+                await Api.rejudge.save({}, { submissions: subs.map(s => s._id) });
+                this.fetchAll();
+              } catch (response) {
+                if (response.status === 401 || response.status === 403)
+                  this.$router.push("/");
+                new BulmaUtils(this).toastResponseError(response);
+              }
+            }
+          });
         },
         getTooltipText() {
           return Helper.getTooltipText(`Click in the eye button to show more details about a submission.`);

@@ -1,14 +1,36 @@
 
 <template>
   <div>
-    <div class="container ju-override-container has-text-centered" v-if="clarifications.length === 0">
+    <div class="level" v-if="isAdmin()">
+      <div class="level-left">
+        <div class="level-item ju-primary-text">Filters</div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <b-switch v-model="config.clarifications.sortByAnswer"
+            size="is-small"
+            @input="changeConfig">
+            Prioritize unanswered
+          </b-switch>
+        </div>
+        <div class="level-item">
+          <b-switch v-model="config.clarifications.onlyNonAnswered"
+            size="is-small"
+            @input="changeConfig">
+            Show only non-answered
+          </b-switch>
+        </div>
+      </div>
+    </div>
+    <div class="container ju-override-container has-text-centered" 
+      v-if="clarifications.length === 0">
       <hr class="rule"></hr>
       <p>There are no clarifications to be shown.</p>
     </div>
     <div v-else v-for="clar in sortedClarifications" :key="clar._id">
       <hr class="rule"></hr>
       <ju-clarification-talk :clarification="clar"
-        @select="select(clar)"></ju-clarification-talk>
+        @select="select"></ju-clarification-talk>
     </div>
   </div>
 </template>
@@ -18,6 +40,7 @@ import Vue from "vue";
 import * as Helper from "./helpers";
 import * as Api from "./api";
 import { mapGetters } from "vuex";
+import { types } from "./store";
 import BulmaUtils from "./bulmutils";
 import ClarificationTalkComponent from "./clarification-talk.vue";
 
@@ -29,7 +52,8 @@ export default {
   props: ["clarifications"],
   computed: {
     ...Helper.mapModuleState("main", [
-      "userObject"
+      "userObject",
+      "config"
     ]),
     ...mapGetters([
       "problems",
@@ -40,7 +64,11 @@ export default {
       if (!this.isAdmin())
         return this.clarifications;
       else {
-        const sorted = Vue.util.extend([], this.clarifications);
+        const { onlyNonAnswered, sortByAnswer } = this.config.clarifications;
+        const sorted = Vue.util.extend([], this.clarifications)
+          .filter(c => !onlyNonAnswered || !this.answeredByAdmin(c));
+        if (!sortByAnswer)
+          return sorted;
         sorted.sort((a, b) => {
           const xa = this.answeredByAdmin(a);
           const xb = this.answeredByAdmin(b);
@@ -59,14 +87,18 @@ export default {
     }
   },
   methods: {
+    changeConfig() {
+      this.$store.commit(
+        types.SET_CLARIFICATIONS_CONFIG, this.config.clarifications);
+    },
     getSelf() {
       return this.userObject;
     },
     isAdmin() {
       return this.getSelf().role === "admin";
     },
-    select(clar) {
-      this.$emit("select", clar);
+    select(data) {
+      this.$emit("select", data);
     },
     answeredByAdmin(clar) {
       return clar.comments.filter(t => !t._creator).length > 0;
