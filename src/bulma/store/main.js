@@ -43,6 +43,7 @@ export const state = {
     },
     submissions: {
       onlyAc: false,
+      onlyUndelivered: false,
       byProblem: null
     }
   }

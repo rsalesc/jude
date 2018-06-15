@@ -3,7 +3,8 @@
     <div class="container">
       <div class="content has-text-centered">
         <p>
-          <strong>Jude</strong> by <a href="https://github.com/rsalesc">Roberio Sales</a>.
+        <strong>Jude</strong> was developed by 
+        <a href="http://github.com/rsalesc">rsalesc</a>.
         </p>
         <p>
           <a class="icon" href="https://github.com/rsalesc/jude">

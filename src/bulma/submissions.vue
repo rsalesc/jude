@@ -30,6 +30,13 @@
             </b-switch>
           </div>
           <div class="level-item">
+            <b-switch v-model="config.submissions.onlyUndelivered"
+                      size="is-small"
+                      @input="changeConfig">
+              Show only undelivered
+            </b-switch>
+          </div>
+          <div class="level-item">
             <b-select placeholder="By Problem"
               v-model="config.submissions.byProblem"
               @input="changeConfig"
@@ -220,9 +227,10 @@
         },
         getSubmissions() {
           const subs = this.isAdmin() ? this.submissions : this.my.submissions;
-          const { onlyAc, byProblem } = this.config.submissions;
+          const { onlyAc, byProblem, onlyUndelivered } = this.config.submissions;
           return subs.filter(s => !onlyAc || this.isAc(s))
-            .filter(s => !byProblem || s.problem === byProblem);
+            .filter(s => !byProblem || s.problem === byProblem)
+            .filter(s => !onlyUndelivered || this.isAc(s) && !this.getBalloon(s));
         },
         getProblem(id) {
           for (const prob of this.problems) {
