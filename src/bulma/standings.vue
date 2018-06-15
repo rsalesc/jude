@@ -17,14 +17,22 @@
               @input="setCompactTable">Compact Table</b-switch>
             <b-switch size="is-small"
               :value="config.formattedPenalty"
-              @input="setFormattedPenalty">Format Penalty</b-switch>
+              @input="setFormattedPenalty">Format Penalty</b-switch> 
           </div>
+          <b-select
+                    v-model="config.unofficialLevel"
+                    @input="setUnofficialLevel"
+                    size="is-small">
+            <option value="0">Do not show unofficials</option>
+            <option value="1">Show unofficials, but do not rank them</option>
+            <option value="2">Show unofficials and rank them</option>
+          </b-select>
         </div>  
       </div>
     </div>
     <hr class="rule"></hr>
     <div class="box-content">
-      <div class="container ju-override-container has-text-centered" v-if="teams.length === 0">
+      <div class="container ju-override-container has-text-centered" v-if="shownTeams.length === 0">
         <p>There is no competitor to be shown.</p>
       </div>
       <table v-else class="table ju-standings" :class="getTableClasses()">
@@ -42,11 +50,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="team in teams" :key="team._id">
+          <tr v-for="team in shownTeams" :key="team._id"
+              :class="{ 'ju-self': getSelf()._id === team._id }">
             <td style="width: 36px;" class="has-text-centered">
               <strong>{{ team.rank }}</strong>
             </td>
-            <td class="ju-contestant-cell" :class="{ 'ju-non-official': team.unofficial }">
+            <td class="ju-contestant-cell" 
+              :class="{ 'ju-non-official': team.unofficial }">
               <p>{{ team.name }}</p>
               <p class="ju-comment ju-tertiary-text">
                 {{ team.description }}
@@ -114,7 +124,10 @@
           "my",
           "groupedSubs",
           "teams"
-        ])
+        ]),
+        shownTeams() {
+          return this.teams.filter(t => this.config.unofficialLevel || t.rank);
+        }
       },
       methods: {
         getSelf() {
@@ -214,6 +227,9 @@
         },
         setFormattedPenalty(val, $event) {
           this.$store.commit(types.SET_FORMATTED_PENALTY, val);
+        },
+        setUnofficialLevel(val) {
+          this.$store.commit(types.SET_UNOFFICIAL_LEVEL, parseInt(val));
         }
       }
     };

@@ -11,6 +11,7 @@ export const types = {
   SET_AUTO_FETCH_STANDINGS: "main/SET_AUTO_FETCH_STANDINGS",
   SET_COMPACT_TABLE: "main/SET_COMPACT_TABLE",
   SET_FORMATTED_PENALTY: "main/SET_FORMATTED_PENALTY",
+  SET_UNOFFICIAL_LEVEL: "main/SET_UNOFFICIAL_LEVEL",
   SET_CLARIFICATIONS_CONFIG: "main/SET_CLARIFICATIONS_CONFIG",
   SET_SUBMISSIONS_CONFIG: "main/SET_SUBMISSIONS_CONFIG",
   SET_DASHBOARD_TAB: "main/SET_DASHBOARD_TAB",
@@ -37,6 +38,7 @@ export const state = {
     autoFetchStandings: false,
     compactTable: false,
     formattedPenalty: true,
+    unofficialLevel: 1,
     clarifications: {
       sortByAnswer: true,
       onlyNonAnswered: false
@@ -74,6 +76,9 @@ export const mutations = {
   },
   [types.SET_FORMATTED_PENALTY](state, value) {
     state.config.formattedPenalty = value;
+  },
+  [types.SET_UNOFFICIAL_LEVEL](state, value) {
+    state.config.unofficialLevel = value;
   },
   [types.SET_CLARIFICATIONS_CONFIG](state, value) {
     state.config.clarifications = value;
@@ -227,7 +232,7 @@ export const computed = {
     let officials = 0;
 
     for (let i = 0; i < teams.length; i++) {
-      if (!teams[i].unofficial) {
+      if (!teams[i].unofficial || state.config.unofficialLevel >= 2) {
         officials++;
         if (last !== -1)
           Vue.set(teams, i, { ...teams[i], rank: teams[last].rank });

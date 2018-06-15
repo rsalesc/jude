@@ -189,6 +189,15 @@ $sizes: 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 9
   }
 }
 
+.ju-standings {
+  tr.ju-self {
+    background-color: rgba(255, 153, 0, 0.125);
+    .ju-contestant-cell {
+      font-style: bold;
+    }
+  }
+}
+
 @media only screen and (min-width: 769px) {
   .table .ju-contestant-cell {
     min-width: 300px;
