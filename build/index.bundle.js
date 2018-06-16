@@ -3560,9 +3560,9 @@ var MongoQueue2 = __webpack_require__(26);
 var JudgeConfig = {
   MAX_TRIES: 5,
   EPS: 1e-7,
-  SANDBOX_OFFSET: process.env.SANDBOX_OFFSET || 0,
-  MAX_SANDBOXES: process.env.MAX_SANDBOXES || 10,
-  MAX_SIMUL_TESTS: process.env.MAX_SIMUL_TESTS || 1,
+  SANDBOX_OFFSET: parseInt(process.env.SANDBOX_OFFSET || 0, 10),
+  MAX_SANDBOXES: parseInt(process.env.MAX_SANDBOXES || 10, 10),
+  MAX_SIMUL_TESTS: parseInt(process.env.MAX_SIMUL_TESTS || 1, 10),
   COMPILATION_TL: 30,
   CHECKING_TL: 10,
   CHECKING_ML: 512,
@@ -3571,7 +3571,7 @@ var JudgeConfig = {
   OUTPUT_LIMIT: 1 << 24,
   TEMP_DIR: "/tmp",
   ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
-  VISIBILITY_WINDOW: process.env.VISIBILITY_WINDOW || 20,
+  VISIBILITY_WINDOW: parseInt(process.env.VISIBILITY_WINDOW || 20, 10),
   BOUND_ML: 2048
 };
 
@@ -4273,7 +4273,7 @@ module.exports = function () {
     upseeing: { type: Boolean, required: true, default: false },
     blind: { type: Number, default: 0 },
     freeze: { type: Number, default: 0 },
-    hideFreeze: { type: Boolean, default: true }
+    unfreeze: { type: Boolean, default: false }
   }, { timestamps: true });
 
   ContestSchema.index({ name: 1 });
@@ -4311,16 +4311,26 @@ module.exports = function () {
     return this.hasStarted() && !this.hasEnded();
   };
 
-  ContestSchema.methods.getTimeInContest = function () {
-    return parseInt((Date.now() - this.start_time.getTime()) / 60 / 1000, 10);
+  ContestSchema.methods.getTimeInContest = function (x) {
+    var cur = x != null ? x : Date.now();
+    return parseInt((cur - this.start_time.getTime()) / 60 / 1000, 10);
   };
 
-  ContestSchema.methods.isFrozen = function () {
-    return this.isRunning() && this.getTimeInContest() >= this.freeze;
+  ContestSchema.methods.getDurationInContest = function () {
+    var diff = this.end_time.getTime() - this.start_time.getTime();
+    return parseInt(Math.ceil(diff / 60 / 1000), 10);
   };
 
-  ContestSchema.methods.isBlind = function () {
-    return this.isRunning() && this.getTimeInContest() >= this.blind;
+  ContestSchema.methods.getRemainingInContest = function (x) {
+    return this.getDurationInContest() - (x != null ? x : this.getTimeInContest());
+  };
+
+  ContestSchema.methods.isFrozen = function (x) {
+    return this.getRemainingInContest(x) <= this.freeze && (this.isRunning() || this.hasEnded() && !this.unfreeze && this.freeze > 0);
+  };
+
+  ContestSchema.methods.isBlind = function (x) {
+    return this.getRemainingInContest(x) <= this.blind && (this.isRunning() || this.hasEnded() && !this.unfreeze && this.blind > 0);
   };
 
   ContestSchema.pre("remove", function (next) {
@@ -4328,6 +4338,12 @@ module.exports = function () {
       if (err) console.error(err);
     });
     db.model("User").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
+    });
+    db.model("Clarification").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
+    });
+    db.model("Printout").remove({ contest: this._id }, function (err) {
       if (err) console.error(err);
     });
     next();
@@ -4381,6 +4397,7 @@ module.exports = function () {
         },
         contest: { type: Schema.Types.ObjectId, ref: 'Contest' },
         unofficial: { type: Boolean, default: false },
+        disabled: { type: Boolean, default: false },
         role: { type: String, default: "contestant" }
     }, { timestamps: true });
 
@@ -5349,6 +5366,50 @@ function filterPrivateUser(user) {
   return user;
 }
 
+function filterBlind(contest, user, sub) {
+  if (contest.isFrozen(sub.timeInContest) && !sub._creator.equals(user._id) || contest.isBlind(sub.timeInContest)) {
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+      for (var _iterator3 = (0, _getIterator3.default)((0, _keys2.default)(sub.verdict)), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var dataset = _step3.value;
+
+        sub.verdict[dataset] = { verdict: "VERDICT_INQ" };
+      }
+    } catch (err) {
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+          _iterator3.return();
+        }
+      } finally {
+        if (_didIteratorError3) {
+          throw _iteratorError3;
+        }
+      }
+    }
+  }
+  return sub;
+}
+
+function applyFreezeFilter(contest, user, subs) {
+  var res = subs;
+
+  // we have to filter out submissions
+  if (!contest.hasEnded()) {
+    res = res.filter(function (sub) {
+      return !contest.isFrozen(sub.timeInContest) || sub._creator.equals(user._id);
+    });
+  }
+  return res.map(function (sub) {
+    return filterBlind(contest, user, sub);
+  });
+}
+
 function checkForDuplicateSubmission(user, contest, problem, hashCode) {
   return new _promise2.default(function (resolve, reject) {
     Submission.findOne({ _creator: user, contest: contest, problem: problem, codeHash: hashCode }).exec(function (err, result) {
@@ -5395,7 +5456,7 @@ router.get("/", function (req, res) {
 
     var contestObj = (0, _extends3.default)({}, contest.toObject(), { languages: (0, _entries2.default)(grader.availableLanguages) });
 
-    User.find({ contest: contest.id, role: "contestant" }).select("-password -email -handle").exec(function (err, teams) {
+    User.find({ contest: contest.id, role: "contestant", disabled: { $ne: true } }).select("-password -email -handle").exec(function (err, teams) {
       if (err) return handleContestError(err, req, res);
       if (teams === null) return handleContestError("couldnt retrieve teams", req, res);
 
@@ -5437,7 +5498,10 @@ router.get("/submissions", function (req, res) {
 
     return Submission.find({ contest: req.auth2.user.contest }).sort("-time").select("-code").exec(function (err, subs) {
       if (err) return handleContestError(err, req, res);
-      return res.json({ _user: req.auth2.user._id, submissions: subs.map(filterOutSub) });
+      var filteredSubs = subs;
+      if (!isAdmin(req)) filteredSubs = applyFreezeFilter(contest, req.auth2.user, filteredSubs);
+      filteredSubs = filteredSubs.map(filterOutSub);
+      return res.json({ _user: req.auth2.user._id, submissions: filteredSubs });
     });
   });
 });
@@ -5449,6 +5513,7 @@ router.post("/submit", function (req, res) {
 
 
   if (isAdmin(req)) return handleRequestError("admin cannot submit solutions", req, res);
+  if (user.disabled) return handleRequestError("you cant submit solutions", req, res);
 
   if (!grader.availableLanguages.hasOwnProperty(req.body.language)) return handleRequestError("language is invalid", req, res);
 
@@ -5464,7 +5529,7 @@ router.post("/submit", function (req, res) {
 
     Problem.findById(req.body.problem).exec(function () {
       var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(err, problem) {
-        var hashCode, timeInContest, verdict, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, data, sub;
+        var hashCode, timeInContest, verdict, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, data, sub;
 
         return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
@@ -5525,13 +5590,13 @@ router.post("/submit", function (req, res) {
                 if (contest.hasEnded()) timeInContest = -1;
 
                 verdict = {};
-                _iteratorNormalCompletion3 = true;
-                _didIteratorError3 = false;
-                _iteratorError3 = undefined;
+                _iteratorNormalCompletion4 = true;
+                _didIteratorError4 = false;
+                _iteratorError4 = undefined;
                 _context2.prev = 23;
 
-                for (_iterator3 = (0, _getIterator3.default)(problem.attr.datasets); !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                  data = _step3.value;
+                for (_iterator4 = (0, _getIterator3.default)(problem.attr.datasets); !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                  data = _step4.value;
 
                   verdict[data.name] = {
                     verdict: "VERDICT_INQ", passed: -1, score: 0, info: ""
@@ -5544,26 +5609,26 @@ router.post("/submit", function (req, res) {
               case 27:
                 _context2.prev = 27;
                 _context2.t1 = _context2["catch"](23);
-                _didIteratorError3 = true;
-                _iteratorError3 = _context2.t1;
+                _didIteratorError4 = true;
+                _iteratorError4 = _context2.t1;
 
               case 31:
                 _context2.prev = 31;
                 _context2.prev = 32;
 
-                if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                  _iterator3.return();
+                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                  _iterator4.return();
                 }
 
               case 34:
                 _context2.prev = 34;
 
-                if (!_didIteratorError3) {
+                if (!_didIteratorError4) {
                   _context2.next = 37;
                   break;
                 }
 
-                throw _iteratorError3;
+                throw _iteratorError4;
 
               case 37:
                 return _context2.finish(34);
@@ -5656,13 +5721,13 @@ router.get("/statement/:letter", function (req, res, next) {
 
     if (!contest.hasStarted()) return handleRequestError("contest has not started", req, res);
 
-    var _iteratorNormalCompletion4 = true;
-    var _didIteratorError4 = false;
-    var _iteratorError4 = undefined;
+    var _iteratorNormalCompletion5 = true;
+    var _didIteratorError5 = false;
+    var _iteratorError5 = undefined;
 
     try {
-      for (var _iterator4 = (0, _getIterator3.default)(contest.problems), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-        var prob = _step4.value;
+      for (var _iterator5 = (0, _getIterator3.default)(contest.problems), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+        var prob = _step5.value;
 
         if (prob.letter === req.params.letter) {
           // res.setHeader('Content-Disposition', 'attachment');
@@ -5670,16 +5735,16 @@ router.get("/statement/:letter", function (req, res, next) {
         }
       }
     } catch (err) {
-      _didIteratorError4 = true;
-      _iteratorError4 = err;
+      _didIteratorError5 = true;
+      _iteratorError5 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion4 && _iterator4.return) {
-          _iterator4.return();
+        if (!_iteratorNormalCompletion5 && _iterator5.return) {
+          _iterator5.return();
         }
       } finally {
-        if (_didIteratorError4) {
-          throw _iteratorError4;
+        if (_didIteratorError5) {
+          throw _iteratorError5;
         }
       }
     }
@@ -5697,14 +5762,18 @@ router.get("/submission/:id", function (req, res, next) {
       if (err2) return handleContestError(err2, req, res, next);
       if (!sub) return handleRequestError("submission not found", req, res, next);
 
-      if (!sub._creator.equals(req.auth2.user._id) && !(contest.hasEnded() && contest.upseeing) && !isAdmin(req)) return res.json(filterOutSub(sub));
+      if (!sub._creator.equals(req.auth2.user._id) && !(contest.hasEnded() && contest.upseeing && !contest.isFrozen()) && !isAdmin(req)) return res.json(filterBlind(contest, req.auth2.user, filterOutSub(sub)));
 
-      return res.json(filterOutPrivateSub(sub));
+      var filteredSub = filterOutPrivateSub(sub);
+      if (!isAdmin(req)) filteredSub = filterBlind(contest, req.auth2.user, filteredSub);
+      return res.json(filteredSub);
     });
   });
 });
 
 router.post("/clarification", function (req, res, next) {
+  if (req.auth2.user.disabled) return handleRequestError("you are a disabled user", req, res);
+
   getUserContest(req.auth2.user).exec(function (err, contest) {
     if (err) return handleContestError(err, req, res, next);
     if (!contest) return handleContestError("contest not found", req, res, next);
@@ -5740,6 +5809,8 @@ router.post("/clarification", function (req, res, next) {
 });
 
 router.post("/clarification/:id", function (req, res, next) {
+  if (req.auth2.user.disabled) return handleRequestError("you are a disabled user", req, res);
+
   getUserContest(req.auth2.user).exec(function (err, contest) {
     if (err) return handleContestError(err, req, res, next);
     if (!contest) return handleContestError("contest not found", req, res, next);
@@ -5781,6 +5852,8 @@ router.post("/clarification/:id", function (req, res, next) {
 });
 
 router.post("/printout", function (req, res, next) {
+  if (req.auth2.user.disabled) return handleRequestError("you are a disabled user", req, res);
+
   getUserContest(req.auth2.user).exec(function (err, contest) {
     if (err) return handleContestError(err, req, res, next);
     if (!contest) return handleContestError("contest not found", req, res, next);
@@ -6643,12 +6716,10 @@ var testPackage = function () {
           case 10:
             task = _context18.sent;
             datasets = task.getDatasets();
-
-            console.log(datasets);
-            _context18.next = 15;
+            _context18.next = 14;
             return testTask(env, task, store, code, lang);
 
-          case 15:
+          case 14:
             verdicts = _context18.sent;
             res = {};
 
@@ -6656,7 +6727,7 @@ var testPackage = function () {
               res[datasets[i].name] = verdicts[i];
             }return _context18.abrupt("return", res);
 
-          case 19:
+          case 18:
           case "end":
             return _context18.stop();
         }

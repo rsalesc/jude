@@ -136,6 +136,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
 
   user.showView().fields(user.listView().fields().concat([
     nga.field("unofficial", "boolean").validation({ required: true }),
+    nga.field("disabled", "boolean").validation({ required: true }),
     nga.field("email", "email"),
     nga.field("contest", "reference")
       .targetEntity(contest)
@@ -179,6 +180,9 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     nga.field("hidden", "boolean").validation({ required: true }),
     nga.field("upseeing", "boolean").label("Users can see others codes after the competition")
       .validation({ required: true }),
+    nga.field("freeze", "number").validation({ required: true }).defaultValue(0),
+    nga.field("blind", "number").validation({ required: true }).defaultValue(0),
+    nga.field("unfreeze", "boolean").validation({ required: true }),
     nga.field("problems", "embedded_list").defaultValue([])
       .targetFields([
         nga.field("letter")

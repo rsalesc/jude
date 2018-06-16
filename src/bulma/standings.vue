@@ -8,6 +8,9 @@
             <p class="subtitle ju-comment ju-secondary-text">
               {{ getTooltipText() }}
             </p>
+            <p class="subtitle ju-comment ju-secondary-text" v-if="isFrozen()">
+              The scoreboard is frozen. These are not the final results.
+            </p>
           </div>
         </div>
         <div class="column is-narrow">
@@ -35,7 +38,8 @@
       <div class="container ju-override-container has-text-centered" v-if="shownTeams.length === 0">
         <p>There is no competitor to be shown.</p>
       </div>
-      <float-thead-table v-else class="table ju-standings" :class="getTableClasses()">
+      <float-thead-table v-else class="table ju-standings" 
+        :class="getTableClasses()" :z-index="10">
         <thead>
           <tr>
             <th class="has-text-centered">#</th>
@@ -71,7 +75,7 @@
             <td class="ju-problem-cell"
               v-for="prob in problems" :key="prob.problem._id"
               @dblclick.stop="showScore(team, prob)"
-              :class="{'ac-color': isAc(team, prob), 'wa-color': isWa(team, prob)}">
+              :class="getCellClasses(team, prob)">
               <span v-if="prob.scoring.attempted(team.results[prob.problem._id])">
                   <p> {{ getProblemScore(team, prob) }}  <span class="fails">{{ getProblemWeightedFails(team, prob) }}</span></p>
                   <p class="ju-score-info" v-if="my.scoring.hasPenalty() && isAc(team, prob)">
@@ -134,6 +138,12 @@
         getSelf() {
           return this.userObject;
         },
+        isFrozen() {
+          return Helper.isFrozen(this.rawContest);
+        },
+        isBlind() {
+          return Helper.isBlind(this.rawContest);
+        },
         isAdmin() {
           return Helper.isAdmin(this.getSelf());
         },
@@ -143,6 +153,15 @@
         },
         isAc(team, prob) {
           return prob.scoring.solved(team.results[prob.problem._id]);
+        },
+        getCellClasses(team, prob) {
+          if (this.isAc(team, prob))
+            return ["ac-color"];
+          else if (team.hasBlind[prob.problem._id] && this.isFrozen())
+            return ["pending-color"];
+          else if (this.isWa(team, prob))
+            return ["wa-color"];
+          return [];
         },
         getProblem(id) {
           for (const prob of this.problems) {

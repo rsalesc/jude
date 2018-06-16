@@ -160,9 +160,12 @@ export function getMainVerdict(verdicts, task) {
 }
 
 export function getPassed(n) {
-  return n < 0
-    ? "-"
-    : String(n);
+  if (n != null) {
+    return n < 0
+      ? "-"
+      : String(n);
+  }
+  return "-";
 }
 
 export function getExecTime(verdict) {
@@ -288,4 +291,34 @@ export function hasContestStarted(contest) {
 
 export function hasContestEnded(contest) {
   return new Date(contest.end_time) <= new Date();
+}
+
+export function isRunning(contest) {
+  return hasContestStarted(contest) && !hasContestEnded(contest);
+}
+
+export function getTimeInContest(contest, x) {
+  const cur = x != null ? x : Date.now();
+  return parseInt((cur - new Date(contest.start_time).getTime()) / 60 / 1000, 10);
+}
+
+export function getDurationInContest(contest) {
+  const diff = new Date(contest.end_time).getTime() 
+    - new Date(contest.start_time).getTime();
+  return parseInt(Math.ceil(diff / 60 / 1000), 10);
+}
+
+export function getRemainingInContest(contest, x) {
+  return getDurationInContest(contest)
+    - (x != null ? x : getTimeInContest(contest));
+}
+
+export function isFrozen(contest, x) {
+  return getRemainingInContest(contest, x) <= contest.freeze && (isRunning(contest)
+  || (hasContestEnded(contest) && !contest.unfreeze && contest.freeze > 0));
+}
+
+export function isBlind(contest, x) {
+  return getRemainingInContest(contest, x) <= contest.blind && (isRunning(contest)
+    || (hasContestEnded(contest) && !contest.unfreeze && contest.blind > 0));
 }

@@ -60,6 +60,27 @@ function filterPrivateUser(user) {
   return user;
 }
 
+function filterBlind(contest, user, sub) {
+  if (contest.isFrozen(sub.timeInContest) && !sub._creator.equals(user._id)
+    || contest.isBlind(sub.timeInContest)) {
+    for (const dataset of Object.keys(sub.verdict)) {
+      sub.verdict[dataset] = { verdict: "VERDICT_INQ" };
+    }
+  }
+  return sub;
+}
+
+function applyFreezeFilter(contest, user, subs) {
+  let res = subs;
+
+  // we have to filter out submissions
+  if (!contest.hasEnded()) {
+    res = res.filter(sub =>
+      !contest.isFrozen(sub.timeInContest) || sub._creator.equals(user._id));
+  }
+  return res.map(sub => filterBlind(contest, user, sub));
+}
+
 function checkForDuplicateSubmission(user, contest, problem, hashCode) {
   return new Promise((resolve, reject) => {
     Submission.findOne({ _creator: user, contest, problem, codeHash: hashCode }).exec((err, result) => {
@@ -118,28 +139,29 @@ router.get("/", (req, res) => {
 
     const contestObj = { ...contest.toObject(), ...{ languages: Object.entries(grader.availableLanguages) }};
 
-    User.find({ contest: contest.id, role: "contestant" }).select("-password -email -handle").exec((err, teams) => {
-      if (err)
-        return handleContestError(err, req, res);
-      if (teams === null)
-        return handleContestError("couldnt retrieve teams", req, res);
-
-      return getVisibleClarifications(req, (err, clarifications) => {
+    User.find({ contest: contest.id, role: "contestant", disabled: { $ne: true } })
+      .select("-password -email -handle").exec((err, teams) => {
         if (err)
           return handleContestError(err, req, res);
-        return getVisiblePrintouts(req, (err, printouts) => {
+        if (teams === null)
+          return handleContestError("couldnt retrieve teams", req, res);
+
+        return getVisibleClarifications(req, (err, clarifications) => {
           if (err)
             return handleContestError(err, req, res);
-          return res.json({
-            _user: req.auth2.user._id,
-            userObject: filterPrivateUser(req.auth2.user.toObject()),
-            teams,
-            clarifications,
-            printouts,
-            contest: contestObj
+          return getVisiblePrintouts(req, (err, printouts) => {
+            if (err)
+              return handleContestError(err, req, res);
+            return res.json({
+              _user: req.auth2.user._id,
+              userObject: filterPrivateUser(req.auth2.user.toObject()),
+              teams,
+              clarifications,
+              printouts,
+              contest: contestObj
+            });
           });
         });
-      });
     });
   });
 });
@@ -172,7 +194,11 @@ router.get("/submissions", (req, res) => {
       .exec((err, subs) => {
         if (err)
           return handleContestError(err, req, res);
-        return res.json({ _user: req.auth2.user._id, submissions: subs.map(filterOutSub) });
+        let filteredSubs = subs;
+        if (!isAdmin(req))
+          filteredSubs = applyFreezeFilter(contest, req.auth2.user, filteredSubs);
+        filteredSubs = filteredSubs.map(filterOutSub);
+        return res.json({ _user: req.auth2.user._id, submissions: filteredSubs });
       });
   });
 });
@@ -185,6 +211,8 @@ router.post("/submit", (req, res) => {
 
   if (isAdmin(req))
     return handleRequestError("admin cannot submit solutions", req, res);
+  if (user.disabled)
+    return handleRequestError("you cant submit solutions", req, res);
 
   if (!grader.availableLanguages.hasOwnProperty(req.body.language))
     return handleRequestError("language is invalid", req, res);
@@ -299,16 +327,22 @@ router.get("/submission/:id", (req, res, next) => {
       if (!sub)
         return handleRequestError("submission not found", req, res, next);
 
-      if (!sub._creator.equals(req.auth2.user._id) && !(contest.hasEnded() && contest.upseeing) && !isAdmin(req))
-        return res.json(filterOutSub(sub));
+      if (!sub._creator.equals(req.auth2.user._id) && !(contest.hasEnded() && contest.upseeing && !contest.isFrozen()) && !isAdmin(req))
+        return res.json(filterBlind(contest, req.auth2.user, filterOutSub(sub)));
 
 
-      return res.json(filterOutPrivateSub(sub));
+      let filteredSub = filterOutPrivateSub(sub);
+      if (!isAdmin(req))
+        filteredSub = filterBlind(contest, req.auth2.user, filteredSub);
+      return res.json(filteredSub);
     });
   });
 });
 
 router.post("/clarification", (req, res, next) => {
+  if (req.auth2.user.disabled)
+    return handleRequestError("you are a disabled user", req, res);
+
   getUserContest(req.auth2.user).exec((err, contest) => {
     if (err)
       return handleContestError(err, req, res, next);
@@ -344,6 +378,9 @@ router.post("/clarification", (req, res, next) => {
 });
 
 router.post("/clarification/:id", (req, res, next) => {
+  if (req.auth2.user.disabled)
+    return handleRequestError("you are a disabled user", req, res);
+
   getUserContest(req.auth2.user).exec((err, contest) => {
     if (err)
       return handleContestError(err, req, res, next);
@@ -388,6 +425,9 @@ router.post("/clarification/:id", (req, res, next) => {
 });
 
 router.post("/printout", (req, res, next) => {
+  if (req.auth2.user.disabled)
+    return handleRequestError("you are a disabled user", req, res);
+
   getUserContest(req.auth2.user).exec((err, contest) => {
     if (err)
       return handleContestError(err, req, res, next);

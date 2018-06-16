@@ -4,11 +4,11 @@
       <div class="box">
         <div class="box-title">
           <p class="title is-4">
-            <span v-if="isAdmin()">Printout Requests</span>
+            <span v-if="isAdmin()">Print Requests</span>
             <span v-else>Ask for Printouts</span>
           </p>
           <p v-if="!isAdmin()" class="subtitle ju-comment ju-secondary-text">
-            Write what you want be in paper in the textbox below and
+            Write what you want to be in paper in the textbox below and
             we will get you a "print out of it" (pun intended). Max of 100000 characters.
           </p>
         </div>
@@ -32,7 +32,7 @@
 
           <div class="container ju-override-container has-text-centered" 
             v-if="printouts.length === 0">
-            <p>There are no printout requests to be shown.</p>
+            <p>There are no print requests to be shown.</p>
           </div>
           <div v-else>
             <b-table

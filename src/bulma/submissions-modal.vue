@@ -23,8 +23,10 @@
               <ju-verdict-tag 
                 :verdict="getMainVerdict(props.row.verdict, problem.problem)" 
                 :weighted="problem.scoring.hasWeight()"
-                :score="props.row.score">
+                :score="props.row.score"
+                v-if="!shouldBlind(props.row)">
               </ju-verdict-tag>
+              <span v-else class="tag">blind</span>
             </b-table-column>
 
             <b-table-column label="-" numeric>
@@ -88,6 +90,17 @@ export default {
     ])  
   },
   methods: {
+    isFrozen(x) {
+      return Helper.isFrozen(this.rawContest, x);
+    },
+    isBlind(x) {
+      return Helper.isBlind(this.rawContest, x);
+    },
+    shouldBlind(sub) {
+      const x = sub.timeInContest;
+      return !this.isAdmin() && (this.isBlind(x)
+        || this.isFrozen(x) && this.getSelf()._id !== sub._creator);
+    },
     getSelf() {
       return this.userObject;
     },

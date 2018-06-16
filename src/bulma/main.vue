@@ -57,7 +57,7 @@
               <span>Control Panel</span>
             </a>
             <div class="navbar-dropdown">
-              <b-switch class="navbar-item" v-if="isAdmin()" 
+              <b-switch class="navbar-item"
                 v-model="config.autoFetchStandings"
                 @input="setAutoFetch">Auto-refresh</b-switch>
               <a class="navbar-item" @click="doLogout()">Logout</a>

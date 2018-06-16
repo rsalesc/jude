@@ -33,8 +33,10 @@
             <b-table-column label="Verdict">
               <ju-verdict-tag 
                 :verdict="props.row.verdict.verdict" 
-                :weighted="false">
+                :weighted="false"
+                v-if="!shouldBlind(shownSubmission)">
               </ju-verdict-tag>
+              <span v-else class="tag">blind</span>
             </b-table-column>
           </template>
         </b-table>
@@ -86,7 +88,9 @@ export default {
   },
   computed: {
     ...Helper.mapModuleState("main", [
-      "shownSubmission"
+      "shownSubmission",
+      "userObject",
+      "rawContest"
     ]),
     ...mapGetters([
       "languages",
@@ -95,6 +99,23 @@ export default {
     ])
   },
   methods: {
+    isFrozen(x) {
+      return Helper.isFrozen(this.rawContest, x);
+    },
+    isBlind(x) {
+      return Helper.isBlind(this.rawContest, x);
+    },
+    shouldBlind(sub) {
+      const x = sub.timeInContest;
+      return !this.isAdmin() && (this.isBlind(x)
+        || this.isFrozen(x) && this.getSelf()._id !== sub._creator);
+    },
+    getSelf() {
+      return this.userObject;
+    },
+    isAdmin() {
+      return Helper.isAdmin(this.getSelf());
+    },
     getCodeCompilationInfo() {
       const submission = this.shownSubmission || {};
       if (!submission.verdict)

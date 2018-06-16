@@ -9,9 +9,22 @@
     <b-field label="End" horizontal>
       <ju-date-time-picker v-model="localContest.end_time"></ju-date-time-picker>
     </b-field>
+    <b-field label="Freeze duration" horizontal>
+      <b-input v-model="localContest.freeze"></b-input>
+    </b-field>
+    <b-field label="Blind duration" horizontal>
+      <b-input v-model="localContest.blind"></b-input>
+    </b-field>
     <b-field horizontal>
-      <b-switch size="is-small" v-model="localContest.hidden">Hidden</b-switch>
-      <b-switch size="is-small" v-model="localContest.upseeing">Can see code after contest ends</b-switch>
+      <b-switch size="is-small" v-model="localContest.hidden">
+        Hidden
+      </b-switch>
+      <b-switch size="is-small" v-model="localContest.upseeing">
+        Can see code after the contest ends
+      </b-switch>
+      <b-switch size="is-small" v-model="localContest.unfreeze">
+        Unfreeze the scoreboard after the contest ends
+      </b-switch>
     </b-field>
     <b-field>
       <button class="button is-small is-primary" @click="confirm">

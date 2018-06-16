@@ -227,6 +227,11 @@ $sizes: 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 9
     background-color: rgba(255, 164, 156, 0.4) !important;
   }
 
+  &.pending-color {
+    color: #0000a9;
+    background-color: #d9dfff !important;
+  }
+
   .fails {
     color: red;
     @extend .ju-secondary-text;

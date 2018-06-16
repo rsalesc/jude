@@ -31,6 +31,7 @@ module.exports = () => {
         },
         contest: {type: Schema.Types.ObjectId, ref: 'Contest'},
         unofficial: {type: Boolean, default: false},
+        disabled: {type: Boolean, default: false},
         role: {type: String, default: "contestant"}
     }, {timestamps: true});
 

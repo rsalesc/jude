@@ -925,7 +925,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     required: true
   }), nga.field("description"), nga.field("role", "choice").choices(roles).validation({ required: true })]).filters([nga.field("handle"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").perPage(100).remoteComplete(false), (0, _q2.default)(nga)]).listActions(["edit", "delete", (0, _filtered2.default)("submissions", "{_creator: entry.values.id, contest: entry.values.contest}", "Submissions")]);
 
-  user.showView().fields(user.listView().fields().concat([nga.field("unofficial", "boolean").validation({ required: true }), nga.field("email", "email"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").perPage(100).remoteComplete(false)]));
+  user.showView().fields(user.listView().fields().concat([nga.field("unofficial", "boolean").validation({ required: true }), nga.field("disabled", "boolean").validation({ required: true }), nga.field("email", "email"), nga.field("contest", "reference").targetEntity(contest).targetField(nga.field("name")).sortField("createdAt").perPage(100).remoteComplete(false)]));
 
   user.editionView().fields(user.showView().fields(), nga.field("password", "password"));
   user.creationView().fields(user.editionView().fields());
@@ -939,7 +939,7 @@ myApp.config(["NgAdminConfigurationProvider", function (nga) {
     maxlength: 64
   }), nga.field("start_time", "datetime"), nga.field("end_time", "datetime")]).filters([(0, _q2.default)(nga)]).listActions([(0, _filtered2.default)("submissions", "{contest: entry.values.id}", "Submissions"), (0, _filtered2.default)("users", "{contest: entry.values.id}", "Users"), "<ma-add-users size='xs' contest='entry'></ma-add-users>", "edit", "delete"]).sortField("createdAt");
 
-  contest.showView().fields(contest.listView().fields().concat([nga.field("scoring", "choice").choices(scorings).validation({ required: true }), nga.field("hidden", "boolean").validation({ required: true }), nga.field("upseeing", "boolean").label("Users can see others codes after the competition").validation({ required: true }), nga.field("problems", "embedded_list").defaultValue([]).targetFields([nga.field("letter").validation({
+  contest.showView().fields(contest.listView().fields().concat([nga.field("scoring", "choice").choices(scorings).validation({ required: true }), nga.field("hidden", "boolean").validation({ required: true }), nga.field("upseeing", "boolean").label("Users can see others codes after the competition").validation({ required: true }), nga.field("freeze", "number").validation({ required: true }).defaultValue(0), nga.field("blind", "number").validation({ required: true }).defaultValue(0), nga.field("unfreeze", "boolean").validation({ required: true }), nga.field("problems", "embedded_list").defaultValue([]).targetFields([nga.field("letter").validation({
     required: true,
     pattern: "[A-Z][0-9]*"
   }), nga.field("color").validation({ required: true }), nga.field("problem", "reference").validation({ required: true }).targetEntity(problem).targetField(nga.field("name")).sortField("createdAt").perPage(100).remoteComplete(true, {

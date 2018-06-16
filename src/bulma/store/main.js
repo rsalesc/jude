@@ -101,6 +101,16 @@ export const mutations = {
 };
 
 export const computed = {
+  isAdmin: (state) => {
+    if (!state.userObject)
+      return false;
+    return Helper.isAdmin(state.userObject);
+  },
+  isDisabled: (state) => {
+    if (!state.userObject)
+      return true;
+    return Helper.isAdmin(state.userObject) || state.userObject.disabled;
+  },
   problems: (state, getters) => {
     const contest = state.rawContest;
     const { my } = getters;
@@ -204,21 +214,28 @@ export const computed = {
     if (!teams || !my || !problems || !state.rawContest
             || !my.scoring || !getters.groupedSubs)
       return [];
-    const { groupedSubs } = getters;
+    const { groupedSubs, isAdmin } = getters;
+    const { rawContest } = state;
 
     for (let i = 0; i < teams.length; i++) {
       const results = {};
+      const hasBlind = {};
       const arr = [];
 
       for (const prob of problems) {
-        const subs = (groupedSubs[teams[i]._id] || []).filter(v => v.problem === prob.problem._id);
-        results[prob.problem._id] = prob.scoring.evalContext(subs);
+        const subs = (groupedSubs[teams[i]._id] || [])
+          .filter(v => v.problem === prob.problem._id);
+        const filteredSubs = subs
+          .filter(v => isAdmin || !Helper.isFrozen(rawContest, v.timeInContest));
+        if (filteredSubs.length !== subs.length)
+          hasBlind[prob.problem._id] = true;
+        results[prob.problem._id] = prob.scoring.evalContext(filteredSubs);
         arr.push(results[prob.problem._id]);
       }
 
       const merged = getters.my.scoring.mergeEvaluations(arr);
       Vue.set(teams, i, {
-        ...teams[i], merged, results, rank: null
+        ...teams[i], merged, results, hasBlind, rank: null
       });
     }
 

@@ -14,6 +14,10 @@
       <p class="subtitle ju-comment ju-secondary-text">
         {{ getTooltipText() }}
       </p>
+      <p class="subtitle ju-comment ju-secondary-text" v-if="isBlind()">
+        The contest is in blind phase. Your submissions won't be judged
+        until the contest ends and the scoreboard is unfrozen.
+      </p>
     </div>
     <hr class="rule"></hr>
     <div class="box-content">
@@ -96,8 +100,10 @@
               <ju-verdict-tag 
                 :verdict="getMainVerdict(props.row.verdict, getProblem(props.row.problem).problem)" 
                 :weighted="getProblem(props.row.problem).scoring.hasWeight()"
-                :score="props.row.score">
+                :score="props.row.score"
+                v-if="isAdmin() || !isBlind(props.row.timeInContest)">
               </ju-verdict-tag>
+              <span v-else class="tag">blind</span>
             </b-table-column>
             <b-table-column label="-" numeric>
               <b-tooltip label="Check if balloon for this problem was delivered"
@@ -176,7 +182,8 @@
           "shownSubmission",
           "user",
           "userObject",
-          "config"
+          "config",
+          "rawContest"
         ]),
         ...mapGetters([
           "problems",
@@ -192,6 +199,12 @@
         }
       },
       methods: {
+        isFrozen(x) {
+          return Helper.isFrozen(this.rawContest, x);
+        },
+        isBlind(x) {
+          return Helper.isBlind(this.rawContest, x);
+        },
         getProblemBorder(problem) {
           const thickness = this.isAdmin() ? 5 : 1;
           return { borderLeft: `${thickness}px solid #${this.getProblem(problem).color}` };
