@@ -5,7 +5,7 @@
       </header>
       <section class="modal-card-body">
         <b-field label="Problem">
-          <b-select placeholder="Select a problem" v-model="problem" required expanded>
+          <b-select placeholder="Select a problem" v-model="form.problem" required expanded>
             <option
               v-for="prob in problems"
               :value="prob.problem._id"
@@ -15,7 +15,7 @@
           </b-select>
         </b-field>
         <b-field label="Language">
-          <b-select placeholder="Select a language" v-model="language" required expanded>
+          <b-select placeholder="Select a language" v-model="form.language" required expanded>
             <option
               v-for="lang in languages"
               :value="lang[0]"
@@ -27,7 +27,7 @@
         <b-field label="Code">
           <brace
             :id="braceId"
-            v-model="code"
+            v-model="form.code"
             style="height: 175px;"
             :theme="'github'" :mode="getMode()"></brace>
         </b-field>
@@ -61,10 +61,15 @@
           this.braceId = genRandom(8);
         },
         data() {
-            return {
-                submitting: 0,
-                braceId: "default"
+          return {
+            submitting: 0,
+            braceId: "default",
+            form: {
+              problem: this.problem,
+              language: this.language,
+              code: this.code
             }
+          }
         },
         props: {
           problem: {
@@ -105,11 +110,7 @@
 
                 const { problem, code, language } = this;
 
-                Api.submit.save({
-                    problem,
-                    code,
-                    language
-                }).then(async (result) => {
+                Api.submit.save(this.form).then(async (result) => {
                     new BulmaUtils(this).toast('Your submission was sent successfully!', 4000, "is-success");
                     this.submitting--;
                     this.$emit("close");
@@ -134,7 +135,7 @@
                 });
             },
             getMode() {
-              return Helper.getBraceMode(this.language);
+              return Helper.getBraceMode(this.form.language);
             }
         },
         components: {

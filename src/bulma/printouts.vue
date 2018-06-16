@@ -7,6 +7,10 @@
             <span v-if="isAdmin()">Printout Requests</span>
             <span v-else>Ask for Printouts</span>
           </p>
+          <p v-if="!isAdmin()" class="subtitle ju-comment ju-secondary-text">
+            Write what you want be in paper in the textbox below and
+            we will get you a "print out of it" (pun intended).
+          </p>
         </div>
         <hr class="rule"></hr>
         <div class="box-content">

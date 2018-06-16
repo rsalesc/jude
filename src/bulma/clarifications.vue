@@ -7,6 +7,12 @@
             <span v-if="isAdmin()">Make Clarifications</span>
             <span v-else>Ask for Clarifications</span>
           </p>
+          <p class="subtitle ju-comment ju-secondary-text"
+            v-if="!isAdmin()">
+            Ask a question by filling the textbox below. Make sure to fill
+            the issue type field if you have a very specific question.
+          </p>
+
         </div>
         <hr class="rule"></hr>
         <div class="box-content">
@@ -16,7 +22,7 @@
             <hr class="rule"></hr>
           </div>
           <b-field label="Target" v-if="isAdmin() && !isAnswering()">
-            <b-select placeholder="Select target" 
+            <b-select
                       v-model="newClarification._creator" required expanded>
               <option value="" selected="selected">***BROADCAST***</option>
               <option v-for="team in teams"
@@ -27,7 +33,7 @@
             </b-select>
           </b-field>
           <b-field label="Issue" v-if="!isAnswering()">    
-            <b-select placeholder="Select type of issue" 
+            <b-select
                       v-model="newClarification.problem" required expanded>
               <option value="" selected="selected">General</option>
               <option

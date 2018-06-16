@@ -15,7 +15,7 @@ services:
       - MONGO_HOST=db
       - WEED_HOST=fs
 
-  judge:
+  judge1:
     build:
       context: .
     links:
@@ -30,6 +30,27 @@ services:
     environment:
       - MONGO_HOST=db
       - WEED_HOST=fs
+      - SANDBOX_OFFSET=0
+      - MAX_SIMUL_TESTS=3
+
+  judge2:
+    build:
+      context: .
+    links:
+      - db
+      - fs
+    cap_add:
+      - ALL
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    entrypoint: "npm run start-judge"
+    environment:
+      - MONGO_HOST=db
+      - WEED_HOST=fs
+      - SANDBOX_OFFSET=1
+      - MAX_SIMUL_TESTS=3
+
 
   db:
     image: mongo

@@ -14,9 +14,10 @@ const MongoQueue2 = require("mongo-queue2");
 const JudgeConfig = {
   MAX_TRIES: 5,
   EPS: 1e-7,
-  MAX_SANDBOXES: 10,
-  MAX_SIMUL_TESTS: 3,
-  COMPILATION_TL: 25,
+  SANDBOX_OFFSET: process.env.SANDBOX_OFFSET || 0,
+  MAX_SANDBOXES: process.env.MAX_SANDBOXES || 10,
+  MAX_SIMUL_TESTS: process.env.MAX_SIMUL_TESTS || 1,
+  COMPILATION_TL: 30,
   CHECKING_TL: 10,
   CHECKING_ML: 512,
   CHECKING_WTL: 20,
@@ -24,7 +25,7 @@ const JudgeConfig = {
   OUTPUT_LIMIT: 1 << 24,
   TEMP_DIR: "/tmp",
   ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
-  VISIBILITY_WINDOW: 15,
+  VISIBILITY_WINDOW: process.env.VISIBILITY_WINDOW || 20,
   BOUND_ML: 2048
 };
 
@@ -136,7 +137,8 @@ class JudgeEnvironment {
   getNextBoxId() {
     const res = this.nextSandboxId++;
     this.nextSandboxId %= JudgeConfig.MAX_SANDBOXES;
-    return res % JudgeConfig.MAX_SANDBOXES;
+    return res % JudgeConfig.MAX_SANDBOXES
+      + JudgeConfig.SANDBOX_OFFSET * JudgeConfig.MAX_SANDBOXES;
   }
 }
 

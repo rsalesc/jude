@@ -57,6 +57,9 @@
               <span>Control Panel</span>
             </a>
             <div class="navbar-dropdown">
+              <b-switch class="navbar-item" v-if="isAdmin()" 
+                v-model="config.autoFetchStandings"
+                @input="setAutoFetch">Auto-refresh</b-switch>
               <a class="navbar-item" @click="doLogout()">Logout</a>
             </div>
           </div>
@@ -93,7 +96,7 @@
         this.countdownTimer = window.setInterval(() => {
           this.countdownString = this.getRemainingTime();
         }, 1000);
-        // this.fetchTimer = window.setInterval(async () => this.autoFetch(), 5000);
+        this.fetchTimer = window.setInterval(async () => this.autoFetch(), 5000);
       },
       beforeDestroy() {
         if (this.fetchTimer)

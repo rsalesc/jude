@@ -92,19 +92,19 @@ module.exports = require("babel-runtime/helpers/createClass");
 /* 4 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/regenerator");
+module.exports = require("mongoose");
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/asyncToGenerator");
+module.exports = require("babel-runtime/regenerator");
 
 /***/ }),
 /* 6 */
 /***/ (function(module, exports) {
 
-module.exports = require("mongoose");
+module.exports = require("babel-runtime/helpers/asyncToGenerator");
 
 /***/ }),
 /* 7 */
@@ -187,11 +187,11 @@ var _getIterator2 = __webpack_require__(0);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -456,11 +456,11 @@ module.exports = require("babel-runtime/helpers/inherits");
 "use strict";
 
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -502,9 +502,10 @@ var MongoQueue2 = __webpack_require__(21);
 var JudgeConfig = {
   MAX_TRIES: 5,
   EPS: 1e-7,
-  MAX_SANDBOXES: 10,
-  MAX_SIMUL_TESTS: 3,
-  COMPILATION_TL: 25,
+  SANDBOX_OFFSET: process.env.SANDBOX_OFFSET || 0,
+  MAX_SANDBOXES: process.env.MAX_SANDBOXES || 10,
+  MAX_SIMUL_TESTS: process.env.MAX_SIMUL_TESTS || 1,
+  COMPILATION_TL: 30,
   CHECKING_TL: 10,
   CHECKING_ML: 512,
   CHECKING_WTL: 20,
@@ -512,7 +513,7 @@ var JudgeConfig = {
   OUTPUT_LIMIT: 1 << 24,
   TEMP_DIR: "/tmp",
   ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
-  VISIBILITY_WINDOW: 15,
+  VISIBILITY_WINDOW: process.env.VISIBILITY_WINDOW || 20,
   BOUND_ML: 2048
 };
 
@@ -721,7 +722,7 @@ var JudgeEnvironment = function () {
     value: function getNextBoxId() {
       var res = this.nextSandboxId++;
       this.nextSandboxId %= JudgeConfig.MAX_SANDBOXES;
-      return res % JudgeConfig.MAX_SANDBOXES;
+      return res % JudgeConfig.MAX_SANDBOXES + JudgeConfig.SANDBOX_OFFSET * JudgeConfig.MAX_SANDBOXES;
     }
   }]);
   return JudgeEnvironment;
@@ -791,7 +792,7 @@ module.exports = require("mongo-queue2");
 "use strict";
 
 
-var mongoose = __webpack_require__(6);
+var mongoose = __webpack_require__(4);
 var MongoQueue2 = __webpack_require__(21);
 var weed = __webpack_require__(32);
 
@@ -854,11 +855,11 @@ var _createClass2 = __webpack_require__(3);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -2106,7 +2107,7 @@ var ProductScoring = function (_Scoring) {
       return evals.reduce(function (old, cur) {
         return {
           score: old.score + cur.score,
-          penalty: old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
+          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
         };
       }, { score: 0, penalty: 0 });
     }
@@ -2147,7 +2148,7 @@ var SubtaskSumScoring = function (_Scoring2) {
   }, {
     key: "attempted",
     value: function attempted(obj) {
-      return obj.affect;
+      return obj.affect || obj.fails > 0;
     }
   }, {
     key: "fails",
@@ -2313,7 +2314,7 @@ var IcpcScoring = function (_Scoring3) {
   }, {
     key: "attempted",
     value: function attempted(obj) {
-      return obj.affect;
+      return obj.affect || obj.fails > 0;
     }
   }, {
     key: "fails",
@@ -2415,7 +2416,7 @@ var IcpcScoring = function (_Scoring3) {
       return evals.reduce(function (old, cur) {
         return {
           score: old.score + cur.score,
-          penalty: old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
+          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
         };
       }, { score: 0, penalty: 0 });
     }
@@ -2451,7 +2452,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var path = __webpack_require__(1);
-var mongoose = __webpack_require__(6);
+var mongoose = __webpack_require__(4);
 var Schema = mongoose.Schema;
 
 // TODO: add creation time (with a plugin)
@@ -2548,11 +2549,11 @@ module.exports = __webpack_require__(28);
 "use strict";
 
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -2878,11 +2879,11 @@ var _promise = __webpack_require__(9);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -4646,11 +4647,11 @@ var _inherits2 = __webpack_require__(15);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -6426,11 +6427,11 @@ var _inherits2 = __webpack_require__(15);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -7451,7 +7452,7 @@ module.exports = Profiler;
 /* eslint-disable */
 var path = __webpack_require__(1),
     fs = __webpack_require__(17),
-    mongoose = __webpack_require__(6);
+    mongoose = __webpack_require__(4);
 // files = fs.readdirSync(__dirname);
 
 __webpack_require__(22);
@@ -7469,7 +7470,9 @@ module.exports = {
   Contest: __webpack_require__(52)(),
   User: __webpack_require__(55)(),
   Submission: __webpack_require__(57)(),
-  Problem: __webpack_require__(26)()
+  Problem: __webpack_require__(26)(),
+  Clarification: __webpack_require__(58)(),
+  Printout: __webpack_require__(59)()
 };
 
 /***/ }),
@@ -7488,7 +7491,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 14/07/16.
  */
-var mongoose = __webpack_require__(6);
+var mongoose = __webpack_require__(4);
 var deepPopulate = __webpack_require__(54)(mongoose);
 var Schema = mongoose.Schema;
 
@@ -7617,7 +7620,7 @@ module.exports = require("mongoose-deep-populate");
 /**
  * Created by rsalesc on 14/07/16.
  */
-var mongoose = __webpack_require__(6);
+var mongoose = __webpack_require__(4);
 var Schema = mongoose.Schema;
 var sha256 = __webpack_require__(56);
 
@@ -7702,7 +7705,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/07/16.
  */
 
-var mongoose = __webpack_require__(6);
+var mongoose = __webpack_require__(4);
 var Schema = mongoose.Schema;
 
 
@@ -7774,6 +7777,66 @@ module.exports = function () {
   });
 
   return db.model("Submission", SubmissionSchema);
+};
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var mongoose = __webpack_require__(4);
+var Schema = mongoose.Schema;
+
+
+module.exports = function () {
+  if (db.models.Clarification) return db.model("Clarification");
+
+  var CommentSchema = new Schema({
+    _creator: { type: Schema.Types.ObjectId, ref: "User" },
+    text: String
+  }, { timestamps: true });
+
+  var ClarificationSchema = new Schema({
+    _creator: { type: Schema.Types.ObjectId, ref: "User" },
+    contest: { type: Schema.Types.ObjectId, ref: "Contest" },
+    problem: { type: Schema.Types.ObjectId, ref: "Problem" },
+    broadcast: { type: Boolean, default: false },
+    comments: [CommentSchema]
+  }, { timestamps: true });
+
+  ClarificationSchema.index({ _creator: 1, contest: 1 });
+  ClarificationSchema.index({ contest: 1, broadcast: 1 });
+
+  return db.model("Clarification", ClarificationSchema);
+};
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var mongoose = __webpack_require__(4);
+var Schema = mongoose.Schema;
+
+
+module.exports = function () {
+  if (db.models.Printout) return db.model("Printout");
+
+  var PrintoutSchema = new Schema({
+    _creator: { type: Schema.Types.ObjectId, ref: "User" },
+    contest: { type: Schema.Types.ObjectId, ref: "Contest" },
+    text: String,
+    lines: Number,
+    done: Boolean
+  }, { timestamps: true });
+
+  PrintoutSchema.index({ _creator: 1, contest: 1 });
+
+  return db.model("Printout", PrintoutSchema);
 };
 
 /***/ })
