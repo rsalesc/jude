@@ -10,11 +10,13 @@ import Rankings from "./rankings.vue";
 import Settings from "./admin/settings.vue";
 import { store } from "./store/";
 import Buefy from "buefy";
+import FloatThead from "vue-floatthead";
 import "buefy/lib/buefy.css";
 import "./main.scss";
 require("font-awesome-webpack");
 
 Vue.use(VueRouter);
+Vue.use(FloatThead);
 Vue.use(Buefy, { defaultIconPack: "fa" });
 
 // routing setup

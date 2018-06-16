@@ -35,7 +35,7 @@
       <div class="container ju-override-container has-text-centered" v-if="shownTeams.length === 0">
         <p>There is no competitor to be shown.</p>
       </div>
-      <table v-else class="table ju-standings" :class="getTableClasses()">
+      <float-thead-table v-else class="table ju-standings" :class="getTableClasses()">
         <thead>
           <tr>
             <th class="has-text-centered">#</th>
@@ -81,7 +81,7 @@
             </td>
           </tr>
         </tbody>
-      </table>
+      </float-thead-table>
     </div>
 
     <b-modal
@@ -98,6 +98,7 @@
     import { mapGetters } from "vuex";
     import BulmaUtils from "./bulmutils";
     import SubmissionsModalComponent from "./submissions-modal.vue";
+    import FloatThead from "vue-floatthead";
 
     export default {
       data() {
@@ -231,6 +232,9 @@
         setUnofficialLevel(val) {
           this.$store.commit(types.SET_UNOFFICIAL_LEVEL, parseInt(val));
         }
+      },
+      components: {
+        FloatThead
       }
     };
 </script>
