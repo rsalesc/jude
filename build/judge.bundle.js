@@ -502,9 +502,9 @@ var MongoQueue2 = __webpack_require__(21);
 var JudgeConfig = {
   MAX_TRIES: 5,
   EPS: 1e-7,
-  SANDBOX_OFFSET: process.env.SANDBOX_OFFSET || 0,
-  MAX_SANDBOXES: process.env.MAX_SANDBOXES || 10,
-  MAX_SIMUL_TESTS: process.env.MAX_SIMUL_TESTS || 1,
+  SANDBOX_OFFSET: parseInt(process.env.SANDBOX_OFFSET || 0, 10),
+  MAX_SANDBOXES: parseInt(process.env.MAX_SANDBOXES || 10, 10),
+  MAX_SIMUL_TESTS: parseInt(process.env.MAX_SIMUL_TESTS || 1, 10),
   COMPILATION_TL: 30,
   CHECKING_TL: 10,
   CHECKING_ML: 512,
@@ -513,7 +513,7 @@ var JudgeConfig = {
   OUTPUT_LIMIT: 1 << 24,
   TEMP_DIR: "/tmp",
   ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
-  VISIBILITY_WINDOW: process.env.VISIBILITY_WINDOW || 20,
+  VISIBILITY_WINDOW: parseInt(process.env.VISIBILITY_WINDOW || 20, 10),
   BOUND_ML: 2048
 };
 
@@ -3030,7 +3030,6 @@ var testCaseAsync = function () {
                   while (1) {
                     switch (_context13.prev = _context13.next) {
                       case 0:
-                        console.log(testcase);
                         logger.debug("running on testcase " + testcase.in);
 
                         // to seconds
@@ -3050,20 +3049,20 @@ var testCaseAsync = function () {
                         execLog = {};
                         // grading step
 
-                        _context13.prev = 9;
-                        _context13.next = 12;
+                        _context13.prev = 8;
+                        _context13.next = 11;
                         return iso.init();
 
-                      case 12:
-                        _context13.next = 14;
+                      case 11:
+                        _context13.next = 13;
                         return Evaluation[lang](iso, store, SOURCE_EXEC_PATH, testcase.in, timelimit, timelimit * JudgeConfig.WT_MULTIPLIER, memorylimit);
 
-                      case 14:
+                      case 13:
                         evaluationResult = _context13.sent;
-                        _context13.next = 17;
+                        _context13.next = 16;
                         return iso.getLog();
 
-                      case 17:
+                      case 16:
                         evaluationResult.log = _context13.sent;
 
                         execLog = evaluationResult.log;
@@ -3071,7 +3070,7 @@ var testCaseAsync = function () {
                         // sandbox crashed
 
                         if (Isolate.translateBoxExitCode(evaluationResult.code)) {
-                          _context13.next = 23;
+                          _context13.next = 22;
                           break;
                         }
 
@@ -3079,7 +3078,7 @@ var testCaseAsync = function () {
                         console.log(evaluationResult);
                         return _context13.abrupt("return", exitWith(new Verdict(0, "VERDICT_JE")));
 
-                      case 23:
+                      case 22:
                         dummy = new Isolate(env, store, evaluationResult.log);
 
                         execTime = dummy.getRunningTime();
@@ -3087,7 +3086,7 @@ var testCaseAsync = function () {
                         // execution failed, do something and return
 
                         if (!(evaluationResult.code === 1)) {
-                          _context13.next = 39;
+                          _context13.next = 38;
                           break;
                         }
 
@@ -3095,68 +3094,68 @@ var testCaseAsync = function () {
                         exitCode = dummy.getExitCode();
 
                         if (!(exitStatus === IsolateConst.EXIT_TIMEOUT)) {
-                          _context13.next = 32;
+                          _context13.next = 31;
                           break;
                         }
 
                         return _context13.abrupt("return", exitWith(new Verdict(0, "VERDICT_TLE", -1, { time: timelimit })));
 
-                      case 32:
+                      case 31:
                         if (!(exitStatus === IsolateConst.EXIT_TIMEOUT_WALL)) {
-                          _context13.next = 36;
+                          _context13.next = 35;
                           break;
                         }
 
                         return _context13.abrupt("return", exitWith(new Verdict(0, "VERDICT_WTE", -1, { time: execTime })));
 
-                      case 36:
+                      case 35:
                         if (!(exitStatus === IsolateConst.EXIT_OUTPUT_LIMIT)) {
-                          _context13.next = 38;
+                          _context13.next = 37;
                           break;
                         }
 
                         return _context13.abrupt("return", exitWith(new Verdict(0, "VERDICT_OLE", -1, { time: execTime })));
 
-                      case 38:
+                      case 37:
                         return _context13.abrupt("return", exitWith(new Verdict(0, "VERDICT_RTE", -1, {
                           text: "exited with code " + exitCode,
                           time: execTime
                         })));
 
-                      case 39:
-                        _context13.next = 45;
+                      case 38:
+                        _context13.next = 44;
                         break;
 
-                      case 41:
-                        _context13.prev = 41;
-                        _context13.t0 = _context13["catch"](9);
+                      case 40:
+                        _context13.prev = 40;
+                        _context13.t0 = _context13["catch"](8);
 
                         logger.error("execution step failed - %s", _context13.t0.toString());
                         return _context13.abrupt("return", exitWith(new Verdict(0, "VERDICT_JE")));
 
-                      case 45:
-                        _context13.prev = 45;
-                        _context13.next = 48;
+                      case 44:
+                        _context13.prev = 44;
+                        _context13.next = 47;
                         return iso.createFileFromStorage("input", testcase.in);
 
-                      case 48:
-                        _context13.next = 50;
+                      case 47:
+                        _context13.next = 49;
                         return iso.createFileFromStorage("answer", testcase.out);
 
-                      case 50:
-                        _context13.next = 52;
+                      case 49:
+                        _context13.next = 51;
                         return Checking[task.getCheckerLanguage()](iso, store, CHECKER_EXEC_PATH);
 
-                      case 52:
+                      case 51:
                         checkingResult = _context13.sent;
-                        _context13.next = 55;
+                        _context13.next = 54;
                         return iso.getLog();
 
-                      case 55:
+                      case 54:
                         checkingResult.log = _context13.sent;
 
                         if (Isolate.translateBoxExitCode(checkingResult.code)) {
-                          _context13.next = 60;
+                          _context13.next = 59;
                           break;
                         }
 
@@ -3164,13 +3163,13 @@ var testCaseAsync = function () {
                         console.log(checkingResult);
                         return _context13.abrupt("return", exitWith(new Verdict(0, "VERDICT_JE")));
 
-                      case 60:
+                      case 59:
 
                         iso.log = execLog;
                         output = checkingResult.stderr;
 
                         if (!(checkingResult.code === 1)) {
-                          _context13.next = 71;
+                          _context13.next = 70;
                           break;
                         }
 
@@ -3179,40 +3178,40 @@ var testCaseAsync = function () {
                         _exitCode = _dummy.getExitCode();
 
                         if (!(_exitStatus === IsolateConst.EXIT_TIMEOUT || _exitStatus === IsolateConst.EXIT_TIMEOUT_WALL)) {
-                          _context13.next = 68;
+                          _context13.next = 67;
                           break;
                         }
 
                         return _context13.abrupt("return", exitWith(new Verdict(0, "VERDICT_CHTE")));
 
-                      case 68:
+                      case 67:
                         if (!(_exitCode === 1 || _exitCode === 2)) {
-                          _context13.next = 70;
+                          _context13.next = 69;
                           break;
                         }
 
                         return _context13.abrupt("return", exitWith(new Verdict(0, "VERDICT_WA", 0, { text: output, time: execTime })));
 
-                      case 70:
+                      case 69:
                         return _context13.abrupt("return", exitWith(new Verdict(0, "VERDICT_FAIL", 0, { text: output, time: execTime })));
 
-                      case 71:
+                      case 70:
                         return _context13.abrupt("return", exitWith(new Verdict(1, "VERDICT_AC", 0, { text: output, time: execTime })));
 
-                      case 74:
-                        _context13.prev = 74;
-                        _context13.t1 = _context13["catch"](45);
+                      case 73:
+                        _context13.prev = 73;
+                        _context13.t1 = _context13["catch"](44);
 
                         logger.error("checker step failed - %s", _context13.t1.toString());
                         console.log(_context13.t1);
                         return _context13.abrupt("return", exitWith(new Verdict(0, "VERDICT_JE")));
 
-                      case 79:
+                      case 78:
                       case "end":
                         return _context13.stop();
                     }
                   }
-                }, _callee13, _this11, [[9, 41], [45, 74]]);
+                }, _callee13, _this11, [[8, 40], [44, 73]]);
               }));
 
               return function (_x49) {
