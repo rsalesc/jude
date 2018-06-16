@@ -321,7 +321,7 @@ router.post("/clarification", (req, res, next) => {
       _creator: req.auth2.user._id,
       contest: contest._id,
       problem: req.body.problem || null,
-      comments: (req.body.$push || []).filter(t => t).map(t => ({
+      comments: (req.body.$push || []).map(t => (t || "").trim()).filter(t => t).map(t => ({
         _creator: isAdmin(req) ? null : req.auth2.user._id,
         text: t
       }))
@@ -365,10 +365,11 @@ router.post("/clarification/:id", (req, res, next) => {
       }
       // TODO: validate if comments are really strings
 
-      const toPush = (req.body.$push || []).filter(t => t).map(t => ({
-        _creator: isAdmin(req) ? null : req.auth2.user._id,
-        text: t
-      }));
+      const toPush = (req.body.$push || []).map(t => (t || "").trim())
+        .filter(t => t).map(t => ({
+          _creator: isAdmin(req) ? null : req.auth2.user._id,
+          text: t
+        }));
       let updateQuery = {
         $push: { comments: { $each: toPush }}
       };
@@ -396,7 +397,7 @@ router.post("/printout", (req, res, next) => {
     const insertData = {
       _creator: req.auth2.user._id,
       contest: contest._id,
-      text: req.body.text,
+      text: (req.body.text || "").trim(),
       lines: estimateLines(req.body.text),
       done: false
     };

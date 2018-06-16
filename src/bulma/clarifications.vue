@@ -10,7 +10,7 @@
           <p class="subtitle ju-comment ju-secondary-text"
             v-if="!isAdmin()">
             Ask a question by filling the textbox below. Make sure to fill
-            the issue type field if you have a very specific question.
+            the issue type field if you have a very specific question. Max of 1500 characters.
           </p>
 
         </div>
@@ -23,8 +23,8 @@
           </div>
           <b-field label="Target" v-if="isAdmin() && !isAnswering()">
             <b-select
-                      v-model="newClarification._creator" required expanded>
-              <option value="" selected="selected">***BROADCAST***</option>
+                      v-model="newClarification._creator" expanded>
+              <option value="" selected>***BROADCAST***</option>
               <option v-for="team in teams"
                       :value="team._id"
                       :key="team._id">
@@ -34,8 +34,8 @@
           </b-field>
           <b-field label="Issue" v-if="!isAnswering()">    
             <b-select
-                      v-model="newClarification.problem" required expanded>
-              <option value="" selected="selected">General</option>
+                      v-model="newClarification.problem" expanded>
+              <option value="">General</option>
               <option
                 v-for="prob in problems"
                 :value="prob.problem._id"
@@ -48,6 +48,7 @@
             <textarea class="textarea"
                       v-model="newClarification.text"
                       placeholder="Write here..."
+                      maxlength="1500"
                       ref="text"></textarea>
           </b-field>
           <b-field v-if="isAnswering()">

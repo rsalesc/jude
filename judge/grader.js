@@ -683,6 +683,7 @@ async function testPackage(env, pack, code, lang) {
   const task = await new Loader(store).load();
 
   const datasets = task.getDatasets();
+  console.log(datasets);
   const verdicts = await testTask(env, task, store, code, lang);
 
   const res = {};

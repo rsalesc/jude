@@ -3560,9 +3560,10 @@ var MongoQueue2 = __webpack_require__(26);
 var JudgeConfig = {
   MAX_TRIES: 5,
   EPS: 1e-7,
-  MAX_SANDBOXES: 10,
-  MAX_SIMUL_TESTS: 3,
-  COMPILATION_TL: 25,
+  SANDBOX_OFFSET: process.env.SANDBOX_OFFSET || 0,
+  MAX_SANDBOXES: process.env.MAX_SANDBOXES || 10,
+  MAX_SIMUL_TESTS: process.env.MAX_SIMUL_TESTS || 1,
+  COMPILATION_TL: 30,
   CHECKING_TL: 10,
   CHECKING_ML: 512,
   CHECKING_WTL: 20,
@@ -3570,7 +3571,7 @@ var JudgeConfig = {
   OUTPUT_LIMIT: 1 << 24,
   TEMP_DIR: "/tmp",
   ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
-  VISIBILITY_WINDOW: 15,
+  VISIBILITY_WINDOW: process.env.VISIBILITY_WINDOW || 20,
   BOUND_ML: 2048
 };
 
@@ -3779,7 +3780,7 @@ var JudgeEnvironment = function () {
     value: function getNextBoxId() {
       var res = this.nextSandboxId++;
       this.nextSandboxId %= JudgeConfig.MAX_SANDBOXES;
-      return res % JudgeConfig.MAX_SANDBOXES;
+      return res % JudgeConfig.MAX_SANDBOXES + JudgeConfig.SANDBOX_OFFSET * JudgeConfig.MAX_SANDBOXES;
     }
   }]);
   return JudgeEnvironment;
@@ -5714,7 +5715,9 @@ router.post("/clarification", function (req, res, next) {
       _creator: req.auth2.user._id,
       contest: contest._id,
       problem: req.body.problem || null,
-      comments: (req.body.$push || []).filter(function (t) {
+      comments: (req.body.$push || []).map(function (t) {
+        return (t || "").trim();
+      }).filter(function (t) {
         return t;
       }).map(function (t) {
         return {
@@ -5752,7 +5755,9 @@ router.post("/clarification/:id", function (req, res, next) {
       }
       // TODO: validate if comments are really strings
 
-      var toPush = (req.body.$push || []).filter(function (t) {
+      var toPush = (req.body.$push || []).map(function (t) {
+        return (t || "").trim();
+      }).filter(function (t) {
         return t;
       }).map(function (t) {
         return {
@@ -5783,7 +5788,7 @@ router.post("/printout", function (req, res, next) {
     var insertData = {
       _creator: req.auth2.user._id,
       contest: contest._id,
-      text: req.body.text,
+      text: (req.body.text || "").trim(),
       lines: estimateLines(req.body.text),
       done: false
     };
@@ -6638,10 +6643,12 @@ var testPackage = function () {
           case 10:
             task = _context18.sent;
             datasets = task.getDatasets();
-            _context18.next = 14;
+
+            console.log(datasets);
+            _context18.next = 15;
             return testTask(env, task, store, code, lang);
 
-          case 14:
+          case 15:
             verdicts = _context18.sent;
             res = {};
 
@@ -6649,7 +6656,7 @@ var testPackage = function () {
               res[datasets[i].name] = verdicts[i];
             }return _context18.abrupt("return", res);
 
-          case 18:
+          case 19:
           case "end":
             return _context18.stop();
         }

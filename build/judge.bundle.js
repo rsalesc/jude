@@ -3605,10 +3605,12 @@ var testPackage = function () {
           case 10:
             task = _context18.sent;
             datasets = task.getDatasets();
-            _context18.next = 14;
+
+            console.log(datasets);
+            _context18.next = 15;
             return testTask(env, task, store, code, lang);
 
-          case 14:
+          case 15:
             verdicts = _context18.sent;
             res = {};
 
@@ -3616,7 +3618,7 @@ var testPackage = function () {
               res[datasets[i].name] = verdicts[i];
             }return _context18.abrupt("return", res);
 
-          case 18:
+          case 19:
           case "end":
             return _context18.stop();
         }

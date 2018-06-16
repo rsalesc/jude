@@ -9,7 +9,7 @@
           </p>
           <p v-if="!isAdmin()" class="subtitle ju-comment ju-secondary-text">
             Write what you want be in paper in the textbox below and
-            we will get you a "print out of it" (pun intended).
+            we will get you a "print out of it" (pun intended). Max of 100000 characters.
           </p>
         </div>
         <hr class="rule"></hr>
@@ -19,6 +19,7 @@
               <textarea class="textarea"
                         v-model="text"
                         placeholder="Paste the text to be printed..."
+                        maxlength="100000"
                         ref="text"></textarea>
             </b-field>
             <b-field>
@@ -53,8 +54,7 @@
                   {{ props.row.lines }}
                 </b-table-column>
                 <b-table-column numeric>
-                  <b-tooltip label="Print" position="is-bottom"
-                    v-if="isAdmin()">
+                  <b-tooltip label="Print" position="is-bottom">
                     <button class="button is-primary is-small"
                       @click="print(props.row)">
                       <b-icon icon="print" size="is-small"></b-icon>
@@ -166,7 +166,8 @@ export default {
         <h2>${teamName}</h2>
         <h4>${Helper.getDatetimeString(new Date())}</h4>
         <pre>${code}</pre>`;
-      win.print();
+      if (this.isAdmin())
+        win.print();
     },
     async fetchAll() {
       try {
