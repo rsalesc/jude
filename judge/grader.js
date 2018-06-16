@@ -422,6 +422,7 @@ async function compilationStepAsync(env, store, lang, sol = SOURCE_PATH,
 // eslint-disable-next-line require-await
 async function testCaseAsync(env, store, iso, task, lang, dataset, testcase) {
   return new Promise(async (resolve) => {
+    console.log(testcase);
     logger.debug(`running on testcase ${testcase.in}`);
 
     // to seconds
@@ -683,7 +684,6 @@ async function testPackage(env, pack, code, lang) {
   const task = await new Loader(store).load();
 
   const datasets = task.getDatasets();
-  console.log(datasets);
   const verdicts = await testTask(env, task, store, code, lang);
 
   const res = {};
