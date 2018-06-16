@@ -8,6 +8,8 @@
         <div class="level-item ju-secondary-text">
           <span v-if="!clar.problem">General</span>
           <span v-else>
+            <span class="ju-color-block"
+                  :style="{ backgroundColor: `#${getProblem(clar.problem).color}` }"></span>
             {{ getProblem(clar.problem).letter }}. {{ getProblem(clar.problem).problem.name }}
           </span>
         </div>

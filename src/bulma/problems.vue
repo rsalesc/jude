@@ -14,7 +14,11 @@
           </div>
 
           <div class="media-content">
-            <p class="ju-problem-title"> {{ prob.problem.name }}</p>
+            <p class="ju-problem-title"> 
+              <span class="ju-color-block"
+                    :style="{ backgroundColor: `#${prob.color}` }"></span>
+              {{ prob.problem.name }}
+            </p>
             <p class="ju-tertiary-text">
               {{ prob.problem.attr.limits.time }} ms / {{ prob.problem.attr.limits.memory }} MB
             </p>

@@ -72,7 +72,7 @@
           
           <template slot-scope="props">
             <b-table-column label="" class="has-text-centered"
-              :style="{ borderLeft: `2px solid #${getProblem(props.row.problem).color}` }">
+              :style="getProblemBorder(props.row.problem)">
               <span>
                 {{ getProblem(props.row.problem).letter }}
               </span>
@@ -192,6 +192,10 @@
         }
       },
       methods: {
+        getProblemBorder(problem) {
+          const thickness = this.isAdmin() ? 5 : 1;
+          return { borderLeft: `${thickness}px solid #${this.getProblem(problem).color}` };
+        },
         isUpsolving(sub) {
           return sub.timeInContest < 0;
         },

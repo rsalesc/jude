@@ -29,6 +29,14 @@ body, html {
   overflow-wrap: break-word;
 }
 
+.ju-color-block {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  border: 1px solid #333;
+  margin: 0 3px;
+}
+
 $sizes: 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950;
 @mixin minwidth($env) {
   @each $size in $sizes {
