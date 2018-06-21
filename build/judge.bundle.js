@@ -4006,7 +4006,7 @@ var Compilation = {
               iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
               _context7.next = 14;
-              return evaluate(iso, store, ["/usr/bin/g++", "-static", "-lm", "-std=c++11", sourceFile, "-O2"]);
+              return evaluate(iso, store, ["/usr/bin/g++", "-lm", "-std=c++11", sourceFile, "-O2"]);
 
             case 14:
               res = _context7.sent;
@@ -4089,7 +4089,7 @@ var Compilation = {
               iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
               _context8.next = 14;
-              return evaluate(iso, store, ["/usr/bin/gcc", "-static", "-lm", "-std=c11", sourceFile, "-O2"]);
+              return evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c11", sourceFile, "-O2"]);
 
             case 14:
               res = _context8.sent;
@@ -7535,7 +7535,7 @@ module.exports = function () {
     upseeing: { type: Boolean, required: true, default: false },
     blind: { type: Number, default: 0 },
     freeze: { type: Number, default: 0 },
-    hideFreeze: { type: Boolean, default: true }
+    unfreeze: { type: Boolean, default: false }
   }, { timestamps: true });
 
   ContestSchema.index({ name: 1 });
@@ -7573,16 +7573,26 @@ module.exports = function () {
     return this.hasStarted() && !this.hasEnded();
   };
 
-  ContestSchema.methods.getTimeInContest = function () {
-    return parseInt((Date.now() - this.start_time.getTime()) / 60 / 1000, 10);
+  ContestSchema.methods.getTimeInContest = function (x) {
+    var cur = x != null ? x : Date.now();
+    return parseInt((cur - this.start_time.getTime()) / 60 / 1000, 10);
   };
 
-  ContestSchema.methods.isFrozen = function () {
-    return this.isRunning() && this.getTimeInContest() >= this.freeze;
+  ContestSchema.methods.getDurationInContest = function () {
+    var diff = this.end_time.getTime() - this.start_time.getTime();
+    return parseInt(Math.ceil(diff / 60 / 1000), 10);
   };
 
-  ContestSchema.methods.isBlind = function () {
-    return this.isRunning() && this.getTimeInContest() >= this.blind;
+  ContestSchema.methods.getRemainingInContest = function (x) {
+    return this.getDurationInContest() - (x != null ? x : this.getTimeInContest());
+  };
+
+  ContestSchema.methods.isFrozen = function (x) {
+    return this.getRemainingInContest(x) <= this.freeze && (this.isRunning() || this.hasEnded() && !this.unfreeze && this.freeze > 0);
+  };
+
+  ContestSchema.methods.isBlind = function (x) {
+    return this.getRemainingInContest(x) <= this.blind && (this.isRunning() || this.hasEnded() && !this.unfreeze && this.blind > 0);
   };
 
   ContestSchema.pre("remove", function (next) {
@@ -7590,6 +7600,12 @@ module.exports = function () {
       if (err) console.error(err);
     });
     db.model("User").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
+    });
+    db.model("Clarification").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
+    });
+    db.model("Printout").remove({ contest: this._id }, function (err) {
       if (err) console.error(err);
     });
     next();
@@ -7649,6 +7665,7 @@ module.exports = function () {
         },
         contest: { type: Schema.Types.ObjectId, ref: 'Contest' },
         unofficial: { type: Boolean, default: false },
+        disabled: { type: Boolean, default: false },
         role: { type: String, default: "contestant" }
     }, { timestamps: true });
 

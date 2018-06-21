@@ -201,7 +201,7 @@ const Compilation = {
     iso.timelimit = JudgeConfig.COMPILATION_TL;
     iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
-    const res = await evaluate(iso, store, ["/usr/bin/g++", "-static", "-lm", "-std=c++11",
+    const res = await evaluate(iso, store, ["/usr/bin/g++", "-lm", "-std=c++11",
                                             sourceFile, "-O2"]);
 
     iso.maxProcesses = oldProc;
@@ -237,7 +237,7 @@ const Compilation = {
     iso.timelimit = JudgeConfig.COMPILATION_TL;
     iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
-    const res = await evaluate(iso, store, ["/usr/bin/gcc", "-static", "-lm", "-std=c11",
+    const res = await evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c11",
                                             sourceFile, "-O2"]);
 
 

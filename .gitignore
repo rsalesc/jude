@@ -3,4 +3,5 @@ node_modules/
 .idea/
 env/
 *.swp
+*.swo
 .nyc_output/
