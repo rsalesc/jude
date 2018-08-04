@@ -49,7 +49,7 @@
               :key="prob.problem._id"
               :style="getProblemBorder(prob)">
               <p>{{ prob.letter }}</p>
-              <p class="ju-comment ju-tertiary-text"></p>
+              <p class="ju-comment ju-tertiary-text">{{ getProblemWorthScore(prob) }}</p>
             </th>
           </tr>
         </thead>
@@ -183,6 +183,11 @@
         },
         getContestTime(t) {
           return Helper.getFormattedContestTime(t);
+        },
+        getProblemWorthScore(prob) {
+          if (prob.scoring.hasWeight())
+            return prob.problem.attr.weight;
+          return "";
         },
         getProblemScore(team, prob) {
           const result = team.results[prob.problem._id];

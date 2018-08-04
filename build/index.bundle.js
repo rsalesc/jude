@@ -7117,7 +7117,7 @@ var Compilation = {
               iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
               _context7.next = 14;
-              return evaluate(iso, store, ["/usr/bin/g++", "-static", "-lm", "-std=c++11", sourceFile, "-O2"]);
+              return evaluate(iso, store, ["/usr/bin/g++", "-lm", "-std=c++11", sourceFile, "-O2"]);
 
             case 14:
               res = _context7.sent;
@@ -7200,7 +7200,7 @@ var Compilation = {
               iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
               _context8.next = 14;
-              return evaluate(iso, store, ["/usr/bin/gcc", "-static", "-lm", "-std=c11", sourceFile, "-O2"]);
+              return evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c11", sourceFile, "-O2"]);
 
             case 14:
               res = _context8.sent;

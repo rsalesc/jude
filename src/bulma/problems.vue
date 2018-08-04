@@ -21,6 +21,7 @@
             </p>
             <p class="ju-tertiary-text">
               {{ prob.problem.attr.limits.time }} ms / {{ prob.problem.attr.limits.memory }} MB
+              <span v-if="prob.scoring.hasWeight()">/ {{ getProblemWorthScore(prob) }} pt(s)</span>
             </p>
           </div>
 
@@ -91,6 +92,11 @@
             },
             isAc(prob){
                 return prob.solved;
+            },
+            getProblemWorthScore(prob) {
+              if (prob.scoring.hasWeight())
+                return prob.problem.attr.weight;
+              return "";
             },
             lighten(t){
                 return Helper.lighten(t);
