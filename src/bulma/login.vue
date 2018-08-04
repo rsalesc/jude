@@ -18,12 +18,12 @@
           </b-field>
         </div>
         <div class="card-footer">
-          <a class="card-footer-item" @click="formLogin()">
-            Login
-          </a>
           <router-link to="/" class="card-footer-item">
             Go Back
           </router-link>
+          <a class="card-footer-item" @click="formLogin()">
+            Login
+          </a>
         </div>
       </div>
     </div>
