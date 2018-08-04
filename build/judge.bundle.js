@@ -505,11 +505,11 @@ var JudgeConfig = {
   SANDBOX_OFFSET: parseInt(process.env.SANDBOX_OFFSET || 0, 10),
   MAX_SANDBOXES: parseInt(process.env.MAX_SANDBOXES || 10, 10),
   MAX_SIMUL_TESTS: parseInt(process.env.MAX_SIMUL_TESTS || 1, 10),
-  COMPILATION_TL: 30,
-  CHECKING_TL: 10,
+  COMPILATION_TL: 90,
+  CHECKING_TL: 90,
   CHECKING_ML: 512,
-  CHECKING_WTL: 20,
-  WT_MULTIPLIER: 8,
+  CHECKING_WTL: 90,
+  WT_MULTIPLIER: 15,
   OUTPUT_LIMIT: 1 << 24,
   TEMP_DIR: "/tmp",
   ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
@@ -1866,6 +1866,11 @@ var Scoring = function () {
       throw new Error("Function not implemented in this class");
     }
   }, {
+    key: "hasPartial",
+    value: function hasPartial() {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
     key: "hasPenalty",
     value: function hasPenalty() {
       throw new Error("Function not implemented in this class");
@@ -1991,6 +1996,11 @@ var ProductScoring = function (_Scoring) {
     key: "hasWeight",
     value: function hasWeight() {
       return true;
+    }
+  }, {
+    key: "hasPartial",
+    value: function hasPartial() {
+      return false;
     }
   }, {
     key: "hasPenalty",
@@ -2133,6 +2143,11 @@ var SubtaskSumScoring = function (_Scoring2) {
   }, {
     key: "hasWeight",
     value: function hasWeight() {
+      return true;
+    }
+  }, {
+    key: "hasPartial",
+    value: function hasPartial() {
       return true;
     }
   }, {
@@ -2299,6 +2314,11 @@ var IcpcScoring = function (_Scoring3) {
   }, {
     key: "hasWeight",
     value: function hasWeight() {
+      return false;
+    }
+  }, {
+    key: "hasPartial",
+    value: function hasPartial() {
       return false;
     }
   }, {
