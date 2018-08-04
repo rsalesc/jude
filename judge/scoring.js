@@ -33,6 +33,10 @@ class Scoring {
     throw new Error("Function not implemented in this class");
   }
 
+  hasPartial() {
+    throw new Error("Function not implemented in this class");
+  }
+
   hasPenalty() {
     throw new Error("Function not implemented in this class");
   }
@@ -96,6 +100,10 @@ class ProductScoring extends Scoring {
 
   hasWeight() {
     return true;
+  }
+
+  hasPartial() {
+    return false;
   }
 
   hasPenalty() {
@@ -177,6 +185,10 @@ class SubtaskSumScoring extends Scoring {
   }
 
   hasWeight() {
+    return true;
+  }
+
+  hasPartial() {
     return true;
   }
 
@@ -287,6 +299,10 @@ class IcpcScoring extends Scoring {
 
   hasWeight() {
     return false;
+  }
+
+  hasPartial() {
+    return false
   }
 
   hasPenalty() {

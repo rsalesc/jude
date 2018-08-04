@@ -99,7 +99,7 @@
             <b-table-column label="Verdict" numeric>
               <ju-verdict-tag 
                 :verdict="getMainVerdict(props.row.verdict, getProblem(props.row.problem).problem)" 
-                :weighted="getProblem(props.row.problem).scoring.hasWeight()"
+                :weighted="getProblem(props.row.problem).scoring.hasPartial()"
                 :score="props.row.score"
                 v-if="isAdmin() || !isBlind(props.row.timeInContest)">
               </ju-verdict-tag>
