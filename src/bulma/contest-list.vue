@@ -79,7 +79,7 @@
         if (!contest._id && !contest.name)
           return new BulmaUtils(this).toast("Select a contest before trying to log in!");
         this.$store.commit(types.SELECT_CONTEST_FROM_LIST, contest);
-        this.$router.push({ path: "/login", query: { id: contest._id }});
+        return this.$router.push({ path: "/login", query: { id: contest._id }});
       },
       getRemainingTime(contest) {
         return Helper.getRemainingTime(contest);

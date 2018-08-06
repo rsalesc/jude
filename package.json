@@ -118,6 +118,7 @@
     "sass-loader": "^6.0.6",
     "sinon": "^4.5.0",
     "style-loader": "^0.13.2",
+    "timesync": "^1.0.3",
     "url-loader": "^0.5.9",
     "vue": "^2.0.0",
     "vue-bulma-brace": "^0.1.0",

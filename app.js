@@ -14,6 +14,7 @@ const router = express.Router();
 const restify = require("express-restify-mongoose");
 const apiRoutes = require("./routes/api");
 const staticCompressed = require("express-static-gzip");
+const timesync = require("timesync/server");
 
 // expose db object globally
 require("./db");
@@ -47,6 +48,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(multer());
 app.use(flash());
+app.use("/timesync", timesync.requestHandler);
+
 // app.use(methodOverride('X-HTTP-Method-Override'));
 
 // setup cors
@@ -57,7 +60,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Expose-Headers", "X-Total-Count");
   if (req.method === "OPTIONS")
     return res.sendStatus(200);
-  next();
+  return next();
 });
 
 // configure api auth

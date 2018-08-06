@@ -4,6 +4,7 @@ import { Task } from "../../judge/task.js";
 import { VerdictConst, VerdictTag } from "../../judge/verdict.js";
 import Vue from "vue";
 import * as Api from "./api.js";
+import ts from "./ts.js";
 import moment from "moment";
 import "moment/locale/en-gb";
 
@@ -180,9 +181,10 @@ export function pad(x, size, ch = "0") {
 }
 
 export function getCountdown(m) {
-  const dur = moment.duration(m.diff(moment()));
+  const now = moment(ts.now());
+  const dur = moment.duration(m.diff(now));
   if (dur.asHours() >= 24)
-    return m.fromNow();
+    return m.from(now);
   return `${parseInt(dur.asHours(), 10)}:${pad(dur.minutes(), 2)}:${pad(dur.seconds(), 2)}`;
 }
 
@@ -192,9 +194,9 @@ export function getRemainingTime(contest) {
   const startTs = new Date(contest.start_time).getTime();
   const endTs = new Date(contest.end_time).getTime();
 
-  if (Date.now() >= endTs)
+  if (ts.now() >= endTs)
     return "contest has ended";
-  else if (Date.now() < startTs) {
+  else if (ts.now() < startTs) {
     const res = getCountdown(moment(contest.start_time));
     return `contest will start ${res}`;
   }
@@ -286,11 +288,11 @@ export function getTooltipText(s) {
 }
 
 export function hasContestStarted(contest) {
-  return new Date(contest.start_time) <= new Date();
+  return new Date(contest.start_time) <= ts.date();
 }
 
 export function hasContestEnded(contest) {
-  return new Date(contest.end_time) <= new Date();
+  return new Date(contest.end_time) <= ts.date();
 }
 
 export function isRunning(contest) {
@@ -298,7 +300,7 @@ export function isRunning(contest) {
 }
 
 export function getTimeInContest(contest, x) {
-  const cur = x != null ? x : Date.now();
+  const cur = x != null ? x : ts.now();
   return parseInt((cur - new Date(contest.start_time).getTime()) / 60 / 1000, 10);
 }
 

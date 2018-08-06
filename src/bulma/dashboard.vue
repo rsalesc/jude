@@ -1,5 +1,5 @@
 <template>
-    <section v-if="hasStarted() || true">
+    <section v-if="hasStarted()">
       <b-tabs v-model="activeTab" @change="changedTab">
         <b-tab-item label="Problems & Submissions">
           <div class="columns">
@@ -90,7 +90,8 @@
             return Helper.getRemainingTime(this.rawContest);
           },
           hasStarted() {
-            return Helper.hasContestStarted(this.rawContest);
+            return this.rawContest.problems &&
+              this.rawContest.problems.length > 0;
           },
           changedTab() {
             this.$store.commit(types.SET_DASHBOARD_TAB, this.activeTab);
