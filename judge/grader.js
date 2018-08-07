@@ -4,6 +4,7 @@
 
 // eslint-disable-next-line no-unused-vars
 const fs = require("fs");
+const fse = require("fs-extra");
 const path = require("path");
 const promiseReflect = require("promise-reflect");
 
@@ -592,28 +593,68 @@ async function testDataset(env, store, task, lang, dataset) {
 *   Created files in storage are: _/checker_exec, _/sol_exec
 *
 *   @param {JudgeEnvironment}
+*   @param {string} unique file ID of the package
 *   @param {Task}
 *   @param {Storage}
 *   @param {string} the submitted code
 *   @param {string} language of the submitted code
 *   @returns {Verdict} evalution output/verdict
  */
-async function testTask(env, task, store, code, lang) {
+async function testTask(env, packageFid, task, store, code, lang) {
   // create solution source in the storage
   await store.createFileFromContent(SOURCE_PATH, code);
 
-  // compile solution
-  const [compilationResult, checkerCompilationResult]
-        = await Promise.all([compilationStepAsync(env, store, lang),
-                             compilationStepAsync(env, store, task.getCheckerLanguage(),
-                                                  task.getChecker(), CHECKER_EXEC_PATH)]);
+  // setup compilation step
+  const compilationSteps = [compilationStepAsync(env, store, lang)];
 
+  // check for cached checker
+  if (env.checkerCache.exists(packageFid)) {
+    const checkerPath = env.checkerCache.getFilePath(packageFid);
+    await store.createFileFromContent(CHECKER_EXEC_PATH, await fse.readFile(checkerPath));
+    env.checkerCache.ping(packageFid);
+    console.log("using cached checker");
+  } else {
+    compilationSteps.push(compilationStepAsync(env, store, task.getCheckerLanguage(),
+                                               task.getChecker(), CHECKER_EXEC_PATH));
+  }
+
+  // compile files
+  const [compilationResult,
+         checkerCompilationResult] = await Promise.all(compilationSteps);
 
     // sandbox crashed
   if (!Isolate.translateBoxExitCode(compilationResult.code)) {
     console.log("sandbox crashed in compilation step");
     console.log(compilationResult);
     return utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount());
+  }
+
+  // check if checker had to be compiled (in case it wasn't cached).
+  if (checkerCompilationResult != null) {
+    // sandbox crashed
+    if (!Isolate.translateBoxExitCode(checkerCompilationResult.code)) {
+      console.log("sandbox crashed in checker compilation step");
+      console.log(checkerCompilationResult);
+      return utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount());
+    }
+
+    // checker compilation failed, do something and return
+    if (checkerCompilationResult.code === 1) {
+      const dummy = new Isolate(env, null, compilationResult.log);
+      const exitStatus = dummy.getExitStatus();
+      const exitCode = dummy.getExitCode();
+      const output = compilationResult.stderr;
+
+      logger.error("checker compilation failed with error %s (%d):\n%s",
+                   exitStatus, exitCode, output);
+
+      return utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount());
+    }
+
+    // cache compiled checker
+    console.log("caching compiled checker");
+    await env.checkerCache.addFromContent(packageFid,
+                                          await store.getFileBuffer(CHECKER_EXEC_PATH));
   }
 
   // compilation failed
@@ -626,26 +667,6 @@ async function testTask(env, task, store, code, lang) {
       return utils.fillUpTo([new Verdict(0, "VERDICT_CTE")], task.getDatasetsCount());
 
     return utils.fillUpTo([new Verdict(0, "VERDICT_CE", -1, output)], task.getDatasetsCount());
-  }
-
-  // sandbox crashed
-  if (!Isolate.translateBoxExitCode(checkerCompilationResult.code)) {
-    console.log("sandbox crashed in checker compilation step");
-    console.log(checkerCompilationResult);
-    return utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount());
-  }
-
-  // checker compilation failed, do something and return
-  if (checkerCompilationResult.code === 1) {
-    const dummy = new Isolate(env, null, compilationResult.log);
-    const exitStatus = dummy.getExitStatus();
-    const exitCode = dummy.getExitCode();
-    const output = compilationResult.stderr;
-
-    logger.error("checker compilation failed with error %s (%d):\n%s",
-                 exitStatus, exitCode, output);
-
-    return utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount());
   }
 
   // now run solution against each of the datasets in ladder fashion
@@ -672,7 +693,8 @@ async function testTask(env, task, store, code, lang) {
  * @param code
  * @param lang
  */
-async function testPackage(env, pack, code, lang) {
+async function testPackage(env, packageFid, code, lang) {
+  const pack = env.cache.getFilePath(packageFid);
   const store = new Storage();
   await store.loadZip(pack);
 
@@ -683,7 +705,7 @@ async function testPackage(env, pack, code, lang) {
   const task = await new Loader(store).load();
 
   const datasets = task.getDatasets();
-  const verdicts = await testTask(env, task, store, code, lang);
+  const verdicts = await testTask(env, packageFid, task, store, code, lang);
 
   const res = {};
   for (let i = 0; i < datasets.length; i++)

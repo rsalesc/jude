@@ -11,6 +11,7 @@ const logger = require("./logger");
 const fs = require("fs-extra");
 const promisify = require("es6-promisify");
 const glob = promisify(require("glob").glob);
+const streamifier = require("streamifier");
 
 /* Helper Functions for storage */
 function dealWithEntry(zipFile, entry) {
@@ -142,6 +143,16 @@ class Storage {
   }
 
   /**
+   * Get readable stream from a file in storage
+   * @param {string} path/ID to the file in storage
+   * @returns {string} readable stream to the file
+   * */
+  // eslint-disable-next-line no-unused-vars
+  async getFileStream(p) {
+    throw `Function not implemented in ${this.constructor.name}`;
+  }
+
+  /**
    *  Check if file is readable
    */
   async isReadable(p) {
@@ -218,6 +229,10 @@ class RealStorage extends Storage {
       throw e;
     }
   }
+
+  async getFileStream(p) {
+    return fs.createReadStream(p);
+  }
 }
 
 class MemoryStorage extends Storage {
@@ -228,11 +243,15 @@ class MemoryStorage extends Storage {
 
   async load(p) {
     const absPath = path.resolve(p);
-    const res = await glob("**/*", { cwd: absPath, nodir: true });
+    const stat = await fs.lstat(absPath);
+    if (stat.isDirectory()) {
+      const res = await glob("**/*", { cwd: absPath, nodir: true });
 
-    await Promise.all(res.map(async (file) => {
-      this.data[this.normalizePath(file)] = await fs.readFile(path.join(absPath, file));
-    }));
+      await Promise.all(res.map(async (file) => {
+        this.data[this.normalizePath(file)] = await fs.readFile(path.join(absPath, file));
+      }));
+    } else
+      this.data[this.normalizePath(absPath)] = await fs.readFile(absPath);
   }
 
   async loadZip(p) {
@@ -270,6 +289,11 @@ class MemoryStorage extends Storage {
         return def.toString();
     }
     return this.data[normalizedPath].toString();
+  }
+
+  // eslint-disable-next-line require-await
+  async getFileStream(p, def = null) {
+    return streamifier.createReadStream(this.getFileBuffer(p, def));
   }
 
   // eslint-disable-next-line require-await

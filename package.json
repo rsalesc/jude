@@ -59,6 +59,7 @@
     "sleep": "^5.1.1",
     "source-map-support": "^0.4.15",
     "spawn-rx": "^0.2.0",
+    "streamifier": "^0.1.1",
     "tmp": "0.0.28",
     "vue-router": "^2.6.0",
     "vuex": "^2.3.1",

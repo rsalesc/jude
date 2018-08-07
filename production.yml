@@ -11,9 +11,6 @@ services:
     #environment:
       #- NODE_ENV=production
     restart: always
-  judge2:
-    image: rsalesc/jude
-    restart: always
 
   db:
     restart: always

@@ -55,9 +55,8 @@ function watch(env) {
       }
 
       try {
-        const packPath = env.cache.getFilePath(req.fid.toString());
         const verdict = await grader.testPackage(env,
-                                                 packPath,
+                                                 req.fid.toString(),
                                                  req.code,
                                                  req.lang);
 
@@ -94,8 +93,10 @@ function watch(env) {
     if (!env.cache.exists(req.fid.toString())) {
       const writeStream = env.cache.addFromStream(req.fid.toString(), processMessage);
       env.seaweed.read(req.fid, writeStream);
-    } else
+    } else {
+      console.log("loading cached package");
       processMessage();
+    }
 
     return null;
   });

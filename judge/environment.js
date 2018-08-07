@@ -29,7 +29,7 @@ const JudgeConfig = {
   BOUND_ML: 2048
 };
 
-class PackageCacher {
+class FileCacher {
   constructor(size = 20) {
     this.path = tmp.dirSync({ prefix: "judecache-", unsafeCleanup: true }).name;
     this.has = new Map();
@@ -82,18 +82,26 @@ class PackageCacher {
     writeStream.on("finish", () => {
       this.ensureSpace();
       this.ping(p);
-      cb(null);
+      if (cb)
+        cb(null);
     });
 
     writeStream.on("error", (err) => {
-      cb(null);
+      if (cb)
+        cb(null);
     });
 
     return writeStream;
   }
 
-  addFromFile(p, d) {
-    fse.copySync(d, this.getFilePath(p));
+  async addFromFile(p, d) {
+    await fse.copySync(d, this.getFilePath(p));
+    this.ensureSpace();
+    this.ping(p);
+  }
+
+  async addFromContent(p, content) {
+    await fse.writeFile(this.getFilePath(p), content, { flag: "wx+" });
     this.ensureSpace();
     this.ping(p);
   }
@@ -112,7 +120,8 @@ class JudgeEnvironment {
     this.sandboxes = [];
     this.nextSandboxId = 0;
     this.db = db;
-    this.cache = new PackageCacher();
+    this.cache = new FileCacher();
+    this.checkerCache = new FileCacher();
     this.ack = null;
 
     this.seaweed = seaweed;
