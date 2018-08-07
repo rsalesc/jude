@@ -202,8 +202,8 @@ const Compilation = {
     iso.timelimit = JudgeConfig.COMPILATION_TL;
     iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
-    const res = await evaluate(iso, store, ["/usr/bin/g++", "-lm", "-std=c++11",
-                                            sourceFile, "-O2"]);
+    const res = await evaluate(iso, store, ["/usr/bin/g++", "-lm", "-std=c++14",
+                                            sourceFile, "-O3"]);
 
     iso.maxProcesses = oldProc;
     iso.preserveEnv = oldEnv;
@@ -238,8 +238,8 @@ const Compilation = {
     iso.timelimit = JudgeConfig.COMPILATION_TL;
     iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
-    const res = await evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c11",
-                                            sourceFile, "-O2"]);
+    const res = await evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c14",
+                                            sourceFile, "-O3"]);
 
 
     iso.maxProcesses = oldProc;
@@ -848,8 +848,8 @@ public class Main {
 
 /* eslint-enable */
 const availableLanguages = {
-  CPP: "C++ 11",
-  C: "C 11",
+  CPP: "C++ 14",
+  C: "C 14",
   Java: "Java 8",
   Py2: "Python 2",
   Py3: "Python 3"
