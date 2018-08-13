@@ -40,6 +40,15 @@
               Show only undelivered
             </b-switch>
           </div>
+          <div class="level-item" v-if="rawTeams">
+            <ju-user-filter
+              :users="rawTeams"
+              placeholder="Type to filter by user..."
+              size="is-small"
+              @select="filterByTeam"
+              select>
+            </ju-user-filter>
+          </div>
           <div class="level-item">
             <b-select placeholder="By Problem"
               v-model="config.submissions.byProblem"
@@ -157,6 +166,7 @@
     import CodeModalComponent from "./code-modal.vue";
     import BulmaUtils from "./bulmutils";
     import JuVerdictTag from "./components/VerdictTag.vue";
+    import JuUserFilter from "./components/UserFilter.vue";
 
     export default {
       mounted() {},
@@ -174,7 +184,8 @@
               language: null,
               code: ""
             }
-          }
+          },
+          teamFilter: null
         };
       },
       computed: {
@@ -183,7 +194,8 @@
           "user",
           "userObject",
           "config",
-          "rawContest"
+          "rawContest",
+          "rawTeams"
         ]),
         ...mapGetters([
           "problems",
@@ -199,6 +211,17 @@
         }
       },
       methods: {
+        filterByTeams(x) {
+          this.teamFilter = {};
+          for (const team of x)
+            this.teamFilter[team._id] = true;
+        },
+        filterByTeam(x) {
+          if (!x)
+            this.teamFilter = null;
+          else
+            this.filterByTeams([x]);
+        },
         isFrozen(x) {
           return Helper.isFrozen(this.rawContest, x);
         },
@@ -245,9 +268,13 @@
         getSubmissions() {
           const subs = this.isAdmin() ? this.submissions : this.my.submissions;
           const { onlyAc, byProblem, onlyUndelivered } = this.config.submissions;
-          return subs.filter(s => !onlyAc || this.isAc(s))
+          const res = subs.filter(s => !onlyAc || this.isAc(s))
             .filter(s => !byProblem || s.problem === byProblem)
             .filter(s => !onlyUndelivered || this.isAc(s) && !this.getBalloon(s));
+
+          if (this.teamFilter != null)
+            return res.filter(s => this.teamFilter.hasOwnProperty(s._creator));
+          return res;
         },
         getProblem(id) {
           for (const prob of this.problems) {
@@ -342,7 +369,7 @@
           }
         }
       },
-      components: { JuVerdictTag }
+      components: { JuVerdictTag, JuUserFilter }
     };
 </script>
 

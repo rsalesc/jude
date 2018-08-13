@@ -1,11 +1,12 @@
 <template>
   <b-autocomplete
+    v-if="select"
     v-model="name"
+    :size="size"
     :data="data"
     :open-on-focus="true"
     :expanded="expanded"
     :placeholder="placeholder"
-    :size="size"
     field="name"
     @input="getData"
     @select="selected">
@@ -13,14 +14,20 @@
       <div>
         <p>
           {{ props.option.name }}
-          <i class="ju-secondary-text">{{ props.option.code }}</i>
-        </p>
-        <p class="ju-tertiary-text">
-          {{ props.option.attr.limits.time }} ms / {{ props.option.attr.limits.memory }} MB
+          <br>
+          <i class="ju-secondary-text">{{ props.option.handle }}</i>
         </p>
       </div>
     </template>
   </b-autocomplete>
+  <b-input
+    v-else
+    v-model="name"
+    :size="size"
+    :expanded="expanded"
+    :placeholder="placeholder"
+    @input="getData">
+  </b-input>
 </template>
 
 <script>
@@ -40,9 +47,13 @@ export default {
     };
   },
   props: {
-    problems: {
+    users: {
       type: Array,
       default: () => []
+    },
+    select: {
+      type: Boolean,
+      default: false
     },
     expanded: {
       type: Boolean,
@@ -52,26 +63,30 @@ export default {
       type: String,
       default: "Select a problem..."
     },
-    size: String
+    size: String,
+    threshold: {
+      type: Number,
+      default: 0.4
+    }
   },
   computed: {
     useFuzzy() {
-      return this.problems.length < 10000;
+      return this.users.length < 10000;
     },
     index() {
-      const problems = this.problems.map((problem, index) => ({ ...problem, ref: index }));
+      const users = this.users.map((user, index) => ({ ...user, ref: index }));
       if (!this.useFuzzy) {
-        return elasticlunr(function() {
-          this.addField("code");
+        return elasticlunr(function () {
+          this.addField("handle");
           this.addField("name");
           this.setRef("ref");
           this.saveDocument(false);
 
-          for (const prob of problems)
-            this.addDoc(prob);
+          for (const user of users)
+            this.addDoc(user);
         });
       } else {
-        return new Fuse(problems, {
+        return new Fuse(users, {
           shouldSort: true,
           threshold: 0.6,
           tokenize: true,
@@ -81,7 +96,7 @@ export default {
           distance: 32,
           maxPatternLength: 32,
           minMatchCharLength: 1,
-          keys: ["code", "name"]
+          keys: ["handle", "name"]
         });
       }
     }
@@ -89,19 +104,19 @@ export default {
   methods: {
     selected(option) {
       this.$emit("select", option);
-      this.$nextTick(() => this.name = "");
     },
-    getData: debounce(function() {
+    getData: debounce(function () {
       if (!this.name)
-        this.data = this.problems;
+        this.data = this.users;
       else if (this.useFuzzy) {
         this.data = this.index.search(this.name)
-          .filter(result => result.score < 0.4)
+          .filter(result => result.score < this.threshold)
           .map(result => result.item);
       } else {
         this.data = this.index.search(this.name)
-          .map(result => this.problems[result.ref]);
+          .map(result => this.users[result.ref]);
       }
+      this.$emit("filter", this.data);
     }, 300)
   }
 };
