@@ -140,7 +140,7 @@ router.get("/", (req, res) => {
     const contestObj = { ...contest.toObject(), ...{ languages: Object.entries(grader.availableLanguages) }};
 
     User.find({ contest: contest.id, role: "contestant", disabled: { $ne: true } })
-      .select("-password -email -handle").exec((err, teams) => {
+      .select("-password -email").exec((err, teams) => {
         if (err)
           return handleContestError(err, req, res);
         if (teams === null)

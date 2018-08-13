@@ -5694,7 +5694,7 @@ router.get("/", function (req, res) {
 
     var contestObj = (0, _extends3.default)({}, contest.toObject(), { languages: (0, _entries2.default)(grader.availableLanguages) });
 
-    User.find({ contest: contest.id, role: "contestant", disabled: { $ne: true } }).select("-password -email -handle").exec(function (err, teams) {
+    User.find({ contest: contest.id, role: "contestant", disabled: { $ne: true } }).select("-password -email").exec(function (err, teams) {
       if (err) return handleContestError(err, req, res);
       if (teams === null) return handleContestError("couldnt retrieve teams", req, res);
 
