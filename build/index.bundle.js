@@ -61,7 +61,7 @@ require("source-map-support").install();
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 38);
+/******/ 	return __webpack_require__(__webpack_require__.s = 39);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,18 +90,6 @@ module.exports = require("express");
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/regenerator");
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/asyncToGenerator");
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -125,13 +113,25 @@ __webpack_require__(25);
 });*/
 
 module.exports = {
-  Contest: __webpack_require__(53)(),
-  User: __webpack_require__(55)(),
-  Submission: __webpack_require__(56)(),
+  Contest: __webpack_require__(54)(),
+  User: __webpack_require__(56)(),
+  Submission: __webpack_require__(57)(),
   Problem: __webpack_require__(28)(),
-  Clarification: __webpack_require__(57)(),
-  Printout: __webpack_require__(58)()
+  Clarification: __webpack_require__(58)(),
+  Printout: __webpack_require__(59)()
 };
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/regenerator");
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/helpers/asyncToGenerator");
 
 /***/ }),
 /* 7 */
@@ -164,6 +164,279 @@ module.exports = require("babel-runtime/core-js/object/keys");
 "use strict";
 
 
+var _promise = __webpack_require__(9);
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _typeof2 = __webpack_require__(66);
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
+var _keys = __webpack_require__(10);
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _getIterator2 = __webpack_require__(2);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _regenerator = __webpack_require__(5);
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = __webpack_require__(6);
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var exists = function () {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(p) {
+    return _regenerator2.default.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            _context.next = 3;
+            return fs.stat(p);
+
+          case 3:
+            return _context.abrupt("return", true);
+
+          case 6:
+            _context.prev = 6;
+            _context.t0 = _context["catch"](0);
+            return _context.abrupt("return", false);
+
+          case 9:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this, [[0, 6]]);
+  }));
+
+  return function exists(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+var fileExists = function () {
+  var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(p) {
+    var res;
+    return _regenerator2.default.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            _context2.next = 3;
+            return fs.stat(p);
+
+          case 3:
+            res = _context2.sent;
+            return _context2.abrupt("return", res.isFile());
+
+          case 7:
+            _context2.prev = 7;
+            _context2.t0 = _context2["catch"](0);
+            return _context2.abrupt("return", false);
+
+          case 10:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, this, [[0, 7]]);
+  }));
+
+  return function fileExists(_x2) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+var dirExists = function () {
+  var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(p) {
+    var res;
+    return _regenerator2.default.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            _context3.next = 3;
+            return fs.statAsync(p);
+
+          case 3:
+            res = _context3.sent;
+            return _context3.abrupt("return", res.isDirectory());
+
+          case 7:
+            _context3.prev = 7;
+            _context3.t0 = _context3["catch"](0);
+            return _context3.abrupt("return", false);
+
+          case 10:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, this, [[0, 7]]);
+  }));
+
+  return function dirExists(_x3) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+
+// eslint-disable-next-line require-await
+var globAsync = function () {
+  var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(pattern, opts) {
+    return _regenerator2.default.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            return _context4.abrupt("return", new _promise2.default(function (resolve, reject) {
+              glob(pattern, opts, function (err, files) {
+                if (err) return reject(err);
+                return resolve(files);
+              });
+            }));
+
+          case 1:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, this);
+  }));
+
+  return function globAsync(_x5, _x6) {
+    return _ref4.apply(this, arguments);
+  };
+}();
+
+var mkdtemp = function () {
+  var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _regenerator2.default.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            return _context5.abrupt("return", new _promise2.default(function (resolve, reject) {
+              return fs.mkdtemp.apply(fs, args.concat([function (err, result) {
+                if (err) return reject(err);
+                return resolve(result);
+              }]));
+            }));
+
+          case 1:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5, this);
+  }));
+
+  return function mkdtemp() {
+    return _ref5.apply(this, arguments);
+  };
+}();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Created by rsalesc on 14/06/16.
+ */
+
+var path = __webpack_require__(1);
+var fs = __webpack_require__(12);
+var util = __webpack_require__(67);
+var glob = __webpack_require__(30);
+
+function inspect(p) {
+  return util.inspect(p, false, null);
+}
+
+function logInspect(p) {
+  return console.log(inspect(p));
+}
+
+function fillUpTo(arr) {
+  var n = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+  if (n === 0) return [];
+  if (!(arr instanceof Array) || arr.length === 0) arr = [undefined];
+
+  while (arr.length > n) {
+    arr.pop();
+  }while (arr.length < n) {
+    var el = arr.pop();
+    arr.push(el);
+    arr.push(el);
+  }
+
+  return arr;
+}
+
+function destroy(obj) {
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = (0, _getIterator3.default)((0, _keys2.default)(obj)), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var prop = _step.value;
+
+      var property = obj[prop];
+      if (property != null && (typeof property === "undefined" ? "undefined" : (0, _typeof3.default)(property)) === "object") destroy(property);else obj[prop] = null;
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+}
+
+function normalizePath(p) {
+  var normalizedPath = path.normalize(p);
+  if (normalizedPath[-1] === "/") return normalizedPath.slice(0, -1);
+  return normalizedPath;
+}
+
+module.exports = {
+  exists: exists,
+  fileExists: fileExists,
+  dirExists: dirExists,
+  inspect: inspect,
+  logInspect: logInspect,
+  fillUpTo: fillUpTo,
+  destroy: destroy,
+  globAsync: globAsync,
+  mkdtemp: mkdtemp
+};
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs-extra");
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _extends2 = __webpack_require__(20);
 
 var _extends3 = _interopRequireDefault(_extends2);
@@ -171,8 +444,8 @@ var _extends3 = _interopRequireDefault(_extends2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var mongoose = __webpack_require__(0);
-var models = __webpack_require__(6);
-var crypto = __webpack_require__(74);
+var models = __webpack_require__(4);
+var crypto = __webpack_require__(76);
 
 var Schema = mongoose.Schema;
 
@@ -435,280 +708,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _promise = __webpack_require__(9);
-
-var _promise2 = _interopRequireDefault(_promise);
-
-var _typeof2 = __webpack_require__(65);
-
-var _typeof3 = _interopRequireDefault(_typeof2);
-
-var _keys = __webpack_require__(10);
-
-var _keys2 = _interopRequireDefault(_keys);
-
-var _getIterator2 = __webpack_require__(2);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-var _regenerator = __webpack_require__(4);
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
-var _asyncToGenerator2 = __webpack_require__(5);
-
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
-
-var exists = function () {
-  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(p) {
-    return _regenerator2.default.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            _context.next = 3;
-            return fs.stat(p);
-
-          case 3:
-            return _context.abrupt("return", true);
-
-          case 6:
-            _context.prev = 6;
-            _context.t0 = _context["catch"](0);
-            return _context.abrupt("return", false);
-
-          case 9:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, this, [[0, 6]]);
-  }));
-
-  return function exists(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-var fileExists = function () {
-  var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(p) {
-    var res;
-    return _regenerator2.default.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
-            return fs.stat(p);
-
-          case 3:
-            res = _context2.sent;
-            return _context2.abrupt("return", res.isFile());
-
-          case 7:
-            _context2.prev = 7;
-            _context2.t0 = _context2["catch"](0);
-            return _context2.abrupt("return", false);
-
-          case 10:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2, this, [[0, 7]]);
-  }));
-
-  return function fileExists(_x2) {
-    return _ref2.apply(this, arguments);
-  };
-}();
-
-var dirExists = function () {
-  var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(p) {
-    var res;
-    return _regenerator2.default.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            _context3.prev = 0;
-            _context3.next = 3;
-            return fs.statAsync(p);
-
-          case 3:
-            res = _context3.sent;
-            return _context3.abrupt("return", res.isDirectory());
-
-          case 7:
-            _context3.prev = 7;
-            _context3.t0 = _context3["catch"](0);
-            return _context3.abrupt("return", false);
-
-          case 10:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3, this, [[0, 7]]);
-  }));
-
-  return function dirExists(_x3) {
-    return _ref3.apply(this, arguments);
-  };
-}();
-
-// eslint-disable-next-line require-await
-var globAsync = function () {
-  var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(pattern, opts) {
-    return _regenerator2.default.wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            return _context4.abrupt("return", new _promise2.default(function (resolve, reject) {
-              glob(pattern, opts, function (err, files) {
-                if (err) return reject(err);
-                return resolve(files);
-              });
-            }));
-
-          case 1:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4, this);
-  }));
-
-  return function globAsync(_x5, _x6) {
-    return _ref4.apply(this, arguments);
-  };
-}();
-
-var mkdtemp = function () {
-  var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _regenerator2.default.wrap(function _callee5$(_context5) {
-      while (1) {
-        switch (_context5.prev = _context5.next) {
-          case 0:
-            return _context5.abrupt("return", new _promise2.default(function (resolve, reject) {
-              return fs.mkdtemp.apply(fs, args.concat([function (err, result) {
-                if (err) return reject(err);
-                return resolve(result);
-              }]));
-            }));
-
-          case 1:
-          case "end":
-            return _context5.stop();
-        }
-      }
-    }, _callee5, this);
-  }));
-
-  return function mkdtemp() {
-    return _ref5.apply(this, arguments);
-  };
-}();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Created by rsalesc on 14/06/16.
- */
-
-var path = __webpack_require__(1);
-var fs = __webpack_require__(17);
-var util = __webpack_require__(66);
-var glob = __webpack_require__(30);
-
-function inspect(p) {
-  return util.inspect(p, false, null);
-}
-
-function logInspect(p) {
-  return console.log(inspect(p));
-}
-
-function fillUpTo(arr) {
-  var n = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-
-  if (n === 0) return [];
-  if (!(arr instanceof Array) || arr.length === 0) arr = [undefined];
-
-  while (arr.length > n) {
-    arr.pop();
-  }while (arr.length < n) {
-    var el = arr.pop();
-    arr.push(el);
-    arr.push(el);
-  }
-
-  return arr;
-}
-
-function destroy(obj) {
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = (0, _getIterator3.default)((0, _keys2.default)(obj)), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var prop = _step.value;
-
-      var property = obj[prop];
-      if (property != null && (typeof property === "undefined" ? "undefined" : (0, _typeof3.default)(property)) === "object") destroy(property);else obj[prop] = null;
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-}
-
-function normalizePath(p) {
-  var normalizedPath = path.normalize(p);
-  if (normalizedPath[-1] === "/") return normalizedPath.slice(0, -1);
-  return normalizedPath;
-}
-
-module.exports = {
-  exists: exists,
-  fileExists: fileExists,
-  dirExists: dirExists,
-  inspect: inspect,
-  logInspect: logInspect,
-  fillUpTo: fillUpTo,
-  destroy: destroy,
-  globAsync: globAsync,
-  mkdtemp: mkdtemp
-};
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
@@ -716,7 +722,7 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -733,7 +739,7 @@ var express = __webpack_require__(3);
 var router = express.Router();
 var path = __webpack_require__(1);
 
-var models = __webpack_require__(6);
+var models = __webpack_require__(4);
 var Submission = models.Submission;
 
 
@@ -905,28 +911,22 @@ module.exports.SubmissionNoCode = SubmissionNoCode;
 module.exports.rejudge = rejudge;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/object/get-prototype-of");
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/inherits");
-
-/***/ }),
 /* 17 */
 /***/ (function(module, exports) {
 
-module.exports = require("fs-extra");
+module.exports = require("babel-runtime/helpers/inherits");
 
 /***/ }),
 /* 18 */
@@ -938,7 +938,7 @@ module.exports = require("fs-extra");
 /**
  * Created by rsalesc on 14/06/16.
  */
-var winston = __webpack_require__(68);
+var winston = __webpack_require__(69);
 var process = __webpack_require__(31);
 
 var logger = new winston.Logger({
@@ -995,15 +995,15 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(14);
+var _getPrototypeOf = __webpack_require__(15);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(15);
+var _possibleConstructorReturn2 = __webpack_require__(16);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(16);
+var _inherits2 = __webpack_require__(17);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -1015,11 +1015,11 @@ var _createClass2 = __webpack_require__(8);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -1033,15 +1033,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/06/16.
  */
 
-var yauzl = __webpack_require__(63);
-var concatStream = __webpack_require__(64);
-var utils = __webpack_require__(12);
-var wildcard = __webpack_require__(67);
+var yauzl = __webpack_require__(64);
+var concatStream = __webpack_require__(65);
+var utils = __webpack_require__(11);
+var wildcard = __webpack_require__(68);
 var path = __webpack_require__(1);
 var logger = __webpack_require__(18);
-var fs = __webpack_require__(17);
-var promisify = __webpack_require__(69);
+var fs = __webpack_require__(12);
+var promisify = __webpack_require__(70);
 var glob = promisify(__webpack_require__(30).glob);
+var streamifier = __webpack_require__(71);
 
 /* Helper Functions for storage */
 function dealWithEntry(zipFile, entry) {
@@ -1308,39 +1309,71 @@ var Storage = function () {
     }()
 
     /**
-     *  Check if file is readable
-     */
+     * Get readable stream from a file in storage
+     * @param {string} path/ID to the file in storage
+     * @returns {string} readable stream to the file
+     * */
+    // eslint-disable-next-line no-unused-vars
 
   }, {
-    key: "isReadable",
+    key: "getFileStream",
     value: function () {
       var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7(p) {
         return _regenerator2.default.wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                _context7.prev = 0;
-                _context7.next = 3;
-                return this.getFileBuffer(p);
+                throw "Function not implemented in " + this.constructor.name;
 
-              case 3:
-                return _context7.abrupt("return", true);
-
-              case 6:
-                _context7.prev = 6;
-                _context7.t0 = _context7["catch"](0);
-                return _context7.abrupt("return", false);
-
-              case 9:
+              case 1:
               case "end":
                 return _context7.stop();
             }
           }
-        }, _callee7, this, [[0, 6]]);
+        }, _callee7, this);
       }));
 
-      function isReadable(_x7) {
+      function getFileStream(_x7) {
         return _ref7.apply(this, arguments);
+      }
+
+      return getFileStream;
+    }()
+
+    /**
+     *  Check if file is readable
+     */
+
+  }, {
+    key: "isReadable",
+    value: function () {
+      var _ref8 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee8(p) {
+        return _regenerator2.default.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                _context8.prev = 0;
+                _context8.next = 3;
+                return this.getFileBuffer(p);
+
+              case 3:
+                return _context8.abrupt("return", true);
+
+              case 6:
+                _context8.prev = 6;
+                _context8.t0 = _context8["catch"](0);
+                return _context8.abrupt("return", false);
+
+              case 9:
+              case "end":
+                return _context8.stop();
+            }
+          }
+        }, _callee8, this, [[0, 6]]);
+      }));
+
+      function isReadable(_x8) {
+        return _ref8.apply(this, arguments);
       }
 
       return isReadable;
@@ -1356,39 +1389,8 @@ var Storage = function () {
   }, {
     key: "glob",
     value: function () {
-      var _ref8 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee8(p) {
-        var sort = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-        return _regenerator2.default.wrap(function _callee8$(_context8) {
-          while (1) {
-            switch (_context8.prev = _context8.next) {
-              case 0:
-                throw "Function not implemented in " + this.constructor.name;
-
-              case 1:
-              case "end":
-                return _context8.stop();
-            }
-          }
-        }, _callee8, this);
-      }));
-
-      function glob(_x8) {
-        return _ref8.apply(this, arguments);
-      }
-
-      return glob;
-    }()
-
-    /**
-       *  Dispose any resource cached in-memory by the storage
-       *  (the Storage object should be unusable after that)
-       */
-    // eslint-disable-next-line no-unused-vars
-
-  }, {
-    key: "dispose",
-    value: function () {
       var _ref9 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee9(p) {
+        var sort = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
         return _regenerator2.default.wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
@@ -1403,8 +1405,39 @@ var Storage = function () {
         }, _callee9, this);
       }));
 
-      function dispose(_x10) {
+      function glob(_x9) {
         return _ref9.apply(this, arguments);
+      }
+
+      return glob;
+    }()
+
+    /**
+       *  Dispose any resource cached in-memory by the storage
+       *  (the Storage object should be unusable after that)
+       */
+    // eslint-disable-next-line no-unused-vars
+
+  }, {
+    key: "dispose",
+    value: function () {
+      var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee10(p) {
+        return _regenerator2.default.wrap(function _callee10$(_context10) {
+          while (1) {
+            switch (_context10.prev = _context10.next) {
+              case 0:
+                throw "Function not implemented in " + this.constructor.name;
+
+              case 1:
+              case "end":
+                return _context10.stop();
+            }
+          }
+        }, _callee10, this);
+      }));
+
+      function dispose(_x11) {
+        return _ref10.apply(this, arguments);
       }
 
       return dispose;
@@ -1434,23 +1467,23 @@ var RealStorage = function (_Storage) {
   (0, _createClass3.default)(RealStorage, [{
     key: "load",
     value: function () {
-      var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee10(p) {
-        return _regenerator2.default.wrap(function _callee10$(_context10) {
+      var _ref11 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee11(p) {
+        return _regenerator2.default.wrap(function _callee11$(_context11) {
           while (1) {
-            switch (_context10.prev = _context10.next) {
+            switch (_context11.prev = _context11.next) {
               case 0:
                 this.path = path.resolve(p);
 
               case 1:
               case "end":
-                return _context10.stop();
+                return _context11.stop();
             }
           }
-        }, _callee10, this);
+        }, _callee11, this);
       }));
 
-      function load(_x11) {
-        return _ref10.apply(this, arguments);
+      function load(_x12) {
+        return _ref11.apply(this, arguments);
       }
 
       return load;
@@ -1458,47 +1491,8 @@ var RealStorage = function (_Storage) {
   }, {
     key: "createFileFromContent",
     value: function () {
-      var _ref11 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee11(p, content) {
+      var _ref12 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee12(p, content) {
         var abs;
-        return _regenerator2.default.wrap(function _callee11$(_context11) {
-          while (1) {
-            switch (_context11.prev = _context11.next) {
-              case 0:
-                abs = path.resolve(this.path, p);
-                _context11.prev = 1;
-                _context11.next = 4;
-                return fs.writeFile(abs, content);
-
-              case 4:
-                _context11.next = 10;
-                break;
-
-              case 6:
-                _context11.prev = 6;
-                _context11.t0 = _context11["catch"](1);
-
-                logger.error("[%s] File %s could not be created", this.constructor.name, p);
-                throw _context11.t0;
-
-              case 10:
-              case "end":
-                return _context11.stop();
-            }
-          }
-        }, _callee11, this, [[1, 6]]);
-      }));
-
-      function createFileFromContent(_x12, _x13) {
-        return _ref11.apply(this, arguments);
-      }
-
-      return createFileFromContent;
-    }()
-  }, {
-    key: "getFileBuffer",
-    value: function () {
-      var _ref12 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee12(p) {
-        var abs, res;
         return _regenerator2.default.wrap(function _callee12$(_context12) {
           while (1) {
             switch (_context12.prev = _context12.next) {
@@ -1506,35 +1500,35 @@ var RealStorage = function (_Storage) {
                 abs = path.resolve(this.path, p);
                 _context12.prev = 1;
                 _context12.next = 4;
-                return fs.readFile(abs);
+                return fs.writeFile(abs, content);
 
               case 4:
-                res = _context12.sent;
-                return _context12.abrupt("return", res);
+                _context12.next = 10;
+                break;
 
-              case 8:
-                _context12.prev = 8;
+              case 6:
+                _context12.prev = 6;
                 _context12.t0 = _context12["catch"](1);
 
-                logger.error("[%s] File %s could not be retrieved", this.constructor.name, p);
+                logger.error("[%s] File %s could not be created", this.constructor.name, p);
                 throw _context12.t0;
 
-              case 12:
+              case 10:
               case "end":
                 return _context12.stop();
             }
           }
-        }, _callee12, this, [[1, 8]]);
+        }, _callee12, this, [[1, 6]]);
       }));
 
-      function getFileBuffer(_x14) {
+      function createFileFromContent(_x13, _x14) {
         return _ref12.apply(this, arguments);
       }
 
-      return getFileBuffer;
+      return createFileFromContent;
     }()
   }, {
-    key: "getFileString",
+    key: "getFileBuffer",
     value: function () {
       var _ref13 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee13(p) {
         var abs, res;
@@ -1545,7 +1539,7 @@ var RealStorage = function (_Storage) {
                 abs = path.resolve(this.path, p);
                 _context13.prev = 1;
                 _context13.next = 4;
-                return fs.readFile(abs, "utf8");
+                return fs.readFile(abs);
 
               case 4:
                 res = _context13.sent;
@@ -1566,11 +1560,74 @@ var RealStorage = function (_Storage) {
         }, _callee13, this, [[1, 8]]);
       }));
 
-      function getFileString(_x15) {
+      function getFileBuffer(_x15) {
         return _ref13.apply(this, arguments);
       }
 
+      return getFileBuffer;
+    }()
+  }, {
+    key: "getFileString",
+    value: function () {
+      var _ref14 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee14(p) {
+        var abs, res;
+        return _regenerator2.default.wrap(function _callee14$(_context14) {
+          while (1) {
+            switch (_context14.prev = _context14.next) {
+              case 0:
+                abs = path.resolve(this.path, p);
+                _context14.prev = 1;
+                _context14.next = 4;
+                return fs.readFile(abs, "utf8");
+
+              case 4:
+                res = _context14.sent;
+                return _context14.abrupt("return", res);
+
+              case 8:
+                _context14.prev = 8;
+                _context14.t0 = _context14["catch"](1);
+
+                logger.error("[%s] File %s could not be retrieved", this.constructor.name, p);
+                throw _context14.t0;
+
+              case 12:
+              case "end":
+                return _context14.stop();
+            }
+          }
+        }, _callee14, this, [[1, 8]]);
+      }));
+
+      function getFileString(_x16) {
+        return _ref14.apply(this, arguments);
+      }
+
       return getFileString;
+    }()
+  }, {
+    key: "getFileStream",
+    value: function () {
+      var _ref15 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee15(p) {
+        return _regenerator2.default.wrap(function _callee15$(_context15) {
+          while (1) {
+            switch (_context15.prev = _context15.next) {
+              case 0:
+                return _context15.abrupt("return", fs.createReadStream(p));
+
+              case 1:
+              case "end":
+                return _context15.stop();
+            }
+          }
+        }, _callee15, this);
+      }));
+
+      function getFileStream(_x17) {
+        return _ref15.apply(this, arguments);
+      }
+
+      return getFileStream;
     }()
   }]);
   return RealStorage;
@@ -1591,56 +1648,78 @@ var MemoryStorage = function (_Storage2) {
   (0, _createClass3.default)(MemoryStorage, [{
     key: "load",
     value: function () {
-      var _ref14 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee15(p) {
+      var _ref16 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(p) {
         var _this4 = this;
 
-        var absPath, res;
-        return _regenerator2.default.wrap(function _callee15$(_context15) {
+        var absPath, stat, res;
+        return _regenerator2.default.wrap(function _callee17$(_context17) {
           while (1) {
-            switch (_context15.prev = _context15.next) {
+            switch (_context17.prev = _context17.next) {
               case 0:
                 absPath = path.resolve(p);
-                _context15.next = 3;
-                return glob("**/*", { cwd: absPath, nodir: true });
+                _context17.next = 3;
+                return fs.lstat(absPath);
 
               case 3:
-                res = _context15.sent;
-                _context15.next = 6;
+                stat = _context17.sent;
+
+                if (!stat.isDirectory()) {
+                  _context17.next = 12;
+                  break;
+                }
+
+                _context17.next = 7;
+                return glob("**/*", { cwd: absPath, nodir: true });
+
+              case 7:
+                res = _context17.sent;
+                _context17.next = 10;
                 return _promise2.default.all(res.map(function () {
-                  var _ref15 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee14(file) {
-                    return _regenerator2.default.wrap(function _callee14$(_context14) {
+                  var _ref17 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee16(file) {
+                    return _regenerator2.default.wrap(function _callee16$(_context16) {
                       while (1) {
-                        switch (_context14.prev = _context14.next) {
+                        switch (_context16.prev = _context16.next) {
                           case 0:
-                            _context14.next = 2;
+                            _context16.next = 2;
                             return fs.readFile(path.join(absPath, file));
 
                           case 2:
-                            _this4.data[_this4.normalizePath(file)] = _context14.sent;
+                            _this4.data[_this4.normalizePath(file)] = _context16.sent;
 
                           case 3:
                           case "end":
-                            return _context14.stop();
+                            return _context16.stop();
                         }
                       }
-                    }, _callee14, _this4);
+                    }, _callee16, _this4);
                   }));
 
-                  return function (_x17) {
-                    return _ref15.apply(this, arguments);
+                  return function (_x19) {
+                    return _ref17.apply(this, arguments);
                   };
                 }()));
 
-              case 6:
+              case 10:
+                _context17.next = 15;
+                break;
+
+              case 12:
+                _context17.next = 14;
+                return fs.readFile(absPath);
+
+              case 14:
+                this.data[this.normalizePath(absPath)] = _context17.sent;
+
+              case 15:
               case "end":
-                return _context15.stop();
+                return _context17.stop();
             }
           }
-        }, _callee15, this);
+        }, _callee17, this);
       }));
 
-      function load(_x16) {
-        return _ref14.apply(this, arguments);
+      function load(_x18) {
+        return _ref16.apply(this, arguments);
       }
 
       return load;
@@ -1648,37 +1727,37 @@ var MemoryStorage = function (_Storage2) {
   }, {
     key: "loadZip",
     value: function () {
-      var _ref16 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee16(p) {
+      var _ref18 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee18(p) {
         var _this5 = this;
 
         var res, promises;
-        return _regenerator2.default.wrap(function _callee16$(_context16) {
+        return _regenerator2.default.wrap(function _callee18$(_context18) {
           while (1) {
-            switch (_context16.prev = _context16.next) {
+            switch (_context18.prev = _context18.next) {
               case 0:
-                _context16.next = 2;
+                _context18.next = 2;
                 return loadZipAsync(p);
 
               case 2:
-                res = _context16.sent;
-                promises = res.map(function (_ref17) {
-                  var resPath = _ref17.path,
-                      buffer = _ref17.buffer;
+                res = _context18.sent;
+                promises = res.map(function (_ref19) {
+                  var resPath = _ref19.path,
+                      buffer = _ref19.buffer;
                   return _this5.createFileFromContent(resPath, buffer);
                 });
-                _context16.next = 6;
+                _context18.next = 6;
                 return _promise2.default.all(promises);
 
               case 6:
               case "end":
-                return _context16.stop();
+                return _context18.stop();
             }
           }
-        }, _callee16, this);
+        }, _callee18, this);
       }));
 
-      function loadZip(_x18) {
-        return _ref16.apply(this, arguments);
+      function loadZip(_x20) {
+        return _ref18.apply(this, arguments);
       }
 
       return loadZip;
@@ -1689,11 +1768,11 @@ var MemoryStorage = function (_Storage2) {
   }, {
     key: "createFileFromContent",
     value: function () {
-      var _ref18 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(p, content) {
+      var _ref20 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee19(p, content) {
         var norm;
-        return _regenerator2.default.wrap(function _callee17$(_context17) {
+        return _regenerator2.default.wrap(function _callee19$(_context19) {
           while (1) {
-            switch (_context17.prev = _context17.next) {
+            switch (_context19.prev = _context19.next) {
               case 0:
                 norm = this.normalizePath(p);
 
@@ -1701,14 +1780,14 @@ var MemoryStorage = function (_Storage2) {
 
               case 2:
               case "end":
-                return _context17.stop();
+                return _context19.stop();
             }
           }
-        }, _callee17, this);
+        }, _callee19, this);
       }));
 
-      function createFileFromContent(_x19, _x20) {
-        return _ref18.apply(this, arguments);
+      function createFileFromContent(_x21, _x22) {
+        return _ref20.apply(this, arguments);
       }
 
       return createFileFromContent;
@@ -1719,43 +1798,43 @@ var MemoryStorage = function (_Storage2) {
   }, {
     key: "getFileBuffer",
     value: function () {
-      var _ref19 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee18(p) {
+      var _ref21 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee20(p) {
         var def = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
         var normalizedPath;
-        return _regenerator2.default.wrap(function _callee18$(_context18) {
+        return _regenerator2.default.wrap(function _callee20$(_context20) {
           while (1) {
-            switch (_context18.prev = _context18.next) {
+            switch (_context20.prev = _context20.next) {
               case 0:
                 normalizedPath = this.normalizePath(p);
 
                 if (this.data.hasOwnProperty(normalizedPath)) {
-                  _context18.next = 7;
+                  _context20.next = 7;
                   break;
                 }
 
                 if (!(def === null)) {
-                  _context18.next = 6;
+                  _context20.next = 6;
                   break;
                 }
 
                 throw "File " + normalizedPath + " not found in MemoryStorage";
 
               case 6:
-                return _context18.abrupt("return", new Buffer(def));
+                return _context20.abrupt("return", new Buffer(def));
 
               case 7:
-                return _context18.abrupt("return", this.data[normalizedPath]);
+                return _context20.abrupt("return", this.data[normalizedPath]);
 
               case 8:
               case "end":
-                return _context18.stop();
+                return _context20.stop();
             }
           }
-        }, _callee18, this);
+        }, _callee20, this);
       }));
 
-      function getFileBuffer(_x21) {
-        return _ref19.apply(this, arguments);
+      function getFileBuffer(_x23) {
+        return _ref21.apply(this, arguments);
       }
 
       return getFileBuffer;
@@ -1766,43 +1845,43 @@ var MemoryStorage = function (_Storage2) {
   }, {
     key: "getFileString",
     value: function () {
-      var _ref20 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee19(p) {
+      var _ref22 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee21(p) {
         var def = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
         var normalizedPath;
-        return _regenerator2.default.wrap(function _callee19$(_context19) {
+        return _regenerator2.default.wrap(function _callee21$(_context21) {
           while (1) {
-            switch (_context19.prev = _context19.next) {
+            switch (_context21.prev = _context21.next) {
               case 0:
                 normalizedPath = this.normalizePath(p);
 
                 if (this.data.hasOwnProperty(normalizedPath)) {
-                  _context19.next = 7;
+                  _context21.next = 7;
                   break;
                 }
 
                 if (!(def === null)) {
-                  _context19.next = 6;
+                  _context21.next = 6;
                   break;
                 }
 
                 throw "File " + normalizedPath + " not found in MemoryStorage";
 
               case 6:
-                return _context19.abrupt("return", def.toString());
+                return _context21.abrupt("return", def.toString());
 
               case 7:
-                return _context19.abrupt("return", this.data[normalizedPath].toString());
+                return _context21.abrupt("return", this.data[normalizedPath].toString());
 
               case 8:
               case "end":
-                return _context19.stop();
+                return _context21.stop();
             }
           }
-        }, _callee19, this);
+        }, _callee21, this);
       }));
 
-      function getFileString(_x23) {
-        return _ref20.apply(this, arguments);
+      function getFileString(_x25) {
+        return _ref22.apply(this, arguments);
       }
 
       return getFileString;
@@ -1811,76 +1890,104 @@ var MemoryStorage = function (_Storage2) {
     // eslint-disable-next-line require-await
 
   }, {
+    key: "getFileStream",
+    value: function () {
+      var _ref23 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee22(p) {
+        var def = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+        return _regenerator2.default.wrap(function _callee22$(_context22) {
+          while (1) {
+            switch (_context22.prev = _context22.next) {
+              case 0:
+                return _context22.abrupt("return", streamifier.createReadStream(this.getFileBuffer(p, def)));
+
+              case 1:
+              case "end":
+                return _context22.stop();
+            }
+          }
+        }, _callee22, this);
+      }));
+
+      function getFileStream(_x27) {
+        return _ref23.apply(this, arguments);
+      }
+
+      return getFileStream;
+    }()
+
+    // eslint-disable-next-line require-await
+
+  }, {
     key: "glob",
     value: function () {
-      var _ref21 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee20(p) {
+      var _ref24 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee23(p) {
         var sort = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
         var normalizedPath, res, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, fn;
 
-        return _regenerator2.default.wrap(function _callee20$(_context20) {
+        return _regenerator2.default.wrap(function _callee23$(_context23) {
           while (1) {
-            switch (_context20.prev = _context20.next) {
+            switch (_context23.prev = _context23.next) {
               case 0:
                 normalizedPath = this.normalizePath(p);
                 res = [];
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context20.prev = 5;
+                _context23.prev = 5;
 
                 for (_iterator = (0, _getIterator3.default)((0, _keys2.default)(this.data)); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                   fn = _step.value;
 
                   if (wildcard(fn, normalizedPath)) res.push(fn);
                 }
-                _context20.next = 13;
+                _context23.next = 13;
                 break;
 
               case 9:
-                _context20.prev = 9;
-                _context20.t0 = _context20["catch"](5);
+                _context23.prev = 9;
+                _context23.t0 = _context23["catch"](5);
                 _didIteratorError = true;
-                _iteratorError = _context20.t0;
+                _iteratorError = _context23.t0;
 
               case 13:
-                _context20.prev = 13;
-                _context20.prev = 14;
+                _context23.prev = 13;
+                _context23.prev = 14;
 
                 if (!_iteratorNormalCompletion && _iterator.return) {
                   _iterator.return();
                 }
 
               case 16:
-                _context20.prev = 16;
+                _context23.prev = 16;
 
                 if (!_didIteratorError) {
-                  _context20.next = 19;
+                  _context23.next = 19;
                   break;
                 }
 
                 throw _iteratorError;
 
               case 19:
-                return _context20.finish(16);
+                return _context23.finish(16);
 
               case 20:
-                return _context20.finish(13);
+                return _context23.finish(13);
 
               case 21:
                 if (sort) res.sort();
-                return _context20.abrupt("return", res);
+                return _context23.abrupt("return", res);
 
               case 23:
               case "end":
-                return _context20.stop();
+                return _context23.stop();
             }
           }
-        }, _callee20, this, [[5, 9, 13, 21], [14,, 16, 20]]);
+        }, _callee23, this, [[5, 9, 13, 21], [14,, 16, 20]]);
       }));
 
-      function glob(_x25) {
-        return _ref21.apply(this, arguments);
+      function glob(_x29) {
+        return _ref24.apply(this, arguments);
       }
 
       return glob;
@@ -1891,24 +1998,24 @@ var MemoryStorage = function (_Storage2) {
   }, {
     key: "dispose",
     value: function () {
-      var _ref22 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee21() {
-        return _regenerator2.default.wrap(function _callee21$(_context21) {
+      var _ref25 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee24() {
+        return _regenerator2.default.wrap(function _callee24$(_context24) {
           while (1) {
-            switch (_context21.prev = _context21.next) {
+            switch (_context24.prev = _context24.next) {
               case 0:
                 utils.destroy(this.data);
                 this.data = null;
 
               case 2:
               case "end":
-                return _context21.stop();
+                return _context24.stop();
             }
           }
-        }, _callee21, this);
+        }, _callee24, this);
       }));
 
       function dispose() {
-        return _ref22.apply(this, arguments);
+        return _ref25.apply(this, arguments);
       }
 
       return dispose;
@@ -1919,20 +2026,20 @@ var MemoryStorage = function (_Storage2) {
 
 if (!module.parent && false) {
   // eslint-disable-next-line require-await
-  (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee22() {
+  (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee25() {
     var store;
-    return _regenerator2.default.wrap(function _callee22$(_context22) {
+    return _regenerator2.default.wrap(function _callee25$(_context25) {
       while (1) {
-        switch (_context22.prev = _context22.next) {
+        switch (_context25.prev = _context25.next) {
           case 0:
             console.log("Testing with async...");
             store = new MemoryStorage();
-            _context22.next = 4;
+            _context25.next = 4;
             return store.load("test_contest");
 
           case 4:
             console.log(store.getFileString("jude.yml"));
-            _context22.next = 7;
+            _context25.next = 7;
             return store.createFileFromContent("lola", "HAHAHA");
 
           case 7:
@@ -1941,10 +2048,10 @@ if (!module.parent && false) {
 
           case 9:
           case "end":
-            return _context22.stop();
+            return _context25.stop();
         }
       }
-    }, _callee22, undefined);
+    }, _callee25, undefined);
   }))();
 }
 
@@ -1998,7 +2105,7 @@ module.exports = require("babel-runtime/core-js/object/assign");
 
 var mongoose = __webpack_require__(0);
 var MongoQueue2 = __webpack_require__(26);
-var weed = __webpack_require__(52);
+var weed = __webpack_require__(53);
 
 // mongodb setup
 
@@ -2047,88 +2154,93 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/07/16.
  */
 
-var path = __webpack_require__(1);
 var mongoose = __webpack_require__(0);
 var Schema = mongoose.Schema;
 
 // TODO: add creation time (with a plugin)
+
 module.exports = function () {
-    if (db.models.Problem) return db.model('Problem');
+  if (db.models.Problem) return db.model("Problem");
 
-    var ProblemSchema = new Schema({
-        code: {
-            type: String,
-            minlength: 4,
-            maxlength: 24,
-            match: /[a-zA-Z][a-zA-Z0-9\-]*/,
-            required: true
-        },
-        name: {
-            type: String,
-            minlength: 4,
-            maxlength: 64,
-            required: true
-        },
-        statementFid: String,
-        fid: String,
-        attr: Schema.Types.Mixed
-    }, { timestamps: true });
+  var VisibilitySchema = new Schema({
+    contest: { type: Schema.Types.ObjectId, ref: "Contest" }
+  }, { _id: false });
 
-    ProblemSchema.index({ code: 1 }, { unique: 1 });
-    ProblemSchema.index({ name: 1 });
-    ProblemSchema.index({ code: 'text', name: 'text' });
+  var ProblemSchema = new Schema({
+    code: {
+      type: String,
+      minlength: 4,
+      maxlength: 24,
+      match: /[a-zA-Z][a-zA-Z0-9-]*/,
+      required: true
+    },
+    name: {
+      type: String,
+      minlength: 4,
+      maxlength: 64,
+      required: true
+    },
+    statementFid: String,
+    fid: String,
+    attr: Schema.Types.Mixed,
+    visibility: [VisibilitySchema]
+  }, { timestamps: true });
 
-    ProblemSchema.pre("remove", function (next) {
-        var _this = this;
+  ProblemSchema.index({ code: 1 }, { unique: 1 });
+  ProblemSchema.index({ name: 1 });
+  ProblemSchema.index({ code: "text", name: "text" });
 
-        db.model("Submission").remove({ problem: this._id }, function (err) {
-            if (err) console.error(err);
-        });
-        var contestQuery = {
-            problems: {
-                $elemMatch: {
-                    problem: this._id
-                }
-            }
-        };
+  ProblemSchema.pre("remove", function (next) {
+    var _this = this;
 
-        db.model("Contest").find(contestQuery, function (err, contests) {
-            if (err) return console.error(err);
-
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = (0, _getIterator3.default)(contests), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var contest = _step.value;
-
-                    contest.problems = contest.problems.filter(function (problem) {
-                        return !_this._id.equals(problem.problem);
-                    });
-                    contest.save(function (err) {
-                        if (err) console.error(err);
-                    });
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-        });
-        next();
+    db.model("Submission").remove({ problem: this._id }, function (err) {
+      if (err) console.error(err);
     });
+    var contestQuery = {
+      problems: {
+        $elemMatch: {
+          problem: this._id
+        }
+      }
+    };
 
-    return db.model('Problem', ProblemSchema);
+    db.model("Contest").find(contestQuery, function (err, contests) {
+      if (err) return console.error(err);
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = (0, _getIterator3.default)(contests), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var contest = _step.value;
+
+          contest.problems = contest.problems.filter(function (problem) {
+            return !_this._id.equals(problem.problem);
+          });
+          contest.save(function (err) {
+            if (err) console.error(err);
+          });
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+    });
+    next();
+  });
+
+  return db.model("Problem", ProblemSchema);
 };
 
 /***/ }),
@@ -2168,23 +2280,23 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(14);
+var _getPrototypeOf = __webpack_require__(15);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(15);
+var _possibleConstructorReturn2 = __webpack_require__(16);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(16);
+var _inherits2 = __webpack_require__(17);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -2297,10 +2409,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var path = __webpack_require__(1);
-var task = __webpack_require__(70);
-var YAML = __webpack_require__(72);
+var task = __webpack_require__(72);
+var YAML = __webpack_require__(74);
 var logger = __webpack_require__(18);
-var utils = __webpack_require__(12);
+var utils = __webpack_require__(11);
 var scoring = __webpack_require__(34);
 
 var JUDE_FN = "jude.yml";
@@ -2846,15 +2958,15 @@ module.exports = require("babel-runtime/core-js/map");
 "use strict";
 
 
-var _getPrototypeOf = __webpack_require__(14);
+var _getPrototypeOf = __webpack_require__(15);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(15);
+var _possibleConstructorReturn2 = __webpack_require__(16);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(16);
+var _inherits2 = __webpack_require__(17);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -3505,7 +3617,42 @@ module.exports = {
 "use strict";
 
 
-var _require = __webpack_require__(6),
+var mongoose = __webpack_require__(0);
+
+var _require = __webpack_require__(36),
+    isAdmin = _require.isAdmin,
+    getUserContest = _require.getUserContest;
+
+function handleApiError(res, error) {
+  return res.status(400).json({ error: error });
+}
+
+function checkAdminContest(contestId) {
+  return function (req, res, next) {
+    if (isAdmin(req)) {
+      getUserContest(req.auth2.user).exec(function (err, contest) {
+        if (err) return handleApiError(res, err);
+        if (!contest) return res.status(400).json({ error: "contest not found" });
+        if (!contest._id.equals(mongoose.Types.ObjectId(contestId))) return res.status(401).json({ error: "unauthorized" });
+        return next();
+      });
+    } else return next();
+  };
+}
+
+module.exports = {
+  checkAdminContest: checkAdminContest,
+  handleApiError: handleApiError
+};
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(4),
     Contest = _require.Contest;
 
 function getUserContest(user) {
@@ -3528,17 +3675,17 @@ module.exports = {
 };
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -3569,8 +3716,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var fs = __webpack_require__(21);
-var fse = __webpack_require__(17);
-var tmp = __webpack_require__(85);
+var fse = __webpack_require__(12);
+var tmp = __webpack_require__(87);
 tmp.setGracefulCleanup();
 
 var path = __webpack_require__(1);
@@ -3595,17 +3742,17 @@ var JudgeConfig = {
   BOUND_ML: 2048
 };
 
-var PackageCacher = function () {
-  function PackageCacher() {
+var FileCacher = function () {
+  function FileCacher() {
     var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 20;
-    (0, _classCallCheck3.default)(this, PackageCacher);
+    (0, _classCallCheck3.default)(this, FileCacher);
 
     this.path = tmp.dirSync({ prefix: "judecache-", unsafeCleanup: true }).name;
     this.has = new _map2.default();
     this.size = size;
   }
 
-  (0, _createClass3.default)(PackageCacher, [{
+  (0, _createClass3.default)(FileCacher, [{
     key: "popLessFrequent",
     value: function popLessFrequent() {
       var best = 1e9;
@@ -3703,22 +3850,73 @@ var PackageCacher = function () {
       writeStream.on("finish", function () {
         _this.ensureSpace();
         _this.ping(p);
-        cb(null);
+        if (cb) cb(null);
       });
 
       writeStream.on("error", function (err) {
-        cb(null);
+        if (cb) cb(null);
       });
 
       return writeStream;
     }
   }, {
     key: "addFromFile",
-    value: function addFromFile(p, d) {
-      fse.copySync(d, this.getFilePath(p));
-      this.ensureSpace();
-      this.ping(p);
-    }
+    value: function () {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(p, d) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return fse.copySync(d, this.getFilePath(p));
+
+              case 2:
+                this.ensureSpace();
+                this.ping(p);
+
+              case 4:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function addFromFile(_x2, _x3) {
+        return _ref.apply(this, arguments);
+      }
+
+      return addFromFile;
+    }()
+  }, {
+    key: "addFromContent",
+    value: function () {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(p, content) {
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return fse.writeFile(this.getFilePath(p), content, { flag: "wx+" });
+
+              case 2:
+                this.ensureSpace();
+                this.ping(p);
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function addFromContent(_x4, _x5) {
+        return _ref2.apply(this, arguments);
+      }
+
+      return addFromContent;
+    }()
   }, {
     key: "exists",
     value: function exists(p) {
@@ -3730,7 +3928,7 @@ var PackageCacher = function () {
       return path.resolve(this.path, p);
     }
   }]);
-  return PackageCacher;
+  return FileCacher;
 }();
 
 var JudgeEnvironment = function () {
@@ -3740,7 +3938,8 @@ var JudgeEnvironment = function () {
     this.sandboxes = [];
     this.nextSandboxId = 0;
     this.db = db;
-    this.cache = new PackageCacher();
+    this.cache = new FileCacher();
+    this.checkerCache = new FileCacher();
     this.ack = null;
 
     this.seaweed = seaweed;
@@ -3750,47 +3949,47 @@ var JudgeEnvironment = function () {
   (0, _createClass3.default)(JudgeEnvironment, [{
     key: "pingCurrent",
     value: function () {
-      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-        return _regenerator2.default.wrap(function _callee$(_context) {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 if (this.ack) {
-                  _context.next = 2;
+                  _context3.next = 2;
                   break;
                 }
 
-                return _context.abrupt("return", null);
+                return _context3.abrupt("return", null);
 
               case 2:
-                _context.prev = 2;
-                _context.next = 5;
+                _context3.prev = 2;
+                _context3.next = 5;
                 return this.queue.ping(this.ack);
 
               case 5:
                 console.log("pinged " + this.ack);
-                _context.next = 11;
+                _context3.next = 11;
                 break;
 
               case 8:
-                _context.prev = 8;
-                _context.t0 = _context["catch"](2);
+                _context3.prev = 8;
+                _context3.t0 = _context3["catch"](2);
 
                 console.error("couldnt ack " + this.ack);
 
               case 11:
-                return _context.abrupt("return", null);
+                return _context3.abrupt("return", null);
 
               case 12:
               case "end":
-                return _context.stop();
+                return _context3.stop();
             }
           }
-        }, _callee, this, [[2, 8]]);
+        }, _callee3, this, [[2, 8]]);
       }));
 
       function pingCurrent() {
-        return _ref.apply(this, arguments);
+        return _ref3.apply(this, arguments);
       }
 
       return pingCurrent;
@@ -3812,26 +4011,26 @@ module.exports = {
 };
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = require("passport");
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(39);
+module.exports = __webpack_require__(40);
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var app = __webpack_require__(40);
+var app = __webpack_require__(41);
 var port = process.env.PORT || 3000;
 
 app.listen(port, function () {
@@ -3839,7 +4038,7 @@ app.listen(port, function () {
 });
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3852,30 +4051,30 @@ var _extends3 = _interopRequireDefault(_extends2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var express = __webpack_require__(3);
-var session = __webpack_require__(41);
-var MongoStore = __webpack_require__(42)(session);
+var session = __webpack_require__(42);
+var MongoStore = __webpack_require__(43)(session);
 var mongoose = __webpack_require__(0);
 var path = __webpack_require__(1);
-var favicon = __webpack_require__(43);
-var logger = __webpack_require__(44);
-var cookieParser = __webpack_require__(45);
-var bodyParser = __webpack_require__(46);
-var multer = __webpack_require__(47);
-var flash = __webpack_require__(48);
+var favicon = __webpack_require__(44);
+var logger = __webpack_require__(45);
+var cookieParser = __webpack_require__(46);
+var bodyParser = __webpack_require__(47);
+var multer = __webpack_require__(48);
+var flash = __webpack_require__(49);
 var router = express.Router();
 // var methodOverride = require('method-override');
-var restify = __webpack_require__(49);
-var apiRoutes = __webpack_require__(50);
-var staticCompressed = __webpack_require__(60);
-var timesync = __webpack_require__(61);
+var restify = __webpack_require__(50);
+var apiRoutes = __webpack_require__(51);
+var staticCompressed = __webpack_require__(61);
+var timesync = __webpack_require__(62);
 
 // expose db object globally
 __webpack_require__(25);
 
 var app = express();
-var routes = __webpack_require__(62);
-var auth2 = __webpack_require__(11);
-var models = __webpack_require__(6);
+var routes = __webpack_require__(63);
+var auth2 = __webpack_require__(13);
+var models = __webpack_require__(4);
 
 // app.use(express.static(path.join(__dirname, "public")));
 app.use("/static-jude", staticCompressed(path.join(__dirname, "public"), { enableBrotli: true }));
@@ -4035,61 +4234,61 @@ module.exports = app;
 /* WEBPACK VAR INJECTION */}.call(exports, ""))
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-session");
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 module.exports = require("connect-mongo");
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports) {
 
 module.exports = require("serve-favicon");
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 module.exports = require("morgan");
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports) {
 
 module.exports = require("cookie-parser");
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports) {
 
 module.exports = require("body-parser");
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports) {
 
 module.exports = require("multer");
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports) {
 
 module.exports = require("connect-flash");
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-restify-mongoose");
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4101,9 +4300,9 @@ module.exports = require("express-restify-mongoose");
 var express = __webpack_require__(3);
 var router = express.Router();
 
-var contestRouter = __webpack_require__(51);
-var userRouter = __webpack_require__(59);
-var submissionRouter = __webpack_require__(13);
+var contestRouter = __webpack_require__(52);
+var userRouter = __webpack_require__(60);
+var submissionRouter = __webpack_require__(14);
 
 // middlewares
 router.use("/contests", contestRouter);
@@ -4113,13 +4312,13 @@ router.use("/submissions", submissionRouter);
 module.exports = router;
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
@@ -4131,7 +4330,7 @@ var _assign = __webpack_require__(24);
 
 var _assign2 = _interopRequireDefault(_assign);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -4145,11 +4344,11 @@ var router = express.Router();
 var path = __webpack_require__(1);
 
 var mongoose = __webpack_require__(0);
-var models = __webpack_require__(6);
+var models = __webpack_require__(4);
 var Contest = models.Contest,
     User = models.User;
 
-var _require = __webpack_require__(13),
+var _require = __webpack_require__(14),
     SubmissionNoCode = _require.SubmissionNoCode;
 
 var ObjectId = mongoose.Types.ObjectId;
@@ -4231,13 +4430,13 @@ router.post("/:id/addUsers", function () {
 module.exports = router;
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports) {
 
 module.exports = require("jude-seaweedfs");
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4253,7 +4452,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 14/07/16.
  */
 var mongoose = __webpack_require__(0);
-var deepPopulate = __webpack_require__(54)(mongoose);
+var deepPopulate = __webpack_require__(55)(mongoose);
 var Schema = mongoose.Schema;
 
 
@@ -4285,8 +4484,11 @@ module.exports = function () {
           var letters = v.map(function (val) {
             return val.letter;
           });
+          var ids = v.map(function (val) {
+            return val.problem.toString();
+          });
 
-          return new _set2.default(letters).size === letters.length;
+          return new _set2.default(letters).size === letters.length && new _set2.default(ids).size === ids.length;
         },
 
         message: "Contest cannot have repeated letters and problems must be an array"
@@ -4376,13 +4578,13 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports) {
 
 module.exports = require("mongoose-deep-populate");
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4455,7 +4657,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4546,7 +4748,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4579,7 +4781,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4606,7 +4808,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4617,11 +4819,11 @@ var path = __webpack_require__(1);
 var mongoose = __webpack_require__(0);
 // eslint-disable-next-line new-cap
 var router = express.Router();
-var models = __webpack_require__(6);
+var models = __webpack_require__(4);
 var User = models.User,
     Submission = models.Submission;
 
-var _require = __webpack_require__(13),
+var _require = __webpack_require__(14),
     SubmissionNoCode = _require.SubmissionNoCode;
 
 var ObjectId = mongoose.Types.ObjectId;
@@ -4636,29 +4838,29 @@ function handleUserError(err, req, res) {
 module.exports = router;
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-static-gzip");
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports) {
 
 module.exports = require("timesync/server");
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -4667,19 +4869,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var express = __webpack_require__(3);
 var router = express.Router();
 var path = __webpack_require__(1);
-var models = __webpack_require__(6);
+var models = __webpack_require__(4);
 var Problem = models.Problem,
     Contest = models.Contest;
 
 
 var Storage = __webpack_require__(22).MemoryStorage;
 var Loader = __webpack_require__(32);
-var utils = __webpack_require__(12);
-var api2 = __webpack_require__(73);
-var contest = __webpack_require__(77);
-var admin = __webpack_require__(89);
-var auth2 = __webpack_require__(11);
-var passport = __webpack_require__(37);
+var utils = __webpack_require__(11);
+var api2 = __webpack_require__(75);
+var contest = __webpack_require__(79);
+var admin = __webpack_require__(91);
+var auth2 = __webpack_require__(13);
+var passport = __webpack_require__(38);
 
 function handleInternalError(err, req, res, next) {
   res.status(500).json({ error: err.toString() });
@@ -4843,49 +5045,55 @@ router.use("/api/v2", api2);
 module.exports = router;
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports) {
 
 module.exports = require("yauzl");
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports) {
 
 module.exports = require("concat-stream");
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports) {
 
 module.exports = require("util");
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports) {
 
 module.exports = require("node-wildcard");
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports) {
 
 module.exports = require("winston");
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports) {
 
 module.exports = require("es6-promisify");
 
 /***/ }),
-/* 70 */
+/* 71 */
+/***/ (function(module, exports) {
+
+module.exports = require("streamifier");
+
+/***/ }),
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4910,7 +5118,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var scoring = __webpack_require__(34);
-var deepcopy = __webpack_require__(71);
+var deepcopy = __webpack_require__(73);
 
 var Task = function () {
   function Task(attr) {
@@ -5129,19 +5337,19 @@ var Task = function () {
 module.exports = { Task: Task };
 
 /***/ }),
-/* 71 */
+/* 73 */
 /***/ (function(module, exports) {
 
 module.exports = require("deepcopy");
 
 /***/ }),
-/* 72 */
+/* 74 */
 /***/ (function(module, exports) {
 
 module.exports = require("yamljs");
 
 /***/ }),
-/* 73 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5152,23 +5360,25 @@ module.exports = require("yamljs");
  */
 var express = __webpack_require__(3);
 var router = express.Router();
-var auth2 = __webpack_require__(11);
+var auth2 = __webpack_require__(13);
 
-var contest = __webpack_require__(75);
+var contest = __webpack_require__(77);
+var problems = __webpack_require__(78);
 
 router.use(auth2.isAuth(["root", "admin"]));
 router.use(contest);
+router.use(problems);
 
 module.exports = router;
 
 /***/ }),
-/* 74 */
+/* 76 */
 /***/ (function(module, exports) {
 
 module.exports = require("crypto");
 
 /***/ }),
-/* 75 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5176,18 +5386,26 @@ module.exports = require("crypto");
 
 var express = __webpack_require__(3);
 var router = express.Router();
-var auth2 = __webpack_require__(11);
 
-var _require = __webpack_require__(76),
+var _require = __webpack_require__(35),
     checkAdminContest = _require.checkAdminContest,
     handleApiError = _require.handleApiError;
 
-var _require2 = __webpack_require__(6),
+var _require2 = __webpack_require__(4),
     Contest = _require2.Contest;
 
 router.post("/contest/:id", function (req, res) {
   checkAdminContest(req.params.id)(req, res, function () {
     Contest.update({ _id: req.params.id }, { $set: req.body.contest }, { runValidators: true }, function (err) {
+      if (err) return handleApiError(res, err);
+      return res.send(200);
+    });
+  });
+});
+
+router.post("/contest/:id/problems", function (req, res) {
+  checkAdminContest(req.params.id)(req, res, function () {
+    Contest.update({ _id: req.params.id }, { $set: { problems: req.body.problems } }, { runValidators: true }, function (err) {
       if (err) return handleApiError(res, err);
       return res.send(200);
     });
@@ -5207,42 +5425,33 @@ router.get("/contest/:id", function (req, res) {
 module.exports = router;
 
 /***/ }),
-/* 76 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var mongoose = __webpack_require__(0);
+var express = __webpack_require__(3);
+var router = express.Router();
 
 var _require = __webpack_require__(35),
-    isAdmin = _require.isAdmin,
-    getUserContest = _require.getUserContest;
+    checkAdminContest = _require.checkAdminContest,
+    handleApiError = _require.handleApiError;
 
-function handleApiError(res, error) {
-  return res.status(400).json({ error: error });
-}
+var _require2 = __webpack_require__(4),
+    Problem = _require2.Problem;
 
-function checkAdminContest(contestId) {
-  return function (req, res, next) {
-    if (isAdmin(req)) {
-      getUserContest(req.auth2.user).exec(function (err, contest) {
-        if (err) return handleApiError(res, err);
-        if (!contest) return res.status(400).json({ error: "contest not found" });
-        if (!contest._id.equals(mongoose.Types.ObjectId(contestId))) return res.status(401).json({ error: "unauthorized" });
-        return next();
-      });
-    } else return next();
-  };
-}
+router.get("/problems", function (req, res) {
+  Problem.find({}, function (err, problems) {
+    if (err) return handleApiError(res, err);
+    return res.json(problems);
+  });
+});
 
-module.exports = {
-  checkAdminContest: checkAdminContest,
-  handleApiError: handleApiError
-};
+module.exports = router;
 
 /***/ }),
-/* 77 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5252,19 +5461,19 @@ var _set = __webpack_require__(27);
 
 var _set2 = _interopRequireDefault(_set);
 
-var _toConsumableArray2 = __webpack_require__(78);
+var _toConsumableArray2 = __webpack_require__(80);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _entries = __webpack_require__(79);
+var _entries = __webpack_require__(81);
 
 var _entries2 = _interopRequireDefault(_entries);
 
@@ -5288,14 +5497,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = __webpack_require__(1);
 var mongoose = __webpack_require__(0);
-var grader = __webpack_require__(80);
-var precheck = __webpack_require__(88);
-var auth2 = __webpack_require__(11);
+var grader = __webpack_require__(82);
+var precheck = __webpack_require__(90);
+var auth2 = __webpack_require__(13);
 
 var express = __webpack_require__(3);
 var router = express.Router();
 
-var models = __webpack_require__(6);
+var models = __webpack_require__(4);
 var sha256 = __webpack_require__(29);
 
 var ContestProblemSelection = "code name _id attr.weight attr.author attr.datasets attr.scoring attr.limits attr.blockedLanguages";
@@ -5306,10 +5515,10 @@ var Contest = models.Contest,
     Clarification = models.Clarification,
     Printout = models.Printout;
 
-var _require = __webpack_require__(13),
+var _require = __webpack_require__(14),
     rejudge = _require.rejudge;
 
-var _require2 = __webpack_require__(35),
+var _require2 = __webpack_require__(36),
     getUserContest = _require2.getUserContest,
     isAdmin = _require2.isAdmin;
 
@@ -5989,19 +6198,19 @@ router.post("/rejudge", function (req, res, next) {
 module.exports = router;
 
 /***/ }),
-/* 78 */
+/* 80 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/toConsumableArray");
 
 /***/ }),
-/* 79 */
+/* 81 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/object/entries");
 
 /***/ }),
-/* 80 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6019,11 +6228,11 @@ var _promise = __webpack_require__(9);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -6528,6 +6737,7 @@ var testDataset = function () {
 *   Created files in storage are: _/checker_exec, _/sol_exec
 *
 *   @param {JudgeEnvironment}
+*   @param {string} unique file ID of the package
 *   @param {Task}
 *   @param {Storage}
 *   @param {string} the submitted code
@@ -6537,8 +6747,8 @@ var testDataset = function () {
 
 
 var testTask = function () {
-  var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(env, task, store, code, lang) {
-    var _ref8, _ref9, compilationResult, checkerCompilationResult, dummy, exitStatus, output, _dummy2, _exitStatus2, exitCode, _output, verdicts, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, dataset, datasetVerdict;
+  var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(env, packageFid, task, store, code, lang) {
+    var compilationSteps, checkerPath, _ref8, _ref9, compilationResult, checkerCompilationResult, dummy, exitStatus, exitCode, output, _dummy2, _exitStatus2, _output, verdicts, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, dataset, datasetVerdict;
 
     return _regenerator2.default.wrap(function _callee17$(_context17) {
       while (1) {
@@ -6548,17 +6758,49 @@ var testTask = function () {
             return store.createFileFromContent(SOURCE_PATH, code);
 
           case 2:
-            _context17.next = 4;
-            return _promise2.default.all([compilationStepAsync(env, store, lang), compilationStepAsync(env, store, task.getCheckerLanguage(), task.getChecker(), CHECKER_EXEC_PATH)]);
 
-          case 4:
+            // setup compilation step
+            compilationSteps = [compilationStepAsync(env, store, lang)];
+
+            // check for cached checker
+
+            if (!env.checkerCache.exists(packageFid)) {
+              _context17.next = 16;
+              break;
+            }
+
+            checkerPath = env.checkerCache.getFilePath(packageFid);
+            _context17.t0 = store;
+            _context17.t1 = CHECKER_EXEC_PATH;
+            _context17.next = 9;
+            return fse.readFile(checkerPath);
+
+          case 9:
+            _context17.t2 = _context17.sent;
+            _context17.next = 12;
+            return _context17.t0.createFileFromContent.call(_context17.t0, _context17.t1, _context17.t2);
+
+          case 12:
+            env.checkerCache.ping(packageFid);
+            console.log("using cached checker");
+            _context17.next = 17;
+            break;
+
+          case 16:
+            compilationSteps.push(compilationStepAsync(env, store, task.getCheckerLanguage(), task.getChecker(), CHECKER_EXEC_PATH));
+
+          case 17:
+            _context17.next = 19;
+            return _promise2.default.all(compilationSteps);
+
+          case 19:
             _ref8 = _context17.sent;
             _ref9 = (0, _slicedToArray3.default)(_ref8, 2);
             compilationResult = _ref9[0];
             checkerCompilationResult = _ref9[1];
 
             if (Isolate.translateBoxExitCode(compilationResult.code)) {
-              _context17.next = 12;
+              _context17.next = 27;
               break;
             }
 
@@ -6566,29 +6808,14 @@ var testTask = function () {
             console.log(compilationResult);
             return _context17.abrupt("return", utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount()));
 
-          case 12:
-            if (!(compilationResult.code === 1)) {
-              _context17.next = 19;
+          case 27:
+            if (!(checkerCompilationResult != null)) {
+              _context17.next = 47;
               break;
             }
 
-            dummy = new Isolate(env, null, compilationResult.log);
-            exitStatus = dummy.getExitStatus();
-            output = compilationResult.stderr;
-
-            if (!(exitStatus === IsolateConst.EXIT_TIMEOUT || exitStatus === IsolateConst.EXIT_TIMEOUT_WALL)) {
-              _context17.next = 18;
-              break;
-            }
-
-            return _context17.abrupt("return", utils.fillUpTo([new Verdict(0, "VERDICT_CTE")], task.getDatasetsCount()));
-
-          case 18:
-            return _context17.abrupt("return", utils.fillUpTo([new Verdict(0, "VERDICT_CE", -1, output)], task.getDatasetsCount()));
-
-          case 19:
             if (Isolate.translateBoxExitCode(checkerCompilationResult.code)) {
-              _context17.next = 23;
+              _context17.next = 32;
               break;
             }
 
@@ -6596,43 +6823,77 @@ var testTask = function () {
             console.log(checkerCompilationResult);
             return _context17.abrupt("return", utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount()));
 
-          case 23:
+          case 32:
             if (!(checkerCompilationResult.code === 1)) {
-              _context17.next = 30;
+              _context17.next = 39;
+              break;
+            }
+
+            dummy = new Isolate(env, null, compilationResult.log);
+            exitStatus = dummy.getExitStatus();
+            exitCode = dummy.getExitCode();
+            output = compilationResult.stderr;
+
+
+            logger.error("checker compilation failed with error %s (%d):\n%s", exitStatus, exitCode, output);
+
+            return _context17.abrupt("return", utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount()));
+
+          case 39:
+
+            // cache compiled checker
+            console.log("caching compiled checker");
+            _context17.t3 = env.checkerCache;
+            _context17.t4 = packageFid;
+            _context17.next = 44;
+            return store.getFileBuffer(CHECKER_EXEC_PATH);
+
+          case 44:
+            _context17.t5 = _context17.sent;
+            _context17.next = 47;
+            return _context17.t3.addFromContent.call(_context17.t3, _context17.t4, _context17.t5);
+
+          case 47:
+            if (!(compilationResult.code === 1)) {
+              _context17.next = 54;
               break;
             }
 
             _dummy2 = new Isolate(env, null, compilationResult.log);
             _exitStatus2 = _dummy2.getExitStatus();
-            exitCode = _dummy2.getExitCode();
             _output = compilationResult.stderr;
 
+            if (!(_exitStatus2 === IsolateConst.EXIT_TIMEOUT || _exitStatus2 === IsolateConst.EXIT_TIMEOUT_WALL)) {
+              _context17.next = 53;
+              break;
+            }
 
-            logger.error("checker compilation failed with error %s (%d):\n%s", _exitStatus2, exitCode, _output);
+            return _context17.abrupt("return", utils.fillUpTo([new Verdict(0, "VERDICT_CTE")], task.getDatasetsCount()));
 
-            return _context17.abrupt("return", utils.fillUpTo([new Verdict(0, "VERDICT_JE")], task.getDatasetsCount()));
+          case 53:
+            return _context17.abrupt("return", utils.fillUpTo([new Verdict(0, "VERDICT_CE", -1, _output)], task.getDatasetsCount()));
 
-          case 30:
+          case 54:
 
             // now run solution against each of the datasets in ladder fashion
             verdicts = [];
             _iteratorNormalCompletion = true;
             _didIteratorError = false;
             _iteratorError = undefined;
-            _context17.prev = 34;
+            _context17.prev = 58;
             _iterator = (0, _getIterator3.default)(task.getDatasets());
 
-          case 36:
+          case 60:
             if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              _context17.next = 47;
+              _context17.next = 71;
               break;
             }
 
             dataset = _step.value;
-            _context17.next = 40;
+            _context17.next = 64;
             return testDataset(env, store, task, lang, dataset);
 
-          case 40:
+          case 64:
             datasetVerdict = _context17.sent;
 
             verdicts.push(datasetVerdict);
@@ -6640,66 +6901,66 @@ var testTask = function () {
             // if it was not accepted, break here (ladder effect)
 
             if (!(datasetVerdict.verdict !== "VERDICT_AC")) {
-              _context17.next = 44;
+              _context17.next = 68;
               break;
             }
 
-            return _context17.abrupt("break", 47);
+            return _context17.abrupt("break", 71);
 
-          case 44:
+          case 68:
             _iteratorNormalCompletion = true;
-            _context17.next = 36;
+            _context17.next = 60;
             break;
 
-          case 47:
-            _context17.next = 53;
+          case 71:
+            _context17.next = 77;
             break;
 
-          case 49:
-            _context17.prev = 49;
-            _context17.t0 = _context17["catch"](34);
+          case 73:
+            _context17.prev = 73;
+            _context17.t6 = _context17["catch"](58);
             _didIteratorError = true;
-            _iteratorError = _context17.t0;
+            _iteratorError = _context17.t6;
 
-          case 53:
-            _context17.prev = 53;
-            _context17.prev = 54;
+          case 77:
+            _context17.prev = 77;
+            _context17.prev = 78;
 
             if (!_iteratorNormalCompletion && _iterator.return) {
               _iterator.return();
             }
 
-          case 56:
-            _context17.prev = 56;
+          case 80:
+            _context17.prev = 80;
 
             if (!_didIteratorError) {
-              _context17.next = 59;
+              _context17.next = 83;
               break;
             }
 
             throw _iteratorError;
 
-          case 59:
-            return _context17.finish(56);
+          case 83:
+            return _context17.finish(80);
 
-          case 60:
-            return _context17.finish(53);
+          case 84:
+            return _context17.finish(77);
 
-          case 61:
+          case 85:
 
             // push skip verdict to enforce ladder effect
             verdicts.push(new Verdict(0, "VERDICT_SKIP"));
             return _context17.abrupt("return", utils.fillUpTo(verdicts, task.getDatasetsCount()));
 
-          case 63:
+          case 87:
           case "end":
             return _context17.stop();
         }
       }
-    }, _callee17, this, [[34, 49, 53, 61], [54,, 56, 60]]);
+    }, _callee17, this, [[58, 73, 77, 85], [78,, 80, 84]]);
   }));
 
-  return function testTask(_x56, _x57, _x58, _x59, _x60) {
+  return function testTask(_x56, _x57, _x58, _x59, _x60, _x61) {
     return _ref7.apply(this, arguments);
   };
 }();
@@ -6714,41 +6975,42 @@ var testTask = function () {
 
 
 var testPackage = function () {
-  var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee18(env, pack, code, lang) {
-    var store, Loader, task, datasets, verdicts, res, i;
+  var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee18(env, packageFid, code, lang) {
+    var pack, store, Loader, task, datasets, verdicts, res, i;
     return _regenerator2.default.wrap(function _callee18$(_context18) {
       while (1) {
         switch (_context18.prev = _context18.next) {
           case 0:
+            pack = env.cache.getFilePath(packageFid);
             store = new Storage();
-            _context18.next = 3;
+            _context18.next = 4;
             return store.loadZip(pack);
 
-          case 3:
-            _context18.next = 5;
+          case 4:
+            _context18.next = 6;
             return loader.autoDetect(store);
 
-          case 5:
+          case 6:
             Loader = _context18.sent;
 
             if (!(Loader === null)) {
-              _context18.next = 8;
+              _context18.next = 9;
               break;
             }
 
             throw new Error("Package is not loadable");
 
-          case 8:
-            _context18.next = 10;
+          case 9:
+            _context18.next = 11;
             return new Loader(store).load();
 
-          case 10:
+          case 11:
             task = _context18.sent;
             datasets = task.getDatasets();
-            _context18.next = 14;
-            return testTask(env, task, store, code, lang);
+            _context18.next = 15;
+            return testTask(env, packageFid, task, store, code, lang);
 
-          case 14:
+          case 15:
             verdicts = _context18.sent;
             res = {};
 
@@ -6756,7 +7018,7 @@ var testPackage = function () {
               res[datasets[i].name] = verdicts[i];
             }return _context18.abrupt("return", res);
 
-          case 18:
+          case 19:
           case "end":
             return _context18.stop();
         }
@@ -6764,7 +7026,7 @@ var testPackage = function () {
     }, _callee18, this);
   }));
 
-  return function testPackage(_x61, _x62, _x63, _x64) {
+  return function testPackage(_x62, _x63, _x64, _x65) {
     return _ref10.apply(this, arguments);
   };
 }();
@@ -6780,17 +7042,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // eslint-disable-next-line no-unused-vars
 var fs = __webpack_require__(21);
+var fse = __webpack_require__(12);
 var path = __webpack_require__(1);
-var promiseReflect = __webpack_require__(81);
+var promiseReflect = __webpack_require__(83);
 
-var verdict = __webpack_require__(82);
-var utils = __webpack_require__(12);
+var verdict = __webpack_require__(84);
+var utils = __webpack_require__(11);
 var logger = __webpack_require__(18);
-var sandbox = __webpack_require__(83);
-var environment = __webpack_require__(36);
+var sandbox = __webpack_require__(85);
+var environment = __webpack_require__(37);
 
 var loader = __webpack_require__(32);
-var Profiler = __webpack_require__(87);
+var Profiler = __webpack_require__(89);
 
 var Storage = __webpack_require__(22).MemoryStorage;
 
@@ -7146,7 +7409,7 @@ var Compilation = {
               iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
               _context7.next = 14;
-              return evaluate(iso, store, ["/usr/bin/g++", "-lm", "-std=c++11", sourceFile, "-O2"]);
+              return evaluate(iso, store, ["/usr/bin/g++", "-lm", "-std=c++14", sourceFile, "-O3"]);
 
             case 14:
               res = _context7.sent;
@@ -7229,7 +7492,7 @@ var Compilation = {
               iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
               _context8.next = 14;
-              return evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c11", sourceFile, "-O2"]);
+              return evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c14", sourceFile, "-O3"]);
 
             case 14:
               res = _context8.sent;
@@ -7585,8 +7848,8 @@ var CHECKER_EXEC_PATH = "_/checker_exec";if (!module.parent && false) {
 
 /* eslint-enable */
 var availableLanguages = {
-  CPP: "C++ 11",
-  C: "C 11",
+  CPP: "C++ 14",
+  C: "C 14",
   Java: "Java 8",
   Py2: "Python 2",
   Py3: "Python 3"
@@ -7596,13 +7859,13 @@ module.exports = { testTask: testTask, testPackage: testPackage, availableLangua
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 81 */
+/* 83 */
 /***/ (function(module, exports) {
 
 module.exports = require("promise-reflect");
 
 /***/ }),
-/* 82 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7739,7 +8002,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 83 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7757,23 +8020,23 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(14);
+var _getPrototypeOf = __webpack_require__(15);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(15);
+var _possibleConstructorReturn2 = __webpack_require__(16);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(16);
+var _inherits2 = __webpack_require__(17);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _regenerator = __webpack_require__(4);
+var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(5);
+var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -7790,21 +8053,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 15/06/16.
  */
-var Promise = __webpack_require__(84);
+var Promise = __webpack_require__(86);
 
-var fs = __webpack_require__(17);
+var fs = __webpack_require__(12);
 
 var path = __webpack_require__(1);
 var logger = __webpack_require__(18);
-var jenv = __webpack_require__(36);
-var utils = __webpack_require__(12);
+var jenv = __webpack_require__(37);
+var utils = __webpack_require__(11);
 var globAsync = utils.globAsync;
 
 
 var Storage = __webpack_require__(22).MemoryStorage;
 var JudgeConfig = jenv.JudgeConfig;
 
-var spawnDetachedPromise = __webpack_require__(86).spawn;
+var spawnDetachedPromise = __webpack_require__(88).spawn;
 
 /*
 *   spawnDetached async version (promisified)
@@ -9483,25 +9746,25 @@ module.exports = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 84 */
+/* 86 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");
 
 /***/ }),
-/* 85 */
+/* 87 */
 /***/ (function(module, exports) {
 
 module.exports = require("tmp");
 
 /***/ }),
-/* 86 */
+/* 88 */
 /***/ (function(module, exports) {
 
 module.exports = require("child-process-promise");
 
 /***/ }),
-/* 87 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9607,7 +9870,7 @@ var Profiler = function () {
 module.exports = Profiler;
 
 /***/ }),
-/* 88 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9646,7 +9909,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 89 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9654,13 +9917,13 @@ module.exports = {
 
 var path = __webpack_require__(1);
 var mongoose = __webpack_require__(0);
-var passport = __webpack_require__(37);
-var auth2 = __webpack_require__(11);
+var passport = __webpack_require__(38);
+var auth2 = __webpack_require__(13);
 
 var express = __webpack_require__(3);
 var router = express.Router();
 
-var models = __webpack_require__(6);
+var models = __webpack_require__(4);
 
 var Contest = models.Contest,
     Submission = models.Submission,

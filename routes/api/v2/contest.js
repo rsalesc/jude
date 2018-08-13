@@ -1,16 +1,27 @@
 const express = require("express");
 const router = express.Router();
-const auth2 = require("~/auth2");
 const { checkAdminContest, handleApiError } = require("./util");
 const { Contest } = require("@models");
 
 router.post("/contest/:id", (req, res) => {
   checkAdminContest(req.params.id)(req, res, () => {
-    Contest.update({ _id: req.params.id }, { $set: req.body.contest }, { runValidators: true }, (err) => {
-      if (err)
-        return handleApiError(res, err);
-      return res.send(200);
-    });
+    Contest.update({ _id: req.params.id }, { $set: req.body.contest },
+                   { runValidators: true }, (err) => {
+                     if (err)
+                       return handleApiError(res, err);
+                     return res.send(200);
+                   });
+  });
+});
+
+router.post("/contest/:id/problems", (req, res) => {
+  checkAdminContest(req.params.id)(req, res, () => {
+    Contest.update({ _id: req.params.id }, { $set: { problems: req.body.problems }},
+                   { runValidators: true }, (err) => {
+                     if (err)
+                       return handleApiError(res, err);
+                     return res.send(200);
+                   });
   });
 });
 

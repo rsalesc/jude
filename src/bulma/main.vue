@@ -4,6 +4,7 @@
       <ul>
         <li><router-link class="sidemenu-item" to="dashboard">Dashboard</router-link></li>
         <li><router-link class="sidemenu-item" to="standings">Standings</router-link></li>
+        <li><router-link class="sidemenu-item" v-if="isAdmin()" to="settings">Settings</router-link></li>
         <hr class="rule">
         <li><span class="sidemenu-item ju-secondary-text">{{ countdownString }}</span></li>
         <li><a class="sidemenu-item" @click="doLogout()">Logout</a></li>
@@ -28,11 +29,11 @@
             <span>Dashboard</span>
           </router-link>
           <router-link class="navbar-item" to="standings">
-            <b-icon icon="users" size="is-small"></b-icon>
+            <b-icon icon="list-ol" size="is-small"></b-icon>
             <span>Standings</span>
           </router-link>
           <router-link v-if="isAdmin()" class="navbar-item" to="settings">
-            <b-icon icon="users" size="is-small"></b-icon>
+            <b-icon icon="cogs" size="is-small"></b-icon>
             <span>Settings</span>
           </router-link>
         </div>

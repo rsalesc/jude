@@ -33,8 +33,10 @@ module.exports = () => {
           if (!Array.isArray(v))
             return false;
           const letters = v.map(val => val.letter);
+          const ids = v.map(val => val.problem.toString());
 
-          return new Set(letters).size === letters.length;
+          return new Set(letters).size === letters.length
+            && new Set(ids).size === ids.length;
         },
         message: "Contest cannot have repeated letters and problems must be an array"
       }

@@ -2,6 +2,5 @@ bin/
 node_modules/
 .idea/
 env/
-*.swp
-*.swo
+*.sw?
 .nyc_output/

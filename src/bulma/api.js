@@ -27,7 +27,9 @@ export const rejudge = Vue.resource(resolveToRoot("/contest/rejudge"));
 
 // admin api v2
 export const admin = {
-  contest: Vue.resource(resolveToRoot("/api/v2/contest{/id}"))
+  contest: Vue.resource(resolveToRoot("/api/v2/contest{/id}")),
+  contestProblems: Vue.resource(resolveToRoot("/api/v2/contest{/id}/problems")),
+  problems: Vue.resource(resolveToRoot("/api/v2/problems"))
 };
 
 export const paths = {

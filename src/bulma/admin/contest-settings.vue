@@ -19,14 +19,18 @@
       <b-switch size="is-small" v-model="localContest.hidden">
         Hidden
       </b-switch>
+    </b-field>
+    <b-field horizontal>
       <b-switch size="is-small" v-model="localContest.upseeing">
         Can see code after the contest ends
       </b-switch>
+    </b-field>
+    <b-field horizontal>
       <b-switch size="is-small" v-model="localContest.unfreeze">
         Unfreeze the scoreboard after the contest ends
       </b-switch>
     </b-field>
-    <b-field>
+    <b-field horizontal>
       <button class="button is-small is-primary" @click="confirm">
         Save
       </button>
