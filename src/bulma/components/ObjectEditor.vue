@@ -38,7 +38,8 @@
       </p>
       <p class="control">
         <button class="button is-primary is-small" @click="done">
-          Done
+          <b-icon icon="check" size="is-small"></b-icon>
+          <span>Done</span>
         </button>
       </p>
       <p class="control">

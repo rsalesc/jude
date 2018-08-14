@@ -37,7 +37,7 @@ body, html {
   margin: 0 3px;
 }
 
-@for $i from 1 through 12 {
+@for $i from 1 through 24 {
   .has-width-#{$i} {
     width: #{$i}rem;
   }
@@ -366,12 +366,12 @@ pre.ju-pre-field {
 
 .ju-datetime {
   .datepicker.control {
-    width: 8rem;
-    min-width: 8rem;
+    width: 11rem;
+    min-width: 11rem;
   }
   
   .timepicker.control {
-    width: 5rem;
-    min-width: 5rem;
+    width: 8rem;
+    min-width: 8rem;
   }
 }

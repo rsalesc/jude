@@ -33,7 +33,10 @@
         </b-field>
       </section>
       <footer class="modal-card-foot">
-        <a class="button is-success" @click="submit()">Submit Code</a>
+        <a class="button is-success" @click="submit()">
+          <b-icon icon="send" size="is-small"></b-icon>
+          <span>Submit Code</span>
+        </a>
         <a class="button" @click="close()">Close</a>
       </footer>
     </div>
@@ -47,6 +50,7 @@
     import { types } from "./store/";
     import BulmaUtils from "./bulmutils";
     import Brace from "./components/Brace.vue";
+    import debounce from "debounce";
 
     function genRandom(len) {
       const data = "0123456789abcdef";
@@ -102,8 +106,8 @@
             close() {
               this.$emit("close");
             },
-            submit(){
-                if(this.submitting++ > 0) {
+            submit: debounce(function (){
+                if (this.submitting++ > 0) {
                     this.submitting--;
                     return;
                 }
@@ -133,7 +137,7 @@
 
                     new BulmaUtils(this).toastResponseError(err, "Internal submission error");
                 });
-            },
+            }, 500, true),
             getMode() {
               return Helper.getBraceMode(this.form.language);
             }

@@ -29,9 +29,9 @@
         v-model="localContest.scoringOpts"></ju-object-editor>
     </b-field>
     <b-field label="Freeze duration" horizontal>
-      <div class="is-width-12">
+      <div class="is-width-15">
         <b-field>
-            <b-input type="number" v-model="localContest.freeze"></b-input>
+            <b-input type="number" v-model="localContest.freeze" icon="clock-o"></b-input>
             <p class="control">
               <span class="button is-static">minute(s)</span>
             </p>
@@ -39,9 +39,9 @@
       </div>
     </b-field>
     <b-field label="Blind duration" horizontal>
-      <div class="is-width-12">
+      <div class="is-width-15">
         <b-field>
-          <b-input type="number" v-model="localContest.blind"></b-input>
+          <b-input type="number" v-model="localContest.blind" icon="clock-o"></b-input>
           <p class="control">
             <span class="button is-static">minute(s)</span>
           </p>
@@ -65,7 +65,8 @@
     </b-field>
     <b-field horizontal>
       <button class="button is-small is-primary" @click="confirm">
-        Save
+        <b-icon icon="floppy-o" size="is-small"></b-icon>
+        <span>Save</span>
       </button>
     </b-field>
   </div>

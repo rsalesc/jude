@@ -46,7 +46,8 @@
       </div>
     </div>
     <button class="button is-small is-primary" @click="confirm">
-      Save
+      <b-icon icon="floppy-o" size="is-small"></b-icon>
+      <span>Save</span>
     </button>
   </div>
 </template>

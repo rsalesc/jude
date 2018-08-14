@@ -2,13 +2,14 @@
   <b-field class="ju-datetime">
     <b-datepicker
       ref="datepicker"
-      icon="calendar-alt"
+      icon="calendar"
       placeholder="Select a date..."
       :value="dateValue"
       @input="refreshDate">
     </b-datepicker>
     <b-timepicker
       ref="timepicker"
+      icon="clock-o"
       placeholder="Pick a time..."
       :value="timeValue"
       @input="refreshTime">
