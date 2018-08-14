@@ -37,6 +37,16 @@ body, html {
   margin: 0 3px;
 }
 
+@for $i from 1 through 12 {
+  .has-width-#{$i} {
+    width: #{$i}rem;
+  }
+  .is-width-#{$i} {
+    width: #{$i}rem;
+    min-width: #{$i}rem;
+  }
+}
+
 $sizes: 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950;
 @mixin minwidth($env) {
   @each $size in $sizes {
@@ -352,4 +362,16 @@ pre.ju-pre-field {
 
 .ju-flex-end {
   justify-content: flex-end !important;
+}
+
+.ju-datetime {
+  .datepicker.control {
+    width: 8rem;
+    min-width: 8rem;
+  }
+  
+  .timepicker.control {
+    width: 5rem;
+    min-width: 5rem;
+  }
 }

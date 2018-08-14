@@ -1,5 +1,5 @@
 <template>
-  <b-field>
+  <b-field class="ju-datetime">
     <b-datepicker
       ref="datepicker"
       icon="calendar-alt"

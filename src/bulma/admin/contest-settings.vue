@@ -29,10 +29,24 @@
         v-model="localContest.scoringOpts"></ju-object-editor>
     </b-field>
     <b-field label="Freeze duration" horizontal>
-      <b-input type="number" v-model="localContest.freeze"></b-input>
+      <div class="is-width-12">
+        <b-field>
+            <b-input type="number" v-model="localContest.freeze"></b-input>
+            <p class="control">
+              <span class="button is-static">minute(s)</span>
+            </p>
+        </b-field>
+      </div>
     </b-field>
     <b-field label="Blind duration" horizontal>
-      <b-input type="number" v-model="localContest.blind"></b-input>
+      <div class="is-width-12">
+        <b-field>
+          <b-input type="number" v-model="localContest.blind"></b-input>
+          <p class="control">
+            <span class="button is-static">minute(s)</span>
+          </p>
+        </b-field>
+      </div>
     </b-field>
     <b-field horizontal>
       <b-switch size="is-small" v-model="localContest.hidden">
