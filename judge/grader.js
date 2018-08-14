@@ -238,7 +238,7 @@ const Compilation = {
     iso.timelimit = JudgeConfig.COMPILATION_TL;
     iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
-    const res = await evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c14",
+    const res = await evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c11",
                                             sourceFile, "-O3"]);
 
 
@@ -849,7 +849,7 @@ public class Main {
 /* eslint-enable */
 const availableLanguages = {
   CPP: "C++ 14",
-  C: "C 14",
+  C: "C 11",
   Java: "Java 8",
   Py2: "Python 2",
   Py3: "Python 3"

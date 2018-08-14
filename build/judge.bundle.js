@@ -1981,6 +1981,10 @@ var _getIterator2 = __webpack_require__(0);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
+var _extends2 = __webpack_require__(49);
+
+var _extends3 = _interopRequireDefault(_extends2);
+
 var _classCallCheck2 = __webpack_require__(2);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -2008,37 +2012,14 @@ var Scoring = function () {
     // if (new.target == Scoring)
     //  throw `Cannot instantiate abstract class Scoring`;
     this._task = task;
-    this._opts = opts;
+    this._opts = (0, _extends3.default)({}, this.defaults, opts);
   }
 
   (0, _createClass3.default)(Scoring, [{
-    key: "isTaskValid",
-
-
-    // eslint-disable-next-line no-unused-vars
-    value: function isTaskValid(tk) {
-      throw new Error("Function not implemented in this class");
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      throw new Error("Function not implemented in this class");
-    }
-  }, {
-    key: "hasPartial",
-    value: function hasPartial() {
-      throw new Error("Function not implemented in this class");
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      throw new Error("Function not implemented in this class");
-    }
-
-    // eslint-disable-next-line no-unused-vars
-
-  }, {
     key: "solved",
+
+
+    // eslint-disable-next-line no-unused-vars
     value: function solved(obj) {
       throw new Error("Function not implemented in this class");
     }
@@ -2118,11 +2099,6 @@ var Scoring = function () {
     // eslint-disable-next-line no-unused-vars
 
   }, {
-    key: "mergeEvaluations",
-    value: function mergeEvaluations(evals) {
-      throw new Error("Function not implemented in this class");
-    }
-  }, {
     key: "task",
     get: function get() {
       return this._task;
@@ -2131,6 +2107,46 @@ var Scoring = function () {
     key: "opts",
     get: function get() {
       return this._opts;
+    }
+
+    // eslint-disable-next-line no-unused-vars
+
+  }, {
+    key: "weight",
+    get: function get() {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "defaults",
+    get: function get() {
+      throw new Error("Function not implemented in this class");
+    }
+  }], [{
+    key: "isTaskValid",
+    value: function isTaskValid(tk) {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "hasPartial",
+    value: function hasPartial() {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "mergeEvaluations",
+    value: function mergeEvaluations(evals) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      throw new Error("Function not implemented in this class");
     }
   }]);
   return Scoring;
@@ -2145,31 +2161,9 @@ var ProductScoring = function (_Scoring) {
   }
 
   (0, _createClass3.default)(ProductScoring, [{
-    key: "isTaskValid",
-
-    // eslint-disable-next-line no-unused-vars
-    value: function isTaskValid(tk) {
-      return true;
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      return true;
-    }
-  }, {
-    key: "hasPartial",
-    value: function hasPartial() {
-      return false;
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      return true;
-    }
-  }, {
     key: "solved",
     value: function solved(obj) {
-      return obj.score === this.task.getWeight();
+      return obj.score === this.weight;
     }
   }, {
     key: "attempted",
@@ -2218,7 +2212,7 @@ var ProductScoring = function (_Scoring) {
       }
 
       return {
-        score: parseInt(res * this.task.getWeight(), 10), penalty: 0, affect: true, fails: 0
+        score: parseInt(res * this.weight, 10), penalty: 0, affect: true, fails: 0
       };
     }
   }, {
@@ -2268,11 +2262,43 @@ var ProductScoring = function (_Scoring) {
       };
     }
   }, {
+    key: "defaults",
+    get: function get() {
+      return { weight: this.task.getWeight() };
+    }
+  }, {
+    key: "weight",
+    get: function get() {
+      return this.opts.weight;
+    }
+  }], [{
+    key: "isTaskValid",
+
+    // eslint-disable-next-line no-unused-vars
+    value: function isTaskValid(tk) {
+      return true;
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      return true;
+    }
+  }, {
+    key: "hasPartial",
+    value: function hasPartial() {
+      return false;
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      return true;
+    }
+  }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
-      var opts = this.opts;
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-
+      opts = (0, _extends3.default)({ penalty: 20 }, opts);
       return evals.reduce(function (old, cur) {
         return {
           score: old.score + cur.score,
@@ -2293,28 +2319,6 @@ var SubtaskSumScoring = function (_Scoring2) {
   }
 
   (0, _createClass3.default)(SubtaskSumScoring, [{
-    key: "isTaskValid",
-
-    // eslint-disable-next-line no-unused-vars
-    value: function isTaskValid(tk) {
-      return true;
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      return true;
-    }
-  }, {
-    key: "hasPartial",
-    value: function hasPartial() {
-      return true;
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      return true;
-    }
-  }, {
     key: "solved",
     value: function solved(obj) {
       return obj.score > 0;
@@ -2367,7 +2371,7 @@ var SubtaskSumScoring = function (_Scoring2) {
       }
 
       return {
-        score: parseInt(res * this.task.getWeight(), 10), penalty: 0, affect: true, fails: 0
+        score: parseInt(res * this.weight, 10), penalty: 0, affect: true, fails: 0
       };
     }
   }, {
@@ -2410,10 +2414,43 @@ var SubtaskSumScoring = function (_Scoring2) {
       };
     }
   }, {
+    key: "weight",
+    get: function get() {
+      return this.opts.weight;
+    }
+  }, {
+    key: "defaults",
+    get: function get() {
+      return { weight: this.task.getWeight() };
+    }
+  }], [{
+    key: "isTaskValid",
+
+    // eslint-disable-next-line no-unused-vars
+    value: function isTaskValid(tk) {
+      return true;
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      return true;
+    }
+  }, {
+    key: "hasPartial",
+    value: function hasPartial() {
+      return true;
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      return true;
+    }
+  }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
-      var opts = this.opts;
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+      opts = (0, _extends3.default)({ penalty: 1 }, opts);
 
       return evals.reduce(function (old, cur) {
         return {
@@ -2434,11 +2471,12 @@ var SubtaskMaxScoring = function (_SubtaskSumScoring) {
     return (0, _possibleConstructorReturn3.default)(this, (SubtaskMaxScoring.__proto__ || (0, _getPrototypeOf2.default)(SubtaskMaxScoring)).apply(this, arguments));
   }
 
-  (0, _createClass3.default)(SubtaskMaxScoring, [{
+  (0, _createClass3.default)(SubtaskMaxScoring, null, [{
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
-      var opts = this.opts;
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+      opts = (0, _extends3.default)({ penalty: 1 }, opts);
 
       var maxTime = evals.reduce(function (old, cur) {
         return Math.max(old, cur.affect ? cur.penalty : 0);
@@ -2464,28 +2502,6 @@ var IcpcScoring = function (_Scoring3) {
   }
 
   (0, _createClass3.default)(IcpcScoring, [{
-    key: "isTaskValid",
-
-    // eslint-disable-next-line no-unused-vars
-    value: function isTaskValid(tk) {
-      return true;
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      return false;
-    }
-  }, {
-    key: "hasPartial",
-    value: function hasPartial() {
-      return false;
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      return true;
-    }
-  }, {
     key: "solved",
     value: function solved(obj) {
       return obj.score > 0;
@@ -2589,8 +2605,9 @@ var IcpcScoring = function (_Scoring3) {
   }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
-      var opts = this.opts;
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+      opts = (0, _extends3.default)({ penalty: 20 }, opts);
 
       return evals.reduce(function (old, cur) {
         return {
@@ -2598,6 +2615,33 @@ var IcpcScoring = function (_Scoring3) {
           penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
         };
       }, { score: 0, penalty: 0 });
+    }
+  }, {
+    key: "defaults",
+    get: function get() {
+      return {};
+    }
+  }], [{
+    key: "isTaskValid",
+
+    // eslint-disable-next-line no-unused-vars
+    value: function isTaskValid(tk) {
+      return true;
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      return false;
+    }
+  }, {
+    key: "hasPartial",
+    value: function hasPartial() {
+      return false;
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      return true;
     }
   }]);
   return IcpcScoring;
@@ -2630,88 +2674,93 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/07/16.
  */
 
-var path = __webpack_require__(1);
 var mongoose = __webpack_require__(4);
 var Schema = mongoose.Schema;
 
 // TODO: add creation time (with a plugin)
+
 module.exports = function () {
-    if (db.models.Problem) return db.model('Problem');
+  if (db.models.Problem) return db.model("Problem");
 
-    var ProblemSchema = new Schema({
-        code: {
-            type: String,
-            minlength: 4,
-            maxlength: 24,
-            match: /[a-zA-Z][a-zA-Z0-9\-]*/,
-            required: true
-        },
-        name: {
-            type: String,
-            minlength: 4,
-            maxlength: 64,
-            required: true
-        },
-        statementFid: String,
-        fid: String,
-        attr: Schema.Types.Mixed
-    }, { timestamps: true });
+  var VisibilitySchema = new Schema({
+    contest: { type: Schema.Types.ObjectId, ref: "Contest" }
+  }, { _id: false });
 
-    ProblemSchema.index({ code: 1 }, { unique: 1 });
-    ProblemSchema.index({ name: 1 });
-    ProblemSchema.index({ code: 'text', name: 'text' });
+  var ProblemSchema = new Schema({
+    code: {
+      type: String,
+      minlength: 4,
+      maxlength: 24,
+      match: /[a-zA-Z][a-zA-Z0-9-]*/,
+      required: true
+    },
+    name: {
+      type: String,
+      minlength: 4,
+      maxlength: 64,
+      required: true
+    },
+    statementFid: String,
+    fid: String,
+    attr: Schema.Types.Mixed,
+    visibility: [VisibilitySchema]
+  }, { timestamps: true });
 
-    ProblemSchema.pre("remove", function (next) {
-        var _this = this;
+  ProblemSchema.index({ code: 1 }, { unique: 1 });
+  ProblemSchema.index({ name: 1 });
+  ProblemSchema.index({ code: "text", name: "text" });
 
-        db.model("Submission").remove({ problem: this._id }, function (err) {
-            if (err) console.error(err);
-        });
-        var contestQuery = {
-            problems: {
-                $elemMatch: {
-                    problem: this._id
-                }
-            }
-        };
+  ProblemSchema.pre("remove", function (next) {
+    var _this = this;
 
-        db.model("Contest").find(contestQuery, function (err, contests) {
-            if (err) return console.error(err);
-
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = (0, _getIterator3.default)(contests), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var contest = _step.value;
-
-                    contest.problems = contest.problems.filter(function (problem) {
-                        return !_this._id.equals(problem.problem);
-                    });
-                    contest.save(function (err) {
-                        if (err) console.error(err);
-                    });
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-        });
-        next();
+    db.model("Submission").remove({ problem: this._id }, function (err) {
+      if (err) console.error(err);
     });
+    var contestQuery = {
+      problems: {
+        $elemMatch: {
+          problem: this._id
+        }
+      }
+    };
 
-    return db.model('Problem', ProblemSchema);
+    db.model("Contest").find(contestQuery, function (err, contests) {
+      if (err) return console.error(err);
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = (0, _getIterator3.default)(contests), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var contest = _step.value;
+
+          contest.problems = contest.problems.filter(function (problem) {
+            return !_this._id.equals(problem.problem);
+          });
+          contest.save(function (err) {
+            if (err) console.error(err);
+          });
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+    });
+    next();
+  });
+
+  return db.model("Problem", ProblemSchema);
 };
 
 /***/ }),
@@ -2814,7 +2863,7 @@ var environment = __webpack_require__(16);
 var db = __webpack_require__(22);
 var grader = __webpack_require__(33);
 
-var _require = __webpack_require__(52),
+var _require = __webpack_require__(53),
     Submission = _require.Submission;
 
 var JudgeEnvironment = environment.JudgeEnvironment,
@@ -3885,7 +3934,7 @@ var sandbox = __webpack_require__(39);
 var environment = __webpack_require__(16);
 
 var loader = __webpack_require__(47);
-var Profiler = __webpack_require__(51);
+var Profiler = __webpack_require__(52);
 
 var Storage = __webpack_require__(24).MemoryStorage;
 
@@ -4241,7 +4290,7 @@ var Compilation = {
               iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
               _context7.next = 14;
-              return evaluate(iso, store, ["/usr/bin/g++", "-lm", "-std=c++11", sourceFile, "-O2"]);
+              return evaluate(iso, store, ["/usr/bin/g++", "-lm", "-std=c++14", sourceFile, "-O3"]);
 
             case 14:
               res = _context7.sent;
@@ -4324,7 +4373,7 @@ var Compilation = {
               iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
               _context8.next = 14;
-              return evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c11", sourceFile, "-O2"]);
+              return evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c11", sourceFile, "-O3"]);
 
             case 14:
               res = _context8.sent;
@@ -4680,7 +4729,7 @@ var CHECKER_EXEC_PATH = "_/checker_exec";if (!module.parent && false) {
 
 /* eslint-enable */
 var availableLanguages = {
-  CPP: "C++ 11",
+  CPP: "C++ 14",
   C: "C 11",
   Java: "Java 8",
   Py2: "Python 2",
@@ -6786,7 +6835,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = __webpack_require__(1);
 var task = __webpack_require__(48);
-var YAML = __webpack_require__(50);
+var YAML = __webpack_require__(51);
 var logger = __webpack_require__(7);
 var utils = __webpack_require__(12);
 var scoring = __webpack_require__(25);
@@ -7347,7 +7396,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var scoring = __webpack_require__(25);
-var deepcopy = __webpack_require__(49);
+var deepcopy = __webpack_require__(50);
 
 var Task = function () {
   function Task(attr) {
@@ -7569,16 +7618,22 @@ module.exports = { Task: Task };
 /* 49 */
 /***/ (function(module, exports) {
 
-module.exports = require("deepcopy");
+module.exports = require("babel-runtime/helpers/extends");
 
 /***/ }),
 /* 50 */
 /***/ (function(module, exports) {
 
-module.exports = require("yamljs");
+module.exports = require("deepcopy");
 
 /***/ }),
 /* 51 */
+/***/ (function(module, exports) {
+
+module.exports = require("yamljs");
+
+/***/ }),
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7684,7 +7739,7 @@ var Profiler = function () {
 module.exports = Profiler;
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7708,22 +7763,22 @@ __webpack_require__(22);
 });*/
 
 module.exports = {
-  Contest: __webpack_require__(53)(),
-  User: __webpack_require__(56)(),
-  Submission: __webpack_require__(58)(),
+  Contest: __webpack_require__(54)(),
+  User: __webpack_require__(57)(),
+  Submission: __webpack_require__(59)(),
   Problem: __webpack_require__(26)(),
-  Clarification: __webpack_require__(59)(),
-  Printout: __webpack_require__(60)()
+  Clarification: __webpack_require__(60)(),
+  Printout: __webpack_require__(61)()
 };
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _set = __webpack_require__(54);
+var _set = __webpack_require__(55);
 
 var _set2 = _interopRequireDefault(_set);
 
@@ -7733,7 +7788,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 14/07/16.
  */
 var mongoose = __webpack_require__(4);
-var deepPopulate = __webpack_require__(55)(mongoose);
+var deepPopulate = __webpack_require__(56)(mongoose);
 var Schema = mongoose.Schema;
 
 
@@ -7749,7 +7804,8 @@ module.exports = function () {
       match: /[A-Z][0-9]*/
     },
     problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
-    color: { type: String, default: "000" }
+    color: { type: String, default: "000" },
+    scoringOpts: { type: Schema.Types.Mixed, default: {} }
   }, { _id: false });
 
   var ContestSchema = new Schema({
@@ -7757,6 +7813,7 @@ module.exports = function () {
     start_time: { type: Date, required: true },
     end_time: { type: Date, required: true },
     scoring: { type: String, required: true },
+    scoringOpts: { type: Schema.Types.Mixed, default: {} },
     problems: {
       type: [ContestProblem],
       validate: {
@@ -7765,8 +7822,11 @@ module.exports = function () {
           var letters = v.map(function (val) {
             return val.letter;
           });
+          var ids = v.map(function (val) {
+            return val.problem.toString();
+          });
 
-          return new _set2.default(letters).size === letters.length;
+          return new _set2.default(letters).size === letters.length && new _set2.default(ids).size === ids.length;
         },
 
         message: "Contest cannot have repeated letters and problems must be an array"
@@ -7856,19 +7916,19 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/set");
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports) {
 
 module.exports = require("mongoose-deep-populate");
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7879,7 +7939,7 @@ module.exports = require("mongoose-deep-populate");
  */
 var mongoose = __webpack_require__(4);
 var Schema = mongoose.Schema;
-var sha256 = __webpack_require__(57);
+var sha256 = __webpack_require__(58);
 
 module.exports = function () {
     if (db.models.User) return db.model("User");
@@ -7941,13 +8001,13 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports) {
 
 module.exports = require("sha256");
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8038,7 +8098,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8071,7 +8131,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
