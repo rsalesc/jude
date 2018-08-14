@@ -32,7 +32,7 @@ router.get("/contest/:id", (req, res) => {
         return handleApiError(res, err);
       if (!contest)
         return res.status(400).json({ error: "contest not found" });
-      return res.json(contest);
+      return res.json(contest.toObject({ minimize: false }));
     });
   });
 });

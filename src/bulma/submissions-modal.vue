@@ -22,7 +22,7 @@
             <b-table-column label="Verdict">
               <ju-verdict-tag 
                 :verdict="getMainVerdict(props.row.verdict, problem.problem)" 
-                :weighted="problem.scoring.hasPartial()"
+                :weighted="my.scoring.hasPartial()"
                 :score="props.row.score"
                 v-if="!shouldBlind(props.row)">
               </ju-verdict-tag>
@@ -87,7 +87,10 @@ export default {
       "user",
       "userObject",
       "rawContest"
-    ])  
+    ]),
+    ...mapGetters([
+      "my"
+    ])
   },
   methods: {
     isFrozen(x) {

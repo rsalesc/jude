@@ -137,7 +137,10 @@ router.get("/", (req, res) => {
     if (!isAdmin(req) && !contest.hasStarted())
       contest.problems = [];
 
-    const contestObj = { ...contest.toObject(), ...{ languages: Object.entries(grader.availableLanguages) }};
+    const contestObj = {
+      ...contest.toObject({ minimize: false }),
+      ...{ languages: Object.entries(grader.availableLanguages) }
+    };
 
     User.find({ contest: contest.id, role: "contestant", disabled: { $ne: true } })
       .select("-password -email").exec((err, teams) => {
@@ -154,7 +157,7 @@ router.get("/", (req, res) => {
               return handleContestError(err, req, res);
             return res.json({
               _user: req.auth2.user._id,
-              userObject: filterPrivateUser(req.auth2.user.toObject()),
+              userObject: filterPrivateUser(req.auth2.user.toObject({ minimize: false })),
               teams,
               clarifications,
               printouts,

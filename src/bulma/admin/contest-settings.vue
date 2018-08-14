@@ -9,6 +9,18 @@
     <b-field label="End" horizontal>
       <ju-date-time-picker v-model="localContest.end_time"></ju-date-time-picker>
     </b-field>
+    <b-field label="Scoring" horizontal>
+      <b-select v-model="localContest.scoring">
+        <option v-for="scoring in scorings" :value="scoring">
+          {{ scoring }}
+        </option>
+      </b-select>
+    </b-field>
+    <b-field horizontal>
+      <ju-object-editor 
+        edit-text="Edit scoring options..."
+        v-model="localContest.scoringOpts"></ju-object-editor>
+    </b-field>
     <b-field label="Freeze duration" horizontal>
       <b-input v-model="localContest.freeze"></b-input>
     </b-field>
@@ -41,7 +53,9 @@
 <script type="text/babel">// import 'babel-polyfill';
     import * as Helper from "@front/helpers.js";
     import JuDateTimePicker from "@front/components/DateTime.vue";
+    import JuObjectEditor from "@front/components/ObjectEditor.vue";
     import Vue from "vue";
+    import * as Scorings from "@judge/scoring.js";
     const clone = require("clone");
 
     export default {
@@ -57,6 +71,13 @@
           })
         };
       },
+      computed: {
+        scorings() {
+          return Object.keys(Scorings)
+            .filter(s => !s.startsWith("_"))
+            .filter(s => s !== "default");
+        }
+      },
       methods: {
         confirm() {
           this.$dialog.confirm({
@@ -66,7 +87,8 @@
         }
       },
       components: {
-        JuDateTimePicker
+        JuDateTimePicker,
+        JuObjectEditor
       }
     };
 </script>

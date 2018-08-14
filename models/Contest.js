@@ -18,7 +18,8 @@ module.exports = () => {
       match: /[A-Z][0-9]*/
     },
     problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
-    color: { type: String, default: "000" }
+    color: { type: String, default: "000" },
+    scoringOpts: { type: Schema.Types.Mixed, default: {}}
   }, { _id: false });
 
   const ContestSchema = new Schema({
@@ -26,6 +27,7 @@ module.exports = () => {
     start_time: { type: Date, required: true },
     end_time: { type: Date, required: true },
     scoring: { type: String, required: true },
+    scoringOpts: { type: Schema.Types.Mixed, default: {}},
     problems: {
       type: [ContestProblem],
       validate: {

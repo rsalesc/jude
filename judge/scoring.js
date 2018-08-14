@@ -13,7 +13,7 @@ class Scoring {
     // if (new.target == Scoring)
     //  throw `Cannot instantiate abstract class Scoring`;
     this._task = task;
-    this._opts = opts;
+    this._opts = { ...this.defaults, ...opts };
   }
 
   get task() {
@@ -25,19 +25,27 @@ class Scoring {
   }
 
   // eslint-disable-next-line no-unused-vars
-  isTaskValid(tk) {
+  static isTaskValid(tk) {
     throw new Error("Function not implemented in this class");
   }
 
-  hasWeight() {
+  static hasWeight() {
     throw new Error("Function not implemented in this class");
   }
 
-  hasPartial() {
+  static hasPartial() {
     throw new Error("Function not implemented in this class");
   }
 
-  hasPenalty() {
+  static hasPenalty() {
+    throw new Error("Function not implemented in this class");
+  }
+
+  get weight() {
+    throw new Error("Function not implemented in this class");
+  }
+
+  get defaults() {
     throw new Error("Function not implemented in this class");
   }
 
@@ -87,31 +95,39 @@ class Scoring {
   }
 
   // eslint-disable-next-line no-unused-vars
-  mergeEvaluations(evals) {
+  static mergeEvaluations(evals, opts = {}) {
     throw new Error("Function not implemented in this class");
   }
 }
 
 class ProductScoring extends Scoring {
   // eslint-disable-next-line no-unused-vars
-  isTaskValid(tk) {
+  static isTaskValid(tk) {
     return true;
   }
 
-  hasWeight() {
+  static hasWeight() {
     return true;
   }
 
-  hasPartial() {
+  static hasPartial() {
     return false;
   }
 
-  hasPenalty() {
+  static hasPenalty() {
     return true;
   }
 
+  get defaults() {
+    return { weight: this.task.getWeight() };
+  }
+
+  get weight() {
+    return this.opts.weight;
+  }
+
   solved(obj) {
-    return obj.score === this.task.getWeight();
+    return obj.score === this.weight;
   }
 
   attempted(obj) {
@@ -138,7 +154,7 @@ class ProductScoring extends Scoring {
     }
 
     return {
-      score: parseInt(res * this.task.getWeight(), 10), penalty: 0, affect: true, fails: 0
+      score: parseInt(res * this.weight, 10), penalty: 0, affect: true, fails: 0
     };
   }
 
@@ -168,9 +184,8 @@ class ProductScoring extends Scoring {
     };
   }
 
-  mergeEvaluations(evals) {
-    const { opts } = this;
-
+  static mergeEvaluations(evals, opts = {}) {
+    opts = { penalty: 20, ...opts };
     return evals.reduce((old, cur) => ({
       score: old.score + cur.score,
       penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
@@ -180,20 +195,28 @@ class ProductScoring extends Scoring {
 
 class SubtaskSumScoring extends Scoring {
   // eslint-disable-next-line no-unused-vars
-  isTaskValid(tk) {
+  static isTaskValid(tk) {
     return true;
   }
 
-  hasWeight() {
+  static hasWeight() {
     return true;
   }
 
-  hasPartial() {
+  static hasPartial() {
     return true;
   }
 
-  hasPenalty() {
+  static hasPenalty() {
     return true;
+  }
+
+  get weight() {
+    return this.opts.weight;
+  }
+
+  get defaults() {
+    return { weight: this.task.getWeight() };
   }
 
   solved(obj) {
@@ -225,7 +248,7 @@ class SubtaskSumScoring extends Scoring {
     }
 
     return {
-      score: parseInt(res * this.task.getWeight(), 10), penalty: 0, affect: true, fails: 0
+      score: parseInt(res * this.weight, 10), penalty: 0, affect: true, fails: 0
     };
   }
 
@@ -268,8 +291,8 @@ class SubtaskSumScoring extends Scoring {
     };
   }
 
-  mergeEvaluations(evals) {
-    const { opts } = this;
+  static mergeEvaluations(evals, opts = {}) {
+    opts = { penalty: 1, ...opts };
 
     return evals.reduce((old, cur) => ({
       score: old.score + cur.score,
@@ -279,8 +302,8 @@ class SubtaskSumScoring extends Scoring {
 }
 
 class SubtaskMaxScoring extends SubtaskSumScoring {
-  mergeEvaluations(evals) {
-    const { opts } = this;
+  static mergeEvaluations(evals, opts = {}) {
+    opts = { penalty: 1, ...opts };
 
     const maxTime = evals.reduce((old, cur) => Math.max(old, cur.affect ? cur.penalty : 0), 0);
 
@@ -293,20 +316,24 @@ class SubtaskMaxScoring extends SubtaskSumScoring {
 
 class IcpcScoring extends Scoring {
   // eslint-disable-next-line no-unused-vars
-  isTaskValid(tk) {
+  static isTaskValid(tk) {
     return true;
   }
 
-  hasWeight() {
+  static hasWeight() {
     return false;
   }
 
-  hasPartial() {
-    return false
+  static hasPartial() {
+    return false;
   }
 
-  hasPenalty() {
+  static hasPenalty() {
     return true;
+  }
+
+  get defaults() {
+    return {};
   }
 
   solved(obj) {
@@ -367,8 +394,8 @@ class IcpcScoring extends Scoring {
     };
   }
 
-  mergeEvaluations(evals) {
-    const { opts } = this;
+  mergeEvaluations(evals, opts = {}) {
+    opts = { penalty: 20, ...opts };
 
     return evals.reduce((old, cur) => ({
       score: old.score + cur.score,

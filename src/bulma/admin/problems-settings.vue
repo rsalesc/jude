@@ -26,11 +26,21 @@
         <p class="ju-tertiary-text">
           {{ prob.problem.attr.limits.time }} ms / {{ prob.problem.attr.limits.memory }} MB
         </p>
+        <b-field>
+          <ju-object-editor
+            edit-text="Edit scoring options..."
+            :value="prob.scoringOpts"
+            @input="opts => localProblems[index].scoringOpts = opts">
+          </ju-object-editor>
+        </b-field>
       </div>
       <div class="media-right">
-        <b-tooltip label="Remove problem from contest (submissions not removed)">
+        <b-tooltip
+          position="is-left"
+          label="Remove problem from contest (submissions not removed)">
           <a class="button is-danger is-small" @click="localProblems.splice(index, 1)">
             <b-icon size="is-small" icon="remove"></b-icon>
+            <span>Remove</span>
           </a>
         </b-tooltip>
       </div>
@@ -44,6 +54,7 @@
 <script type="text/babel">// import 'babel-polyfill';
     import * as Helper from "@front/helpers.js";
     import JuProblemPicker from "@front/components/ProblemPicker.vue";
+    import JuObjectEditor from "@front/components/ObjectEditor.vue";
     import { VueColorpicker } from "vue-pop-colorpicker";
     import Vue from "vue";
     const clone = require("clone");
@@ -90,12 +101,14 @@
           this.localProblems.push({
             problem: problem._id,
             color: "000",
-            letter: ""
+            letter: "",
+            scoringOpts: {}
           });
         }
       },
       components: {
         JuProblemPicker,
+        JuObjectEditor,
         ColorPicker: VueColorpicker
       }
     };

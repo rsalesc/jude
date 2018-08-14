@@ -93,13 +93,19 @@ export function getScoringClass(contestProb, contest) {
   return Scoring[getScoringString(contestProb, contest)];
 }
 
-export function getScoring(contestProb, contest) {
+export function getScoring(contestProb, contest, opts = {}) {
   const task = new Task(contestProb.problem.attr);
-  return new (getScoringClass(contestProb, contest))(task);
+  const usedOpts = {
+    ...opts,
+    ...(contest.scoringOpts || {}),
+    ...(contestProb.scoringOpts || {})
+  };
+  return new (getScoringClass(contestProb, contest))(task, usedOpts);
 }
 
-export function getScoringFromString(sc) {
-  return new (getScoringClassFromString(sc))(null);
+export function getScoringFromString(sc, problem, opts = {}) {
+  const task = new Task(problem.attr);
+  return new (getScoringClassFromString(sc))(task, opts);
 }
 
 export function getHumanVerdict(v) {
@@ -345,4 +351,105 @@ export function isFrozen(contest, x) {
 export function isBlind(contest, x) {
   return getRemainingInContest(contest, x) <= contest.blind && (isRunning(contest)
     || (hasContestEnded(contest) && !contest.unfreeze && contest.blind > 0));
+}
+
+function _objectToPathMap(obj, res, prefix = "") {
+  if (Array.isArray(obj)
+      || typeof obj === "number"
+      || typeof obj === "string"
+      || !(obj instanceof Object)) {
+    res[prefix] = obj;
+    return res;
+  }
+
+  for (const [key, value] of Object.entries(obj)) {
+    const newPrefix = !prefix
+      ? `${key}`
+      : `${prefix}.${key}`;
+    _objectToPathMap(value, res, newPrefix);
+  }
+
+  return res;
+}
+
+export function objectToPathMap(obj, prefix = "") {
+  const res = {};
+  return _objectToPathMap(obj, res, prefix);
+}
+
+function parsePath(p) {
+  const res = [];
+  const path = `${p}.`;
+
+  function isOpenBracket(c) {
+    return c === "[";
+  }
+
+  function isCloseBracket(c) {
+    return c === "]";
+  }
+
+  function isValidChar(c) {
+    return /^[a-z0-9]+$/i.test(c) || c === "$" || c === "_";
+  }
+
+  let currentKey = "";
+  let hadBrackets = false;
+  let brackets = 0;
+  for (let i = 0; i < path.length; i++) {
+    if (brackets) {
+      if (isCloseBracket(path[i]))
+        --brackets;
+      if (brackets)
+        currentKey += path[i];
+    } else if (isValidChar(path[i]) && !hadBrackets)
+      currentKey += path[i];
+    else if (path[i] === ".") {
+      if (currentKey) {
+        res.push(currentKey);
+        currentKey = "";
+        hadBrackets = false;
+      }
+    } else if (isOpenBracket(path[i]) && !hadBrackets) {
+      if (currentKey.length > 0)
+        throw Error("Unexpected bracket during key parsing");
+      hadBrackets = true;
+      brackets++;
+    } else
+      throw Error(`Unexpected character '${path[i]}' during path parsing`);
+  }
+
+  return res;
+}
+
+export function pathMapToObject(map) {
+  const res = {};
+
+  for (const [path, value] of Object.entries(map)) {
+    let acc = res;
+
+    const parsedValue = JSON.parse(value);
+    if (parsedValue === undefined)
+      continue;
+
+    let keys = [];
+    try {
+      keys = parsePath(path);
+    } catch (_) {
+      continue;
+    }
+
+    if (!keys)
+      continue;
+    const last = keys.pop();
+    for (const key of keys) {
+      if (!acc.hasOwnProperty(key))
+        acc[key] = {};
+      acc = acc[key];
+    }
+
+    acc[last] = parsedValue;
+  }
+
+  return res;
 }

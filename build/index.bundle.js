@@ -437,7 +437,7 @@ module.exports = require("fs-extra");
 "use strict";
 
 
-var _extends2 = __webpack_require__(20);
+var _extends2 = __webpack_require__(14);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -709,6 +709,12 @@ module.exports = {
 
 /***/ }),
 /* 14 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/helpers/extends");
+
+/***/ }),
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -911,25 +917,25 @@ module.exports.SubmissionNoCode = SubmissionNoCode;
 module.exports.rejudge = rejudge;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/object/get-prototype-of");
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/inherits");
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -963,16 +969,10 @@ module.exports = logger;
 /* WEBPACK VAR INJECTION */}.call(exports, "judge"))
 
 /***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/slicedToArray");
-
-/***/ }),
 /* 20 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/extends");
+module.exports = require("babel-runtime/helpers/slicedToArray");
 
 /***/ }),
 /* 21 */
@@ -995,15 +995,15 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(15);
+var _getPrototypeOf = __webpack_require__(16);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(16);
+var _possibleConstructorReturn2 = __webpack_require__(17);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(17);
+var _inherits2 = __webpack_require__(18);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -1038,7 +1038,7 @@ var concatStream = __webpack_require__(65);
 var utils = __webpack_require__(11);
 var wildcard = __webpack_require__(68);
 var path = __webpack_require__(1);
-var logger = __webpack_require__(18);
+var logger = __webpack_require__(19);
 var fs = __webpack_require__(12);
 var promisify = __webpack_require__(70);
 var glob = promisify(__webpack_require__(30).glob);
@@ -2268,7 +2268,7 @@ module.exports = require("process");
 "use strict";
 
 
-var _slicedToArray2 = __webpack_require__(19);
+var _slicedToArray2 = __webpack_require__(20);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -2280,15 +2280,15 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(15);
+var _getPrototypeOf = __webpack_require__(16);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(16);
+var _possibleConstructorReturn2 = __webpack_require__(17);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(17);
+var _inherits2 = __webpack_require__(18);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -2411,7 +2411,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var path = __webpack_require__(1);
 var task = __webpack_require__(72);
 var YAML = __webpack_require__(74);
-var logger = __webpack_require__(18);
+var logger = __webpack_require__(19);
 var utils = __webpack_require__(11);
 var scoring = __webpack_require__(34);
 
@@ -2958,15 +2958,15 @@ module.exports = require("babel-runtime/core-js/map");
 "use strict";
 
 
-var _getPrototypeOf = __webpack_require__(15);
+var _getPrototypeOf = __webpack_require__(16);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(16);
+var _possibleConstructorReturn2 = __webpack_require__(17);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(17);
+var _inherits2 = __webpack_require__(18);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -2977,6 +2977,10 @@ var _keys2 = _interopRequireDefault(_keys);
 var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _extends2 = __webpack_require__(14);
+
+var _extends3 = _interopRequireDefault(_extends2);
 
 var _classCallCheck2 = __webpack_require__(7);
 
@@ -3005,37 +3009,14 @@ var Scoring = function () {
     // if (new.target == Scoring)
     //  throw `Cannot instantiate abstract class Scoring`;
     this._task = task;
-    this._opts = opts;
+    this._opts = (0, _extends3.default)({}, this.defaults, opts);
   }
 
   (0, _createClass3.default)(Scoring, [{
-    key: "isTaskValid",
-
-
-    // eslint-disable-next-line no-unused-vars
-    value: function isTaskValid(tk) {
-      throw new Error("Function not implemented in this class");
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      throw new Error("Function not implemented in this class");
-    }
-  }, {
-    key: "hasPartial",
-    value: function hasPartial() {
-      throw new Error("Function not implemented in this class");
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      throw new Error("Function not implemented in this class");
-    }
-
-    // eslint-disable-next-line no-unused-vars
-
-  }, {
     key: "solved",
+
+
+    // eslint-disable-next-line no-unused-vars
     value: function solved(obj) {
       throw new Error("Function not implemented in this class");
     }
@@ -3115,11 +3096,6 @@ var Scoring = function () {
     // eslint-disable-next-line no-unused-vars
 
   }, {
-    key: "mergeEvaluations",
-    value: function mergeEvaluations(evals) {
-      throw new Error("Function not implemented in this class");
-    }
-  }, {
     key: "task",
     get: function get() {
       return this._task;
@@ -3128,6 +3104,46 @@ var Scoring = function () {
     key: "opts",
     get: function get() {
       return this._opts;
+    }
+
+    // eslint-disable-next-line no-unused-vars
+
+  }, {
+    key: "weight",
+    get: function get() {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "defaults",
+    get: function get() {
+      throw new Error("Function not implemented in this class");
+    }
+  }], [{
+    key: "isTaskValid",
+    value: function isTaskValid(tk) {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "hasPartial",
+    value: function hasPartial() {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      throw new Error("Function not implemented in this class");
+    }
+  }, {
+    key: "mergeEvaluations",
+    value: function mergeEvaluations(evals) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      throw new Error("Function not implemented in this class");
     }
   }]);
   return Scoring;
@@ -3142,31 +3158,9 @@ var ProductScoring = function (_Scoring) {
   }
 
   (0, _createClass3.default)(ProductScoring, [{
-    key: "isTaskValid",
-
-    // eslint-disable-next-line no-unused-vars
-    value: function isTaskValid(tk) {
-      return true;
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      return true;
-    }
-  }, {
-    key: "hasPartial",
-    value: function hasPartial() {
-      return false;
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      return true;
-    }
-  }, {
     key: "solved",
     value: function solved(obj) {
-      return obj.score === this.task.getWeight();
+      return obj.score === this.weight;
     }
   }, {
     key: "attempted",
@@ -3215,7 +3209,7 @@ var ProductScoring = function (_Scoring) {
       }
 
       return {
-        score: parseInt(res * this.task.getWeight(), 10), penalty: 0, affect: true, fails: 0
+        score: parseInt(res * this.weight, 10), penalty: 0, affect: true, fails: 0
       };
     }
   }, {
@@ -3265,11 +3259,43 @@ var ProductScoring = function (_Scoring) {
       };
     }
   }, {
+    key: "defaults",
+    get: function get() {
+      return { weight: this.task.getWeight() };
+    }
+  }, {
+    key: "weight",
+    get: function get() {
+      return this.opts.weight;
+    }
+  }], [{
+    key: "isTaskValid",
+
+    // eslint-disable-next-line no-unused-vars
+    value: function isTaskValid(tk) {
+      return true;
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      return true;
+    }
+  }, {
+    key: "hasPartial",
+    value: function hasPartial() {
+      return false;
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      return true;
+    }
+  }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
-      var opts = this.opts;
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-
+      opts = (0, _extends3.default)({ penalty: 20 }, opts);
       return evals.reduce(function (old, cur) {
         return {
           score: old.score + cur.score,
@@ -3290,28 +3316,6 @@ var SubtaskSumScoring = function (_Scoring2) {
   }
 
   (0, _createClass3.default)(SubtaskSumScoring, [{
-    key: "isTaskValid",
-
-    // eslint-disable-next-line no-unused-vars
-    value: function isTaskValid(tk) {
-      return true;
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      return true;
-    }
-  }, {
-    key: "hasPartial",
-    value: function hasPartial() {
-      return true;
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      return true;
-    }
-  }, {
     key: "solved",
     value: function solved(obj) {
       return obj.score > 0;
@@ -3364,7 +3368,7 @@ var SubtaskSumScoring = function (_Scoring2) {
       }
 
       return {
-        score: parseInt(res * this.task.getWeight(), 10), penalty: 0, affect: true, fails: 0
+        score: parseInt(res * this.weight, 10), penalty: 0, affect: true, fails: 0
       };
     }
   }, {
@@ -3407,10 +3411,43 @@ var SubtaskSumScoring = function (_Scoring2) {
       };
     }
   }, {
+    key: "weight",
+    get: function get() {
+      return this.opts.weight;
+    }
+  }, {
+    key: "defaults",
+    get: function get() {
+      return { weight: this.task.getWeight() };
+    }
+  }], [{
+    key: "isTaskValid",
+
+    // eslint-disable-next-line no-unused-vars
+    value: function isTaskValid(tk) {
+      return true;
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      return true;
+    }
+  }, {
+    key: "hasPartial",
+    value: function hasPartial() {
+      return true;
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      return true;
+    }
+  }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
-      var opts = this.opts;
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+      opts = (0, _extends3.default)({ penalty: 1 }, opts);
 
       return evals.reduce(function (old, cur) {
         return {
@@ -3431,11 +3468,12 @@ var SubtaskMaxScoring = function (_SubtaskSumScoring) {
     return (0, _possibleConstructorReturn3.default)(this, (SubtaskMaxScoring.__proto__ || (0, _getPrototypeOf2.default)(SubtaskMaxScoring)).apply(this, arguments));
   }
 
-  (0, _createClass3.default)(SubtaskMaxScoring, [{
+  (0, _createClass3.default)(SubtaskMaxScoring, null, [{
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
-      var opts = this.opts;
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+      opts = (0, _extends3.default)({ penalty: 1 }, opts);
 
       var maxTime = evals.reduce(function (old, cur) {
         return Math.max(old, cur.affect ? cur.penalty : 0);
@@ -3461,28 +3499,6 @@ var IcpcScoring = function (_Scoring3) {
   }
 
   (0, _createClass3.default)(IcpcScoring, [{
-    key: "isTaskValid",
-
-    // eslint-disable-next-line no-unused-vars
-    value: function isTaskValid(tk) {
-      return true;
-    }
-  }, {
-    key: "hasWeight",
-    value: function hasWeight() {
-      return false;
-    }
-  }, {
-    key: "hasPartial",
-    value: function hasPartial() {
-      return false;
-    }
-  }, {
-    key: "hasPenalty",
-    value: function hasPenalty() {
-      return true;
-    }
-  }, {
     key: "solved",
     value: function solved(obj) {
       return obj.score > 0;
@@ -3586,8 +3602,9 @@ var IcpcScoring = function (_Scoring3) {
   }, {
     key: "mergeEvaluations",
     value: function mergeEvaluations(evals) {
-      var opts = this.opts;
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+      opts = (0, _extends3.default)({ penalty: 20 }, opts);
 
       return evals.reduce(function (old, cur) {
         return {
@@ -3595,6 +3612,33 @@ var IcpcScoring = function (_Scoring3) {
           penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
         };
       }, { score: 0, penalty: 0 });
+    }
+  }, {
+    key: "defaults",
+    get: function get() {
+      return {};
+    }
+  }], [{
+    key: "isTaskValid",
+
+    // eslint-disable-next-line no-unused-vars
+    value: function isTaskValid(tk) {
+      return true;
+    }
+  }, {
+    key: "hasWeight",
+    value: function hasWeight() {
+      return false;
+    }
+  }, {
+    key: "hasPartial",
+    value: function hasPartial() {
+      return false;
+    }
+  }, {
+    key: "hasPenalty",
+    value: function hasPenalty() {
+      return true;
     }
   }]);
   return IcpcScoring;
@@ -3689,7 +3733,7 @@ var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _slicedToArray2 = __webpack_require__(19);
+var _slicedToArray2 = __webpack_require__(20);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -4044,7 +4088,7 @@ app.listen(port, function () {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(__dirname) {
 
-var _extends2 = __webpack_require__(20);
+var _extends2 = __webpack_require__(14);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -4302,7 +4346,7 @@ var router = express.Router();
 
 var contestRouter = __webpack_require__(52);
 var userRouter = __webpack_require__(60);
-var submissionRouter = __webpack_require__(14);
+var submissionRouter = __webpack_require__(15);
 
 // middlewares
 router.use("/contests", contestRouter);
@@ -4348,7 +4392,7 @@ var models = __webpack_require__(4);
 var Contest = models.Contest,
     User = models.User;
 
-var _require = __webpack_require__(14),
+var _require = __webpack_require__(15),
     SubmissionNoCode = _require.SubmissionNoCode;
 
 var ObjectId = mongoose.Types.ObjectId;
@@ -4468,7 +4512,8 @@ module.exports = function () {
       match: /[A-Z][0-9]*/
     },
     problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
-    color: { type: String, default: "000" }
+    color: { type: String, default: "000" },
+    scoringOpts: { type: Schema.Types.Mixed, default: {} }
   }, { _id: false });
 
   var ContestSchema = new Schema({
@@ -4476,6 +4521,7 @@ module.exports = function () {
     start_time: { type: Date, required: true },
     end_time: { type: Date, required: true },
     scoring: { type: String, required: true },
+    scoringOpts: { type: Schema.Types.Mixed, default: {} },
     problems: {
       type: [ContestProblem],
       validate: {
@@ -4823,7 +4869,7 @@ var models = __webpack_require__(4);
 var User = models.User,
     Submission = models.Submission;
 
-var _require = __webpack_require__(14),
+var _require = __webpack_require__(15),
     SubmissionNoCode = _require.SubmissionNoCode;
 
 var ObjectId = mongoose.Types.ObjectId;
@@ -5417,7 +5463,7 @@ router.get("/contest/:id", function (req, res) {
     Contest.findById(req.params.id, function (err, contest) {
       if (err) return handleApiError(res, err);
       if (!contest) return res.status(400).json({ error: "contest not found" });
-      return res.json(contest);
+      return res.json(contest.toObject({ minimize: false }));
     });
   });
 });
@@ -5444,7 +5490,10 @@ var _require2 = __webpack_require__(4),
 router.get("/problems", function (req, res) {
   Problem.find({}, function (err, problems) {
     if (err) return handleApiError(res, err);
-    return res.json(problems);
+
+    return res.json(problems.map(function (p) {
+      return p.toObject({ minimize: false });
+    }));
   });
 });
 
@@ -5477,7 +5526,7 @@ var _entries = __webpack_require__(81);
 
 var _entries2 = _interopRequireDefault(_entries);
 
-var _extends2 = __webpack_require__(20);
+var _extends2 = __webpack_require__(14);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -5515,7 +5564,7 @@ var Contest = models.Contest,
     Clarification = models.Clarification,
     Printout = models.Printout;
 
-var _require = __webpack_require__(14),
+var _require = __webpack_require__(15),
     rejudge = _require.rejudge;
 
 var _require2 = __webpack_require__(36),
@@ -5692,7 +5741,7 @@ router.get("/", function (req, res) {
 
     if (!isAdmin(req) && !contest.hasStarted()) contest.problems = [];
 
-    var contestObj = (0, _extends3.default)({}, contest.toObject(), { languages: (0, _entries2.default)(grader.availableLanguages) });
+    var contestObj = (0, _extends3.default)({}, contest.toObject({ minimize: false }), { languages: (0, _entries2.default)(grader.availableLanguages) });
 
     User.find({ contest: contest.id, role: "contestant", disabled: { $ne: true } }).select("-password -email").exec(function (err, teams) {
       if (err) return handleContestError(err, req, res);
@@ -5704,7 +5753,7 @@ router.get("/", function (req, res) {
           if (err) return handleContestError(err, req, res);
           return res.json({
             _user: req.auth2.user._id,
-            userObject: filterPrivateUser(req.auth2.user.toObject()),
+            userObject: filterPrivateUser(req.auth2.user.toObject({ minimize: false })),
             teams: teams,
             clarifications: clarifications,
             printouts: printouts,
@@ -6220,7 +6269,7 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _slicedToArray2 = __webpack_require__(19);
+var _slicedToArray2 = __webpack_require__(20);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -7048,7 +7097,7 @@ var promiseReflect = __webpack_require__(83);
 
 var verdict = __webpack_require__(84);
 var utils = __webpack_require__(11);
-var logger = __webpack_require__(18);
+var logger = __webpack_require__(19);
 var sandbox = __webpack_require__(85);
 var environment = __webpack_require__(37);
 
@@ -7492,7 +7541,7 @@ var Compilation = {
               iso.wallclockLimit = JudgeConfig.COMPILATION_TL;
 
               _context8.next = 14;
-              return evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c14", sourceFile, "-O3"]);
+              return evaluate(iso, store, ["/usr/bin/gcc", "-lm", "-std=c11", sourceFile, "-O3"]);
 
             case 14:
               res = _context8.sent;
@@ -7849,7 +7898,7 @@ var CHECKER_EXEC_PATH = "_/checker_exec";if (!module.parent && false) {
 /* eslint-enable */
 var availableLanguages = {
   CPP: "C++ 14",
-  C: "C 14",
+  C: "C 11",
   Java: "Java 8",
   Py2: "Python 2",
   Py3: "Python 3"
@@ -8008,7 +8057,7 @@ module.exports = {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(module) {
 
-var _slicedToArray2 = __webpack_require__(19);
+var _slicedToArray2 = __webpack_require__(20);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -8020,15 +8069,15 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(15);
+var _getPrototypeOf = __webpack_require__(16);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(16);
+var _possibleConstructorReturn2 = __webpack_require__(17);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(17);
+var _inherits2 = __webpack_require__(18);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -8058,7 +8107,7 @@ var Promise = __webpack_require__(86);
 var fs = __webpack_require__(12);
 
 var path = __webpack_require__(1);
-var logger = __webpack_require__(18);
+var logger = __webpack_require__(19);
 var jenv = __webpack_require__(37);
 var utils = __webpack_require__(11);
 var globAsync = utils.globAsync;

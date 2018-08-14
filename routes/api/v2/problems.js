@@ -7,7 +7,8 @@ router.get("/problems", (req, res) => {
   Problem.find({}, (err, problems) => {
     if (err)
       return handleApiError(res, err);
-    return res.json(problems);
+
+    return res.json(problems.map(p => p.toObject({ minimize: false })));
   });
 });
 

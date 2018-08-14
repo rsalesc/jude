@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import * as Helper from "../helpers";
+import * as Helper from "@front/helpers";
 import debounce from "debounce";
 import elasticlunr from "elasticlunr";
 import Fuse from "fuse.js";

@@ -156,12 +156,11 @@ export const computed = {
   my: (state, getters) => {
     if (!state.rawContest || !state.rawContest.scoring || getters.submissions === undefined)
       return { submissions: [], languages: getters.languages };
-    const scoringClass = Helper.getScoringClassFromString(state.rawContest.scoring);
-    const scoring = Helper.getScoringFromString(state.rawContest.scoring);
+    const scoring = Helper.getScoringClassFromString(state.rawContest.scoring);
 
     const submissions = getters.submissions.filter(v => v._creator === state.user);
 
-    return { scoring, scoringClass, submissions, languages: getters.languages };
+    return { scoring, submissions, languages: getters.languages };
   },
   submissions: (state, getters) => {
     const contest = state.rawContest;
@@ -233,7 +232,8 @@ export const computed = {
         arr.push(results[prob.problem._id]);
       }
 
-      const merged = getters.my.scoring.mergeEvaluations(arr);
+      const merged = getters.my.scoring.mergeEvaluations(arr,
+                                                         rawContest.scoringOpts || {});
       Vue.set(teams, i, {
         ...teams[i], merged, results, hasBlind, rank: null
       });

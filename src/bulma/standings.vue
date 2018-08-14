@@ -185,13 +185,13 @@
           return Helper.getFormattedContestTime(t);
         },
         getProblemWorthScore(prob) {
-          if (prob.scoring.hasWeight())
-            return prob.problem.attr.weight;
+          if (this.my.scoring.hasWeight())
+            return prob.scoring.weight;
           return "";
         },
         getProblemScore(team, prob) {
           const result = team.results[prob.problem._id];
-          if(prob.scoring.hasWeight()) {
+          if(this.my.scoring.hasWeight()) {
             let scoreString = "";
             if(this.isAc(team, prob))
               scoreString = `${result.score}`;
@@ -212,7 +212,7 @@
         },
         getProblemWeightedFails(team, prob) {
           const result = team.results[prob.problem._id];
-          if(prob.scoring.hasWeight() && result.fails > 0) {
+          if(this.my.scoring.hasWeight() && result.fails > 0) {
             return `(${result.fails})`;
           } else {
             return "";
