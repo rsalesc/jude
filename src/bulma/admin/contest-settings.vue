@@ -3,6 +3,13 @@
     <b-field label="Name" horizontal>
       <b-input placeholder="Type the name of the contest" v-model="localContest.name"></b-input>
     </b-field>
+    <b-field label="Server time" horizontal>
+      <pre class="control is-size-7 ju-pre-field">{{ time }}</pre>
+      <p class="control ju-secondary-text has-text-danger">
+        When changing times, notice that your clock may be out of sync. 
+        Use the server time (already shifted to your timezone) as a reference.
+      </p>
+    </b-field>
     <b-field label="Start" horizontal>
       <ju-date-time-picker v-model="localContest.start_time"></ju-date-time-picker>
     </b-field>
@@ -56,9 +63,17 @@
     import JuObjectEditor from "@front/components/ObjectEditor.vue";
     import Vue from "vue";
     import * as Scorings from "@judge/scoring.js";
+    import ts from "@front/ts.js";
     const clone = require("clone");
 
     export default {
+      mounted() {
+        this.timer = window.setInterval(() => this.tsDate = ts.date(), 1000);
+      },
+      beforeDestroy() {
+        if (this.timer)
+          window.clearInterval(this.timer);
+      },
       props: {
         id: { type: String },
         contest: { type: Object }
@@ -68,10 +83,17 @@
           localContest: Object.assign(clone(this.contest, false), {
             start_time: new Date(this.contest.start_time),
             end_time: new Date(this.contest.end_time)
-          })
+          }),
+          tsDate: ts.date(),
+          timer: null
         };
       },
       computed: {
+        time() {
+          const datetime = Helper.getFormattedDateTime(this.tsDate);
+          const tz = Helper.getTimezone();
+          return `${datetime} ${tz}`;
+        },
         scorings() {
           return Object.keys(Scorings)
             .filter(s => !s.startsWith("_"))

@@ -219,6 +219,11 @@ export function getFormattedContestTime(t) {
   return `${hours}:${minutes}`;
 }
 
+export function getFormattedDateTime(d) {
+  const m = moment(d);
+  return `${m.format("L")} ${m.format("LTS")}`;
+}
+
 export function rgbToHex(color) {
   color = "" + color;
   if (!color || color.indexOf("rgb") < 0) {
