@@ -117,7 +117,8 @@ describe("Scoring classes", function () {
 
       tests.forEach((tc) => {
         it(tc.name, function () {
-          const got = new ProductScoring(null).attempted(tc.evaluation);
+          const task = new Task({ weight: 1 });
+          const got = new ProductScoring(task).attempted(tc.evaluation);
           expect(got).to.equal(tc.want);
         });
       });
@@ -139,7 +140,8 @@ describe("Scoring classes", function () {
 
       tests.forEach((tc) => {
         it(tc.name, function () {
-          const got = new ProductScoring(null).fails(tc.evaluation);
+          const task = new Task({ weight: 1 });
+          const got = new ProductScoring(task).fails(tc.evaluation);
           expect(got).to.equal(tc.want);
         });
       });
@@ -367,8 +369,7 @@ describe("Scoring classes", function () {
 
       tests.forEach((tc) => {
         it(tc.name, function () {
-          const task = new Task(tc.attr);
-          const got = new ProductScoring(task, tc.opts).mergeEvaluations(tc.evaluations);
+          const got = ProductScoring.mergeEvaluations(tc.evaluations, tc.opts);
           expect(got).to.deep.equal(tc.want);
         });
       });
@@ -422,7 +423,8 @@ describe("Scoring classes", function () {
 
       tests.forEach((tc) => {
         it(tc.name, function () {
-          const got = new IcpcScoring(null).attempted(tc.evaluation);
+          const task = new Task(tc.attr);
+          const got = new IcpcScoring(task).attempted(tc.evaluation);
           expect(got).to.equal(tc.want);
         });
       });
@@ -444,7 +446,8 @@ describe("Scoring classes", function () {
 
       tests.forEach((tc) => {
         it(tc.name, function () {
-          const got = new IcpcScoring(null).fails(tc.evaluation);
+          const task = new Task(tc.attr);
+          const got = new IcpcScoring(task).fails(tc.evaluation);
           expect(got).to.equal(tc.want);
         });
       });
@@ -672,8 +675,7 @@ describe("Scoring classes", function () {
 
       tests.forEach((tc) => {
         it(tc.name, function () {
-          const task = new Task(tc.attr);
-          const got = new IcpcScoring(task, tc.opts).mergeEvaluations(tc.evaluations);
+          const got = IcpcScoring.mergeEvaluations(tc.evaluations, tc.opts);
           expect(got).to.deep.equal(tc.want);
         });
       });

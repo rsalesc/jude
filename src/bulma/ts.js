@@ -9,45 +9,50 @@ class JudeTimesync {
     this.useStorage = typeof Storage !== "undefined";
     this.ts = timesync.create(opts);
 
+    const isBrowser = typeof process !== "object";
+
     // Initialize from storage.
     this.lastUpdate = 0;
-    if (this.useStorage) {
-      if (window.localStorage.hasOwnProperty("timesync")) {
-        const obj = JSON.parse(window.localStorage.getItem("timesync"));
-        this.ts.offset = obj.offset;
-        this.lastUpdate = obj.lastUpdate;
+
+    if (isBrowser) {
+      if (this.useStorage) {
+        if (window.localStorage.hasOwnProperty("timesync")) {
+          const obj = JSON.parse(window.localStorage.getItem("timesync"));
+          this.ts.offset = obj.offset;
+          this.lastUpdate = obj.lastUpdate;
+        }
       }
-    }
 
-    if (opts.threshold != null) {
-      (async () => {
-        const singleShotTs = timesync.create({ ...opts, repeat: 1 });
-        await singleShotTs.sync();
-        if (Math.abs(singleShotTs.offset - this.ts.offset) > opts.threshold) {
-          this.ts.offset = singleShotTs.offset;
-          this.sync();
-        }
-      })();
-    }
-
-    if (this.interval != null) {
-      // Configure lastSync callback.
-      this.ts.on("sync", (event) => {
-        if (event === "end") {
-          this.lastUpdate = Date.now();
-          if (this.useStorage) {
-            window.localStorage.setItem("timesync", JSON.stringify({
-              offset: this.ts.offset,
-              lastUpdate: this.lastUpdate
-            }));
+      if (opts.threshold != null) {
+        (async () => {
+          const singleShotTs = timesync.create({ ...opts, repeat: 1 });
+          await singleShotTs.sync();
+          if (Math.abs(singleShotTs.offset - this.ts.offset) > opts.threshold) {
+            this.ts.offset = singleShotTs.offset;
+            this.sync();
           }
-        }
-      });
+        })();
+      }
 
-      const diff = Date.now() - this.lastUpdate;
-      if (diff < 0 || diff > this.interval)
-        this.sync();
-      this.intervalHandler = setInterval(() => this.sync(), this.interval);
+      if (this.interval != null) {
+        // Configure lastSync callback.
+        this.ts.on("sync", (event) => {
+          if (event === "end") {
+            this.lastUpdate = Date.now();
+            if (this.useStorage) {
+              window.localStorage.setItem("timesync", JSON.stringify({
+                offset: this.ts.offset,
+                lastUpdate: this.lastUpdate
+              }));
+            }
+          }
+        });
+
+        const diff = Date.now() - this.lastUpdate;
+        if (diff < 0 || diff > this.interval)
+          this.sync();
+        this.intervalHandler = setInterval(() => this.sync(), this.interval);
+      }
     }
   }
 

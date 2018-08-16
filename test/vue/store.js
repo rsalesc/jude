@@ -243,8 +243,7 @@ describe("computed properties", function () {
           ]
         },
         want: {
-          scoringClass: Scoring.IcpcScoring,
-          scoring: new Scoring.IcpcScoring(null),
+          scoring: Scoring.IcpcScoring,
           submissions: [
             {
               ...getFakeSubmission({ _creator: "me" }),

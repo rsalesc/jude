@@ -46,7 +46,7 @@ class Scoring {
   }
 
   get defaults() {
-    throw new Error("Function not implemented in this class");
+    return {};
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -394,7 +394,7 @@ class IcpcScoring extends Scoring {
     };
   }
 
-  mergeEvaluations(evals, opts = {}) {
+  static mergeEvaluations(evals, opts = {}) {
     opts = { penalty: 20, ...opts };
 
     return evals.reduce((old, cur) => ({

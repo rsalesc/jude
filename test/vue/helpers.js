@@ -9,6 +9,7 @@ import sinon from "sinon";
 
 import * as Helper from "@front/helpers";
 import * as Scoring from "@judge/scoring";
+import ts from "@front/ts";
 import moment from "moment";
 
 describe("helpers", function () {
@@ -132,7 +133,8 @@ describe("helpers", function () {
         const got = Helper.getScoringClassFromString(tc.name);
         expect(got).to.equal(tc.want);
 
-        const gotInstance = Helper.getScoringFromString(tc.name);
+        const problem = { attr: { weight: 1 }};
+        const gotInstance = Helper.getScoringFromString(tc.name, problem);
         expect(gotInstance).to.be.instanceof(tc.want);
       });
     });
@@ -252,12 +254,15 @@ describe("helpers", function () {
 
   describe("test with fake timers", function () {
     const clockBase = 1000000;
+
     setup(function () {
       this.clock = sinon.useFakeTimers(new Date(clockBase));
+      this.ts = sinon.stub(ts, "now").returns(clockBase);
     });
 
     teardown(function () {
       this.clock.restore();
+      this.ts.restore();
     });
 
     describe("getCountDown()", function () {
