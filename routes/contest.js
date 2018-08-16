@@ -303,7 +303,7 @@ router.get("/statement/:letter", (req, res, next) => {
     if (!contest)
       return handleContestError("contest not found", req, res);
 
-    if (!contest.hasStarted())
+    if (!contest.hasStarted() && !isAdmin(req))
       return handleRequestError("contest has not started", req, res);
 
     for (const prob of contest.problems) {

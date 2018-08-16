@@ -6006,7 +6006,7 @@ router.get("/statement/:letter", function (req, res, next) {
     if (err) return handleContestError(err, req, res, next);
     if (!contest) return handleContestError("contest not found", req, res);
 
-    if (!contest.hasStarted()) return handleRequestError("contest has not started", req, res);
+    if (!contest.hasStarted() && !isAdmin(req)) return handleRequestError("contest has not started", req, res);
 
     var _iteratorNormalCompletion5 = true;
     var _didIteratorError5 = false;

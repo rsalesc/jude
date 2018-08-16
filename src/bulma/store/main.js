@@ -109,7 +109,7 @@ export const mutations = {
   [types.LOGOUT](state) {
     const clean = cleanState();
     for (const [key, value] of Object.entries(clean))
-      state[key] = { ...state[key], ...value };
+      state[key] = { ...(state[key] || {}), ...value };
   }
 };
 
