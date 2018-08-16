@@ -95,7 +95,7 @@
             try {
                 const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
                 if(!loggedin)
-                    this.$router.push("/");
+                    this.$judeLogout();
             } catch (err) {
                 console.error(err);
                 new BulmaUtils(this).toast("Error contacting the server", 4000, "is-danger");
@@ -112,7 +112,7 @@
               this.data = { contest: contest.body, problems: problems.body };
             } catch (response) {
                 if (response.status === 401 || response.status === 403)
-                    return this.$router.push("/");
+                    return this.$judeLogout();
 
                 new BulmaUtils(this).toast("Error contacting the server.", 4000, "is-danger");
                 console.error(response);
@@ -126,7 +126,7 @@
                 this.fetchAll();
             } catch(response) {
                 if (response.status === 401 || response.status === 403)
-                    return this.$router.push("/");
+                    return this.$judeLogout();
                 
                 new BulmaUtils(this).toast("Error contacting the server.", 4000, "is-danger");
                 console.error(response);
@@ -139,7 +139,7 @@
                 this.fetchAll();
             } catch(response) {
                 if (response.status === 401 || response.status === 403)
-                    return this.$router.push("/");
+                    return this.$judeLogout();
                 
                 new BulmaUtils(this).toast("Error contacting the server.", 4000, "is-danger");
                 console.error(response);

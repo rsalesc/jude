@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import VueRouter from "vue-router";
 import App from "./app.vue";
+import JudeUse from "@front/use/jude.js";
 import ContestList from "./contest-list.vue";
 import Login from "./login.vue";
 import MainPage from "./main.vue";
@@ -17,6 +18,7 @@ require("font-awesome-webpack");
 
 Vue.use(VueRouter);
 Vue.use(FloatThead);
+Vue.use(JudeUse);
 Vue.use(Buefy, { defaultIconPack: "fa" });
 
 // routing setup

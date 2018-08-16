@@ -312,7 +312,7 @@
           try {
             const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
             if (!loggedin)
-              this.$router.push("/");
+              this.$judeLogout();
           } catch (err) {
             new BulmaUtils(this).toastResponseError(err);
           }
@@ -321,7 +321,7 @@
           try {
             const loggedin = await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
             if (!loggedin)
-              this.$router.push("/");
+              this.$judeLogout();
             else
               this.codeModal.active = true;
           } catch (err) {
@@ -340,7 +340,7 @@
                 this.fetchAll();
               } catch (response) {
                 if (response.status === 401 || response.status === 403)
-                  this.$router.push("/");
+                  return this.$judeLogout();
                 new BulmaUtils(this).toastResponseError(response);
               }
             }
@@ -353,7 +353,7 @@
           try {
             const loggedin = await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
             if (!loggedin)
-              this.$router.push("/");
+              return this.$judeLogout();
             else {
               this.submitModal.props = {
                 ...(this.submitModal.props),

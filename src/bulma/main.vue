@@ -173,7 +173,7 @@
           try {
             const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
             if (!loggedin)
-              this.$router.push("/");
+              this.$judeLogout();
           } catch (err) {
             new BulmaUtils(this).toast("Error contacting the server, turning off auto-refresh.", 4000, "is-danger");
             this.$store.commit(types.SET_AUTO_FETCH_STANDINGS, false);
@@ -181,8 +181,7 @@
           }
         },
         async doLogout() {
-          await this.$http.post(Api.paths.logout);
-          this.$router.push("/");
+          this.$judeLogout();
         },
         async autoFetch() {
           if (this.config.autoFetchStandings)

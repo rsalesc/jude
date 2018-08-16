@@ -122,7 +122,7 @@
                     try {
                       const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
                       if(!loggedin) {
-                        this.$router.push("/");
+                        this.$judeLogout();
                       }
                     } catch (err) {
                       console.error(err);
@@ -132,7 +132,7 @@
                     this.submitting--;
                     if(err.status === 401 || err.status === 403) {
                         new BulmaUtils(this).toast("Not logged in, failed to submit!", 4000, "is-danger");
-                        return this.$router.push("/");
+                        return this.$judeLogout();
                     }
 
                     new BulmaUtils(this).toastResponseError(err, "Internal submission error");
