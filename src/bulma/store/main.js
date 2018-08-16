@@ -16,18 +16,26 @@ export const types = {
   SET_SUBMISSIONS_CONFIG: "main/SET_SUBMISSIONS_CONFIG",
   SET_DASHBOARD_TAB: "main/SET_DASHBOARD_TAB",
   CHECK_CLARIFICATIONS: "main/CHECK_CLARIFICATIONS",
-  MARK_BALLOON: "main/MARK_BALLOON"
+  MARK_BALLOON: "main/MARK_BALLOON",
+  LOGOUT: "main/LOGOUT"
 };
 
+function cleanState() {
+  const reset = {
+    user: null,
+    userObject: {},
+    rawContest: {},
+    rawSubmissions: [],
+    rawClarifications: [],
+    rawPrintouts: [],
+    rawTeams: [],
+    shownSubmission: {}
+  };
+  return reset;
+}
+
 export const state = {
-  user: null,
-  userObject: {},
-  rawContest: {},
-  rawSubmissions: [],
-  rawClarifications: [],
-  rawPrintouts: [],
-  rawTeams: [],
-  shownSubmission: {},
+  ...cleanState(),
   codeModalTrigger: false,
   persist: {
     dashboardTab: 0,
@@ -97,6 +105,11 @@ export const mutations = {
     if (!deliveredBalloons.hasOwnProperty(value.team))
       deliveredBalloons[value.team] = {};
     deliveredBalloons[value.team][value.problem] = value.state;
+  },
+  [types.LOGOUT](state) {
+    const clean = cleanState();
+    for (const [key, value] of Object.entries(clean))
+      state[key] = { ...state[key], ...value };
   }
 };
 
