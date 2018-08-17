@@ -1,6 +1,6 @@
 <template>
     <section v-if="hasStarted()">
-      <b-tabs v-model="activeTab" @change="changedTab">
+      <b-tabs type="is-boxed" v-model="activeTab" @change="changedTab">
         <b-tab-item label="Problems & Submissions">
           <div class="columns">
             <div class="column" :class="{'is-one-third': isAdmin() }">

@@ -9,7 +9,7 @@
           <p>There are no problems to be shown.</p>
         </div>
         <div v-else class="media" v-for="prob in problems" :key="prob.problem._id">
-          <div class="media-left ju-circle">
+          <div class="media-left ju-circle" :class="getCellClasses(prob)">
             <span>{{ prob.letter }}</span>
           </div>
 
@@ -92,6 +92,13 @@
             },
             isAc(prob){
                 return prob.solved;
+            },
+            getCellClasses(prob) {
+              if (this.isAc(prob))
+                return ["ac-color"];
+              else if (this.isWa(prob))
+                return ["wa-color"];
+              return [];
             },
             getProblemWorthScore(prob) {
               if (this.my.scoring.hasWeight())

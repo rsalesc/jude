@@ -1,133 +1,154 @@
 <template>
-  <div>
-    <b-field label="Name" horizontal>
-      <b-input placeholder="Type the name of the contest" v-model="localContest.name"></b-input>
-    </b-field>
-    <b-field label="Server time" horizontal>
-      <pre class="control is-size-7 ju-pre-field">{{ time }}</pre>
-      <p class="control ju-secondary-text has-text-danger">
-        When changing times, notice that your clock may be out of sync. 
-        Use the server time (already shifted to your timezone) as a reference.
-      </p>
-    </b-field>
-    <b-field label="Start" horizontal>
-      <ju-date-time-picker v-model="localContest.start_time"></ju-date-time-picker>
-    </b-field>
-    <b-field label="End" horizontal>
-      <ju-date-time-picker v-model="localContest.end_time"></ju-date-time-picker>
-    </b-field>
-    <b-field label="Scoring" horizontal>
-      <b-select v-model="localContest.scoring">
-        <option v-for="scoring in scorings" :value="scoring">
-          {{ scoring }}
-        </option>
-      </b-select>
-    </b-field>
-    <b-field horizontal>
-      <ju-object-editor 
-        edit-text="Edit scoring options..."
-        v-model="localContest.scoringOpts"></ju-object-editor>
-    </b-field>
-    <b-field label="Freeze duration" horizontal>
-      <div class="is-width-15">
-        <b-field>
-            <b-input type="number" v-model="localContest.freeze" icon="clock-o"></b-input>
-            <p class="control">
-              <span class="button is-static">minute(s)</span>
-            </p>
-        </b-field>
+    <div class="columns">
+      <!-- Contest -->
+      <div class="column is-half">
+          <div class="box">
+            <div class="box-title">
+                <div class="columns">
+                    <div class="column">
+                        <div class="content">
+                            <p class="title is-4">Contest</p>
+                            <p class="subtitle ju-comment ju-secondary-text">
+                                You can change contest configurations here.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="rule"></hr>
+            <div class="box-content">
+                <div class="container ju-override-container" v-if="!isContestLoading">
+                    <ju-contest-settings :id="getContestId()" :contest="data.contest" @submit="onContestSubmit"></ju-contest-settings>
+                </div>
+            </div>
+          </div>
       </div>
-    </b-field>
-    <b-field label="Blind duration" horizontal>
-      <div class="is-width-15">
-        <b-field>
-          <b-input type="number" v-model="localContest.blind" icon="clock-o"></b-input>
-          <p class="control">
-            <span class="button is-static">minute(s)</span>
-          </p>
-        </b-field>
+      <!-- Problems -->
+      <div class="column">
+        <div class="box">
+          <div class="box-title">
+            <div class="columns">
+              <div class="column">
+                <div class="content">
+                  <p class="title is-4">Problems</p>
+                  <p class="subtitle ju-comment ju-secondary-text">
+                    You can add/remove contest problems here.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr class="rule"></hr>
+          <div class="box-content">
+            <div class="container ju-override-container" v-if="!isContestLoading">
+              <ju-problems-settings 
+                :problems="getContestProblems()"
+                :data="data.problems"
+                @submit="onContestProblemsSubmit">
+              </ju-problems-settings>
+            </div>
+          </div>
+        </div>
       </div>
-    </b-field>
-    <b-field horizontal>
-      <b-switch size="is-small" v-model="localContest.hidden">
-        Hidden
-      </b-switch>
-    </b-field>
-    <b-field horizontal>
-      <b-switch size="is-small" v-model="localContest.upseeing">
-        Can see code after the contest ends
-      </b-switch>
-    </b-field>
-    <b-field horizontal>
-      <b-switch size="is-small" v-model="localContest.unfreeze">
-        Unfreeze the scoreboard after the contest ends
-      </b-switch>
-    </b-field>
-    <b-field horizontal>
-      <button class="button is-small is-primary" @click="confirm">
-        <b-icon icon="floppy-o" size="is-small"></b-icon>
-        <span>Save</span>
-      </button>
-    </b-field>
-  </div>
+    </div>
 </template>
 
-<script type="text/babel">// import 'babel-polyfill';
-    import * as Helper from "@front/helpers.js";
-    import JuDateTimePicker from "@front/components/DateTime.vue";
-    import JuObjectEditor from "@front/components/ObjectEditor.vue";
-    import Vue from "vue";
-    import * as Scorings from "@judge/scoring.js";
-    import ts from "@front/ts.js";
-    const clone = require("clone");
+<script type="text/babel">
+  import ContestSettingsComponent from "@front/admin/contest-settings-box.vue";
+  import ProblemsSettingsComponent from "@front/admin/problems-settings-box.vue";
+  import * as Helper from "@front/helpers.js";
+  import BulmaUtils from "@front/bulmutils";
+  import { types } from "@front/store/";
+  import * as Api from "@front/api";
 
-    export default {
-      mounted() {
-        this.timer = window.setInterval(() => this.tsDate = ts.date(), 1000);
-      },
-      beforeDestroy() {
-        if (this.timer)
-          window.clearInterval(this.timer);
-      },
-      props: {
-        id: { type: String },
-        contest: { type: Object }
-      },
-      data() {
+  export default {
+    data()  {
         return {
-          localContest: Object.assign(clone(this.contest, false), {
-            start_time: new Date(this.contest.start_time),
-            end_time: new Date(this.contest.end_time)
-          }),
-          tsDate: ts.date(),
-          timer: null
+            data: {
+                contest: {},
+                problems: []
+            },
+            isContestLoading: true
         };
-      },
-      computed: {
-        time() {
-          const datetime = Helper.getFormattedDateTime(this.tsDate);
-          const tz = Helper.getTimezone();
-          return `${datetime} ${tz}`;
+    },
+    mounted() {
+        this.$nextTick(async () => this.fetch());
+    },
+    computed: {
+        ...Helper.mapModuleState("main", [
+            "rawContest"
+        ]),
+    },
+    watch: {
+        rawContest(newVal) {
+            this.fetch();
+        }
+    },
+    methods: {
+        getContestId() {
+            return this.rawContest._id;
         },
-        scorings() {
-          return Object.keys(Scorings)
-            .filter(s => !s.startsWith("_"))
-            .filter(s => s !== "default");
-        }
-      },
-      methods: {
-        confirm() {
-          this.$dialog.confirm({
-            message: "Do you want to save these changes?",
-            onConfirm: () => this.$emit("submit", this.localContest)
-          });
-        }
-      },
-      components: {
-        JuDateTimePicker,
-        JuObjectEditor
-      }
-    };
-</script>
+        getContestProblems() {
+          return this.data.contest.problems;
+        },
+        async fetchAll() {
+            try {
+                const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
+                if(!loggedin)
+                    this.$judeLogout();
+            } catch (err) {
+                console.error(err);
+                new BulmaUtils(this).toast("Error contacting the server", 4000, "is-danger");
+            }
+        },
+        async fetch() {
+            this.isContestLoading = true;
+            if (this.getContestId() == null) return;
+            try {
+                const [contest, problems] = await Promise.all([
+                  Api.admin.contest.get({ id: this.getContestId() }),
+                  Api.admin.problems.get()
+                ]);
+              this.data = { contest: contest.body, problems: problems.body };
+            } catch (response) {
+                if (response.status === 401 || response.status === 403)
+                    return this.$judeLogout();
 
-<style lang="sass"></style>
+                new BulmaUtils(this).toast("Error contacting the server.", 4000, "is-danger");
+                console.error(response);
+            }
+            this.isContestLoading = false;
+        },
+        async onContestSubmit(contest) {
+            if (this.getContestId() == null) return;
+            try {
+                await Api.admin.contest.save({ id: this.getContestId() }, { contest });
+                this.fetchAll();
+            } catch(response) {
+                if (response.status === 401 || response.status === 403)
+                    return this.$judeLogout();
+                
+                new BulmaUtils(this).toast("Error contacting the server.", 4000, "is-danger");
+                console.error(response);
+            }
+        },
+        async onContestProblemsSubmit(probs) {
+            if (this.getContestId() == null) return;
+            try {
+                await Api.admin.contestProblems.save({ id: this.getContestId() }, { problems: probs });
+                this.fetchAll();
+            } catch(response) {
+                if (response.status === 401 || response.status === 403)
+                    return this.$judeLogout();
+                
+                new BulmaUtils(this).toast("Error contacting the server.", 4000, "is-danger");
+                console.error(response);
+            }
+        }
+    },
+    components: {
+        JuContestSettings: ContestSettingsComponent,
+        JuProblemsSettings: ProblemsSettingsComponent
+    }
+  }
+</script>

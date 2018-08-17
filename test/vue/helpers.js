@@ -265,7 +265,7 @@ describe("helpers", function () {
       this.ts.restore();
     });
 
-    describe("getCountDown()", function () {
+    describe("getCountdown()", function () {
       const tests = [
         {
           name: "one day remaining",

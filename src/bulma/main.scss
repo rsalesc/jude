@@ -183,14 +183,36 @@ $sizes: 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 9
   padding-right: 1em;
 }
 
+@mixin badge-gradient($color) {
+  background: #f2f5f6; /* Old browsers */
+  background: -moz-linear-gradient(-45deg,  #f2f5f6 0%, #e3eaed 37%, #{$color} 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg,  #f2f5f6 0%,#e3eaed 37%,#{$color} 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg,  #f2f5f6 0%,#e3eaed 37%,#{$color} 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#{$color}',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+}
+
 .ju-circle {
   border-radius: 50%;
-  width: 1.5em;
+  width: 2em;
   font-size: 1.5em;
   color: #333;
   border: 1px solid #666;
-  padding-left: 2px;
+  text-align: center;
+  padding-top: 0.15em;
+  height: 2em;
+  box-shadow: 0.02em 0.02em 0.02em black;
 
+  @include badge-gradient(#c8d7dc);
+
+  &.wa-color {
+    @include badge-gradient(#ffbcbc);
+  }
+
+  &.ac-color {
+    @include badge-gradient(#a2ffc7);
+  }
+ 
   span {
     text-align: center;
     line-height: 1.5em;
