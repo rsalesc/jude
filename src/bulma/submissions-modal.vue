@@ -136,7 +136,7 @@ export default {
       try {
         const loggedin = await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
         if (!loggedin)
-          this.$judeLogout();
+          this.$jude.logout();
         else
           this.codeModal.active = true;
       } catch (err) {

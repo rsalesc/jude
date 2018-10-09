@@ -173,7 +173,7 @@ export default {
       try {
         const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
         if (!loggedin)
-          this.$judeLogout();
+          this.$jude.logout();
       } catch (err) {
         new BulmaUtils(this).toastResponseError(err);
       }
@@ -193,7 +193,7 @@ export default {
       } catch (response) {
         this.submitting--;
         if (response.status === 401 || response.status === 403)
-          return this.$judeLogout();
+          return this.$jude.logout();
         new BulmaUtils(this).toastResponseError(response);
       }
     },
@@ -213,7 +213,7 @@ export default {
           } catch (response) {
             this.submitting--;
             if (response.status === 401 || response.status === 403)
-              return this.$judeLogout();
+              return this.$jude.logout();
             new BulmaUtils(this).toastResponseError(response);
           }
           this.clear();
