@@ -61,7 +61,7 @@ require("source-map-support").install();
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 27);
+/******/ 	return __webpack_require__(__webpack_require__.s = 29);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -116,8 +116,8 @@ module.exports = require("babel-runtime/helpers/asyncToGenerator");
 /**
  * Created by rsalesc on 14/06/16.
  */
-var winston = __webpack_require__(30);
-var process = __webpack_require__(19);
+var winston = __webpack_require__(32);
+var process = __webpack_require__(20);
 
 var logger = new winston.Logger({
     level: process.env.LOG_LEVEL || "info",
@@ -150,36 +150,54 @@ module.exports = require("fs-extra");
 /* 9 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/object/keys");
+module.exports = require("babel-runtime/core-js/object/get-prototype-of");
 
 /***/ }),
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/promise");
+module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
 
 /***/ }),
 /* 11 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/slicedToArray");
+module.exports = require("babel-runtime/helpers/inherits");
 
 /***/ }),
 /* 12 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/object/keys");
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/promise");
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/helpers/slicedToArray");
+
+/***/ }),
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _promise = __webpack_require__(10);
+var _promise = __webpack_require__(13);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _typeof2 = __webpack_require__(38);
+var _typeof2 = __webpack_require__(52);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
-var _keys = __webpack_require__(9);
+var _keys = __webpack_require__(12);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -357,8 +375,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = __webpack_require__(1);
 var fs = __webpack_require__(8);
-var util = __webpack_require__(39);
-var glob = __webpack_require__(23);
+var util = __webpack_require__(53);
+var glob = __webpack_require__(26);
 
 function inspect(p) {
   return util.inspect(p, false, null);
@@ -432,24 +450,6 @@ module.exports = {
 };
 
 /***/ }),
-/* 13 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/core-js/object/get-prototype-of");
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/inherits");
-
-/***/ }),
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -464,7 +464,7 @@ var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _slicedToArray2 = __webpack_require__(11);
+var _slicedToArray2 = __webpack_require__(14);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -472,7 +472,7 @@ var _getIterator2 = __webpack_require__(0);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _map = __webpack_require__(20);
+var _map = __webpack_require__(21);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -492,14 +492,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var fs = __webpack_require__(17);
 var fse = __webpack_require__(8);
-var tmp = __webpack_require__(31);
+var tmp = __webpack_require__(33);
 tmp.setGracefulCleanup();
 
 var path = __webpack_require__(1);
 
-var MongoQueue2 = __webpack_require__(21);
+var MongoQueue2 = __webpack_require__(22);
 
-var _require = __webpack_require__(32),
+var _require = __webpack_require__(34),
     JudgeConfig = _require.JudgeConfig;
 
 var FileCacher = function () {
@@ -780,6 +780,12 @@ module.exports = require("fs");
 /* 18 */
 /***/ (function(module, exports) {
 
+module.exports = require("babel-runtime/helpers/extends");
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
 module.exports = function(module) {
 	if(!module.webpackPolyfill) {
 		module.deprecate = function() {};
@@ -805,33 +811,66 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = require("process");
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/map");
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = require("mongo-queue2");
 
 /***/ }),
-/* 22 */
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* eslint-disable */
+var path = __webpack_require__(1),
+    fs = __webpack_require__(17),
+    mongoose = __webpack_require__(4);
+// files = fs.readdirSync(__dirname);
+
+__webpack_require__(24);
+
+/* files.forEach(function(file) {
+    var name = path.basename(file, '.js');
+    if (name === 'index')
+        return;
+
+    var mod = require('./' + name);
+    module.exports[name] = mod();
+});*/
+
+module.exports = {
+  Contest: __webpack_require__(39)(),
+  User: __webpack_require__(42)(),
+  Submission: __webpack_require__(44)(),
+  Problem: __webpack_require__(25)(),
+  Clarification: __webpack_require__(45)(),
+  Printout: __webpack_require__(46)()
+};
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var mongoose = __webpack_require__(4);
-var MongoQueue2 = __webpack_require__(21);
-var weed = __webpack_require__(33);
+var MongoQueue2 = __webpack_require__(22);
+var weed = __webpack_require__(38);
 
 // mongodb setup
 
@@ -852,19 +891,125 @@ if (!global.db) {
 module.exports = global.db;
 
 /***/ }),
-/* 23 */
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _getIterator2 = __webpack_require__(0);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Created by rsalesc on 15/07/16.
+ */
+
+var mongoose = __webpack_require__(4);
+var Schema = mongoose.Schema;
+
+// TODO: add creation time (with a plugin)
+
+module.exports = function () {
+  if (db.models.Problem) return db.model("Problem");
+
+  var VisibilitySchema = new Schema({
+    contest: { type: Schema.Types.ObjectId, ref: "Contest" }
+  }, { _id: false });
+
+  var ProblemSchema = new Schema({
+    code: {
+      type: String,
+      minlength: 4,
+      maxlength: 24,
+      match: /[a-zA-Z][a-zA-Z0-9-]*/,
+      required: true
+    },
+    name: {
+      type: String,
+      minlength: 4,
+      maxlength: 64,
+      required: true
+    },
+    statementFid: String,
+    fid: String,
+    attr: Schema.Types.Mixed,
+    visibility: [VisibilitySchema]
+  }, { timestamps: true });
+
+  ProblemSchema.index({ code: 1 }, { unique: 1 });
+  ProblemSchema.index({ name: 1 });
+  ProblemSchema.index({ code: "text", name: "text" });
+
+  ProblemSchema.pre("remove", function (next) {
+    var _this = this;
+
+    db.model("Submission").remove({ problem: this._id }, function (err) {
+      if (err) console.error(err);
+    });
+    var contestQuery = {
+      problems: {
+        $elemMatch: {
+          problem: this._id
+        }
+      }
+    };
+
+    db.model("Contest").find(contestQuery, function (err, contests) {
+      if (err) return console.error(err);
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = (0, _getIterator3.default)(contests), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var contest = _step.value;
+
+          contest.problems = contest.problems.filter(function (problem) {
+            return !_this._id.equals(problem.problem);
+          });
+          contest.save(function (err) {
+            if (err) console.error(err);
+          });
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+    });
+    next();
+  });
+
+  return db.model("Problem", ProblemSchema);
+};
+
+/***/ }),
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = require("glob");
 
 /***/ }),
-/* 24 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(module) {
 
-var _keys = __webpack_require__(9);
+var _keys = __webpack_require__(12);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -872,15 +1017,15 @@ var _getIterator2 = __webpack_require__(0);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(13);
+var _getPrototypeOf = __webpack_require__(9);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(14);
+var _possibleConstructorReturn2 = __webpack_require__(10);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(15);
+var _inherits2 = __webpack_require__(11);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -900,7 +1045,7 @@ var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _promise = __webpack_require__(10);
+var _promise = __webpack_require__(13);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -910,16 +1055,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/06/16.
  */
 
-var yauzl = __webpack_require__(42);
-var concatStream = __webpack_require__(43);
-var utils = __webpack_require__(12);
-var wildcard = __webpack_require__(44);
+var yauzl = __webpack_require__(56);
+var concatStream = __webpack_require__(57);
+var utils = __webpack_require__(15);
+var wildcard = __webpack_require__(58);
 var path = __webpack_require__(1);
 var logger = __webpack_require__(7);
 var fs = __webpack_require__(8);
-var promisify = __webpack_require__(45);
-var glob = promisify(__webpack_require__(23).glob);
-var streamifier = __webpack_require__(46);
+var promisify = __webpack_require__(59);
+var glob = promisify(__webpack_require__(26).glob);
+var streamifier = __webpack_require__(60);
 
 /* Helper Functions for storage */
 function dealWithEntry(zipFile, entry) {
@@ -1937,28 +2082,28 @@ module.exports = {
   RealStorage: RealStorage,
   MemoryStorage: MemoryStorage
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)(module)))
 
 /***/ }),
-/* 25 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _getPrototypeOf = __webpack_require__(13);
+var _getPrototypeOf = __webpack_require__(9);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(14);
+var _possibleConstructorReturn2 = __webpack_require__(10);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(15);
+var _inherits2 = __webpack_require__(11);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _keys = __webpack_require__(9);
+var _keys = __webpack_require__(12);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -1966,7 +2111,7 @@ var _getIterator2 = __webpack_require__(0);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _extends2 = __webpack_require__(50);
+var _extends2 = __webpack_require__(18);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -2643,120 +2788,14 @@ module.exports = {
 };
 
 /***/ }),
-/* 26 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-var _getIterator2 = __webpack_require__(0);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Created by rsalesc on 15/07/16.
- */
-
-var mongoose = __webpack_require__(4);
-var Schema = mongoose.Schema;
-
-// TODO: add creation time (with a plugin)
-
-module.exports = function () {
-  if (db.models.Problem) return db.model("Problem");
-
-  var VisibilitySchema = new Schema({
-    contest: { type: Schema.Types.ObjectId, ref: "Contest" }
-  }, { _id: false });
-
-  var ProblemSchema = new Schema({
-    code: {
-      type: String,
-      minlength: 4,
-      maxlength: 24,
-      match: /[a-zA-Z][a-zA-Z0-9-]*/,
-      required: true
-    },
-    name: {
-      type: String,
-      minlength: 4,
-      maxlength: 64,
-      required: true
-    },
-    statementFid: String,
-    fid: String,
-    attr: Schema.Types.Mixed,
-    visibility: [VisibilitySchema]
-  }, { timestamps: true });
-
-  ProblemSchema.index({ code: 1 }, { unique: 1 });
-  ProblemSchema.index({ name: 1 });
-  ProblemSchema.index({ code: "text", name: "text" });
-
-  ProblemSchema.pre("remove", function (next) {
-    var _this = this;
-
-    db.model("Submission").remove({ problem: this._id }, function (err) {
-      if (err) console.error(err);
-    });
-    var contestQuery = {
-      problems: {
-        $elemMatch: {
-          problem: this._id
-        }
-      }
-    };
-
-    db.model("Contest").find(contestQuery, function (err, contests) {
-      if (err) return console.error(err);
-
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = (0, _getIterator3.default)(contests), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var contest = _step.value;
-
-          contest.problems = contest.problems.filter(function (problem) {
-            return !_this._id.equals(problem.problem);
-          });
-          contest.save(function (err) {
-            if (err) console.error(err);
-          });
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-    });
-    next();
-  });
-
-  return db.model("Problem", ProblemSchema);
-};
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(28);
+module.exports = __webpack_require__(30);
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2770,7 +2809,7 @@ var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _promise = __webpack_require__(10);
+var _promise = __webpack_require__(13);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -2842,13 +2881,13 @@ var startWatching = function () {
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var path = __webpack_require__(1);
-var mongodb = __webpack_require__(29);
+var mongodb = __webpack_require__(31);
 var logger = __webpack_require__(7);
 var environment = __webpack_require__(16);
-var db = __webpack_require__(22);
-var grader = __webpack_require__(34);
+var db = __webpack_require__(24);
+var grader = __webpack_require__(48);
 
-var _require = __webpack_require__(54),
+var _require = __webpack_require__(23),
     Submission = _require.Submission;
 
 var JudgeEnvironment = environment.JudgeEnvironment,
@@ -3052,25 +3091,25 @@ var seaweed = weedClient;
 startWatching(new JudgeEnvironment(db, seaweed));
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports) {
 
 module.exports = require("mongodb");
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports) {
 
 module.exports = require("winston");
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports) {
 
 module.exports = require("tmp");
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3079,7 +3118,21 @@ module.exports = require("tmp");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.SiteConfig = exports.JudgeConfig = undefined;
+
+var _extends2 = __webpack_require__(18);
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var path = __webpack_require__(1);
+
+var _require = __webpack_require__(35),
+    UserThrottlingPolicy = _require.UserThrottlingPolicy;
+
+var _require2 = __webpack_require__(47),
+    SharedConfig = _require2.SharedConfig;
 
 var JudgeConfig = exports.JudgeConfig = {
   MAX_TRIES: 5,
@@ -3099,14 +3152,582 @@ var JudgeConfig = exports.JudgeConfig = {
   BOUND_ML: 2048
 };
 
+var SiteConfig = exports.SiteConfig = (0, _extends3.default)({}, SharedConfig, {
+
+  // throttling
+  throttling: {
+    submissions: new UserThrottlingPolicy([{ windowMs: 10 * 1000, max: 3 }, { windowMs: 60 * 1000, max: 7 }, { windowMs: 2 * 60 * 1000, max: 10 }], {
+      message: "You submitted too many times! Wait until you can submit again."
+    }),
+    clarifications: new UserThrottlingPolicy([{ windowMs: 60 * 1000, max: 4 }, { windowMs: 10 * 60 * 1000, max: 10 }], {
+      message: "You can't spam clarifications like that!"
+    }),
+    printouts: new UserThrottlingPolicy([{ windowMs: 60 * 1000, max: 4 }, { windowMs: 10 * 60 * 1000, max: 10 }], {
+      message: "You can't ask for printouts like that! Wait and try again."
+    })
+  }
+});
+
 /***/ }),
-/* 33 */
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserThrottlingPolicy = exports.ThrottlingPolicy = undefined;
+
+var _getPrototypeOf = __webpack_require__(9);
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _possibleConstructorReturn2 = __webpack_require__(10);
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = __webpack_require__(11);
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _getIterator2 = __webpack_require__(0);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _extends2 = __webpack_require__(18);
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _classCallCheck2 = __webpack_require__(2);
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var limiter = __webpack_require__(36);
+
+var _require = __webpack_require__(37),
+    isAdmin = _require.isAdmin;
+
+var THROTTLE_CODE = 429;
+
+function sanitize(opts) {
+  var msg = { error: "Too many requests." };
+  if (opts.message) msg = { error: opts.message };
+
+  opts.handler = function (req, res) {
+    res.status(THROTTLE_CODE).send(msg);
+  };
+}
+
+var ThrottlingPolicy = exports.ThrottlingPolicy = function ThrottlingPolicy(sequenceOfOpts) {
+  var commonOpts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  (0, _classCallCheck3.default)(this, ThrottlingPolicy);
+
+  var opts = sequenceOfOpts;
+  if (!Array.isArray(sequenceOfOpts)) opts = [sequenceOfOpts];
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = (0, _getIterator3.default)(opts), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var opt = _step.value;
+
+      sanitize(opt);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  sanitize(commonOpts);
+  this.constraints = opts.map(function (x) {
+    return (0, _extends3.default)({}, x, commonOpts);
+  });
+  this.middlewares = this.constraints.map(function (x) {
+    return limiter(x);
+  });
+};
+
+var UserThrottlingPolicy = exports.UserThrottlingPolicy = function (_ThrottlingPolicy) {
+  (0, _inherits3.default)(UserThrottlingPolicy, _ThrottlingPolicy);
+
+  function UserThrottlingPolicy(sequenceOfOpts) {
+    var commonOpts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    (0, _classCallCheck3.default)(this, UserThrottlingPolicy);
+
+    commonOpts.keyGenerator = function (req) {
+      if (req.auth2 && req.auth2.user) return req.auth2.user;
+      return req.ip;
+    };
+
+    commonOpts.skip = function (req) {
+      return req.auth2 && req.auth2.user && isAdmin(req);
+    };
+
+    commonOpts.skipFailedRequests = true;
+    return (0, _possibleConstructorReturn3.default)(this, (UserThrottlingPolicy.__proto__ || (0, _getPrototypeOf2.default)(UserThrottlingPolicy)).call(this, sequenceOfOpts, commonOpts));
+  }
+
+  return UserThrottlingPolicy;
+}(ThrottlingPolicy);
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports) {
+
+module.exports = require("express-rate-limit");
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(23),
+    Contest = _require.Contest;
+
+function getUserContest(user) {
+  try {
+    return Contest.findById(user.contest);
+  } catch (ex) {
+    return { exec: function exec(cb) {
+        return cb(ex);
+      } };
+  }
+}
+
+function isAdmin(req) {
+  return req.auth2.roles.indexOf("admin") !== -1;
+}
+
+module.exports = {
+  getUserContest: getUserContest,
+  isAdmin: isAdmin
+};
+
+/***/ }),
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = require("jude-seaweedfs");
 
 /***/ }),
-/* 34 */
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _set = __webpack_require__(40);
+
+var _set2 = _interopRequireDefault(_set);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Created by rsalesc on 14/07/16.
+ */
+var mongoose = __webpack_require__(4);
+var deepPopulate = __webpack_require__(41)(mongoose);
+var Schema = mongoose.Schema;
+
+
+module.exports = function () {
+  if (db.models.Contest) return db.model("Contest");
+
+  var Problem = __webpack_require__(25)();
+
+  var ContestProblem = new Schema({
+    letter: {
+      type: String,
+      required: true,
+      match: /[A-Z][0-9]*/
+    },
+    problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
+    color: { type: String, default: "000" },
+    scoringOpts: { type: Schema.Types.Mixed, default: {} }
+  }, { _id: false });
+
+  var ContestSchema = new Schema({
+    name: { type: String, minlength: 4, maxlength: 64 },
+    start_time: { type: Date, required: true },
+    end_time: { type: Date, required: true },
+    scoring: { type: String, required: true },
+    scoringOpts: { type: Schema.Types.Mixed, default: {} },
+    problems: {
+      type: [ContestProblem],
+      validate: {
+        validator: function validator(v) {
+          if (!Array.isArray(v)) return false;
+          var letters = v.map(function (val) {
+            return val.letter;
+          });
+          var ids = v.map(function (val) {
+            return val.problem.toString();
+          });
+
+          return new _set2.default(letters).size === letters.length && new _set2.default(ids).size === ids.length;
+        },
+
+        message: "Contest cannot have repeated letters and problems must be an array"
+      }
+    },
+    hidden: Boolean,
+    upseeing: { type: Boolean, required: true, default: false },
+    blind: { type: Number, default: 0 },
+    freeze: { type: Number, default: 0 },
+    unfreeze: { type: Boolean, default: false }
+  }, { timestamps: true });
+
+  ContestSchema.index({ name: 1 });
+  ContestSchema.index({ name: "text" });
+  ContestSchema.plugin(deepPopulate);
+
+  ContestSchema.pre("save", function (next) {
+    this.problems.sort(function (a, b) {
+      try {
+        return function (x, y) {
+          var xd = parseInt(x.slice(1), 10) || 0;
+          var yd = parseInt(y.slice(1), 10) || 0;
+
+          if (x[0] === y[0]) return xd < yd ? -1 : xd > yd ? 1 : 0;
+
+          return x[0] < y[0] ? -1 : 1;
+        }(a.letter, b.letter);
+      } catch (ex) {
+        return false;
+      }
+    });
+
+    next();
+  });
+
+  ContestSchema.methods.hasStarted = function () {
+    return this.start_time.getTime() <= Date.now();
+  };
+
+  ContestSchema.methods.hasEnded = function () {
+    return this.end_time.getTime() <= Date.now();
+  };
+
+  ContestSchema.methods.isRunning = function () {
+    return this.hasStarted() && !this.hasEnded();
+  };
+
+  ContestSchema.methods.getTimeInContest = function (x) {
+    var cur = x != null ? x : Date.now();
+    return parseInt((cur - this.start_time.getTime()) / 60 / 1000, 10);
+  };
+
+  ContestSchema.methods.getDurationInContest = function () {
+    var diff = this.end_time.getTime() - this.start_time.getTime();
+    return parseInt(Math.ceil(diff / 60 / 1000), 10);
+  };
+
+  ContestSchema.methods.getRemainingInContest = function (x) {
+    return this.getDurationInContest() - (x != null ? x : this.getTimeInContest());
+  };
+
+  ContestSchema.methods.isFrozen = function (x) {
+    return this.getRemainingInContest(x) <= this.freeze && (this.isRunning() || this.hasEnded() && !this.unfreeze && this.freeze > 0);
+  };
+
+  ContestSchema.methods.isBlind = function (x) {
+    return this.getRemainingInContest(x) <= this.blind && (this.isRunning() || this.hasEnded() && !this.unfreeze && this.blind > 0);
+  };
+
+  ContestSchema.pre("remove", function (next) {
+    db.model("Submission").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
+    });
+    db.model("User").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
+    });
+    db.model("Clarification").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
+    });
+    db.model("Printout").remove({ contest: this._id }, function (err) {
+      if (err) console.error(err);
+    });
+    next();
+  });
+
+  return db.model("Contest", ContestSchema);
+};
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/set");
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports) {
+
+module.exports = require("mongoose-deep-populate");
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Created by rsalesc on 14/07/16.
+ */
+var mongoose = __webpack_require__(4);
+var Schema = mongoose.Schema;
+var sha256 = __webpack_require__(43);
+
+module.exports = function () {
+    if (db.models.User) return db.model("User");
+
+    var UserSchema = new Schema({
+        handle: {
+            type: String,
+            minlength: 4,
+            maxlength: 16,
+            match: /[a-zA-Z][a-zA-Z0-9_\.]*/,
+            required: true
+        },
+        name: {
+            type: String,
+            maxlength: 48,
+            default: "unnamed"
+        },
+        description: String,
+        password: { type: String },
+        email: {
+            type: String,
+            maxlength: 64
+            // TODO: put email regex here
+        },
+        contest: { type: Schema.Types.ObjectId, ref: 'Contest' },
+        unofficial: { type: Boolean, default: false },
+        disabled: { type: Boolean, default: false },
+        role: { type: String, default: "contestant" }
+    }, { timestamps: true });
+
+    UserSchema.index({ handle: 1, contest: 1 }, { unique: true });
+    UserSchema.index({ handle: 'text', name: 'text' }, {
+        weights: {
+            handle: 2,
+            name: 1
+        }
+    });
+
+    UserSchema.pre('save', function (next) {
+        if (this.isModified('password')) {
+            this.password = sha256(this.password);
+        }
+
+        next();
+    });
+
+    UserSchema.methods.matchPasswords = function (candidate) {
+        return this.password == sha256(candidate);
+    };
+
+    UserSchema.pre("remove", function (next) {
+        db.model("Submission").remove({ _creator: this._id }, function (err) {
+            if (err) console.error(err);
+        });
+        next();
+    });
+
+    return db.model('User', UserSchema);
+};
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports) {
+
+module.exports = require("sha256");
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _getIterator2 = __webpack_require__(0);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Created by rsalesc on 15/07/16.
+ */
+
+var mongoose = __webpack_require__(4);
+var Schema = mongoose.Schema;
+
+
+var DEFAULT_VERDICT = {
+  verdict: "", info: "", passed: -1, score: 0
+};
+
+// TODO: add creation time (with a plugin)
+module.exports = function () {
+  if (db.models.Submission) return db.model("Submission");
+
+  var SubmissionSchema = new Schema({
+    _creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    contest: { type: Schema.Types.ObjectId, ref: "Contest" },
+    problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
+    time: { type: Date, default: Date.now },
+    timeInContest: { type: Number, default: 0 },
+    // add enum validator? maybe not, language set is mutable
+    language: String,
+    code: String,
+    codeHash: { type: String, default: "" },
+    verdict: Schema.Types.Mixed
+  }, { timestamps: true });
+
+  SubmissionSchema.index({ contest: 1, _creator: 1 });
+  SubmissionSchema.index({ contest: 1, problem: 1 });
+  SubmissionSchema.index({ contest: 1, time: 1 });
+  SubmissionSchema.index({ contest: 1, timeInContest: 1 });
+  SubmissionSchema.index({ problem: 1, _creator: 1 });
+  SubmissionSchema.index({ _creator: 1 });
+
+  SubmissionSchema.pre("save", function (next) {
+    var _this = this;
+
+    if (this.problem) {
+      db.model("Problem").findById(this.problem).exec(function (err, problem) {
+        if (err) next(err);
+        _this.verdict = _this.verdict || {};
+        var res = {};
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = (0, _getIterator3.default)(problem.attr.datasets), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var data = _step.value;
+
+            res[data.name] = _this.verdict[data.name] || DEFAULT_VERDICT;
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        _this.verdict = res;
+        next();
+      });
+    }
+  });
+
+  return db.model("Submission", SubmissionSchema);
+};
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var mongoose = __webpack_require__(4);
+var Schema = mongoose.Schema;
+
+
+module.exports = function () {
+  if (db.models.Clarification) return db.model("Clarification");
+
+  var CommentSchema = new Schema({
+    _creator: { type: Schema.Types.ObjectId, ref: "User" },
+    text: String
+  }, { timestamps: true });
+
+  var ClarificationSchema = new Schema({
+    _creator: { type: Schema.Types.ObjectId, ref: "User" },
+    contest: { type: Schema.Types.ObjectId, ref: "Contest" },
+    problem: { type: Schema.Types.ObjectId, ref: "Problem" },
+    broadcast: { type: Boolean, default: false },
+    comments: [CommentSchema]
+  }, { timestamps: true });
+
+  ClarificationSchema.index({ _creator: 1, contest: 1 });
+  ClarificationSchema.index({ contest: 1, broadcast: 1 });
+
+  return db.model("Clarification", ClarificationSchema);
+};
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var mongoose = __webpack_require__(4);
+var Schema = mongoose.Schema;
+
+
+module.exports = function () {
+  if (db.models.Printout) return db.model("Printout");
+
+  var PrintoutSchema = new Schema({
+    _creator: { type: Schema.Types.ObjectId, ref: "User" },
+    contest: { type: Schema.Types.ObjectId, ref: "Contest" },
+    text: String,
+    lines: Number,
+    done: Boolean
+  }, { timestamps: true });
+
+  PrintoutSchema.index({ _creator: 1, contest: 1 });
+
+  return db.model("Printout", PrintoutSchema);
+};
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var SharedConfig = exports.SharedConfig = {
+  SOURCE_LIMIT: 128 * 1024
+};
+
+/***/ }),
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3116,11 +3737,11 @@ var _getIterator2 = __webpack_require__(0);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _slicedToArray2 = __webpack_require__(11);
+var _slicedToArray2 = __webpack_require__(14);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _promise = __webpack_require__(10);
+var _promise = __webpack_require__(13);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -3940,18 +4561,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var fs = __webpack_require__(17);
 var fse = __webpack_require__(8);
 var path = __webpack_require__(1);
-var promiseReflect = __webpack_require__(35);
+var promiseReflect = __webpack_require__(49);
 
-var verdict = __webpack_require__(36);
-var utils = __webpack_require__(12);
+var verdict = __webpack_require__(50);
+var utils = __webpack_require__(15);
 var logger = __webpack_require__(7);
-var sandbox = __webpack_require__(40);
+var sandbox = __webpack_require__(54);
 var environment = __webpack_require__(16);
 
-var loader = __webpack_require__(48);
-var Profiler = __webpack_require__(53);
+var loader = __webpack_require__(62);
+var Profiler = __webpack_require__(66);
 
-var Storage = __webpack_require__(24).MemoryStorage;
+var Storage = __webpack_require__(27).MemoryStorage;
 
 var Verdict = verdict.Verdict;
 var Isolate = sandbox.Isolate,
@@ -4752,22 +5373,22 @@ var availableLanguages = {
 };
 
 module.exports = { testTask: testTask, testPackage: testPackage, availableLanguages: availableLanguages };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)(module)))
 
 /***/ }),
-/* 35 */
+/* 49 */
 /***/ (function(module, exports) {
 
 module.exports = require("promise-reflect");
 
 /***/ }),
-/* 36 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _assign = __webpack_require__(37);
+var _assign = __webpack_require__(51);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -4898,35 +5519,35 @@ module.exports = {
 };
 
 /***/ }),
-/* 37 */
+/* 51 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/object/assign");
 
 /***/ }),
-/* 38 */
+/* 52 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
-/* 39 */
+/* 53 */
 /***/ (function(module, exports) {
 
 module.exports = require("util");
 
 /***/ }),
-/* 40 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(module) {
 
-var _slicedToArray2 = __webpack_require__(11);
+var _slicedToArray2 = __webpack_require__(14);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _keys = __webpack_require__(9);
+var _keys = __webpack_require__(12);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -4934,15 +5555,15 @@ var _getIterator2 = __webpack_require__(0);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(13);
+var _getPrototypeOf = __webpack_require__(9);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(14);
+var _possibleConstructorReturn2 = __webpack_require__(10);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(15);
+var _inherits2 = __webpack_require__(11);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -4967,21 +5588,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 15/06/16.
  */
-var Promise = __webpack_require__(41);
+var Promise = __webpack_require__(55);
 
 var fs = __webpack_require__(8);
 
 var path = __webpack_require__(1);
 var logger = __webpack_require__(7);
 var jenv = __webpack_require__(16);
-var utils = __webpack_require__(12);
+var utils = __webpack_require__(15);
 var globAsync = utils.globAsync;
 
 
-var Storage = __webpack_require__(24).MemoryStorage;
+var Storage = __webpack_require__(27).MemoryStorage;
 var JudgeConfig = jenv.JudgeConfig;
 
-var spawnDetachedPromise = __webpack_require__(47).spawn;
+var spawnDetachedPromise = __webpack_require__(61).spawn;
 
 /*
 *   spawnDetached async version (promisified)
@@ -6657,62 +7278,62 @@ module.exports = {
   IsolateConst: IsolateConst,
   IsolatePool: IsolatePool
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)(module)))
 
 /***/ }),
-/* 41 */
+/* 55 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");
 
 /***/ }),
-/* 42 */
+/* 56 */
 /***/ (function(module, exports) {
 
 module.exports = require("yauzl");
 
 /***/ }),
-/* 43 */
+/* 57 */
 /***/ (function(module, exports) {
 
 module.exports = require("concat-stream");
 
 /***/ }),
-/* 44 */
+/* 58 */
 /***/ (function(module, exports) {
 
 module.exports = require("node-wildcard");
 
 /***/ }),
-/* 45 */
+/* 59 */
 /***/ (function(module, exports) {
 
 module.exports = require("es6-promisify");
 
 /***/ }),
-/* 46 */
+/* 60 */
 /***/ (function(module, exports) {
 
 module.exports = require("streamifier");
 
 /***/ }),
-/* 47 */
+/* 61 */
 /***/ (function(module, exports) {
 
 module.exports = require("child-process-promise");
 
 /***/ }),
-/* 48 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _slicedToArray2 = __webpack_require__(11);
+var _slicedToArray2 = __webpack_require__(14);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _map = __webpack_require__(20);
+var _map = __webpack_require__(21);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -6720,15 +7341,15 @@ var _getIterator2 = __webpack_require__(0);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _getPrototypeOf = __webpack_require__(13);
+var _getPrototypeOf = __webpack_require__(9);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _possibleConstructorReturn2 = __webpack_require__(14);
+var _possibleConstructorReturn2 = __webpack_require__(10);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(15);
+var _inherits2 = __webpack_require__(11);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
@@ -6849,11 +7470,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var path = __webpack_require__(1);
-var task = __webpack_require__(49);
-var YAML = __webpack_require__(52);
+var task = __webpack_require__(63);
+var YAML = __webpack_require__(65);
 var logger = __webpack_require__(7);
-var utils = __webpack_require__(12);
-var scoring = __webpack_require__(25);
+var utils = __webpack_require__(15);
+var scoring = __webpack_require__(28);
 
 var JUDE_FN = "jude.yml";
 
@@ -7386,7 +8007,7 @@ var LOADERS = new _map2.default([
 };
 
 /***/ }),
-/* 49 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7410,8 +8031,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 14/06/16.
  */
 
-var scoring = __webpack_require__(25);
-var deepcopy = __webpack_require__(51);
+var scoring = __webpack_require__(28);
+var deepcopy = __webpack_require__(64);
 
 var Task = function () {
   function Task(attr) {
@@ -7630,31 +8251,25 @@ var Task = function () {
 module.exports = { Task: Task };
 
 /***/ }),
-/* 50 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/extends");
-
-/***/ }),
-/* 51 */
+/* 64 */
 /***/ (function(module, exports) {
 
 module.exports = require("deepcopy");
 
 /***/ }),
-/* 52 */
+/* 65 */
 /***/ (function(module, exports) {
 
 module.exports = require("yamljs");
 
 /***/ }),
-/* 53 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _keys = __webpack_require__(9);
+var _keys = __webpack_require__(12);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -7672,7 +8287,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var process = __webpack_require__(19);
+var process = __webpack_require__(20);
 
 function getSeconds(tuple) {
   return tuple[0] + tuple[1] / 1e9;
@@ -7752,425 +8367,6 @@ var Profiler = function () {
 }();
 
 module.exports = Profiler;
-
-/***/ }),
-/* 54 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/* eslint-disable */
-var path = __webpack_require__(1),
-    fs = __webpack_require__(17),
-    mongoose = __webpack_require__(4);
-// files = fs.readdirSync(__dirname);
-
-__webpack_require__(22);
-
-/* files.forEach(function(file) {
-    var name = path.basename(file, '.js');
-    if (name === 'index')
-        return;
-
-    var mod = require('./' + name);
-    module.exports[name] = mod();
-});*/
-
-module.exports = {
-  Contest: __webpack_require__(55)(),
-  User: __webpack_require__(58)(),
-  Submission: __webpack_require__(60)(),
-  Problem: __webpack_require__(26)(),
-  Clarification: __webpack_require__(61)(),
-  Printout: __webpack_require__(62)()
-};
-
-/***/ }),
-/* 55 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _set = __webpack_require__(56);
-
-var _set2 = _interopRequireDefault(_set);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Created by rsalesc on 14/07/16.
- */
-var mongoose = __webpack_require__(4);
-var deepPopulate = __webpack_require__(57)(mongoose);
-var Schema = mongoose.Schema;
-
-
-module.exports = function () {
-  if (db.models.Contest) return db.model("Contest");
-
-  var Problem = __webpack_require__(26)();
-
-  var ContestProblem = new Schema({
-    letter: {
-      type: String,
-      required: true,
-      match: /[A-Z][0-9]*/
-    },
-    problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
-    color: { type: String, default: "000" },
-    scoringOpts: { type: Schema.Types.Mixed, default: {} }
-  }, { _id: false });
-
-  var ContestSchema = new Schema({
-    name: { type: String, minlength: 4, maxlength: 64 },
-    start_time: { type: Date, required: true },
-    end_time: { type: Date, required: true },
-    scoring: { type: String, required: true },
-    scoringOpts: { type: Schema.Types.Mixed, default: {} },
-    problems: {
-      type: [ContestProblem],
-      validate: {
-        validator: function validator(v) {
-          if (!Array.isArray(v)) return false;
-          var letters = v.map(function (val) {
-            return val.letter;
-          });
-          var ids = v.map(function (val) {
-            return val.problem.toString();
-          });
-
-          return new _set2.default(letters).size === letters.length && new _set2.default(ids).size === ids.length;
-        },
-
-        message: "Contest cannot have repeated letters and problems must be an array"
-      }
-    },
-    hidden: Boolean,
-    upseeing: { type: Boolean, required: true, default: false },
-    blind: { type: Number, default: 0 },
-    freeze: { type: Number, default: 0 },
-    unfreeze: { type: Boolean, default: false }
-  }, { timestamps: true });
-
-  ContestSchema.index({ name: 1 });
-  ContestSchema.index({ name: "text" });
-  ContestSchema.plugin(deepPopulate);
-
-  ContestSchema.pre("save", function (next) {
-    this.problems.sort(function (a, b) {
-      try {
-        return function (x, y) {
-          var xd = parseInt(x.slice(1), 10) || 0;
-          var yd = parseInt(y.slice(1), 10) || 0;
-
-          if (x[0] === y[0]) return xd < yd ? -1 : xd > yd ? 1 : 0;
-
-          return x[0] < y[0] ? -1 : 1;
-        }(a.letter, b.letter);
-      } catch (ex) {
-        return false;
-      }
-    });
-
-    next();
-  });
-
-  ContestSchema.methods.hasStarted = function () {
-    return this.start_time.getTime() <= Date.now();
-  };
-
-  ContestSchema.methods.hasEnded = function () {
-    return this.end_time.getTime() <= Date.now();
-  };
-
-  ContestSchema.methods.isRunning = function () {
-    return this.hasStarted() && !this.hasEnded();
-  };
-
-  ContestSchema.methods.getTimeInContest = function (x) {
-    var cur = x != null ? x : Date.now();
-    return parseInt((cur - this.start_time.getTime()) / 60 / 1000, 10);
-  };
-
-  ContestSchema.methods.getDurationInContest = function () {
-    var diff = this.end_time.getTime() - this.start_time.getTime();
-    return parseInt(Math.ceil(diff / 60 / 1000), 10);
-  };
-
-  ContestSchema.methods.getRemainingInContest = function (x) {
-    return this.getDurationInContest() - (x != null ? x : this.getTimeInContest());
-  };
-
-  ContestSchema.methods.isFrozen = function (x) {
-    return this.getRemainingInContest(x) <= this.freeze && (this.isRunning() || this.hasEnded() && !this.unfreeze && this.freeze > 0);
-  };
-
-  ContestSchema.methods.isBlind = function (x) {
-    return this.getRemainingInContest(x) <= this.blind && (this.isRunning() || this.hasEnded() && !this.unfreeze && this.blind > 0);
-  };
-
-  ContestSchema.pre("remove", function (next) {
-    db.model("Submission").remove({ contest: this._id }, function (err) {
-      if (err) console.error(err);
-    });
-    db.model("User").remove({ contest: this._id }, function (err) {
-      if (err) console.error(err);
-    });
-    db.model("Clarification").remove({ contest: this._id }, function (err) {
-      if (err) console.error(err);
-    });
-    db.model("Printout").remove({ contest: this._id }, function (err) {
-      if (err) console.error(err);
-    });
-    next();
-  });
-
-  return db.model("Contest", ContestSchema);
-};
-
-/***/ }),
-/* 56 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/core-js/set");
-
-/***/ }),
-/* 57 */
-/***/ (function(module, exports) {
-
-module.exports = require("mongoose-deep-populate");
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Created by rsalesc on 14/07/16.
- */
-var mongoose = __webpack_require__(4);
-var Schema = mongoose.Schema;
-var sha256 = __webpack_require__(59);
-
-module.exports = function () {
-    if (db.models.User) return db.model("User");
-
-    var UserSchema = new Schema({
-        handle: {
-            type: String,
-            minlength: 4,
-            maxlength: 16,
-            match: /[a-zA-Z][a-zA-Z0-9_\.]*/,
-            required: true
-        },
-        name: {
-            type: String,
-            maxlength: 48,
-            default: "unnamed"
-        },
-        description: String,
-        password: { type: String },
-        email: {
-            type: String,
-            maxlength: 64
-            // TODO: put email regex here
-        },
-        contest: { type: Schema.Types.ObjectId, ref: 'Contest' },
-        unofficial: { type: Boolean, default: false },
-        disabled: { type: Boolean, default: false },
-        role: { type: String, default: "contestant" }
-    }, { timestamps: true });
-
-    UserSchema.index({ handle: 1, contest: 1 }, { unique: true });
-    UserSchema.index({ handle: 'text', name: 'text' }, {
-        weights: {
-            handle: 2,
-            name: 1
-        }
-    });
-
-    UserSchema.pre('save', function (next) {
-        if (this.isModified('password')) {
-            this.password = sha256(this.password);
-        }
-
-        next();
-    });
-
-    UserSchema.methods.matchPasswords = function (candidate) {
-        return this.password == sha256(candidate);
-    };
-
-    UserSchema.pre("remove", function (next) {
-        db.model("Submission").remove({ _creator: this._id }, function (err) {
-            if (err) console.error(err);
-        });
-        next();
-    });
-
-    return db.model('User', UserSchema);
-};
-
-/***/ }),
-/* 59 */
-/***/ (function(module, exports) {
-
-module.exports = require("sha256");
-
-/***/ }),
-/* 60 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _getIterator2 = __webpack_require__(0);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Created by rsalesc on 15/07/16.
- */
-
-var mongoose = __webpack_require__(4);
-var Schema = mongoose.Schema;
-
-
-var DEFAULT_VERDICT = {
-  verdict: "", info: "", passed: -1, score: 0
-};
-
-// TODO: add creation time (with a plugin)
-module.exports = function () {
-  if (db.models.Submission) return db.model("Submission");
-
-  var SubmissionSchema = new Schema({
-    _creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    contest: { type: Schema.Types.ObjectId, ref: "Contest" },
-    problem: { type: Schema.Types.ObjectId, ref: "Problem", required: true },
-    time: { type: Date, default: Date.now },
-    timeInContest: { type: Number, default: 0 },
-    // add enum validator? maybe not, language set is mutable
-    language: String,
-    code: String,
-    codeHash: { type: String, default: "" },
-    verdict: Schema.Types.Mixed
-  }, { timestamps: true });
-
-  SubmissionSchema.index({ contest: 1, _creator: 1 });
-  SubmissionSchema.index({ contest: 1, problem: 1 });
-  SubmissionSchema.index({ contest: 1, time: 1 });
-  SubmissionSchema.index({ contest: 1, timeInContest: 1 });
-  SubmissionSchema.index({ problem: 1, _creator: 1 });
-  SubmissionSchema.index({ _creator: 1 });
-
-  SubmissionSchema.pre("save", function (next) {
-    var _this = this;
-
-    if (this.problem) {
-      db.model("Problem").findById(this.problem).exec(function (err, problem) {
-        if (err) next(err);
-        _this.verdict = _this.verdict || {};
-        var res = {};
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = (0, _getIterator3.default)(problem.attr.datasets), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var data = _step.value;
-
-            res[data.name] = _this.verdict[data.name] || DEFAULT_VERDICT;
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-
-        _this.verdict = res;
-        next();
-      });
-    }
-  });
-
-  return db.model("Submission", SubmissionSchema);
-};
-
-/***/ }),
-/* 61 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var mongoose = __webpack_require__(4);
-var Schema = mongoose.Schema;
-
-
-module.exports = function () {
-  if (db.models.Clarification) return db.model("Clarification");
-
-  var CommentSchema = new Schema({
-    _creator: { type: Schema.Types.ObjectId, ref: "User" },
-    text: String
-  }, { timestamps: true });
-
-  var ClarificationSchema = new Schema({
-    _creator: { type: Schema.Types.ObjectId, ref: "User" },
-    contest: { type: Schema.Types.ObjectId, ref: "Contest" },
-    problem: { type: Schema.Types.ObjectId, ref: "Problem" },
-    broadcast: { type: Boolean, default: false },
-    comments: [CommentSchema]
-  }, { timestamps: true });
-
-  ClarificationSchema.index({ _creator: 1, contest: 1 });
-  ClarificationSchema.index({ contest: 1, broadcast: 1 });
-
-  return db.model("Clarification", ClarificationSchema);
-};
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var mongoose = __webpack_require__(4);
-var Schema = mongoose.Schema;
-
-
-module.exports = function () {
-  if (db.models.Printout) return db.model("Printout");
-
-  var PrintoutSchema = new Schema({
-    _creator: { type: Schema.Types.ObjectId, ref: "User" },
-    contest: { type: Schema.Types.ObjectId, ref: "Contest" },
-    text: String,
-    lines: Number,
-    done: Boolean
-  }, { timestamps: true });
-
-  PrintoutSchema.index({ _creator: 1, contest: 1 });
-
-  return db.model("Printout", PrintoutSchema);
-};
 
 /***/ })
 /******/ ]);

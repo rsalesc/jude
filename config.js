@@ -1,5 +1,6 @@
 const path = require("path");
 const { UserThrottlingPolicy } = require("@routes/policies");
+const { SharedConfig } = require("~/config.shared");
 
 export const JudgeConfig = {
   MAX_TRIES: 5,
@@ -21,8 +22,7 @@ export const JudgeConfig = {
 
 
 export const SiteConfig = {
-  // source limit in bytes
-  SOURCE_LIMIT: 128 * 1024,
+  ...SharedConfig,
 
   // throttling
   throttling: {

@@ -38,6 +38,9 @@
           <span>Submit Code</span>
         </a>
         <a class="button" @click="close()">Close</a>
+        <span class="ju-secondary-text">
+          Source code size is limited to: {{ sourceLimit }} KB
+        </span>
       </footer>
     </div>
 </template>
@@ -50,7 +53,8 @@
     import { types } from "./store/";
     import Brace from "./components/Brace.vue";
     import debounce from "debounce";
-
+    import { SharedConfig } from "~/config.shared.js";
+    
     function genRandom(len) {
       const data = "0123456789abcdef";
       let res = "";
@@ -91,7 +95,10 @@
             ...mapGetters([
                 "problems",
                 "languages"
-            ])
+            ]),
+          sourceLimit() {
+            return parseInt(SharedConfig.SOURCE_LIMIT / 1024, 10);
+          }
         },
         methods:{
             getProblem(id) {

@@ -149,19 +149,19 @@ module.exports = require("babel-runtime/helpers/createClass");
 /* 9 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/promise");
+module.exports = require("babel-runtime/helpers/extends");
 
 /***/ }),
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/object/keys");
+module.exports = require("babel-runtime/core-js/promise");
 
 /***/ }),
 /* 11 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/extends");
+module.exports = require("babel-runtime/core-js/object/keys");
 
 /***/ }),
 /* 12 */
@@ -188,7 +188,7 @@ module.exports = require("babel-runtime/helpers/inherits");
 "use strict";
 
 
-var _promise = __webpack_require__(9);
+var _promise = __webpack_require__(10);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -196,7 +196,7 @@ var _typeof2 = __webpack_require__(67);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
-var _keys = __webpack_require__(10);
+var _keys = __webpack_require__(11);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -461,7 +461,7 @@ module.exports = require("fs-extra");
 "use strict";
 
 
-var _extends2 = __webpack_require__(11);
+var _extends2 = __webpack_require__(9);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -750,7 +750,7 @@ var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _promise = __webpack_require__(9);
+var _promise = __webpack_require__(10);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -987,7 +987,7 @@ module.exports = require("fs");
 "use strict";
 /* WEBPACK VAR INJECTION */(function(module) {
 
-var _keys = __webpack_require__(10);
+var _keys = __webpack_require__(11);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -1023,7 +1023,7 @@ var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _promise = __webpack_require__(9);
+var _promise = __webpack_require__(10);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -2999,7 +2999,7 @@ var _inherits2 = __webpack_require__(14);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _keys = __webpack_require__(10);
+var _keys = __webpack_require__(11);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -3007,7 +3007,7 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _extends2 = __webpack_require__(11);
+var _extends2 = __webpack_require__(9);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -4049,10 +4049,21 @@ module.exports = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.SiteConfig = exports.JudgeConfig = undefined;
+
+var _extends2 = __webpack_require__(9);
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var path = __webpack_require__(1);
 
 var _require = __webpack_require__(89),
     UserThrottlingPolicy = _require.UserThrottlingPolicy;
+
+var _require2 = __webpack_require__(91),
+    SharedConfig = _require2.SharedConfig;
 
 var JudgeConfig = exports.JudgeConfig = {
   MAX_TRIES: 5,
@@ -4072,9 +4083,7 @@ var JudgeConfig = exports.JudgeConfig = {
   BOUND_ML: 2048
 };
 
-var SiteConfig = exports.SiteConfig = {
-  // source limit in bytes
-  SOURCE_LIMIT: 128 * 1024,
+var SiteConfig = exports.SiteConfig = (0, _extends3.default)({}, SharedConfig, {
 
   // throttling
   throttling: {
@@ -4088,7 +4097,7 @@ var SiteConfig = exports.SiteConfig = {
       message: "You can't ask for printouts like that! Wait and try again."
     })
   }
-};
+});
 
 /***/ }),
 /* 39 */
@@ -4124,7 +4133,7 @@ app.listen(port, function () {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(__dirname) {
 
-var _extends2 = __webpack_require__(11);
+var _extends2 = __webpack_require__(9);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -4402,7 +4411,7 @@ var _regenerator = __webpack_require__(5);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _promise = __webpack_require__(9);
+var _promise = __webpack_require__(10);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -4961,7 +4970,7 @@ var Loader = __webpack_require__(33);
 var utils = __webpack_require__(15);
 var api2 = __webpack_require__(76);
 var contest = __webpack_require__(80);
-var admin = __webpack_require__(94);
+var admin = __webpack_require__(95);
 var auth2 = __webpack_require__(17);
 var passport = __webpack_require__(39);
 
@@ -5562,15 +5571,15 @@ var _entries = __webpack_require__(82);
 
 var _entries2 = _interopRequireDefault(_entries);
 
-var _extends2 = __webpack_require__(11);
+var _extends2 = __webpack_require__(9);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _promise = __webpack_require__(9);
+var _promise = __webpack_require__(10);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _keys = __webpack_require__(10);
+var _keys = __webpack_require__(11);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -5583,7 +5592,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var path = __webpack_require__(1);
 var mongoose = __webpack_require__(0);
 var grader = __webpack_require__(83);
-var precheck = __webpack_require__(93);
+var precheck = __webpack_require__(94);
 var auth2 = __webpack_require__(17);
 
 var express = __webpack_require__(3);
@@ -6316,7 +6325,7 @@ var _slicedToArray2 = __webpack_require__(20);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _promise = __webpack_require__(9);
+var _promise = __webpack_require__(10);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -7145,7 +7154,7 @@ var sandbox = __webpack_require__(86);
 var environment = __webpack_require__(37);
 
 var loader = __webpack_require__(33);
-var Profiler = __webpack_require__(92);
+var Profiler = __webpack_require__(93);
 
 var Storage = __webpack_require__(22).MemoryStorage;
 
@@ -8104,7 +8113,7 @@ var _slicedToArray2 = __webpack_require__(20);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _keys = __webpack_require__(10);
+var _keys = __webpack_require__(11);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -8159,7 +8168,7 @@ var globAsync = utils.globAsync;
 var Storage = __webpack_require__(22).MemoryStorage;
 var JudgeConfig = jenv.JudgeConfig;
 
-var spawnDetachedPromise = __webpack_require__(91).spawn;
+var spawnDetachedPromise = __webpack_require__(92).spawn;
 
 /*
 *   spawnDetached async version (promisified)
@@ -9877,7 +9886,7 @@ var _getIterator2 = __webpack_require__(2);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _extends2 = __webpack_require__(11);
+var _extends2 = __webpack_require__(9);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -9974,18 +9983,32 @@ module.exports = require("express-rate-limit");
 
 /***/ }),
 /* 91 */
-/***/ (function(module, exports) {
-
-module.exports = require("child-process-promise");
-
-/***/ }),
-/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _keys = __webpack_require__(10);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var SharedConfig = exports.SharedConfig = {
+  SOURCE_LIMIT: 128 * 1024
+};
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports) {
+
+module.exports = require("child-process-promise");
+
+/***/ }),
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _keys = __webpack_require__(11);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -10085,7 +10108,7 @@ var Profiler = function () {
 module.exports = Profiler;
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10124,7 +10147,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
