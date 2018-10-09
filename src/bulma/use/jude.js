@@ -24,6 +24,10 @@ class JudePlugin {
     });
   }
 
+  toastError(message, duration = 4000, position = "is-top-right") {
+    this.toast(message, duration, IS_DANGER, position);
+  }
+
   toastWithResponse(response, defaultMessage = "Internal server error.") {
     if (response.status === 400)
       this.toast(`Error: ${response.body.error}`, ERROR_TOAST_TIME, IS_DANGER);

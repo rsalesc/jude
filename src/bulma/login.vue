@@ -62,8 +62,8 @@
             return null;
           }).catch((err) => {
             if (err.status !== 200 && err.status !== 401 && err.status !== 403)
-              return new BulmaUtils(this).toast(`Error contacting to server: code ${err.status}`, 4000, "is-danger");
-            new BulmaUtils(this).toast(`Login Error: ${err.body.error}`, 4000, "is-danger");
+              return this.$jude.toastWithResponse(err);
+            this.$jude.toastError(`Login error: ${err.body.error}`);
           });
         }
       }

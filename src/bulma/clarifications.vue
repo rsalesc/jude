@@ -180,12 +180,9 @@ export default {
     },
     async fetchAll() {
       try {
-        const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
-        if (!loggedin) {
-          this.$jude.logout();
-        }
+        await this.$store.dispatch(types.FETCH_CONTEST_DATA);
       } catch (err) {
-        new BulmaUtils(this).toastResponseError(err);
+        this.$jude.dealWithResponse(err);
       }
     },
     submit() {
@@ -214,9 +211,7 @@ export default {
             this.fetchAll();
           } catch (response) {
             this.submitting--;
-            if (response.status === 401 || response.status === 403)
-              return this.$jude.logout();
-            new BulmaUtils(this).toastResponseError(response);
+            this.$jude.dealWithResponse(response);
           }
           this.newDraft();
         }
@@ -241,9 +236,7 @@ export default {
             this.fetchAll();
           } catch (response) {
             this.submitting--;
-            if (response.status === 401 || response.status === 403)
-              return this.$jude.logout();
-            new BulmaUtils(this).toastResponseError(response);
+            this.$jude.dealWithResponse(response);
           }
           this.clear();
         }

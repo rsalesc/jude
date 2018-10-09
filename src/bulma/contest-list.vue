@@ -77,7 +77,7 @@
       },
       selectContest(contest) {
         if (!contest._id && !contest.name)
-          return new BulmaUtils(this).toast("Select a contest before trying to log in!");
+          return this.$jude.toast("Select a contest before trying to log in!");
         this.$store.commit(types.SELECT_CONTEST_FROM_LIST, contest);
         return this.$router.push({ path: "/login", query: { id: contest._id }});
       },

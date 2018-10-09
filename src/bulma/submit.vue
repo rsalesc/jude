@@ -95,7 +95,7 @@
             ])
         },
         methods:{
-            getProblem(id){
+            getProblem(id) {
                 for (let prob of this.problems) {
                     if (prob.problem._id === id)
                         return prob;
@@ -115,7 +115,7 @@
                 const { problem, code, language } = this;
 
                 Api.submit.save(this.form).then(async (result) => {
-                    new BulmaUtils(this).toast('Your submission was sent successfully!', 4000, "is-success");
+                    this.$jude.toast("Your submission was sent succesfully!");
                     this.submitting--;
                     this.$emit("close");
 
