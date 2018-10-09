@@ -89,7 +89,6 @@
 import * as Helper from "./helpers";
 import * as Api from "./api";
 import { mapGetters } from "vuex";
-import BulmaUtils from "./bulmutils";
 import ClarificationListComponent from "./clarification-list.vue";
 import ClarificationTalkComponent from "./clarification-talk.vue";
 import { types } from "./store";

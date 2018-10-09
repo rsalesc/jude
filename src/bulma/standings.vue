@@ -100,7 +100,6 @@
     import * as Helper from "./helpers.js";
     import { types } from "./store/";
     import { mapGetters } from "vuex";
-    import BulmaUtils from "./bulmutils";
     import SubmissionsModalComponent from "./submissions-modal.vue";
     import FloatThead from "vue-floatthead";
 

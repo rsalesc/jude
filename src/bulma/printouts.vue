@@ -97,7 +97,6 @@
 import * as Helper from "./helpers";
 import * as Api from "./api";
 import { mapGetters } from "vuex";
-import BulmaUtils from "./bulmutils";
 import { types } from "./store";
 
 import printoutStyle from "./printout.css.tpl";

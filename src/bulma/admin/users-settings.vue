@@ -27,7 +27,6 @@
 
 <script type="text/babel">
 import * as Helper from "@front/helpers.js";
-import BulmaUtils from "@front/bulmutils";
 import { types } from "@front/store/";
 import * as Api from "@front/api";
 

@@ -53,7 +53,6 @@
 
 <script type="text/babel">
   import * as Helper from "./helpers";
-  import BulmaUtils from "./bulmutils";
   import { mapGetters } from "vuex";
   import { types } from "./store/";
 

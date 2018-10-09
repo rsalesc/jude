@@ -32,7 +32,6 @@
 
 <script type="text/babel">import * as Api from "./api";
     import { mapGetters } from "vuex";
-    import BulmaUtils from "./bulmutils";
 
     export default {
       data() {

@@ -48,7 +48,6 @@
     import * as Api from './api.js';
     import { mapGetters } from "vuex";
     import { types } from "./store/";
-    import BulmaUtils from "./bulmutils";
     import Brace from "./components/Brace.vue";
     import debounce from "debounce";
 

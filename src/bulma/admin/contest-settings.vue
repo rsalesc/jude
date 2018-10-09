@@ -57,7 +57,6 @@
   import ContestSettingsComponent from "@front/admin/contest-settings-box.vue";
   import ProblemsSettingsComponent from "@front/admin/problems-settings-box.vue";
   import * as Helper from "@front/helpers.js";
-  import BulmaUtils from "@front/bulmutils";
   import { types } from "@front/store/";
   import * as Api from "@front/api";
 

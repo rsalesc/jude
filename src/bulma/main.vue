@@ -87,7 +87,6 @@
     import "moment/locale/en-gb";
     import { mapGetters, mapState } from "vuex";
     import { types } from "./store/";
-    import BulmaUtils from "./bulmutils";
 
     moment.locale("en-gb");
 

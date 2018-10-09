@@ -164,7 +164,6 @@
     import { types } from "./store/";
     import SubmitComponent from "./submit.vue";
     import CodeModalComponent from "./code-modal.vue";
-    import BulmaUtils from "./bulmutils";
     import JuVerdictTag from "./components/VerdictTag.vue";
     import JuUserFilter from "./components/UserFilter.vue";
 

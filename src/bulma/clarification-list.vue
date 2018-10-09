@@ -41,7 +41,6 @@ import * as Helper from "./helpers";
 import * as Api from "./api";
 import { mapGetters } from "vuex";
 import { types } from "./store";
-import BulmaUtils from "./bulmutils";
 import ClarificationTalkComponent from "./clarification-talk.vue";
 
 export default {
