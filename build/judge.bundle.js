@@ -175,7 +175,7 @@ var _promise = __webpack_require__(10);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _typeof2 = __webpack_require__(37);
+var _typeof2 = __webpack_require__(38);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -357,7 +357,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = __webpack_require__(1);
 var fs = __webpack_require__(8);
-var util = __webpack_require__(38);
+var util = __webpack_require__(39);
 var glob = __webpack_require__(23);
 
 function inspect(p) {
@@ -499,23 +499,8 @@ var path = __webpack_require__(1);
 
 var MongoQueue2 = __webpack_require__(21);
 
-var JudgeConfig = {
-  MAX_TRIES: 5,
-  EPS: 1e-7,
-  SANDBOX_OFFSET: parseInt(process.env.SANDBOX_OFFSET || 0, 10),
-  MAX_SANDBOXES: parseInt(process.env.MAX_SANDBOXES || 10, 10),
-  MAX_SIMUL_TESTS: parseInt(process.env.MAX_SIMUL_TESTS || 1, 10),
-  COMPILATION_TL: 90,
-  CHECKING_TL: 90,
-  CHECKING_ML: 512,
-  CHECKING_WTL: 90,
-  WT_MULTIPLIER: 15,
-  OUTPUT_LIMIT: 1 << 24,
-  TEMP_DIR: "/tmp",
-  ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
-  VISIBILITY_WINDOW: parseInt(process.env.VISIBILITY_WINDOW || 20, 10),
-  BOUND_ML: 2048
-};
+var _require = __webpack_require__(32),
+    JudgeConfig = _require.JudgeConfig;
 
 var FileCacher = function () {
   function FileCacher() {
@@ -846,7 +831,7 @@ module.exports = require("mongo-queue2");
 
 var mongoose = __webpack_require__(4);
 var MongoQueue2 = __webpack_require__(21);
-var weed = __webpack_require__(32);
+var weed = __webpack_require__(33);
 
 // mongodb setup
 
@@ -925,16 +910,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/06/16.
  */
 
-var yauzl = __webpack_require__(41);
-var concatStream = __webpack_require__(42);
+var yauzl = __webpack_require__(42);
+var concatStream = __webpack_require__(43);
 var utils = __webpack_require__(12);
-var wildcard = __webpack_require__(43);
+var wildcard = __webpack_require__(44);
 var path = __webpack_require__(1);
 var logger = __webpack_require__(7);
 var fs = __webpack_require__(8);
-var promisify = __webpack_require__(44);
+var promisify = __webpack_require__(45);
 var glob = promisify(__webpack_require__(23).glob);
-var streamifier = __webpack_require__(45);
+var streamifier = __webpack_require__(46);
 
 /* Helper Functions for storage */
 function dealWithEntry(zipFile, entry) {
@@ -1981,7 +1966,7 @@ var _getIterator2 = __webpack_require__(0);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _extends2 = __webpack_require__(49);
+var _extends2 = __webpack_require__(50);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -2119,7 +2104,7 @@ var Scoring = function () {
   }, {
     key: "defaults",
     get: function get() {
-      throw new Error("Function not implemented in this class");
+      return {};
     }
   }], [{
     key: "isTaskValid",
@@ -2603,20 +2588,6 @@ var IcpcScoring = function (_Scoring3) {
       };
     }
   }, {
-    key: "mergeEvaluations",
-    value: function mergeEvaluations(evals) {
-      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-      opts = (0, _extends3.default)({ penalty: 20 }, opts);
-
-      return evals.reduce(function (old, cur) {
-        return {
-          score: old.score + cur.score,
-          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
-        };
-      }, { score: 0, penalty: 0 });
-    }
-  }, {
     key: "defaults",
     get: function get() {
       return {};
@@ -2642,6 +2613,20 @@ var IcpcScoring = function (_Scoring3) {
     key: "hasPenalty",
     value: function hasPenalty() {
       return true;
+    }
+  }, {
+    key: "mergeEvaluations",
+    value: function mergeEvaluations(evals) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      opts = (0, _extends3.default)({ penalty: 20 }, opts);
+
+      return evals.reduce(function (old, cur) {
+        return {
+          score: old.score + cur.score,
+          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
+        };
+      }, { score: 0, penalty: 0 });
     }
   }]);
   return IcpcScoring;
@@ -2861,9 +2846,9 @@ var mongodb = __webpack_require__(29);
 var logger = __webpack_require__(7);
 var environment = __webpack_require__(16);
 var db = __webpack_require__(22);
-var grader = __webpack_require__(33);
+var grader = __webpack_require__(34);
 
-var _require = __webpack_require__(53),
+var _require = __webpack_require__(54),
     Submission = _require.Submission;
 
 var JudgeEnvironment = environment.JudgeEnvironment,
@@ -3086,12 +3071,42 @@ module.exports = require("tmp");
 
 /***/ }),
 /* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var path = __webpack_require__(1);
+
+var JudgeConfig = exports.JudgeConfig = {
+  MAX_TRIES: 5,
+  EPS: 1e-7,
+  SANDBOX_OFFSET: parseInt(process.env.SANDBOX_OFFSET || 0, 10),
+  MAX_SANDBOXES: parseInt(process.env.MAX_SANDBOXES || 10, 10),
+  MAX_SIMUL_TESTS: parseInt(process.env.MAX_SIMUL_TESTS || 1, 10),
+  COMPILATION_TL: 90,
+  CHECKING_TL: 90,
+  CHECKING_ML: 512,
+  CHECKING_WTL: 90,
+  WT_MULTIPLIER: 15,
+  OUTPUT_LIMIT: 1 << 24,
+  TEMP_DIR: "/tmp",
+  ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
+  VISIBILITY_WINDOW: parseInt(process.env.VISIBILITY_WINDOW || 20, 10),
+  BOUND_ML: 2048
+};
+
+/***/ }),
+/* 33 */
 /***/ (function(module, exports) {
 
 module.exports = require("jude-seaweedfs");
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3925,16 +3940,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var fs = __webpack_require__(17);
 var fse = __webpack_require__(8);
 var path = __webpack_require__(1);
-var promiseReflect = __webpack_require__(34);
+var promiseReflect = __webpack_require__(35);
 
-var verdict = __webpack_require__(35);
+var verdict = __webpack_require__(36);
 var utils = __webpack_require__(12);
 var logger = __webpack_require__(7);
-var sandbox = __webpack_require__(39);
+var sandbox = __webpack_require__(40);
 var environment = __webpack_require__(16);
 
-var loader = __webpack_require__(47);
-var Profiler = __webpack_require__(52);
+var loader = __webpack_require__(48);
+var Profiler = __webpack_require__(53);
 
 var Storage = __webpack_require__(24).MemoryStorage;
 
@@ -4740,19 +4755,19 @@ module.exports = { testTask: testTask, testPackage: testPackage, availableLangua
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)(module)))
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports) {
 
 module.exports = require("promise-reflect");
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _assign = __webpack_require__(36);
+var _assign = __webpack_require__(37);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -4883,25 +4898,25 @@ module.exports = {
 };
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/object/assign");
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 module.exports = require("util");
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4952,7 +4967,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 15/06/16.
  */
-var Promise = __webpack_require__(40);
+var Promise = __webpack_require__(41);
 
 var fs = __webpack_require__(8);
 
@@ -4966,7 +4981,7 @@ var globAsync = utils.globAsync;
 var Storage = __webpack_require__(24).MemoryStorage;
 var JudgeConfig = jenv.JudgeConfig;
 
-var spawnDetachedPromise = __webpack_require__(46).spawn;
+var spawnDetachedPromise = __webpack_require__(47).spawn;
 
 /*
 *   spawnDetached async version (promisified)
@@ -6645,49 +6660,49 @@ module.exports = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)(module)))
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports) {
 
 module.exports = require("yauzl");
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 module.exports = require("concat-stream");
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports) {
 
 module.exports = require("node-wildcard");
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 module.exports = require("es6-promisify");
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports) {
 
 module.exports = require("streamifier");
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports) {
 
 module.exports = require("child-process-promise");
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6834,8 +6849,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var path = __webpack_require__(1);
-var task = __webpack_require__(48);
-var YAML = __webpack_require__(51);
+var task = __webpack_require__(49);
+var YAML = __webpack_require__(52);
 var logger = __webpack_require__(7);
 var utils = __webpack_require__(12);
 var scoring = __webpack_require__(25);
@@ -7371,7 +7386,7 @@ var LOADERS = new _map2.default([
 };
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7396,7 +7411,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var scoring = __webpack_require__(25);
-var deepcopy = __webpack_require__(50);
+var deepcopy = __webpack_require__(51);
 
 var Task = function () {
   function Task(attr) {
@@ -7615,25 +7630,25 @@ var Task = function () {
 module.exports = { Task: Task };
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/extends");
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports) {
 
 module.exports = require("deepcopy");
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports) {
 
 module.exports = require("yamljs");
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7739,7 +7754,7 @@ var Profiler = function () {
 module.exports = Profiler;
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7763,22 +7778,22 @@ __webpack_require__(22);
 });*/
 
 module.exports = {
-  Contest: __webpack_require__(54)(),
-  User: __webpack_require__(57)(),
-  Submission: __webpack_require__(59)(),
+  Contest: __webpack_require__(55)(),
+  User: __webpack_require__(58)(),
+  Submission: __webpack_require__(60)(),
   Problem: __webpack_require__(26)(),
-  Clarification: __webpack_require__(60)(),
-  Printout: __webpack_require__(61)()
+  Clarification: __webpack_require__(61)(),
+  Printout: __webpack_require__(62)()
 };
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _set = __webpack_require__(55);
+var _set = __webpack_require__(56);
 
 var _set2 = _interopRequireDefault(_set);
 
@@ -7788,7 +7803,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 14/07/16.
  */
 var mongoose = __webpack_require__(4);
-var deepPopulate = __webpack_require__(56)(mongoose);
+var deepPopulate = __webpack_require__(57)(mongoose);
 var Schema = mongoose.Schema;
 
 
@@ -7916,19 +7931,19 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/set");
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports) {
 
 module.exports = require("mongoose-deep-populate");
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7939,7 +7954,7 @@ module.exports = require("mongoose-deep-populate");
  */
 var mongoose = __webpack_require__(4);
 var Schema = mongoose.Schema;
-var sha256 = __webpack_require__(58);
+var sha256 = __webpack_require__(59);
 
 module.exports = function () {
     if (db.models.User) return db.model("User");
@@ -8001,13 +8016,13 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports) {
 
 module.exports = require("sha256");
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8098,7 +8113,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8131,7 +8146,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
