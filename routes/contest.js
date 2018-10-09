@@ -208,7 +208,7 @@ router.get("/submissions", (req, res) => {
 });
 
 // TODO: hash submissions to avoid duplicates
-router.post("/submit", (req, res) => {
+router.post("/submit", ...SiteConfig.throttling.submissions.middlewares, (req, res) => {
   if (!req.body.code || !req.body.language || !req.body.problem)
     return handleRequestError("all fields must be filled", req, res);
   const { user } = req.auth2;
@@ -241,7 +241,8 @@ router.post("/submit", (req, res) => {
     Problem.findById(req.body.problem).exec(async (err, problem) => {
       if (err)
         return handleContestError(err, req, res);
-      if (!problem || contest.problems.findIndex(x => x.problem === req.body.problem) === -1)
+      // eslint-disable-next-line
+      if (!problem || contest.problems.findIndex(x => x.problem == req.body.problem) === -1)
         return handleRequestError("problem not found", req, res);
 
       if (!contest.hasStarted())
@@ -348,119 +349,131 @@ router.get("/submission/:id", (req, res, next) => {
   });
 });
 
-router.post("/clarification", (req, res, next) => {
-  if (req.auth2.user.disabled)
-    return handleRequestError("you are a disabled user", req, res);
+router.post("/clarification",
+            ...SiteConfig.throttling.clarifications.middlewares,
+            (req, res, next) => {
+              if (req.auth2.user.disabled)
+                return handleRequestError("you are a disabled user", req, res);
 
-  getUserContest(req.auth2.user).exec((err, contest) => {
-    if (err)
-      return handleContestError(err, req, res, next);
-    if (!contest)
-      return handleContestError("contest not found", req, res, next);
+              getUserContest(req.auth2.user).exec((err, contest) => {
+                if (err)
+                  return handleContestError(err, req, res, next);
+                if (!contest)
+                  return handleContestError("contest not found", req, res, next);
 
-    // TODO: validate if comments are really strings
+                // TODO: validate if comments are really strings
 
-    let insertData = {
-      _creator: req.auth2.user._id,
-      contest: contest._id,
-      problem: req.body.problem || null,
-      comments: (req.body.$push || []).map(t => (t || "").trim()).filter(t => t).map(t => ({
-        _creator: isAdmin(req) ? null : req.auth2.user._id,
-        text: t
-      }))
-    };
+                let insertData = {
+                  _creator: req.auth2.user._id,
+                  contest: contest._id,
+                  problem: req.body.problem || null,
+                  comments: (req.body.$push || [])
+                    .map(t => (t || "").trim())
+                    .filter(t => t).map(t => ({
+                      _creator: isAdmin(req)
+                        ? null
+                        : req.auth2.user._id,
+                      text: t
+                    }))
+                };
 
-    if (insertData.comments.length === 0)
-      return handleRequestError("cant create empty clarification", req, res, next);
+                if (insertData.comments.length === 0)
+                  return handleRequestError("cant create empty clarification", req, res, next);
 
-    if (isAdmin(req))
-      insertData._creator = req.body.target || null;
-    if (isAdmin(req) && req.body.broadcast != null)
-      insertData = { ...insertData, broadcast: req.body.broadcast };
+                if (isAdmin(req))
+                  insertData._creator = req.body.target || null;
+                if (isAdmin(req) && req.body.broadcast != null)
+                  insertData = { ...insertData, broadcast: req.body.broadcast };
 
-    return new Clarification(insertData).save((err2) => {
-      if (err2)
-        return handleContestError(err2, req, res, next);
-      return res.json({ success: "posted" });
-    });
-  });
-});
+                return new Clarification(insertData).save((err2) => {
+                  if (err2)
+                    return handleContestError(err2, req, res, next);
+                  return res.json({ success: "posted" });
+                });
+              });
+            });
 
-router.post("/clarification/:id", (req, res, next) => {
-  if (req.auth2.user.disabled)
-    return handleRequestError("you are a disabled user", req, res);
+router.post("/clarification/:id",
+            ...SiteConfig.throttling.clarifications.middlewares,
+            (req, res, next) => {
+              if (req.auth2.user.disabled)
+                return handleRequestError("you are a disabled user", req, res);
 
-  getUserContest(req.auth2.user).exec((err, contest) => {
-    if (err)
-      return handleContestError(err, req, res, next);
-    if (!contest)
-      return handleContestError("contest not found", req, res, next);
+              getUserContest(req.auth2.user).exec((err, contest) => {
+                if (err)
+                  return handleContestError(err, req, res, next);
+                if (!contest)
+                  return handleContestError("contest not found", req, res, next);
 
-    return Clarification.findById(req.params.id, (err2, clar) => {
-      if (err2)
-        return handleContestError(err2, req, res, next);
-      if (!clar || !clar.contest.equals(ObjectId(req.auth2.user.contest)))
-        return handleRequestError("clarification not found", req, res, next);
-      if (!isAdmin(req) && !clar._creator.equals(ObjectId(req.auth2.user._id))) {
-        return handleRequestError("no permission on this clarification",
-                                  req, res, next);
-      }
-      if (req.body.$push.length && clar.broadcast && !isAdmin(req)) {
-        return handleRequestError("cant comment on a broadcast clarification",
-                                  req, res, next);
-      }
-      // TODO: validate if comments are really strings
+                return Clarification.findById(req.params.id, (err2, clar) => {
+                  if (err2)
+                    return handleContestError(err2, req, res, next);
+                  if (!clar || !clar.contest.equals(ObjectId(req.auth2.user.contest)))
+                    return handleRequestError("clarification not found", req, res, next);
+                  if (!isAdmin(req) && !clar._creator.equals(ObjectId(req.auth2.user._id))) {
+                    return handleRequestError("no permission on this clarification",
+                                              req, res, next);
+                  }
+                  if (req.body.$push.length && clar.broadcast && !isAdmin(req)) {
+                    return handleRequestError("cant comment on a broadcast clarification",
+                                              req, res, next);
+                  }
+                  // TODO: validate if comments are really strings
 
-      const toPush = (req.body.$push || []).map(t => (t || "").trim())
-        .filter(t => t).map(t => ({
-          _creator: isAdmin(req) ? null : req.auth2.user._id,
-          text: t
-        }));
-      let updateQuery = {
-        $push: { comments: { $each: toPush }}
-      };
+                  const toPush = (req.body.$push || []).map(t => (t || "").trim())
+                    .filter(t => t).map(t => ({
+                      _creator: isAdmin(req)
+                        ? null
+                        : req.auth2.user._id,
+                      text: t
+                    }));
+                  let updateQuery = {
+                    $push: { comments: { $each: toPush }}
+                  };
 
-      if (isAdmin(req) && req.body.broadcast != null)
-        updateQuery = { ...updateQuery, broadcast: req.body.broadcast };
+                  if (isAdmin(req) && req.body.broadcast != null)
+                    updateQuery = { ...updateQuery, broadcast: req.body.broadcast };
 
-      return Clarification.update({ _id: req.params.id }, updateQuery, (err3) => {
-        if (err3)
-          return handleContestError(err3, req, res, next);
+                  return Clarification.update({ _id: req.params.id }, updateQuery, (err3) => {
+                    if (err3)
+                      return handleContestError(err3, req, res, next);
 
-        return res.json({ success: "posted" });
-      });
-    });
-  });
-});
+                    return res.json({ success: "posted" });
+                  });
+                });
+              });
+            });
 
-router.post("/printout", (req, res, next) => {
-  if (req.auth2.user.disabled)
-    return handleRequestError("you are a disabled user", req, res);
+router.post("/printout",
+            ...SiteConfig.throttling.printouts.middlewares,
+            (req, res, next) => {
+              if (req.auth2.user.disabled)
+                return handleRequestError("you are a disabled user", req, res);
 
-  getUserContest(req.auth2.user).exec((err, contest) => {
-    if (err)
-      return handleContestError(err, req, res, next);
-    if (!contest)
-      return handleContestError("contest not found", req, res, next);
+              getUserContest(req.auth2.user).exec((err, contest) => {
+                if (err)
+                  return handleContestError(err, req, res, next);
+                if (!contest)
+                  return handleContestError("contest not found", req, res, next);
 
-    const insertData = {
-      _creator: req.auth2.user._id,
-      contest: contest._id,
-      text: (req.body.text || "").trim(),
-      lines: estimateLines(req.body.text),
-      done: false
-    };
+                const insertData = {
+                  _creator: req.auth2.user._id,
+                  contest: contest._id,
+                  text: (req.body.text || "").trim(),
+                  lines: estimateLines(req.body.text),
+                  done: false
+                };
 
-    if (!insertData.text)
-      return handleRequestError("cant create empty printout", req, res, next);
+                if (!insertData.text)
+                  return handleRequestError("cant create empty printout", req, res, next);
 
-    return new Printout(insertData).save((err2) => {
-      if (err2)
-        return handleContestError(err2, req, res, next);
-      return res.json({ success: "posted" });
-    });
-  });
-});
+                return new Printout(insertData).save((err2) => {
+                  if (err2)
+                    return handleContestError(err2, req, res, next);
+                  return res.json({ success: "posted" });
+                });
+              });
+            });
 
 router.post("/printout/:id", (req, res, next) => {
   if (!isAdmin(req))

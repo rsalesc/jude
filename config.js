@@ -1,4 +1,5 @@
 const path = require("path");
+const { UserThrottlingPolicy } = require("@routes/policies");
 
 export const JudgeConfig = {
   MAX_TRIES: 5,
@@ -21,5 +22,28 @@ export const JudgeConfig = {
 
 export const SiteConfig = {
   // source limit in bytes
-  SOURCE_LIMIT: 128 * 1024
+  SOURCE_LIMIT: 128 * 1024,
+
+  // throttling
+  throttling: {
+    submissions: new UserThrottlingPolicy([
+      { windowMs: 10 * 1000, max: 3 },
+      { windowMs: 60 * 1000, max: 7 },
+      { windowMs: 2 * 60 * 1000, max: 10 }
+    ], {
+      message: "You submitted too many times! Wait until you can submit again."
+    }),
+    clarifications: new UserThrottlingPolicy([
+      { windowMs: 60 * 1000, max: 4 },
+      { windowMs: 10 * 60 * 1000, max: 10 }
+    ], {
+      message: "You can't spam clarifications like that!"
+    }),
+    printouts: new UserThrottlingPolicy([
+      { windowMs: 60 * 1000, max: 4 },
+      { windowMs: 10 * 60 * 1000, max: 10 }
+    ], {
+      message: "You can't ask for printouts like that! Wait and try again."
+    })
+  }
 };

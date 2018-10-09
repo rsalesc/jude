@@ -30,9 +30,11 @@ class JudePlugin {
 
   toastWithResponse(response, defaultMessage = "Internal server error.") {
     if (response.status === 400)
-      this.toast(`Error: ${response.body.error}`, ERROR_TOAST_TIME, IS_DANGER);
+      this.toastError(`Error: ${response.body.error}`);
+    else if (response.status === 429)
+      this.toastError(`Limit exceeded: ${response.body.error}`);
     else
-      this.toast(defaultMessage, ERROR_TOAST_TIME, IS_DANGER);
+      this.toastError(defaultMessage);
   }
 
   dealWithResponse(response, defaultMessage = "Internal server error.") {

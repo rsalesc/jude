@@ -33,6 +33,7 @@
     "elasticlunr": "^0.9.5",
     "es6-promisify": "^5.0.0",
     "express": "~4.13.1",
+    "express-rate-limit": "^3.2.1",
     "express-restify-mongoose": "^4.1.1",
     "express-session": "^1.14.0",
     "express-static-gzip": "^0.3.0",
