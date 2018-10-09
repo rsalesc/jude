@@ -17,3 +17,9 @@ export const JudgeConfig = {
   VISIBILITY_WINDOW: parseInt(process.env.VISIBILITY_WINDOW || 20, 10),
   BOUND_ML: 2048
 };
+
+
+export const SiteConfig = {
+  // source limit in bytes
+  SOURCE_LIMIT: 128 * 1024
+};

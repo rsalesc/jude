@@ -10,6 +10,8 @@ const router = express.Router();
 const models = require("../models/");
 const sha256 = require("sha256");
 
+const { SiteConfig } = require("~/config");
+
 const ContestProblemSelection
     = "code name _id attr.weight attr.author attr.datasets attr.scoring attr.limits attr.blockedLanguages";
 const {
@@ -63,9 +65,8 @@ function filterPrivateUser(user) {
 function filterBlind(contest, user, sub) {
   if (contest.isFrozen(sub.timeInContest) && !sub._creator.equals(user._id)
     || contest.isBlind(sub.timeInContest)) {
-    for (const dataset of Object.keys(sub.verdict)) {
+    for (const dataset of Object.keys(sub.verdict))
       sub.verdict[dataset] = { verdict: "VERDICT_INQ" };
-    }
   }
   return sub;
 }
@@ -142,7 +143,7 @@ router.get("/", (req, res) => {
       ...{ languages: Object.entries(grader.availableLanguages) }
     };
 
-    User.find({ contest: contest.id, role: "contestant", disabled: { $ne: true } })
+    User.find({ contest: contest.id, role: "contestant", disabled: { $ne: true }})
       .select("-password -email").exec((err, teams) => {
         if (err)
           return handleContestError(err, req, res);
@@ -165,7 +166,7 @@ router.get("/", (req, res) => {
             });
           });
         });
-    });
+      });
   });
 });
 
@@ -217,6 +218,11 @@ router.post("/submit", (req, res) => {
   if (user.disabled)
     return handleRequestError("you cant submit solutions", req, res);
 
+  if (Buffer.from(req.body.code).length > SiteConfig.SOURCE_LIMIT) {
+    return handleRequestError(
+      `source code exceeds the limit of ${SiteConfig.SOURCE_LIMIT} bytes`);
+  }
+
   if (!grader.availableLanguages.hasOwnProperty(req.body.language))
     return handleRequestError("language is invalid", req, res);
 
@@ -235,7 +241,7 @@ router.post("/submit", (req, res) => {
     Problem.findById(req.body.problem).exec(async (err, problem) => {
       if (err)
         return handleContestError(err, req, res);
-      if (!problem || contest.problems.findIndex(x => x.problem == req.body.problem) === -1)
+      if (!problem || contest.problems.findIndex(x => x.problem === req.body.problem) === -1)
         return handleRequestError("problem not found", req, res);
 
       if (!contest.hasStarted())
@@ -487,9 +493,9 @@ router.post("/rejudge", (req, res, next) => {
       return handleContestError("contest not found", req, res, next);
 
     // filter by contest
-    const toRejudge = [...new Set((req.body.submissions || []))];
+    const toRejudge = [...new Set(req.body.submissions || [])];
 
-    const reflect = (p => p.then(v => ({v, status: true }), e => ({e, status: false })));
+    const reflect = p => p.then(v => ({ v, status: true }), e => ({ e, status: false }));
 
     const ans = await Promise.all(toRejudge.map(s => rejudge(s)).map(reflect));
     return res.json({ success: ans.filter(r => r.status).length });

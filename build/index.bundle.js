@@ -61,7 +61,7 @@ require("source-map-support").install();
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 39);
+/******/ 	return __webpack_require__(__webpack_require__.s = 40);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -113,12 +113,12 @@ __webpack_require__(25);
 });*/
 
 module.exports = {
-  Contest: __webpack_require__(54)(),
-  User: __webpack_require__(56)(),
-  Submission: __webpack_require__(57)(),
+  Contest: __webpack_require__(55)(),
+  User: __webpack_require__(57)(),
+  Submission: __webpack_require__(58)(),
   Problem: __webpack_require__(28)(),
-  Clarification: __webpack_require__(58)(),
-  Printout: __webpack_require__(59)()
+  Clarification: __webpack_require__(59)(),
+  Printout: __webpack_require__(60)()
 };
 
 /***/ }),
@@ -168,7 +168,7 @@ var _promise = __webpack_require__(9);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _typeof2 = __webpack_require__(66);
+var _typeof2 = __webpack_require__(67);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -350,7 +350,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = __webpack_require__(1);
 var fs = __webpack_require__(12);
-var util = __webpack_require__(67);
+var util = __webpack_require__(68);
 var glob = __webpack_require__(30);
 
 function inspect(p) {
@@ -445,7 +445,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mongoose = __webpack_require__(0);
 var models = __webpack_require__(4);
-var crypto = __webpack_require__(76);
+var crypto = __webpack_require__(77);
 
 var Schema = mongoose.Schema;
 
@@ -944,7 +944,7 @@ module.exports = require("babel-runtime/helpers/inherits");
 /**
  * Created by rsalesc on 14/06/16.
  */
-var winston = __webpack_require__(69);
+var winston = __webpack_require__(70);
 var process = __webpack_require__(31);
 
 var logger = new winston.Logger({
@@ -1033,16 +1033,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 15/06/16.
  */
 
-var yauzl = __webpack_require__(64);
-var concatStream = __webpack_require__(65);
+var yauzl = __webpack_require__(65);
+var concatStream = __webpack_require__(66);
 var utils = __webpack_require__(11);
-var wildcard = __webpack_require__(68);
+var wildcard = __webpack_require__(69);
 var path = __webpack_require__(1);
 var logger = __webpack_require__(19);
 var fs = __webpack_require__(12);
-var promisify = __webpack_require__(70);
+var promisify = __webpack_require__(71);
 var glob = promisify(__webpack_require__(30).glob);
-var streamifier = __webpack_require__(71);
+var streamifier = __webpack_require__(72);
 
 /* Helper Functions for storage */
 function dealWithEntry(zipFile, entry) {
@@ -2105,7 +2105,7 @@ module.exports = require("babel-runtime/core-js/object/assign");
 
 var mongoose = __webpack_require__(0);
 var MongoQueue2 = __webpack_require__(26);
-var weed = __webpack_require__(53);
+var weed = __webpack_require__(54);
 
 // mongodb setup
 
@@ -2409,8 +2409,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var path = __webpack_require__(1);
-var task = __webpack_require__(72);
-var YAML = __webpack_require__(74);
+var task = __webpack_require__(73);
+var YAML = __webpack_require__(75);
 var logger = __webpack_require__(19);
 var utils = __webpack_require__(11);
 var scoring = __webpack_require__(34);
@@ -3116,7 +3116,7 @@ var Scoring = function () {
   }, {
     key: "defaults",
     get: function get() {
-      throw new Error("Function not implemented in this class");
+      return {};
     }
   }], [{
     key: "isTaskValid",
@@ -3600,20 +3600,6 @@ var IcpcScoring = function (_Scoring3) {
       };
     }
   }, {
-    key: "mergeEvaluations",
-    value: function mergeEvaluations(evals) {
-      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-      opts = (0, _extends3.default)({ penalty: 20 }, opts);
-
-      return evals.reduce(function (old, cur) {
-        return {
-          score: old.score + cur.score,
-          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
-        };
-      }, { score: 0, penalty: 0 });
-    }
-  }, {
     key: "defaults",
     get: function get() {
       return {};
@@ -3639,6 +3625,20 @@ var IcpcScoring = function (_Scoring3) {
     key: "hasPenalty",
     value: function hasPenalty() {
       return true;
+    }
+  }, {
+    key: "mergeEvaluations",
+    value: function mergeEvaluations(evals) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      opts = (0, _extends3.default)({ penalty: 20 }, opts);
+
+      return evals.reduce(function (old, cur) {
+        return {
+          score: old.score + cur.score,
+          penalty: !cur.affect ? old.penalty : old.penalty + cur.penalty + cur.fails * (opts.penalty || 20)
+        };
+      }, { score: 0, penalty: 0 });
     }
   }]);
   return IcpcScoring;
@@ -3761,30 +3761,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var fs = __webpack_require__(21);
 var fse = __webpack_require__(12);
-var tmp = __webpack_require__(87);
+var tmp = __webpack_require__(88);
 tmp.setGracefulCleanup();
 
 var path = __webpack_require__(1);
 
 var MongoQueue2 = __webpack_require__(26);
 
-var JudgeConfig = {
-  MAX_TRIES: 5,
-  EPS: 1e-7,
-  SANDBOX_OFFSET: parseInt(process.env.SANDBOX_OFFSET || 0, 10),
-  MAX_SANDBOXES: parseInt(process.env.MAX_SANDBOXES || 10, 10),
-  MAX_SIMUL_TESTS: parseInt(process.env.MAX_SIMUL_TESTS || 1, 10),
-  COMPILATION_TL: 90,
-  CHECKING_TL: 90,
-  CHECKING_ML: 512,
-  CHECKING_WTL: 90,
-  WT_MULTIPLIER: 15,
-  OUTPUT_LIMIT: 1 << 24,
-  TEMP_DIR: "/tmp",
-  ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
-  VISIBILITY_WINDOW: parseInt(process.env.VISIBILITY_WINDOW || 20, 10),
-  BOUND_ML: 2048
-};
+var _require = __webpack_require__(38),
+    JudgeConfig = _require.JudgeConfig;
 
 var FileCacher = function () {
   function FileCacher() {
@@ -4056,25 +4041,60 @@ module.exports = {
 
 /***/ }),
 /* 38 */
-/***/ (function(module, exports) {
-
-module.exports = require("passport");
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(40);
-
-
-/***/ }),
-/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var app = __webpack_require__(41);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var path = __webpack_require__(1);
+
+var JudgeConfig = exports.JudgeConfig = {
+  MAX_TRIES: 5,
+  EPS: 1e-7,
+  SANDBOX_OFFSET: parseInt(process.env.SANDBOX_OFFSET || 0, 10),
+  MAX_SANDBOXES: parseInt(process.env.MAX_SANDBOXES || 10, 10),
+  MAX_SIMUL_TESTS: parseInt(process.env.MAX_SIMUL_TESTS || 1, 10),
+  COMPILATION_TL: 90,
+  CHECKING_TL: 90,
+  CHECKING_ML: 512,
+  CHECKING_WTL: 90,
+  WT_MULTIPLIER: 15,
+  OUTPUT_LIMIT: 1 << 24,
+  TEMP_DIR: "/tmp",
+  ISOLATE_PATH: path.resolve("/usr/local/bin/isolate"),
+  VISIBILITY_WINDOW: parseInt(process.env.VISIBILITY_WINDOW || 20, 10),
+  BOUND_ML: 2048
+};
+
+var SiteConfig = exports.SiteConfig = {
+  // source limit in bytes
+  SOURCE_LIMIT: 128 * 1024
+};
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports) {
+
+module.exports = require("passport");
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(41);
+
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var app = __webpack_require__(42);
 var port = process.env.PORT || 3000;
 
 app.listen(port, function () {
@@ -4082,7 +4102,7 @@ app.listen(port, function () {
 });
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4095,28 +4115,28 @@ var _extends3 = _interopRequireDefault(_extends2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var express = __webpack_require__(3);
-var session = __webpack_require__(42);
-var MongoStore = __webpack_require__(43)(session);
+var session = __webpack_require__(43);
+var MongoStore = __webpack_require__(44)(session);
 var mongoose = __webpack_require__(0);
 var path = __webpack_require__(1);
-var favicon = __webpack_require__(44);
-var logger = __webpack_require__(45);
-var cookieParser = __webpack_require__(46);
-var bodyParser = __webpack_require__(47);
-var multer = __webpack_require__(48);
-var flash = __webpack_require__(49);
+var favicon = __webpack_require__(45);
+var logger = __webpack_require__(46);
+var cookieParser = __webpack_require__(47);
+var bodyParser = __webpack_require__(48);
+var multer = __webpack_require__(49);
+var flash = __webpack_require__(50);
 var router = express.Router();
 // var methodOverride = require('method-override');
-var restify = __webpack_require__(50);
-var apiRoutes = __webpack_require__(51);
-var staticCompressed = __webpack_require__(61);
-var timesync = __webpack_require__(62);
+var restify = __webpack_require__(51);
+var apiRoutes = __webpack_require__(52);
+var staticCompressed = __webpack_require__(62);
+var timesync = __webpack_require__(63);
 
 // expose db object globally
 __webpack_require__(25);
 
 var app = express();
-var routes = __webpack_require__(63);
+var routes = __webpack_require__(64);
 var auth2 = __webpack_require__(13);
 var models = __webpack_require__(4);
 
@@ -4278,61 +4298,61 @@ module.exports = app;
 /* WEBPACK VAR INJECTION */}.call(exports, ""))
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-session");
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports) {
 
 module.exports = require("connect-mongo");
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 module.exports = require("serve-favicon");
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports) {
 
 module.exports = require("morgan");
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports) {
 
 module.exports = require("cookie-parser");
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports) {
 
 module.exports = require("body-parser");
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports) {
 
 module.exports = require("multer");
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports) {
 
 module.exports = require("connect-flash");
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-restify-mongoose");
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4344,8 +4364,8 @@ module.exports = require("express-restify-mongoose");
 var express = __webpack_require__(3);
 var router = express.Router();
 
-var contestRouter = __webpack_require__(52);
-var userRouter = __webpack_require__(60);
+var contestRouter = __webpack_require__(53);
+var userRouter = __webpack_require__(61);
 var submissionRouter = __webpack_require__(15);
 
 // middlewares
@@ -4356,7 +4376,7 @@ router.use("/submissions", submissionRouter);
 module.exports = router;
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4474,13 +4494,13 @@ router.post("/:id/addUsers", function () {
 module.exports = router;
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports) {
 
 module.exports = require("jude-seaweedfs");
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4496,7 +4516,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by rsalesc on 14/07/16.
  */
 var mongoose = __webpack_require__(0);
-var deepPopulate = __webpack_require__(55)(mongoose);
+var deepPopulate = __webpack_require__(56)(mongoose);
 var Schema = mongoose.Schema;
 
 
@@ -4624,13 +4644,13 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports) {
 
 module.exports = require("mongoose-deep-populate");
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4703,7 +4723,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4794,7 +4814,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4827,7 +4847,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4854,7 +4874,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4884,19 +4904,19 @@ function handleUserError(err, req, res) {
 module.exports = router;
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-static-gzip");
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports) {
 
 module.exports = require("timesync/server");
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4923,11 +4943,11 @@ var Problem = models.Problem,
 var Storage = __webpack_require__(22).MemoryStorage;
 var Loader = __webpack_require__(32);
 var utils = __webpack_require__(11);
-var api2 = __webpack_require__(75);
-var contest = __webpack_require__(79);
-var admin = __webpack_require__(91);
+var api2 = __webpack_require__(76);
+var contest = __webpack_require__(80);
+var admin = __webpack_require__(92);
 var auth2 = __webpack_require__(13);
-var passport = __webpack_require__(38);
+var passport = __webpack_require__(39);
 
 function handleInternalError(err, req, res, next) {
   res.status(500).json({ error: err.toString() });
@@ -5091,55 +5111,55 @@ router.use("/api/v2", api2);
 module.exports = router;
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports) {
 
 module.exports = require("yauzl");
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports) {
 
 module.exports = require("concat-stream");
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports) {
 
 module.exports = require("util");
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports) {
 
 module.exports = require("node-wildcard");
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports) {
 
 module.exports = require("winston");
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports) {
 
 module.exports = require("es6-promisify");
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports) {
 
 module.exports = require("streamifier");
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5164,7 +5184,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var scoring = __webpack_require__(34);
-var deepcopy = __webpack_require__(73);
+var deepcopy = __webpack_require__(74);
 
 var Task = function () {
   function Task(attr) {
@@ -5383,19 +5403,19 @@ var Task = function () {
 module.exports = { Task: Task };
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports) {
 
 module.exports = require("deepcopy");
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports) {
 
 module.exports = require("yamljs");
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5408,8 +5428,8 @@ var express = __webpack_require__(3);
 var router = express.Router();
 var auth2 = __webpack_require__(13);
 
-var contest = __webpack_require__(77);
-var problems = __webpack_require__(78);
+var contest = __webpack_require__(78);
+var problems = __webpack_require__(79);
 
 router.use(auth2.isAuth(["root", "admin"]));
 router.use(contest);
@@ -5418,13 +5438,13 @@ router.use(problems);
 module.exports = router;
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports) {
 
 module.exports = require("crypto");
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5471,7 +5491,7 @@ router.get("/contest/:id", function (req, res) {
 module.exports = router;
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5500,7 +5520,7 @@ router.get("/problems", function (req, res) {
 module.exports = router;
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5510,7 +5530,7 @@ var _set = __webpack_require__(27);
 
 var _set2 = _interopRequireDefault(_set);
 
-var _toConsumableArray2 = __webpack_require__(80);
+var _toConsumableArray2 = __webpack_require__(81);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -5522,7 +5542,7 @@ var _asyncToGenerator2 = __webpack_require__(6);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _entries = __webpack_require__(81);
+var _entries = __webpack_require__(82);
 
 var _entries2 = _interopRequireDefault(_entries);
 
@@ -5546,8 +5566,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = __webpack_require__(1);
 var mongoose = __webpack_require__(0);
-var grader = __webpack_require__(82);
-var precheck = __webpack_require__(90);
+var grader = __webpack_require__(83);
+var precheck = __webpack_require__(91);
 var auth2 = __webpack_require__(13);
 
 var express = __webpack_require__(3);
@@ -5555,6 +5575,9 @@ var router = express.Router();
 
 var models = __webpack_require__(4);
 var sha256 = __webpack_require__(29);
+
+var _require = __webpack_require__(38),
+    SiteConfig = _require.SiteConfig;
 
 var ContestProblemSelection = "code name _id attr.weight attr.author attr.datasets attr.scoring attr.limits attr.blockedLanguages";
 var Contest = models.Contest,
@@ -5564,12 +5587,12 @@ var Contest = models.Contest,
     Clarification = models.Clarification,
     Printout = models.Printout;
 
-var _require = __webpack_require__(15),
-    rejudge = _require.rejudge;
+var _require2 = __webpack_require__(15),
+    rejudge = _require2.rejudge;
 
-var _require2 = __webpack_require__(36),
-    getUserContest = _require2.getUserContest,
-    isAdmin = _require2.isAdmin;
+var _require3 = __webpack_require__(36),
+    getUserContest = _require3.getUserContest,
+    isAdmin = _require3.isAdmin;
 
 var ObjectId = mongoose.mongo.ObjectId;
 
@@ -5802,6 +5825,10 @@ router.post("/submit", function (req, res) {
   if (isAdmin(req)) return handleRequestError("admin cannot submit solutions", req, res);
   if (user.disabled) return handleRequestError("you cant submit solutions", req, res);
 
+  if (Buffer.from(req.body.code).length > SiteConfig.SOURCE_LIMIT) {
+    return handleRequestError("source code exceeds the limit of " + SiteConfig.SOURCE_LIMIT + " bytes");
+  }
+
   if (!grader.availableLanguages.hasOwnProperty(req.body.language)) return handleRequestError("language is invalid", req, res);
 
   try {
@@ -5831,7 +5858,7 @@ router.post("/submit", function (req, res) {
 
               case 2:
                 if (!(!problem || contest.problems.findIndex(function (x) {
-                  return x.problem == req.body.problem;
+                  return x.problem === req.body.problem;
                 }) === -1)) {
                   _context2.next = 4;
                   break;
@@ -6247,19 +6274,19 @@ router.post("/rejudge", function (req, res, next) {
 module.exports = router;
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/helpers/toConsumableArray");
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports) {
 
 module.exports = require("babel-runtime/core-js/object/entries");
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7093,16 +7120,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var fs = __webpack_require__(21);
 var fse = __webpack_require__(12);
 var path = __webpack_require__(1);
-var promiseReflect = __webpack_require__(83);
+var promiseReflect = __webpack_require__(84);
 
-var verdict = __webpack_require__(84);
+var verdict = __webpack_require__(85);
 var utils = __webpack_require__(11);
 var logger = __webpack_require__(19);
-var sandbox = __webpack_require__(85);
+var sandbox = __webpack_require__(86);
 var environment = __webpack_require__(37);
 
 var loader = __webpack_require__(32);
-var Profiler = __webpack_require__(89);
+var Profiler = __webpack_require__(90);
 
 var Storage = __webpack_require__(22).MemoryStorage;
 
@@ -7908,13 +7935,13 @@ module.exports = { testTask: testTask, testPackage: testPackage, availableLangua
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports) {
 
 module.exports = require("promise-reflect");
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8051,7 +8078,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8102,7 +8129,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Created by rsalesc on 15/06/16.
  */
-var Promise = __webpack_require__(86);
+var Promise = __webpack_require__(87);
 
 var fs = __webpack_require__(12);
 
@@ -8116,7 +8143,7 @@ var globAsync = utils.globAsync;
 var Storage = __webpack_require__(22).MemoryStorage;
 var JudgeConfig = jenv.JudgeConfig;
 
-var spawnDetachedPromise = __webpack_require__(88).spawn;
+var spawnDetachedPromise = __webpack_require__(89).spawn;
 
 /*
 *   spawnDetached async version (promisified)
@@ -9795,25 +9822,25 @@ module.exports = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)(module)))
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports) {
 
 module.exports = require("tmp");
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports) {
 
 module.exports = require("child-process-promise");
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9919,7 +9946,7 @@ var Profiler = function () {
 module.exports = Profiler;
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9958,7 +9985,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9966,7 +9993,7 @@ module.exports = {
 
 var path = __webpack_require__(1);
 var mongoose = __webpack_require__(0);
-var passport = __webpack_require__(38);
+var passport = __webpack_require__(39);
 var auth2 = __webpack_require__(13);
 
 var express = __webpack_require__(3);
