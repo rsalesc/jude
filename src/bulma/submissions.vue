@@ -310,23 +310,17 @@
         },
         async fetchAll() {
           try {
-            const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
-            if (!loggedin)
-              this.$jude.logout();
-          } catch (err) {
-            new BulmaUtils(this).toastResponseError(err);
+            await this.$store.dispatch(types.FETCH_CONTEST_DATA);
+          } catch (response) {
+            this.$jude.dealWithResponse(response);
           }
         },
         async showCode(sub) {
           try {
-            const loggedin = await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
-            if (!loggedin)
-              this.$jude.logout();
-            else
-              this.codeModal.active = true;
-          } catch (err) {
-            console.error(err);
-            new BulmaUtils(this).toast("Error contacting to the server", 4000, "is-danger");
+            await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
+            this.codeModal.active = true;
+          } catch (response) {
+            this.$jude.dealWithResponse(response);
           }
         },
         rejudge(subs) {
@@ -339,9 +333,7 @@
                 await Api.rejudge.save({}, { submissions: subs.map(s => s._id) });
                 this.fetchAll();
               } catch (response) {
-                if (response.status === 401 || response.status === 403)
-                  return this.$jude.logout();
-                new BulmaUtils(this).toastResponseError(response);
+                this.$jude.dealWithResponse(response);
               }
             }
           });
@@ -351,21 +343,16 @@
         },
         async resubmit(sub) {
           try {
-            const loggedin = await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
-            if (!loggedin)
-              return this.$jude.logout();
-            else {
-              this.submitModal.props = {
-                ...(this.submitModal.props),
-                language: sub.language,
-                problem: sub.problem,
-                code: this.shownSubmission.code
-              };
-              this.submitModal.active = true;
-            }
-          } catch (err) {
-            console.error(err);
-            new BulmaUtils(this).toast("Error contacting to the server", 4000, "is-danger");
+            await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
+            this.submitModal.props = {
+              ...this.submitModal.props,
+              language: sub.language,
+              problem: sub.problem,
+              code: this.shownSubmission.code
+            };
+            this.submitModal.active = true;
+          } catch (response) {
+            this.$jude.dealWithResponse(response);
           }
         }
       },

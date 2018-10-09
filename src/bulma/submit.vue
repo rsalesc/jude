@@ -120,22 +120,13 @@
                     this.$emit("close");
 
                     try {
-                      const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
-                      if(!loggedin) {
-                        this.$jude.logout();
-                      }
-                    } catch (err) {
-                      console.error(err);
-                      new BulmaUtils(this).toast("Error contacting the server", 4000, "is-danger");
+                      await this.$store.dispatch(types.FETCH_CONTEST_DATA);
+                    } catch (response) {
+                      this.$jude.dealWithResponse(response);
                     }
                 }).catch((err) => {
                     this.submitting--;
-                    if(err.status === 401 || err.status === 403) {
-                        new BulmaUtils(this).toast("Not logged in, failed to submit!", 4000, "is-danger");
-                        return this.$jude.logout();
-                    }
-
-                    new BulmaUtils(this).toastResponseError(err, "Internal submission error");
+                    this.$jude.dealWithResponse(err, "Internal submission error.");
                 });
             }, 500, true),
             getMode() {

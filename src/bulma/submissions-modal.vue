@@ -111,18 +111,18 @@ export default {
       return Helper.isAdmin(this.getSelf());
     },
     getSubmissions() {
-      if(!this.shownSubmissions)
+      if (!this.shownSubmissions)
         return [];
       return this.shownSubmissions;
     },
     getProblemName() {
-      if(!this.problem)
+      if (!this.problem)
         return "";
 
       return `${this.problem.letter}. ${this.problem.problem.name}`;
     },
     getTeamName() {
-      if(!this.team)
+      if (!this.team)
         return "";
       return this.team.name;
     },
@@ -134,16 +134,12 @@ export default {
     },
     async showCode(sub) {
       try {
-        const loggedin = await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
-        if (!loggedin)
-          this.$jude.logout();
-        else
-          this.codeModal.active = true;
-      } catch (err) {
-        console.error(err);
-        new BulmaUtils(this).toast("Error contacting to the server", 4000, "is-danger");
+        await this.$store.dispatch(types.FETCH_AND_SHOW_SUBMISSION, sub._id);
+        this.codeModal.active = true;
+      } catch (response) {
+        this.$jude.dealWithResponse(response);
       }
-    },    
+    },
     canSubmit() {
       return this.team._id === this.getSelf()._id;
     },

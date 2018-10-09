@@ -320,34 +320,16 @@ export const getters = {
 
 export const actions = {
   async [types.FETCH_CONTEST_DATA](context) {
-    try {
-      const [contestResult, submissionsResult]
-                = await Promise.all([Api.contest.get(), Api.submissions.get()]);
+    const [contestResult, submissionsResult]
+      = await Promise.all([Api.contest.get(), Api.submissions.get()]);
 
-      context.commit(types.UPDATE_CONTEST_DATA, {
-        ...contestResult.body,
-        ...submissionsResult.body
-      });
-    } catch (response) {
-      if (response.status === 401 || response.status === 403)
-        return false;
-      throw response;
-    }
-
-    return true;
+    context.commit(types.UPDATE_CONTEST_DATA, {
+      ...contestResult.body,
+      ...submissionsResult.body
+    });
   },
   async [types.FETCH_AND_SHOW_SUBMISSION](context, submissionId) {
-    try {
-      const res = await Api.submission.get({ id: submissionId });
-
-      context.commit(types.UPDATE_SHOWN_SUBMISSION, res.body);
-    } catch (response) {
-      if (response.status === 401 || response.status === 403)
-        return false;
-
-      throw response;
-    }
-
-    return true;
+    const res = await Api.submission.get({ id: submissionId });
+    context.commit(types.UPDATE_SHOWN_SUBMISSION, res.body);
   }
 };

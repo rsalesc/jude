@@ -93,12 +93,9 @@
         },
         async fetchAll() {
             try {
-                const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
-                if(!loggedin)
-                    this.$jude.logout();
+              await this.$store.dispatch(types.FETCH_CONTEST_DATA);
             } catch (err) {
-                console.error(err);
-                new BulmaUtils(this).toast("Error contacting the server", 4000, "is-danger");
+              this.$jude.dealWithResponse(err);
             }
         },
         async fetch() {
@@ -111,11 +108,7 @@
                 ]);
               this.data = { contest: contest.body, problems: problems.body };
             } catch (response) {
-                if (response.status === 401 || response.status === 403)
-                    return this.$jude.logout();
-
-                new BulmaUtils(this).toast("Error contacting the server.", 4000, "is-danger");
-                console.error(response);
+                this.$jude.dealWithResponse(response);
             }
             this.isContestLoading = false;
         },
@@ -125,11 +118,7 @@
                 await Api.admin.contest.save({ id: this.getContestId() }, { contest });
                 this.fetchAll();
             } catch(response) {
-                if (response.status === 401 || response.status === 403)
-                    return this.$jude.logout();
-                
-                new BulmaUtils(this).toast("Error contacting the server.", 4000, "is-danger");
-                console.error(response);
+                this.$jude.dealWithResponse(response);
             }
         },
         async onContestProblemsSubmit(probs) {
@@ -138,11 +127,7 @@
                 await Api.admin.contestProblems.save({ id: this.getContestId() }, { problems: probs });
                 this.fetchAll();
             } catch(response) {
-                if (response.status === 401 || response.status === 403)
-                    return this.$jude.logout();
-                
-                new BulmaUtils(this).toast("Error contacting the server.", 4000, "is-danger");
-                console.error(response);
+                this.$jude.dealWithResponse(response);
             }
         }
     },

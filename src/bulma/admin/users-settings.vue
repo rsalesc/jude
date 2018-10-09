@@ -48,12 +48,9 @@ export default {
   methods: {
     async fetchAll() {
       try {
-        const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
-        if (!loggedin)
-          this.$jude.logout();
-      } catch (err) {
-        console.error(err);
-        new BulmaUtils(this).toast("Error contacting the server", 4000, "is-danger");
+        await this.$store.dispatch(types.FETCH_CONTEST_DATA);
+      } catch (response) {
+        this.$jude.dealWithREsponse(response);
       }
     },
     async fetch() {
@@ -61,14 +58,10 @@ export default {
         const users = await Api.admin.users.get();
         this.users = users.body;
       } catch (response) {
-        if (response.status === 401 || response.status === 403)
-          return this.$jude.logout();
-
-        new BulmaUtils(this).toast("Error contacting the server.", 4000, "is-danger");
-        console.error(response);
+        this.$jude.dealWithResponse(response);
       }
       this.isContestLoading = false;
     }
-  },
+  }
 };
 </script>

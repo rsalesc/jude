@@ -171,13 +171,10 @@
         },
         async fetch() {
           try {
-            const loggedin = await this.$store.dispatch(types.FETCH_CONTEST_DATA);
-            if (!loggedin)
-              this.$jude.logout();
+            await this.$store.dispatch(types.FETCH_CONTEST_DATA);
           } catch (err) {
-            new BulmaUtils(this).toast("Error contacting the server, turning off auto-refresh.", 4000, "is-danger");
+            this.$jude.dealWithResponse(err);
             this.$store.commit(types.SET_AUTO_FETCH_STANDINGS, false);
-            console.error(err);
           }
         },
         async doLogout() {
