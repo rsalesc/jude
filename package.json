@@ -10,7 +10,7 @@
     "start": "node build/index.bundle.js",
     "serve": "NODE_ENV=production node build/index.bundle.js",
     "build": "webpack --config webpack.index.js &&  webpack --config webpack.judge.js && webpack --config webpack.ng.js && webpack --config webpack.vue.js",
-     "publish-latest": "bash publish.sh",
+    "publish-latest": "bash publish.sh",
     "build-server": "webpack --config webpack.index.js && webpack --config webpack.judge.js",
     "build-index": "webpack --config webpack.index.js",
     "build-judge": "webpack --config webpack.judge.js",
