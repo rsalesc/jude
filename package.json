@@ -2,10 +2,15 @@
   "name": "jude-judge",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+"     url": "https://github.com/rsalesc/jude"
+  },
   "scripts": {
     "start": "node build/index.bundle.js",
     "serve": "NODE_ENV=production node build/index.bundle.js",
-    "build": "wepback --config webpack.index.js &&  webpack --config webpack.judge.js && webpack --config webpack.ng.js && webpack --config webpack.vue.js",
+    "build": "webpack --config webpack.index.js &&  webpack --config webpack.judge.js && webpack --config webpack.ng.js && webpack --config webpack.vue.js",
+     "publish-latest": "bash publish.sh",
     "build-server": "webpack --config webpack.index.js && webpack --config webpack.judge.js",
     "build-index": "webpack --config webpack.index.js",
     "build-judge": "webpack --config webpack.judge.js",
@@ -119,6 +124,7 @@
     "mock-local-storage": "^1.0.5",
     "node-sass": "^4.5.3",
     "nyc": "^11.6.0",
+    "publish-latest": "^1.1.2",
     "raw-loader": "^0.5.1",
     "rgb-hex": "^2.1.0",
     "sass-loader": "^6.0.6",
