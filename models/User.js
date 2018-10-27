@@ -12,8 +12,8 @@ module.exports = () => {
     var UserSchema = new Schema({
         handle: {
             type: String,
-            minlength: 4,
-            maxlength: 16,
+            minlength: 3,
+            maxlength: 24,
             match: /[a-zA-Z][a-zA-Z0-9_\.]*/,
             required: true
         },
