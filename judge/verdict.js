@@ -46,6 +46,31 @@ const VerdictTag = {
   VERDICT_AC: "success"
 };
 
+const VerdictGhost = {
+  "": "RJ",
+  VERDICT_INQ: "RJ",
+  VERDICT_SKIP: "RJ",
+
+  VERDICT_WA: "WA",
+  VERDICT_RTE: "RT",
+  VERDICT_MLE: "RT",
+  VERDICT_TLE: "TL",
+  VERDICT_WTE: "TL",
+  VERDICT_OLE: "RT",
+
+  VERDICT_CE: "CE",
+  VERDICT_CTE: "CE",
+
+  VERDICT_FAIL: "RJ",
+  VERDICT_CHTE: "RJ",
+
+  VERDICT_JE: "RJ",
+  VERDICT_UE: "RJ",
+
+  VERDICT_AC: "OK"
+};
+
+
 class Verdict {
   constructor(score, verdict, passed = -1, info = {}) {
     this.score = score || 0;
@@ -101,5 +126,6 @@ class Verdict {
 module.exports = {
   Verdict,
   VerdictConst,
-  VerdictTag
+  VerdictTag,
+  VerdictGhost
 };

@@ -61,6 +61,8 @@
               <b-switch class="navbar-item"
                 v-model="config.autoFetchStandings"
                 @input="setAutoFetch">Auto-refresh</b-switch>
+              <a v-if="isAdmin()"
+                class="navbar-item" @click="extractGhosts()">Extract Ghosts</a>
               <a class="navbar-item" @click="doLogout()">Logout</a>
             </div>
           </div>
@@ -82,6 +84,7 @@
 <script type="text/babel">import * as Api from "./api.js";
     import * as Helper from "./helpers.js";
     import SubmitComponent from "./submit.vue";
+    import GhostExtractor from "./admin/ghosts.js";
     import Vue from "vue";
     import moment from "moment";
     import "moment/locale/en-gb";
@@ -137,6 +140,13 @@
         ])
       },
       methods: {
+        extractGhosts() {
+          const win = window.open("", "_blank");
+          const code = new GhostExtractor(this.rawContest, this.teams,
+            this.problems, this.submissions).extract({tag: true});
+          win.document.title = `Ghosts for Codeforces`;
+          win.document.body.innerHTML = `<pre>${code}</pre>`;
+        },
         getSelf() {
           return this.userObject;
         },
