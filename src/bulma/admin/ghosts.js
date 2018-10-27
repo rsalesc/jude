@@ -53,7 +53,7 @@ export default class GhostExtractor {
       const probDict = dicts[sub.problem];
       const attempts = probDict.attempts[sub._creator] || 0;
       const v = Helper.getMainVerdict(sub.verdict, probDict.problem);
-      res.push(`@s ${sub._creator},${probDict.letter},${attempts + 1},${sub.timeInContest},${this.verdict(v)}`);
+      res.push(`@s ${sub._creator},${probDict.letter},${attempts + 1},${sub.timeInContest * 60},${this.verdict(v)}`);
 
       dicts[sub.problem].attempts[sub._creator] = attempts + 1;
     }
