@@ -223,6 +223,12 @@ export function getFormattedDateTime(d) {
   const m = moment(d);
   return `${m.format("L")} ${m.format("LTS")}`;
 }
+export function getContestListRemainingTime(contest) {
+  const d = new Date(contest.start_time);
+  if (ts.now() < d.getTime())
+    return `will start at ${getFormattedDateTime(d)}`;
+  return getRemainingTime(contest);
+}
 
 export function rgbToHex(color) {
   color = "" + color;
