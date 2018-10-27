@@ -81,7 +81,7 @@
         return this.$router.push({ path: "/login", query: { id: contest._id }});
       },
       getRemainingTime(contest) {
-        return Helper.getRemainingTime(contest);
+        return Helper.getContestListRemainingTime(contest);
       }
     }
   };
