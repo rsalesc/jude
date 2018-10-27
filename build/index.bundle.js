@@ -4694,8 +4694,8 @@ module.exports = function () {
     var UserSchema = new Schema({
         handle: {
             type: String,
-            minlength: 4,
-            maxlength: 16,
+            minlength: 3,
+            maxlength: 24,
             match: /[a-zA-Z][a-zA-Z0-9_\.]*/,
             required: true
         },
@@ -4705,7 +4705,11 @@ module.exports = function () {
             default: "unnamed"
         },
         description: String,
-        password: { type: String },
+        password: {
+            type: String,
+            minlength: 1,
+            maxlength: 48
+        },
         email: {
             type: String,
             maxlength: 64
