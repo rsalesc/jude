@@ -23,7 +23,11 @@ module.exports = () => {
             default: "unnamed"
         },
         description:String,
-        password: {type: String},
+        password: {
+          type: String,
+          minlength: 1,
+          maxlength: 48
+        },
         email: {
             type: String,
             maxlength: 64
