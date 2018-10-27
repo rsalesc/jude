@@ -5454,6 +5454,30 @@ var VerdictTag = {
   VERDICT_AC: "success"
 };
 
+var VerdictGhost = {
+  "": "RJ",
+  VERDICT_INQ: "RJ",
+  VERDICT_SKIP: "RJ",
+
+  VERDICT_WA: "WA",
+  VERDICT_RTE: "RT",
+  VERDICT_MLE: "RT",
+  VERDICT_TLE: "TL",
+  VERDICT_WTE: "TL",
+  VERDICT_OLE: "RT",
+
+  VERDICT_CE: "CE",
+  VERDICT_CTE: "CE",
+
+  VERDICT_FAIL: "RJ",
+  VERDICT_CHTE: "RJ",
+
+  VERDICT_JE: "RJ",
+  VERDICT_UE: "RJ",
+
+  VERDICT_AC: "OK"
+};
+
 var Verdict = function () {
   function Verdict(score, verdict) {
     var passed = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -1;
@@ -5519,7 +5543,8 @@ var Verdict = function () {
 module.exports = {
   Verdict: Verdict,
   VerdictConst: VerdictConst,
-  VerdictTag: VerdictTag
+  VerdictTag: VerdictTag,
+  VerdictGhost: VerdictGhost
 };
 
 /***/ }),
